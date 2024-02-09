@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "487050937991",
+    "project_id": "yeoddadae",
+    "storage_bucket": "yeoddadae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:487050937991:android:7ba2b46beab33d0e5c9a22",
+        "android_client_info": {
+          "package_name": "com.bucheon.yeoddadae"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDv3AWsHOT7ZBawpV9GKGOySNqw_7aJ4Hs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
