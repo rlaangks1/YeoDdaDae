@@ -24,19 +24,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick (View v) {
                 FirestoreDatabase fd = new FirestoreDatabase();
 
-                fd.selectOne("test", "속성3", 3333, "속성2", new OnDataLoadedListener() {
-                    @Override
-                    public void onSelectOneLoaded(Object resultValue) {
-                        Log.d(TAG, resultValue.toString());
-                    }
-                    @Override
-                    public void onSelectAllLoaded (List<Object> resultList) {}
-
-                    @Override
-                    public void onDataLoadError(String errorMessage) {
-                        // 오류 발생
-                    }
-                });
+                fd.updateData("test", "속성1", 4, "속성3", "수정성공");
             }
         });
     }

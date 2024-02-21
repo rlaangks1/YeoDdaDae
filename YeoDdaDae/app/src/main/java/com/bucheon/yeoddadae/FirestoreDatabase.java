@@ -63,6 +63,34 @@ public class FirestoreDatabase {
         return isDuplicate[0];
     }
 
+    // 데이터 수정
+    // String collection : 콜렉션, String targetField : 찾을속성, Object targetValue : 찾을값, String updateField : 변경할속성, Object updateValue : 변경할값
+    public void updateData (String collection, String targetField, Object targetValue, String updateField, Object updateValue) {
+        db.collection(collection)
+                .whereEqualTo(targetField, targetValue)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        // Check if the document contains the updateField
+                        if (document.contains(updateField)) {
+                            // Update the specified field with the new value
+                            document.getReference().update(updateField, updateValue)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Log.d(TAG, "데이터 수정 성공");
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.d(TAG, "데이터 수정 오류", e);
+                                    });
+                        } else {
+                            Log.d(TAG, "데이터에 " + updateField + " 필드가 존재하지 않음");
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                });
+    }
+
     // 데이터삭제
     // String collection : 콜렉션명, String targetField : 속성명, Object targetValue : 찾는값
     public void deleteData (String collection, String targetField, Object targetValue) {
@@ -153,12 +181,10 @@ public class FirestoreDatabase {
                         }
                         else {
                             Log.d(TAG, "결과 값이 null");
-                            listener.onDataLoadError("결과 값이 null");
                             return;
                         }
                     }
                     Log.d(TAG, "해당 데이터가 없음");
-                    listener.onDataLoadError("해당 데이터가 없음");
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "데이터 검색 오류", e);
