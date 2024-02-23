@@ -8,3 +8,4 @@ public interface OnDataLoadedListener {
     void onSelectOneLoaded(Object resultValue);
     void onDataLoadError(String errorMessage);
 }
+

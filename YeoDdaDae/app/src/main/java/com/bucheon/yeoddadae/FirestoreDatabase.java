@@ -209,4 +209,24 @@ public class FirestoreDatabase {
                     public void onSelectAllLoaded (List<Object> resultList) {}
                 });
      */
+
+    public void login(String id, String pw, OnLoginResultListener listener) {
+        db.collection("account")
+                .whereEqualTo("id", id)
+                .whereEqualTo("pw", pw)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.size() > 0) {
+                        Log.d(TAG, "로그인 성공");
+                        listener.onLoginSuccess();
+                    } else {
+                        Log.d(TAG, "아이디 또는 비밀번호가 일치하지 않음");
+                        listener.onLoginFailure("아이디 또는 비밀번호가 일치하지 않습니다.");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "로그인 중 오류", e);
+                    listener.onLoginFailure(e.getMessage());
+                });
+    }
 }
