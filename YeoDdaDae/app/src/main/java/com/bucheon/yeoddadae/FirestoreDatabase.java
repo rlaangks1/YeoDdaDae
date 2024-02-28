@@ -41,26 +41,22 @@ public class FirestoreDatabase {
 
     // 중복검사 true : 중복없음, false : 중복임
     // String collection : 콜렉션명, String targetField : 속성명, Object targetValue : 찾는값
-    public boolean duplicationCheck(String collection, String targetField, Object targetValue) {
-        boolean[] isDuplicate = {true};
-
+    public void duplicationCheck(String collection, String targetField, Object targetValue, OnDataLoadedListener listener) {
         db.collection(collection)
                 .whereEqualTo(targetField, targetValue)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (queryDocumentSnapshots.size() > 0) {
-                        isDuplicate[0] = false;
+                        listener.onDataLoaded(false);
                         Log.d(TAG, "데이터 with " + targetField + " = " + targetValue + " 가 이미 존재함");
                     } else {
-                        isDuplicate[0] = true;
+                        listener.onDataLoaded(true);
                         Log.d(TAG, "데이터 with " + targetField + " = " + targetValue + " 가 없음");
                     }
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "중복검사 중 오류", e);
                 });
-
-        return isDuplicate[0];
     }
 
     // 데이터 수정
@@ -137,7 +133,7 @@ public class FirestoreDatabase {
                         Log.d(TAG, "해당 데이터가 없음");
                     }
 
-                    listener.onSelectAllLoaded(resultList);
+                    listener.onDataLoaded(resultList);
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "데이터 검색 오류", e);
@@ -149,7 +145,8 @@ public class FirestoreDatabase {
     /*
     fd.selectAll("콜렉션", "속성1", "속성2", new OnDataLoadedListener() {
         @Override
-        public void onSelectAllLoaded(List<Object> resultList) {
+        public void onDataLoaded(Object data) {
+            List<Object> resultList = (List<Object>) data;
             //resultList로 할 작업 작성
         }
 
@@ -157,9 +154,6 @@ public class FirestoreDatabase {
         public void onDataLoadError(String errorMessage) {
             //오류 발생
         }
-
-        @Override
-        public void onSelectOneLoaded (List<Object> resultList) {}
      });
      */
 
@@ -176,7 +170,7 @@ public class FirestoreDatabase {
 
                         if (resultValue != null) {
                             Log.d(TAG, "데이터 검색 성공");
-                            listener.onSelectOneLoaded(resultValue);
+                            listener.onDataLoaded(resultValue);
                             return;
                         }
                         else {
@@ -194,9 +188,9 @@ public class FirestoreDatabase {
 
     // selectOne 사용법 예시
     /*
-    fd.selectOne("test", "속성3", 3333, "속성2", new OnDataLoadedListener() {
+    fd.selectOne("test", "속성1", 1111, "속성2", new OnDataLoadedListener() {
                     @Override
-                    public void onSelectOneLoaded(Object resultValue) {
+                    public void onDataLoaded(Object resultValue) {
                         // resultValue로 할 작업 작성
                     }
 
@@ -204,29 +198,31 @@ public class FirestoreDatabase {
                     public void onDataLoadError(String errorMessage) {
                         // 오류 발생
                     }
-
-                    @Override
-                    public void onSelectAllLoaded (List<Object> resultList) {}
-                });
      */
 
-    public void login(String id, String pw, OnLoginResultListener listener) {
+    public void login(String id, String pw, OnDataLoadedListener listener) {
         db.collection("account")
                 .whereEqualTo("id", id)
                 .whereEqualTo("pw", pw)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (queryDocumentSnapshots.size() > 0) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+
+                        // Get the value of isAdmin property
+                        boolean isAdmin = document.getBoolean("isAdmin");
+
                         Log.d(TAG, "로그인 성공");
-                        listener.onLoginSuccess();
-                    } else {
+                        listener.onDataLoaded(isAdmin);
+                    }
+                    else {
                         Log.d(TAG, "아이디 또는 비밀번호가 일치하지 않음");
-                        listener.onLoginFailure("아이디 또는 비밀번호가 일치하지 않습니다.");
+                        listener.onDataLoadError("아이디 또는 비밀번호가 일치하지 않습니다.");
                     }
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "로그인 중 오류", e);
-                    listener.onLoginFailure(e.getMessage());
+                    listener.onDataLoadError(e.getMessage());
                 });
     }
 }

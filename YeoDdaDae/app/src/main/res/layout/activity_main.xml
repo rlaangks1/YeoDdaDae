@@ -17,8 +17,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button"
-        android:text="버튼"
+        android:id="@+id/toLoginBtn"
+        android:text="로그인"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,11 +27,20 @@
 
     <TextView
         android:id="@+id/nowId"
-        android:text="가나다"
+        android:text="현재ID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button" />
+        app:layout_constraintTop_toBottomOf="@id/toLoginBtn" />
+
+    <TextView
+        android:id="@+id/isAdmin"
+        android:text="관리자여부"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nowId" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,35 +1,54 @@
 package com.bucheon.yeoddadae;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
-    String account = null;
+    String loginId = null;
+    boolean isAdmin = false;
+
+    final int loginIntentRequestCode = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button button = (Button) findViewById(R.id.button);
+        Button toLoginBtn = (Button) findViewById(R.id.toLoginBtn);
+        TextView nowIdTxt = (TextView) findViewById(R.id.nowId);
+        TextView isAdminTxt = (TextView) findViewById(R.id.isAdmin);
 
-        button.setOnClickListener(new View.OnClickListener() {
+        nowIdTxt.setText(loginId);
+        isAdminTxt.setText(Boolean.toString(isAdmin));
+
+        toLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
                 FirestoreDatabase fd = new FirestoreDatabase();
 
-                if (account == null) {
+                if (loginId == null) {
                     Intent loginIntent = new Intent(getApplicationContext(), loginActivity.class);
-                    startActivityForResult(loginIntent, 1);
+                    startActivityForResult(loginIntent, loginIntentRequestCode);
                 }
                 else {
+                    loginId = null;
+                    isAdmin = false;
 
+                    nowIdTxt.setText(loginId);
+                    isAdminTxt.setText(Boolean.toString(isAdmin));
+
+                    toLoginBtn.setText("로그인");
                 }
             }
         });
@@ -39,15 +58,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
-                // 결과가 성공적으로 돌아왔을 때
-                account = data.getStringExtra("accountId");
-                TextView nowIdTxt = (TextView) findViewById(R.id.nowId);
-                nowIdTxt.setText(account);
+        Button toLoginBtn = (Button) findViewById(R.id.toLoginBtn);
+        TextView nowIdTxt = (TextView) findViewById(R.id.nowId);
+        TextView isAdminTxt = (TextView) findViewById(R.id.isAdmin);
 
-            } else if (resultCode == RESULT_CANCELED) {
-                // 사용자가 선택을 취소했을 때
+        if (requestCode == loginIntentRequestCode) {
+            if (resultCode == RESULT_OK) {
+                loginId = data.getStringExtra("loginId");
+                isAdmin = data.getBooleanExtra("isAdmin", false);
+
+                nowIdTxt.setText(loginId);
+                isAdminTxt.setText(Boolean.toString(isAdmin));
+
+                toLoginBtn.setText("로그아웃");
             }
         }
     }

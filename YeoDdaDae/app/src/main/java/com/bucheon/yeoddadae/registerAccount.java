@@ -8,6 +8,7 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 public class registerAccount extends AppCompatActivity {
     @Override
@@ -27,19 +28,44 @@ public class registerAccount extends AppCompatActivity {
                 String id = idTxt.getText().toString();
                 String pw = pwTxt.getText().toString();
 
-                if (id.length() <= 6) {
-
+                if (id.length() <= 5) {
+                    return;
                 }
-                else if (pw.length() <= 6) {
-
+                else if (pw.length() <= 5) {
+                    return;
                 }
                 else {
-                    HashMap<String, Object> newAccount = new HashMap<String, Object>();
+                    if (!Pattern.matches("^[a-zA-Z0-9]+$", id)) {
+                        return;
+                    }
+                    else if (!Pattern.matches("^[a-zA-Z0-9]+$", id)) {
+                        return;
+                    }
+                    else {
+                        fd.duplicationCheck("account", "id", id,  new OnDataLoadedListener() {
+                            @Override
+                            public void onDataLoaded(Object isNotDuplication) {
+                                if ((Boolean) isNotDuplication == true) {
+                                    HashMap<String, Object> newAccount = new HashMap<String, Object>();
 
-                    newAccount.put("id", id);
-                    newAccount.put("pw", pw);
+                                    newAccount.put("id", id);
+                                    newAccount.put("pw", pw);
+                                    newAccount.put("isAdmin", false);
 
-                    fd.insertData("account", newAccount);
+                                    fd.insertData("account", newAccount);
+                                    finish();
+                                }
+                                else {
+
+                                }
+                            }
+
+                            @Override
+                            public void onDataLoadError(String errorMessage) {
+                                // Handle login failure
+                            }
+                        });
+                    }
                 }
             }
         });

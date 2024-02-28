@@ -27,24 +27,25 @@ public class loginActivity extends AppCompatActivity {
                 String id = idTxt.getText().toString();
                 String pw = pwTxt.getText().toString();
 
-                if (id.length() <= 6) {
-
+                if (id.length() <= 5) {
+                    return;
                 }
-                else if (pw.length() <= 6) {
-
+                else if (pw.length() <= 5) {
+                    return;
                 }
                 else {
-                    fd.login(id, pw, new OnLoginResultListener() {
+                    fd.login(id, pw, new OnDataLoadedListener() {
                         @Override
-                        public void onLoginSuccess() {
+                        public void onDataLoaded(Object isAdmin) {
                             Intent resultIntent = new Intent();
-                            resultIntent.putExtra("accountId", id);
+                            resultIntent.putExtra("loginId", id);
+                            resultIntent.putExtra("isAdmin", (Boolean) isAdmin);
                             setResult(RESULT_OK, resultIntent);
                             finish();
                         }
 
                         @Override
-                        public void onLoginFailure(String errorMessage) {
+                        public void onDataLoadError(String errorMessage) {
                             // Handle login failure
                         }
                     });
