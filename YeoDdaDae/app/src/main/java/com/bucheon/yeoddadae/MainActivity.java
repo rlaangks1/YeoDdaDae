@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     boolean isAdmin = false;
 
     final int loginIntentRequestCode = 1;
+    final int sttIntentRequestCode = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         Button toLoginBtn = (Button) findViewById(R.id.toLoginBtn);
         TextView nowIdTxt = (TextView) findViewById(R.id.nowId);
         TextView isAdminTxt = (TextView) findViewById(R.id.isAdmin);
+        TextView toSttBtn = (TextView) findViewById(R.id.toSttBtn);
 
         nowIdTxt.setText(loginId);
         isAdminTxt.setText(Boolean.toString(isAdmin));
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                 FirestoreDatabase fd = new FirestoreDatabase();
 
                 if (loginId == null) {
-                    Intent loginIntent = new Intent(getApplicationContext(), loginActivity.class);
+                    Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivityForResult(loginIntent, loginIntentRequestCode);
                 }
                 else {
@@ -50,6 +52,14 @@ public class MainActivity extends AppCompatActivity {
 
                     toLoginBtn.setText("로그인");
                 }
+            }
+        });
+
+        toSttBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent sttIntent = new Intent(getApplicationContext(), SttActivity.class);
+                startActivityForResult(sttIntent, sttIntentRequestCode);
             }
         });
     }

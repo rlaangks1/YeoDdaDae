@@ -21,8 +21,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".loginActivity"/>
-        <activity android:name=".registerAccount"/>
+        <activity android:name=".LoginActivity"/>
+        <activity android:name=".RegisterAccount"/>
+        <activity android:name=".SttActivity"/>
     </application>
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <queries>
+        <intent>
+            <action android:name="android.speech.RecognitionService" />
+        </intent>
+    </queries>
 
 </manifest>

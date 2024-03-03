@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
-public class registerAccount extends AppCompatActivity {
+public class RegisterAccount extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,9 +18,17 @@ public class registerAccount extends AppCompatActivity {
 
         FirestoreDatabase fd = new FirestoreDatabase();
 
+        Button backBtn = (Button) findViewById(R.id.registerBackBtn);
         EditText idTxt = (EditText) findViewById(R.id.registerIdTxt);
         EditText pwTxt = (EditText) findViewById(R.id.registerPwTxt);
         Button registerBtn = (Button) findViewById(R.id.registerBtn);
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View v) {
+                finish();
+            }
+        });
 
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,7 +50,7 @@ public class registerAccount extends AppCompatActivity {
                         return;
                     }
                     else {
-                        fd.duplicationCheck("account", "id", id,  new OnDataLoadedListener() {
+                        fd.duplicationCheck("account", "id", id,  new OnFirestoreDataLoadedListener() {
                             @Override
                             public void onDataLoaded(Object isNotDuplication) {
                                 if ((Boolean) isNotDuplication == true) {

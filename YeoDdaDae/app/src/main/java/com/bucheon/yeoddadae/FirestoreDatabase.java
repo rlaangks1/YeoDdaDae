@@ -41,7 +41,7 @@ public class FirestoreDatabase {
 
     // 중복검사 true : 중복없음, false : 중복임
     // String collection : 콜렉션명, String targetField : 속성명, Object targetValue : 찾는값
-    public void duplicationCheck(String collection, String targetField, Object targetValue, OnDataLoadedListener listener) {
+    public void duplicationCheck(String collection, String targetField, Object targetValue, OnFirestoreDataLoadedListener listener) {
         db.collection(collection)
                 .whereEqualTo(targetField, targetValue)
                 .get()
@@ -114,7 +114,7 @@ public class FirestoreDatabase {
     // 콜렉션의 모든 데이터의 targetField의 값을 orderField의 값 순서대로 검색
     // 사용법은 아래에
     // String collection : 콜렉션명, String targetField : 속성명, String orderField : 정렬속성명
-    public void selectAll(String collection, String targetField, String orderField, OnDataLoadedListener listener) {
+    public void selectAll(String collection, String targetField, String orderField, OnFirestoreDataLoadedListener listener) {
         List<Object> resultList = new ArrayList<>();
 
         db.collection(collection)
@@ -160,7 +160,7 @@ public class FirestoreDatabase {
     // 콜렉션의 데이터 중 targetField 필드가 targetValue인 문서의 resultField 필드의 값을 리턴
     // 사용법은 아래에
     // String collection : 콜렉션명, String targetField : 찾을 속성명, Object targetValue : 찾는 값, String resultField : 반환할 필드명
-    public void selectOne(String collection, String targetField, Object targetValue, String resultField, OnDataLoadedListener listener) {
+    public void selectOne(String collection, String targetField, Object targetValue, String resultField, OnFirestoreDataLoadedListener listener) {
         db.collection(collection)
                 .whereEqualTo(targetField, targetValue)
                 .get()
@@ -200,7 +200,7 @@ public class FirestoreDatabase {
                     }
      */
 
-    public void login(String id, String pw, OnDataLoadedListener listener) {
+    public void login(String id, String pw, OnFirestoreDataLoadedListener listener) {
         db.collection("account")
                 .whereEqualTo("id", id)
                 .whereEqualTo("pw", pw)

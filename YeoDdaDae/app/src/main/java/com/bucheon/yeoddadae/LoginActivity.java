@@ -8,7 +8,7 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class loginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -16,10 +16,18 @@ public class loginActivity extends AppCompatActivity {
 
         FirestoreDatabase fd = new FirestoreDatabase();
 
+        Button backBtn = (Button) findViewById(R.id.loginBackBtn);
         EditText idTxt = (EditText) findViewById(R.id.loginIdTxt);
         EditText pwTxt = (EditText) findViewById(R.id.loginPwTxt);
         Button loginBtn = (Button) findViewById(R.id.loginBtn);
         Button registerBtn = (Button) findViewById(R.id.toRegisterBtn);
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View v) {
+                finish();
+            }
+        });
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -34,7 +42,7 @@ public class loginActivity extends AppCompatActivity {
                     return;
                 }
                 else {
-                    fd.login(id, pw, new OnDataLoadedListener() {
+                    fd.login(id, pw, new OnFirestoreDataLoadedListener() {
                         @Override
                         public void onDataLoaded(Object isAdmin) {
                             Intent resultIntent = new Intent();
@@ -56,7 +64,7 @@ public class loginActivity extends AppCompatActivity {
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent registerIntent = new Intent(getApplicationContext(), registerAccount.class);
+                Intent registerIntent = new Intent(getApplicationContext(), RegisterAccount.class);
                 startActivity(registerIntent);
             }
         });
