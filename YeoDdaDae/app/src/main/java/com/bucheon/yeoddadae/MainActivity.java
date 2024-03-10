@@ -1,5 +1,7 @@
 package com.bucheon.yeoddadae;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -102,6 +104,12 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        startService(serviceIntent);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -149,7 +157,6 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 Log.d("TAG", "이미 로그아웃 상태임");
             }
         }
-        startService(serviceIntent);
     }
 
     @Override
