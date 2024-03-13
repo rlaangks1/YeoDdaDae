@@ -79,6 +79,9 @@ public class SttService extends Service {
             @Override
             public void onReadyForSpeech(Bundle params) {
                 Log.d(TAG, "호출어듣기 : 준비완료");
+                if (sttCallback != null) {
+                    sttCallback.onUpdateUI("호출어듣는중");
+                }
             }
 
             @Override
@@ -163,6 +166,9 @@ public class SttService extends Service {
             @Override
             public void onReadyForSpeech(Bundle params) {
                 Log.d(TAG, "명령어듣기 : 준비완료");
+                if (sttCallback != null) {
+                    sttCallback.onUpdateUI("메인명령어듣는중");
+                }
             }
 
             @Override
@@ -230,6 +236,7 @@ public class SttService extends Service {
 
     public interface SttCallback {
         void onMainCommandReceived(String mainCommand);
+        void onUpdateUI(String message);
     }
 
     public void setSttCallback(SttCallback callback) {

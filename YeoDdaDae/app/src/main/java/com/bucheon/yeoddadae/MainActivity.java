@@ -27,6 +27,11 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         public void onMainCommandReceived(String mainCommand) {
             MainActivity.this.onMainCommandReceived(mainCommand);
         }
+
+        @Override
+        public void onUpdateUI(String message) {
+            MainActivity.this.onUpdateUI(message);
+        }
     };
 
     private SttService sttService;
@@ -51,23 +56,25 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     TextView nowIdTxt;
     TextView isAdminTxt;
     TextView toSttBtn;
+    TextView sttStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        serviceIntent = new Intent(this, SttService.class);
-        startService(serviceIntent);
-        bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-
         toLoginBtn = findViewById(R.id.toLoginBtn);
         nowIdTxt = findViewById(R.id.nowId);
         isAdminTxt = findViewById(R.id.isAdmin);
         toSttBtn = findViewById(R.id.toSttBtn);
+        sttStatus = findViewById(R.id.sttStatus);
 
         nowIdTxt.setText(loginId);
         isAdminTxt.setText(Boolean.toString(isAdmin));
+
+        serviceIntent = new Intent(this, SttService.class);
+        startService(serviceIntent);
+        bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
         toLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,6 +164,16 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 Log.d("TAG", "이미 로그아웃 상태임");
             }
         }
+    }
+
+    @Override
+    public void onUpdateUI(String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                sttStatus.setText(message);
+            }
+        });
     }
 
     @Override
