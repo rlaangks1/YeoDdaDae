@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     TextView isAdminTxt;
     TextView toSttBtn;
     TextView sttStatus;
+    Button mapBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         isAdminTxt = findViewById(R.id.isAdmin);
         toSttBtn = findViewById(R.id.toSttBtn);
         sttStatus = findViewById(R.id.sttStatus);
+        mapBtn = findViewById(R.id.mapBtn);
 
         nowIdTxt.setText(loginId);
         isAdminTxt.setText(Boolean.toString(isAdmin));
@@ -100,6 +102,14 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 if (sttService != null) {
                     sttService.startListeningForMainCommand();
                 }
+            }
+        });
+
+        mapBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mapIntent = new Intent(getApplicationContext(), MapActivity.class);
+                startActivity(mapIntent);
             }
         });
     }

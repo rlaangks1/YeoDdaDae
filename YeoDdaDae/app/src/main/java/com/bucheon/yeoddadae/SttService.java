@@ -101,7 +101,6 @@ public class SttService extends Service {
                         Log.d(TAG, "호출어듣기 : 호출어확인성공");
                         isListeningForWakeUpWord = false;  // 플래그를 false로 설정
                         listenForMainCommand();
-
                     }
                     else {
                         Log.d(TAG, "호출어듣기 : 호출어가아님");
@@ -192,9 +191,11 @@ public class SttService extends Service {
                 }
 
                 // 메인 명령을 처리한 후, 플래그에 따라 웨이크업 워드를 계속 듣을지 결정합니다.
+                /*
                 if (isListeningForWakeUpWord) {
                     listenForWakeUpWord();
                 }
+                */
             }
 
             @Override
@@ -203,16 +204,12 @@ public class SttService extends Service {
                     case SpeechRecognizer.ERROR_NO_MATCH:
                         // 음성을 인식하지 못했을 때의 처리를 여기에 추가
                         Log.d(TAG, "명령어듣기 : 음성을 인식하지 못했습니다");
-                        if (isListeningForWakeUpWord) {
-                            listenForWakeUpWord();
-                        }
+                        listenForWakeUpWord();
                         break;
                     case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
                         // 음성 입력이 타임아웃 되었을 때의 처리를 여기에 추가
                         Log.d(TAG, "명령어듣기 : 타임아웃");
-                        if (isListeningForWakeUpWord) {
-                            listenForWakeUpWord();
-                        }
+                        listenForWakeUpWord();
                         break;
                     // 다른 오류 코드에 대한 처리를 추가할 수 있습니다.
                     default:
