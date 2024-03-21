@@ -53,14 +53,21 @@
         app:layout_constraintTop_toBottomOf="@id/isAdmin" />
 
     <TextView
-        android:id="@+id/stt"
-        android:text="temptemp"
+        android:id="@+id/sttStatus"
+        android:text="sttStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toSttBtn" />
 
-
+    <Button
+        android:id="@+id/mapBtn"
+        android:text="mapBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sttStatus" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
