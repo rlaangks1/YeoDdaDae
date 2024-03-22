@@ -51,10 +51,24 @@ public class GasStationAdapter extends BaseAdapter {
 
         gasStationName.setText(gasStation.getName());
         gasStationDistance.setText(gasStation.getDistance());
-        gasStationOilPrice.setText(gasStation.getGasolinePrice() + gasStation.getDieselPrice());
+        gasStationOilPrice.setText(gasStation.getGasolinePrice() + ", " + gasStation.getDieselPrice());
         gasStationAddition.setText("세차(수정)");
         gasStationStarRate.setText(Integer.toString(gasStation.getStarRate()));
-        gasStationPhone.setText(gasStation.getPhone());
+
+        String originalPhoneString = gasStation.getPhone();
+        String newPhoneString = "";
+
+        if (originalPhoneString.length() == 10) {
+            newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 6) + "-" + originalPhoneString.substring(6);
+        }
+        else if (originalPhoneString.length() == 11) {
+            newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 7) + "-" + originalPhoneString.substring(7);
+        }
+        else {
+            newPhoneString = originalPhoneString;
+        }
+
+        gasStationPhone.setText(newPhoneString);
 
         return convertView;
     }

@@ -17,22 +17,41 @@
             android:id="@+id/linearLayoutTmap"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal" />
+            android:orientation="horizontal" >
+        </LinearLayout>
 
         <ListView
             android:id="@+id/gasStationListView"
             android:layout_width="match_parent"
-            android:layout_height="450dp"
+            android:layout_height="320dp"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"/>
 
-        <Button
-            android:id="@+id/gpsBtn"
-            android:text="버튼"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"/>
+            android:layout_gravity="bottom|right" >
+
+            <Button
+                android:id="@+id/gpsBtn"
+                android:text="GPS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+            <Button
+                android:id="@+id/tempBtn"
+                android:text="버튼"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/gpsBtn"
+                app:layout_constraintRight_toRightOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
