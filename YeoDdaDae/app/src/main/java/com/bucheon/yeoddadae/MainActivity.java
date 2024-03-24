@@ -1,7 +1,5 @@
 package com.bucheon.yeoddadae;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -57,8 +55,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     TextView isAdminTxt;
     TextView toSttBtn;
     TextView sttStatus;
-    Button toMapBtn;
-    Button toNaviBtn;
+    Button toFindGasStationBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +67,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         isAdminTxt = findViewById(R.id.isAdmin);
         toSttBtn = findViewById(R.id.toSttBtn);
         sttStatus = findViewById(R.id.sttStatus);
-        toMapBtn = findViewById(R.id.toMapBtn);
-        toNaviBtn = findViewById(R.id.toNaviBtn);
+        toFindGasStationBtn = findViewById(R.id.toFindGasStationBtn);
 
         nowIdTxt.setText(loginId);
         isAdminTxt.setText(Boolean.toString(isAdmin));
@@ -107,18 +103,11 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             }
         });
 
-        toMapBtn.setOnClickListener(new View.OnClickListener() {
+        toFindGasStationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent mapIntent = new Intent(getApplicationContext(), MapActivity.class);
-                startActivity(mapIntent);
-            }
-        });
-
-        toNaviBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent naviIntent = new Intent(getApplicationContext(), NaviActivity.class);
+                Intent naviIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                naviIntent.putExtra("sttSort", 1);
                 startActivity(naviIntent);
             }
         });
@@ -167,7 +156,8 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             } else {
                 Log.d("TAG", "이미 로그인 상태임");
             }
-        } else if (mainCommand.contains("로그아웃")) {
+        }
+        else if (mainCommand.contains("로그아웃")) {
             if (loginId != null) {
                 loginId = null;
                 isAdmin = false;
@@ -180,10 +170,40 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 isAdminTxt.setText(Boolean.toString(isAdmin));
 
                 toLoginBtn.setText("로그인");
-            } else {
+            }
+            else {
                 Log.d("TAG", "이미 로그아웃 상태임");
             }
         }
+        // 사투리도 처리????
+        else if (mainCommand.contains("주유소")) {
+            if (mainCommand.contains("가까") || mainCommand.contains("가깝") || mainCommand.contains("근접") || mainCommand.contains("인접") || mainCommand.contains("거리")) {
+                Intent naviIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                naviIntent.putExtra("sttSort", 1);
+                startActivity(naviIntent);
+            }
+            else if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
+                Intent naviIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                naviIntent.putExtra("sttSort", 2);
+                startActivity(naviIntent);
+            }
+            else if (mainCommand.contains("휘발") || mainCommand.contains("가솔린")) {
+                Intent naviIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                naviIntent.putExtra("sttSort", 3);
+                startActivity(naviIntent);
+            }
+            else if (mainCommand.contains("경유") || mainCommand.contains("디젤")) {
+                Intent naviIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                naviIntent.putExtra("sttSort", 4);
+                startActivity(naviIntent);
+            }
+            else if (mainCommand.contains("LPG") || mainCommand.contains("엘피지")) {
+                Intent naviIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                naviIntent.putExtra("sttSort", 5);
+                startActivity(naviIntent);
+            }
+        }
+        else {}
     }
 
     @Override
