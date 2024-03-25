@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,16 +22,19 @@ import android.widget.ListView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.skt.Tmap.TMapCircle;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapGpsManager;
 import com.skt.Tmap.TMapMarkerItem;
+import com.skt.Tmap.TMapMarkerItem2;
 import com.skt.Tmap.TMapPoint;
+import com.skt.Tmap.TMapPolyLine;
 import com.skt.Tmap.TMapView;
 import com.skt.Tmap.poi_item.TMapPOIItem;
 
 import java.util.ArrayList;
 
-public class FindGasStationActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback {
+public class FindGasStationActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback, TMapView.OnClickListenerCallback {
 
     int sttSort;
 
@@ -59,7 +63,9 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     TMapGpsManager gpsManager;
     boolean firstOnLocationChangeCalled = false;
     TMapView tMapView;
+    TMapCircle tMapCircle;
     TMapData tMapData;
+    TMapMarkerItem selectedMarker;
     GasStationAdapter gasStationAdapter;
 
     @Override
@@ -99,10 +105,12 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         // GPSManager 설정
         gpsManager = new TMapGpsManager(this);
         gpsManager.setMinTime(1000);
-        gpsManager.setMinDistance(5);
+        gpsManager.setMinDistance(1);
         gpsManager.setProvider(gpsManager.GPS_PROVIDER);
         gpsManager.OpenGps();
-
+        gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
+        gpsManager.OpenGps();
+        
         // TMapView 보이기
         LinearLayout linearLayoutTmap = (LinearLayout)findViewById(R.id.linearLayoutTmap);
         tMapView = new TMapView(this);
@@ -116,12 +124,15 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         tMapView.setIconVisibility(true);
         tMapView.setSightVisible(true);
 
-        gasStationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        // TMapCircle 설정
+        tMapCircle = new TMapCircle();
+        tMapCircle.setRadius(3000);
+        tMapCircle.setCircleWidth(0);
+        tMapCircle.setAreaColor(Color.rgb(0, 0, 0));
+        tMapCircle.setAreaAlpha(25);
 
-            }
-        });
+        // TMapCircle 추가
+        tMapView.addTMapCircle("Circle", tMapCircle);
 
         // GPS 현재 위치로 맵 중심점 이동
         gpsBtn.setOnClickListener(new View.OnClickListener() {
@@ -205,10 +216,29 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                 // 클릭한 gasStation의 정보를 가져옵니다.
                 GasStationItem clickedGasStation = (GasStationItem) parent.getItemAtPosition(position);
 
-                Log.d(TAG, "주유소 아이템 클릭함 : " + clickedGasStation.getName() + ", " + clickedGasStation.getRadius() + ", " + clickedGasStation.getGasolinePrice()
+                Log.d(TAG, "리스트뷰에서 주유소 아이템 클릭함 : " + clickedGasStation.getName() + ", " + clickedGasStation.getRadius() + ", " + clickedGasStation.getGasolinePrice()
                         + ", " +  clickedGasStation.getDieselPrice() + ", " + clickedGasStation.getLpgPrice() + ", " + clickedGasStation.getPhone() + ", " + clickedGasStation.getAddition()
                         + ", " + clickedGasStation.getStarRate() + ", " + clickedGasStation.getLat() + ", " + clickedGasStation.getLon());
 
+                TMapData tmapdata = new TMapData();
+                TMapPoint end = new TMapPoint (clickedGasStation.getLat(), clickedGasStation.getLon());
+                tmapdata.findPathData(nowPoint, end, new TMapData.FindPathDataListenerCallback() {
+                    @Override
+                    public void onFindPathData(TMapPolyLine polyLine) {
+                        if (selectedMarker != null) {
+                            selectedMarker.setIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),R.drawable.temp_tmap_marker));
+                        }
+
+                        tMapView.setTMapPathIcon(null, null);
+
+                        TMapMarkerItem endMarker = tMapView.getMarkerItemFromID(clickedGasStation.getName());
+                        endMarker.setIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),R.drawable.temp_tmap_selected_marker));
+
+                        selectedMarker = endMarker;
+
+                        tMapView.addTMapPath(polyLine);
+                    }
+                });
             }
         });
     }
@@ -254,7 +284,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                             tItem.setName(item.name);
                             tItem.setVisible(TMapMarkerItem.VISIBLE);
 
-                            Bitmap bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(),R.drawable.temp_tamp_marker);
+                            Bitmap bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(),R.drawable.temp_tmap_marker);
                             tItem.setIcon(bitmap);
 
                             tItem.setPosition(0.5f,1.0f); // 마커의 중심점을 하단, 중앙으로 설정
@@ -314,6 +344,11 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                         sortByGasolinePriceBtn.setVisibility(View.VISIBLE);
                         sortByDieselPriceBtn.setVisibility(View.VISIBLE);
                         sortByLpgPriceBtn.setVisibility(View.VISIBLE);
+
+                        tMapView.removeAllTMapCircle();
+
+                        tMapCircle.setCenterPoint( nowPoint );
+                        tMapView.addTMapCircle("Circle", tMapCircle);
                     }
                 });
             }
@@ -351,5 +386,39 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         Log.d(TAG, "로딩 끝");
         loadingAlert.dismiss();
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    @Override
+    public boolean onPressEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
+        if (arrayList.size() > 0) {
+            TMapMarkerItem endMarker = arrayList.get(0);
+            TMapData tmapdata = new TMapData();
+            TMapPoint endPoint = endMarker.getTMapPoint();
+
+            Log.d(TAG, "TMapView에서 주유소 마커 클릭함 : " + endMarker.getName() + ", " + endPoint.getLatitude() + ", " + endPoint.getLongitude());
+
+            tmapdata.findPathData(nowPoint, endPoint, new TMapData.FindPathDataListenerCallback() {
+                @Override
+                public void onFindPathData(TMapPolyLine polyLine) {
+                    if (selectedMarker != null) {
+                        selectedMarker.setIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),R.drawable.temp_tmap_marker));
+                    }
+
+                    tMapView.setTMapPathIcon(null, null);
+
+                    endMarker.setIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),R.drawable.temp_tmap_selected_marker));
+
+                    selectedMarker = endMarker;
+
+                    tMapView.addTMapPath(polyLine);
+                }
+            });
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onPressUpEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
+        return false;
     }
 }
