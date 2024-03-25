@@ -76,8 +76,8 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     private static String DEVICE_KEY = "";
 
     TMapPoint nowPoint = new TMapPoint(lat, lon);
-    TMapPoint naviStartPoint;
     TMapPoint naviEndPoint;
+    String naviEndPointName;
     TMapGpsManager gpsManager;
     TMapView tMapView;
     TMapCircle tMapCircle;
@@ -152,11 +152,12 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         gpsManager.setMinDistance(1); // m단위
         gpsManager.setProvider(gpsManager.GPS_PROVIDER);
         gpsManager.OpenGps();
-
+        // 가상머신 말고 실제 기기에선 필요
+        /*
         gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
         gpsManager.OpenGps();
+        */
 
-        
         // TMapView 보이기
         LinearLayout linearLayoutTmap = (LinearLayout)findViewById(R.id.linearLayoutTmap);
         tMapView = new TMapView(this);
@@ -272,13 +273,13 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                 tempGasStationAdapter.addItem(clickedGasStation);
                 gasStationListView.setAdapter(tempGasStationAdapter);
 
-                naviStartPoint = nowPoint;
                 naviEndPoint = new TMapPoint (clickedGasStation.getLat(), clickedGasStation.getLon());
+                naviEndPointName = clickedGasStation.getName();
 
                 TMapData tmapdata = new TMapData();
 
                 // 길 찾기 및 선 표시
-                tmapdata.findPathData(naviStartPoint, naviEndPoint, new TMapData.FindPathDataListenerCallback() {
+                tmapdata.findPathData(nowPoint, naviEndPoint, new TMapData.FindPathDataListenerCallback() {
                     @Override
                     public void onFindPathData(TMapPolyLine polyLine) {
                         if (selectedMarker != null) {
@@ -341,17 +342,16 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
             @Override
             public void onClick(View v) {
                 Intent naviIntent = new Intent(getApplicationContext(), NavigationActivity.class);
-                naviIntent.putExtra("startPointLat", naviStartPoint.getLatitude());
-                naviIntent.putExtra("startPointLot", naviStartPoint.getLongitude());
                 naviIntent.putExtra("endPointLat", naviEndPoint.getLatitude());
-                naviIntent.putExtra("endPointLot", naviEndPoint.getLongitude());
+                naviIntent.putExtra("endPointLon", naviEndPoint.getLongitude());
+                naviIntent.putExtra("endPointName", naviEndPointName);
                 startActivity(naviIntent);
             }
         });
 
         // 앱키 받기까지 대기
         try {
-            Thread.sleep(1500); // 0.1초간 sleep
+            Thread.sleep(1000); // 1초간 sleep
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -530,10 +530,11 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     public boolean onPressEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
         if (arrayList.size() > 0) {
             TMapMarkerItem endMarker = arrayList.get(0);
-            naviStartPoint = nowPoint;
-            naviEndPoint = endMarker.getTMapPoint();
-            TMapData tmapdata = new TMapData();
+
             GasStationItem clickedGasStation = gasStationAdapter.findItem(endMarker.getName());
+            naviEndPoint = endMarker.getTMapPoint();
+            naviEndPointName = clickedGasStation.getName();
+            TMapData tmapdata = new TMapData();
 
             Log.d(TAG, "TMapView에서 주유소 마커 클릭함 : " + endMarker.getName() + ", " + naviEndPoint.getLatitude() + ", " + naviEndPoint.getLongitude());
 
@@ -543,7 +544,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
             gasStationListView.setAdapter(tempGasStationAdapter);
 
             // 길 찾기 및 선 표시
-            tmapdata.findPathData(naviStartPoint, naviEndPoint, new TMapData.FindPathDataListenerCallback() {
+            tmapdata.findPathData(nowPoint, naviEndPoint, new TMapData.FindPathDataListenerCallback() {
                 @Override
                 public void onFindPathData(TMapPolyLine polyLine) {
                     if (selectedMarker != null) {

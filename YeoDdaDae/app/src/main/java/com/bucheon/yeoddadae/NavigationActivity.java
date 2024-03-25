@@ -53,16 +53,14 @@ import java.util.HashMap;
 import java.util.List;
 
 public class NavigationActivity extends AppCompatActivity {
-    
-    double startPointLat;
-    double startPointLot;
+
     double endPointLat;
-    double endPointLot;
+    double endPointLon;
+    String endPointName;
 
     // 경복궁
     double lat = 37.578611; // 위도
     double lon = 126.977222; // 경도
-
 
     private final static String CLIENT_ID = "";
     private final static String API_KEY = "iqTSQ2hMuj8E7t2sy3WYA5m73LuX4iUD5iHgwRGf"; //발급받은 KEY
@@ -87,13 +85,12 @@ public class NavigationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_navigation);
 
         Intent inIntent = getIntent();
-        startPointLat = inIntent.getDoubleExtra("startPointLat", 0);
-        startPointLot = inIntent.getDoubleExtra("startPointLot", 0);
         endPointLat = inIntent.getDoubleExtra("endPointLat", 0);
-        endPointLot = inIntent.getDoubleExtra("endPointLot", 0);
+        endPointLon = inIntent.getDoubleExtra("endPointLon", 0);
+        endPointName = inIntent.getStringExtra("endPointName");
 
-        if (startPointLat == 0 || startPointLot == 0 || endPointLat == 0 || endPointLot == 0) {
-            Log.d(TAG, "startPointLat, startPointLot, endPointLat, endPointLot가 0임 (오류)");
+        if (endPointLat == 0 || endPointLon == 0 || endPointName == "") {
+            Log.d(TAG, "endPointLat, endPointLot, endPointName 값 중 하나 이상 문제 (오류)");
             finish();
         }
 
@@ -524,7 +521,7 @@ public class NavigationActivity extends AppCompatActivity {
         WayPoint startPoint = new WayPoint(currentName, new MapPoint(currentLocation.getLongitude(), currentLocation.getLatitude()));
 
         //목적지
-        WayPoint endPoint = new WayPoint("강남역", new MapPoint(127.027813, 37.497999));
+        WayPoint endPoint = new WayPoint(endPointName, new MapPoint(endPointLon, endPointLat));
 
         navigationFragment.setCarOption(carOption);
 
@@ -579,7 +576,7 @@ public class NavigationActivity extends AppCompatActivity {
         passList.add(pass3);
 
         //목적지
-        WayPoint endPoint = new WayPoint("강남역", new MapPoint(127.027813, 37.497999), "280181", (byte) 5);
+        WayPoint endPoint = new WayPoint(endPointName, new MapPoint(endPointLon, endPointLat));
 
 
         navigationFragment.setCarOption(carOption);
@@ -627,7 +624,7 @@ public class NavigationActivity extends AppCompatActivity {
         WayPoint startPoint = new WayPoint(currentName, new MapPoint(currentLocation.getLongitude(), currentLocation.getLatitude()));
 
         //목적지
-        WayPoint endPoint = new WayPoint("강남역", new MapPoint(127.027813, 37.497999), "280181", (byte) 5);
+        WayPoint endPoint = new WayPoint(endPointName, new MapPoint(endPointLon, endPointLat));
 
         navigationFragment.setCarOption(carOption);
 
@@ -670,7 +667,7 @@ public class NavigationActivity extends AppCompatActivity {
         WayPoint startPoint = new WayPoint(currentName, new MapPoint(currentLocation.getLongitude(), currentLocation.getLatitude()));
 
         //목적지
-        WayPoint endPoint = new WayPoint("강남역", new MapPoint(127.027813, 37.497999), "280181", (byte) 5);
+        WayPoint endPoint = new WayPoint(endPointName, new MapPoint(endPointLon, endPointLat));
 
         navigationFragment.setCarOption(carOption);
 
