@@ -1,3 +1,36 @@
 <resources>
-    <string name="app_name">YeoDdaDae</string>
+    <string name="app_name">Eoddadae</string>
+    <string name="new_start">주차의 새로운 시작</string>
+    <string name="already_user">가입된 회원이십니까?</string>
+    <string name="login">로그인</string>
+    <string name="membership">회원이 아니십니까?</string>
+    <string name="join_membership1">회원가입</string>
+    <string name="join_membership2">회원가입</string>
+    <string name="id1">아이디</string>
+    <string name="pw1">비밀번호</string>
+    <string name="pw_check">비밀번호 확인</string>
+    <string name="email1">이메일</string>
+    <string name="all_agree">약관 전체 동의</string>
+    <string name="personal_information">개인정보 수집 동의(필수)</string>
+    <string name="read">읽어보기</string>
+    <string name="ad_agree">광고 이용 동의(선택)</string>
+    <string name="login2">로그인</string>
+    <string name="info_change">회원정보수정</string>
+    <string name="find_parkin">주차장 찾기\n Find parking lot</string>
+    <string name="find_gas_st">주유소 찾기\n Find gas station</string>
+    <string name="car_booking">주차장 예약\n Car booking</string>
+    <string name="microphone">음성을\n 인식해주세요</string>
+    <string name="mybooking">나의 예약</string>
+    <string name="ticket">정기권구매</string>
+    <string name="car_register">주차장등록</string>
+    <string name="info">서비스안내</string>
+    <string name="customer_service">고객센터</string>
+    <string name="mybooking2">나의예약</string>
+    <string name="ticket2">정기권 구매</string>
+    <string name="mybookcheck">예약 자세히 보기</string>
+    <string name="info2">서비스안내</string>
+    <string name="info_listitem">안내사항 및 안내질문 게시글</string>
+    <string name="customer_service2">고객센터</string>
+    <string name="manager_info1">관리자 정보</string>
+    <string name="manager_info2">성명\n\n나이\n\n사업연혁</string>
 </resources>
