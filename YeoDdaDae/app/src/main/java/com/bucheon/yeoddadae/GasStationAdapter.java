@@ -21,6 +21,15 @@ public class GasStationAdapter extends BaseAdapter {
         items.add(item);
     }
 
+    public GasStationItem findItem(String gasStationItemName) {
+        for (GasStationItem item : items) {
+            if (item.getName().equals(gasStationItemName)) {
+                return item;
+            }
+        }
+        return null; // 못 찾은 경우 null 반환
+    }
+
     public void sortByRate () {
         if (items != null && items.size() > 1) {
             Collections.sort(items, new Comparator<GasStationItem>() {

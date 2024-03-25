@@ -25,6 +25,7 @@
         <activity android:name=".LoginActivity"/>
         <activity android:name=".RegisterAccount"/>
         <activity android:name=".FindGasStationActivity"/>
+        <activity android:name=".NavigationActivity"/>
         <service
             android:name=".SttService"
             android:enabled="true"

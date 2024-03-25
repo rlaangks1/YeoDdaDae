@@ -34,6 +34,7 @@
                 android:layout_marginRight="10dp"/>
             
             <HorizontalScrollView
+                android:id="@+id/gasStationSortHorizontalScrollView"
                 android:scrollbars="none"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -80,6 +81,24 @@
                         android:layout_marginLeft="5dp" />
                 </LinearLayout>
             </HorizontalScrollView>
+            <Button
+                android:id="@+id/cancelNaviBtn"
+                android:text="뒤로가기"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/gasStationListView"
+                app:layout_constraintLeft_toLeftOf="@id/gasStationListView"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/toStartNaviBtn"
+                android:text="네비게이션시작"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/gasStationListView"
+                app:layout_constraintRight_toRightOf="@id/gasStationListView"
+                android:visibility="gone"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout

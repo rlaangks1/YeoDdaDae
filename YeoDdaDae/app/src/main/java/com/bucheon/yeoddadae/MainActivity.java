@@ -106,9 +106,9 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         toFindGasStationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent naviIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                naviIntent.putExtra("sttSort", 1);
-                startActivity(naviIntent);
+                Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                findGasStationIntent.putExtra("sttSort", 1);
+                startActivity(findGasStationIntent);
             }
         });
     }
@@ -143,8 +143,6 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         startService(serviceIntent);
     }
 
-
-
     @Override
     public void onMainCommandReceived(String mainCommand) {
         Log.d("TAG", "MainActivity에서 받은 명령: " + mainCommand);
@@ -178,29 +176,29 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         // 사투리도 처리????
         else if (mainCommand.contains("주유소")) {
             if (mainCommand.contains("가까") || mainCommand.contains("가깝") || mainCommand.contains("근접") || mainCommand.contains("인접") || mainCommand.contains("거리")) {
-                Intent naviIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                naviIntent.putExtra("sttSort", 1);
-                startActivity(naviIntent);
+                Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                findGasStationIntent.putExtra("sttSort", 1);
+                startActivity(findGasStationIntent);
             }
             else if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
-                Intent naviIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                naviIntent.putExtra("sttSort", 2);
-                startActivity(naviIntent);
+                Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                findGasStationIntent.putExtra("sttSort", 2);
+                startActivity(findGasStationIntent);
             }
             else if (mainCommand.contains("휘발") || mainCommand.contains("가솔린")) {
-                Intent naviIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                naviIntent.putExtra("sttSort", 3);
-                startActivity(naviIntent);
+                Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                findGasStationIntent.putExtra("sttSort", 3);
+                startActivity(findGasStationIntent);
             }
             else if (mainCommand.contains("경유") || mainCommand.contains("디젤")) {
-                Intent naviIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                naviIntent.putExtra("sttSort", 4);
-                startActivity(naviIntent);
+                Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                findGasStationIntent.putExtra("sttSort", 4);
+                startActivity(findGasStationIntent);
             }
             else if (mainCommand.contains("LPG") || mainCommand.contains("엘피지")) {
-                Intent naviIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                naviIntent.putExtra("sttSort", 5);
-                startActivity(naviIntent);
+                Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                findGasStationIntent.putExtra("sttSort", 5);
+                startActivity(findGasStationIntent);
             }
         }
         else {}
