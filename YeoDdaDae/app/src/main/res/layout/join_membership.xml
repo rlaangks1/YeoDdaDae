@@ -1,0 +1,241 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/android_lar"
+    android:layout_width="410dp"
+    android:layout_height="730dp"
+    android:clipToOutline="true"
+    android:background="#FFFFFF">
+
+    <View
+        android:id="@+id/main_image"
+        android:layout_width="99dp"
+        android:layout_height="36dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="160dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/main_image" />
+
+    <ImageButton
+        android:id="@+id/backward"
+        android:layout_width="43dp"
+        android:layout_height="42dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="362dp"
+        android:layout_marginTop="3dp"
+        android:background="@drawable/backward" />
+
+    <TextView
+        android:id="@+id/join_membership2"
+        android:layout_width="103dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="157dp"
+        android:layout_marginTop="62dp"
+        android:gravity="center"
+        android:text="@string/join_membership2"
+        android:textAppearance="@style/join_membership2" />
+
+    <ImageView
+        android:id="@+id/user_face"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="160dp"
+        android:layout_marginTop="102dp"
+        android:background="@drawable/user_face" />
+
+    <TextView
+        android:id="@+id/id1"
+        android:layout_width="42dp"
+        android:layout_height="18dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="214dp"
+        android:gravity="top"
+        android:text="@string/id1"
+        android:textAppearance="@style/id1" />
+
+    <View
+        android:id="@+id/long_line1"
+        android:layout_width="350dp"
+        android:layout_height="1dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="265dp"
+        android:background="@drawable/long_line" />
+
+    <TextView
+        android:id="@+id/pw1"
+        android:layout_width="56dp"
+        android:layout_height="18dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="281dp"
+        android:gravity="top"
+        android:text="@string/pw1"
+        android:textAppearance="@style/pw1" />
+
+    <View
+        android:id="@+id/long_line2"
+        android:layout_width="350dp"
+        android:layout_height="1dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="342dp"
+        android:background="@drawable/long_line" />
+
+    <TextView
+        android:id="@+id/pw_check"
+        android:layout_width="87dp"
+        android:layout_height="18dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="365dp"
+        android:gravity="top"
+        android:text="@string/pw_check"
+        android:textAppearance="@style/pw_check" />
+
+    <View
+        android:id="@+id/long_line3"
+        android:layout_width="350dp"
+        android:layout_height="1dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="428dp"
+        android:background="@drawable/long_line" />
+
+    <TextView
+        android:id="@+id/email1"
+        android:layout_width="42dp"
+        android:layout_height="18dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="450dp"
+        android:gravity="top"
+        android:text="@string/email1"
+        android:textAppearance="@style/email1" />
+
+    <View
+        android:id="@+id/long_line4"
+        android:layout_width="350dp"
+        android:layout_height="1dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="507dp"
+        android:background="@drawable/long_line" />
+
+    <View
+        android:id="@+id/large_rectangle"
+        android:layout_width="390dp"
+        android:layout_height="131dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="515dp"
+        android:background="@drawable/large_rectangle" />
+
+
+    <CheckBox
+        android:id="@+id/mini_rectangle1"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="11dp"
+        android:layout_marginLeft="11dp"
+        android:layout_marginTop="526dp"
+        android:background="@drawable/mini_rectangle" />
+
+    <TextView
+        android:id="@+id/all_agree"
+        android:layout_width="73dp"
+        android:layout_height="15dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="42dp"
+        android:layout_marginTop="533dp"
+        android:gravity="top"
+        android:text="@string/all_agree"
+        android:textAppearance="@style/all_agree" />
+
+    <CheckBox
+        android:id="@+id/mini_rectangle2"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="21dp"
+        android:layout_marginLeft="21dp"
+        android:layout_marginTop="561dp"
+        android:background="@drawable/mini_rectangle" />
+
+    <TextView
+        android:id="@+id/personal_information"
+        android:layout_width="126dp"
+        android:layout_height="15dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="51dp"
+        android:layout_marginTop="568dp"
+        android:gravity="top"
+        android:text="@string/personal_information"
+        android:textAppearance="@style/personal_information" />
+
+    <CheckBox
+        android:id="@+id/mini_rectangle3"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="21dp"
+        android:layout_marginLeft="21dp"
+        android:layout_marginTop="592dp"
+        android:background="@drawable/mini_rectangle" />
+
+    <TextView
+        android:id="@+id/ad_agree"
+        android:layout_width="104dp"
+        android:layout_height="15dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="52dp"
+        android:layout_marginTop="598dp"
+        android:gravity="top"
+        android:text="@string/ad_agree"
+        android:textAppearance="@style/ad_agree" />
+
+
+
+    <Button
+        android:id="@+id/btn_join_membership"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/large_rectangle"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="54dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/main"
+        android:text="회원가입"
+        android:visibility="visible">
+
+    </Button>
+
+</RelativeLayout>

@@ -1,0 +1,94 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/android_lar"
+    android:layout_width="410dp"
+    android:layout_height="730dp"
+    android:clipToOutline="true"
+    android:background="#FFFFFF">
+
+    <View
+        android:id="@+id/main_image"
+        android:layout_width="99dp"
+        android:layout_height="36dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="160dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/main_image" />
+    <View
+        android:id="@+id/user_face"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="160dp"
+        android:layout_marginTop="102dp"
+        android:background="@drawable/user_face" />
+
+    <ImageView
+        android:id="@+id/Img_backtomain"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_gravity="center"
+        android:layout_marginStart="346dp"
+        android:layout_marginBottom="260dp"
+        android:src="@drawable/backward" />
+
+    <TextView
+        android:id="@+id/info_change"
+        android:layout_width="120dp"
+        android:layout_height="24dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="151dp"
+        android:layout_marginTop="65dp"
+        android:gravity="center"
+        android:text="@string/info_change"
+        android:textAppearance="@style/info_change" />
+
+    <EditText
+        android:id="@+id/current_pw"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="130dp"
+        android:layout_marginEnd="13dp"
+        android:layout_marginBottom="477dp"
+        android:ems="10"
+        android:hint="기존 비밀번호"
+        android:inputType="textPersonName"
+        android:minHeight="48dp" />
+
+    <EditText
+        android:id="@+id/change_pw"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="130dp"
+        android:layout_marginEnd="13dp"
+        android:layout_marginBottom="423dp"
+        android:ems="10"
+        android:hint="변경할 비밀번호"
+        android:inputType="textPersonName"
+        android:minHeight="48dp" />
+
+    <Button
+        android:id="@+id/btn_change_info"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="57dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="53dp"
+        android:layout_marginBottom="356dp"
+        android:background="@color/main"
+        android:text="변경하기"
+        android:visibility="visible" />
+
+
+</RelativeLayout>

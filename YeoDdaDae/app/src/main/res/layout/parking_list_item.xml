@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:src="@drawable/ic_launcher_background" />
+        />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/parkinglot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="주차장"
+                android:layout_margin="5dp"/>
+
+            <TextView
+                android:id="@+id/price_perhour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="시간당가격"
+                android:layout_margin="5dp"/>
+
+            <TextView
+                android:id="@+id/remaining_seat_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="잔여석"
+                android:layout_margin="5dp"/>
+
+            <TextView
+                android:id="@+id/cell_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="전화번호" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>
