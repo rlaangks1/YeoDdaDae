@@ -46,6 +46,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FindGasStationActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback, TMapView.OnClickListenerCallback {
+    private static final int PERMISSION_REQUEST_CODE = 1;
+
+    boolean apiKeyCertified = false; // API KEY 인증됨 여부
+    boolean firstOnLocationChangeCalled = false; // onLocationChange가 처음 불림 여부
 
     int sttSort;
     int nowSort;
@@ -89,27 +93,15 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     TMapMarkerItem selectedMarker;
     GasStationAdapter gasStationAdapter;
 
-    boolean firstOnLocationChangeCalled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_gas_station);
 
-        // 로딩 AlertDialog 지정
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("로딩 중").setCancelable(false).setNegativeButton("액티비티 종료", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                finish();
-            }
-        });
-        loadingAlert = builder.create();
-        
         // 로딩 시작
         loadingStart();
 
-        checkPermission();
-        
         // 메인액티비티에서 정렬기준 받기
         Intent inIntent = getIntent();
         sttSort = inIntent.getIntExtra("sttSort", 0);
@@ -139,13 +131,52 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         tmapSelectedMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_selected_marker);
 
         // 로딩까지 뷰 없애기
-        gasStationListView.setVisibility(View.GONE);
-        sortByDistanceBtn.setVisibility(View.GONE);
-        sortByRateBtn.setVisibility(View.GONE);
-        sortByGasolinePriceBtn.setVisibility(View.GONE);
-        sortByDieselPriceBtn.setVisibility(View.GONE);
-        sortByLpgPriceBtn.setVisibility(View.GONE);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                gasStationListView.setVisibility(View.GONE);
+                sortByDistanceBtn.setVisibility(View.GONE);
+                sortByRateBtn.setVisibility(View.GONE);
+                sortByGasolinePriceBtn.setVisibility(View.GONE);
+                sortByDieselPriceBtn.setVisibility(View.GONE);
+                sortByLpgPriceBtn.setVisibility(View.GONE);
+            }
+        });
 
+        // 권한 확인 후 초기화
+        checkPermission();
+    }
+
+    private void checkPermission() {
+        if (checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "권한 있음");
+            init();
+        }
+        else {
+            Log.d(TAG, "권한 없음. 요청");
+            String[] permissionArr = {android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+            requestPermissions(permissionArr, PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSION_REQUEST_CODE
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "권한요청에서 허가");
+            init();
+        }
+        else {
+            Log.d (TAG, "권한요청에서 거부or문제");
+            finish();
+        }
+    }
+
+    private void init() {
         // 현재 위치 받기
         Location currentLocation = SDKManager.getInstance().getCurrentPosition();
         lat = currentLocation.getLatitude();
@@ -164,32 +195,46 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         gpsManager.OpenGps();
         */
 
-        // TMapView 보이기
-        LinearLayout linearLayoutTmap = (LinearLayout)findViewById(R.id.linearLayoutTmap);
+        // TMapView 생성 및 API Key 설정
         tMapView = new TMapView(this);
         tMapView.setSKTMapApiKey( API_KEY );
+        LinearLayout linearLayoutTmap = (LinearLayout)findViewById(R.id.linearLayoutTmap);
         linearLayoutTmap.addView( tMapView );
 
-        // TMapView 설정
+        // TMapView 초기설정
         tMapView.setCenterPoint(lon, lat);
         tMapView.setLocationPoint(lon, lat);
         tMapView.setIcon(tmapMyLocationIcon);
         tMapView.setIconVisibility(true);
         tMapView.setSightVisible(true);
 
-        // TMapCircle 설정
+        // TMapCircle 초기설정
         tMapCircle = new TMapCircle();
         tMapCircle.setRadius(3000);
         tMapCircle.setCircleWidth(0);
         tMapCircle.setAreaColor(Color.rgb(0, 0, 0));
         tMapCircle.setAreaAlpha(25);
-        
+
         // TMapCircle 추가
         tMapView.addTMapCircle("Circle", tMapCircle);
 
-        // 버튼 클릭 이벤트 리스너
-        // GPS 현재 위치로 맵 중심점 이동
-        gpsBtn.setOnClickListener(new View.OnClickListener() {
+        tMapView.setOnApiKeyListener(new TMapView.OnApiKeyListenerCallback() { // 키 인증되면
+            @Override
+            public void SKTMapApikeySucceed() { // 키인증 성공
+                Log.d(TAG, "키 인증 성공");
+                apiKeyCertified = true;
+
+                findGasStation(sttSort);
+            }
+
+            @Override
+            public void SKTMapApikeyFailed(String s) { // 키인증 실패
+                Log.d(TAG, "인증실패, " + s);
+            }
+        });
+
+        // 버튼 클릭 이벤트 리스너들
+        gpsBtn.setOnClickListener(new View.OnClickListener() { // GPS 현재 위치로 맵 중심점 이동
             @Override
             public void onClick(View v) {
                 tMapView.setCenterPoint(lon, lat);
@@ -197,8 +242,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
             }
         });
 
-        // 맵 축소
-        zoomOutBtn.setOnClickListener(new View.OnClickListener() {
+        zoomOutBtn.setOnClickListener(new View.OnClickListener() { // 맵 축소
             @Override
             public void onClick(View v) {
                 if (tMapView.getZoomLevel() >= 8 ) {
@@ -208,8 +252,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
             }
         });
 
-        // 맵 확대
-        zoomInBtn.setOnClickListener(new View.OnClickListener() {
+        zoomInBtn.setOnClickListener(new View.OnClickListener() { // 맵 확대
             @Override
             public void onClick(View v) {
                 if (tMapView.getZoomLevel() <= 17 ) {
@@ -224,7 +267,6 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
             public void onClick(View v) {
                 loadingStart();
                 findGasStation(1);
-                loadingStop();
             }
         });
 
@@ -233,7 +275,6 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
             public void onClick(View v) {
                 loadingStart();
                 findGasStation(2);
-                loadingStop();
             }
         });
 
@@ -242,7 +283,6 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
             public void onClick(View v) {
                 loadingStart();
                 findGasStation(3);
-                loadingStop();
             }
         });
 
@@ -251,7 +291,6 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
             public void onClick(View v) {
                 loadingStart();
                 findGasStation(4);
-                loadingStop();
             }
         });
 
@@ -260,7 +299,6 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
             public void onClick(View v) {
                 loadingStart();
                 findGasStation(5);
-                loadingStop();
             }
         });
 
@@ -354,10 +392,17 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                 startActivity(naviIntent);
             }
         });
+
+        // 뷰 보이기
+        gasStationListView.setVisibility(View.VISIBLE);
+        sortByDistanceBtn.setVisibility(View.VISIBLE);
+        sortByRateBtn.setVisibility(View.VISIBLE);
+        sortByGasolinePriceBtn.setVisibility(View.VISIBLE);
+        sortByDieselPriceBtn.setVisibility(View.VISIBLE);
+        sortByLpgPriceBtn.setVisibility(View.VISIBLE);
     }
 
     public void findGasStation(int sortBy) { // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:휘발유가순, 4: 경유가순, 5:LPG가순
-
         tMapView.removeAllMarkerItem();
 
         // tMapData 초기화
@@ -462,65 +507,14 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                 });
             }
         });
-
-        tMapView.setOnApiKeyListener(new TMapView.OnApiKeyListenerCallback() {
-            @Override
-            public void SKTMapApikeySucceed() {
-                findGasStation(sttSort);
-            }
-
-            @Override
-            public void SKTMapApikeyFailed(String s) {
-                Log.d(TAG, "인증실패");
-            }
-        });
-
-        gasStationListView.setVisibility(View.VISIBLE);
-        sortByDistanceBtn.setVisibility(View.VISIBLE);
-        sortByRateBtn.setVisibility(View.VISIBLE);
-        sortByGasolinePriceBtn.setVisibility(View.VISIBLE);
-        sortByDieselPriceBtn.setVisibility(View.VISIBLE);
-        sortByLpgPriceBtn.setVisibility(View.VISIBLE);
-
         loadingStop();
     }
 
-    @Override
-    public void onLocationChange(Location location){
-        Log.d(TAG, "onLocationChange 호출됨");
-
-        lat = location.getLatitude();
-        Log.d(TAG, "onLocationChange 호출됨 : lat(경도) = " + lat);
-
-        lon = location.getLongitude();
-        Log.d(TAG, "onLocationChange 호출됨 : lon(위도) = " + lon);
-
-        nowPoint = gpsManager.getLocation();
-        tMapView.setLocationPoint(lon, lat);
-
-        if (!firstOnLocationChangeCalled) {
-            findGasStation(sttSort);
-            tMapView.setCenterPoint(lon, lat);
-            firstOnLocationChangeCalled = true;
-        }
-    }
-
-    public void loadingStart() {
-        Log.d(TAG, "로딩 시작");
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        loadingAlert.show();
-    }
-
-    public void loadingStop() {
-        Log.d(TAG, "로딩 끝");
-        loadingAlert.dismiss();
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-    }
-
+    // TMapView 터치이벤트
     @Override
     public boolean onPressEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
-        if (arrayList.size() > 0) {
-            TMapMarkerItem endMarker = arrayList.get(0);
+        if (arrayList.size() > 0) { // TMapMarkerItem이 클릭됬다면
+            TMapMarkerItem endMarker = arrayList.get(0); // endMarker = 클릭한 TMapMarkerItem
 
             GasStationItem clickedGasStation = gasStationAdapter.findItem(endMarker.getName());
             naviEndPoint = endMarker.getTMapPoint();
@@ -581,29 +575,52 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         return false;
     }
 
-    private void checkPermission() {
+    @Override
+    public void onLocationChange(Location location){
+        Log.d(TAG, "onLocationChange 호출됨");
 
-        if (checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        else {
-            String[] permissionArr = {android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
-            requestPermissions(permissionArr, 100);
+        lat = location.getLatitude();
+        Log.d(TAG, "onLocationChange 호출됨 : lat(경도) = " + lat);
+
+        lon = location.getLongitude();
+        Log.d(TAG, "onLocationChange 호출됨 : lon(위도) = " + lon);
+
+        nowPoint = gpsManager.getLocation();
+        tMapView.setLocationPoint(lon, lat);
+
+        if (!firstOnLocationChangeCalled) {
+            tMapView.setCenterPoint(lon, lat);
+            findGasStation(sttSort);
+            firstOnLocationChangeCalled = true;
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    public void loadingStart() {
+        Log.d(TAG, "로딩 시작");
 
-        if (requestCode == 100
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-        }
-        else {
-            Toast.makeText(this, "위치 권한이 없음", Toast.LENGTH_SHORT).show();
-            finish();
-        }
+        // 로딩 AlertDialog 지정
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("로딩 중").setCancelable(false).setNegativeButton("액티비티 종료", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
+        loadingAlert = builder.create();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        loadingAlert.show();
+    }
+
+    public void loadingStop() {
+        Log.d(TAG, "로딩 끝");
+
+        loadingAlert.dismiss();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        
+        loadingAlert.dismiss();
     }
 }
