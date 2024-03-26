@@ -62,12 +62,21 @@
         app:layout_constraintTop_toBottomOf="@id/toSttBtn" />
 
     <Button
+        android:id="@+id/toFindParkBtn"
+        android:text="주차장찾기"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toSttBtn" />
+
+    <Button
         android:id="@+id/toFindGasStationBtn"
         android:text="주유소찾기"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sttStatus" />
+        app:layout_constraintTop_toBottomOf="@id/toFindParkBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

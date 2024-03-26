@@ -24,6 +24,7 @@
         </activity>
         <activity android:name=".LoginActivity"/>
         <activity android:name=".RegisterAccount"/>
+        <activity android:name=".FindParkActivity"/>
         <activity android:name=".FindGasStationActivity"/>
         <activity android:name=".NavigationActivity"/>
         <service

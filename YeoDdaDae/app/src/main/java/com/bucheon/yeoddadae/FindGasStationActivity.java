@@ -3,8 +3,10 @@ package com.bucheon.yeoddadae;
 
 import static android.content.ContentValues.TAG;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -22,7 +24,9 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -103,6 +107,8 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         
         // 로딩 시작
         loadingStart();
+
+        checkPermission();
         
         // 메인액티비티에서 정렬기준 받기
         Intent inIntent = getIntent();
@@ -348,27 +354,10 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                 startActivity(naviIntent);
             }
         });
-
-        // 앱키 받기까지 대기
-        try {
-            Thread.sleep(1000); // 1초간 sleep
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        findGasStation(sttSort);
-
-        gasStationListView.setVisibility(View.VISIBLE);
-        sortByDistanceBtn.setVisibility(View.VISIBLE);
-        sortByRateBtn.setVisibility(View.VISIBLE);
-        sortByGasolinePriceBtn.setVisibility(View.VISIBLE);
-        sortByDieselPriceBtn.setVisibility(View.VISIBLE);
-        sortByLpgPriceBtn.setVisibility(View.VISIBLE);
-
-        loadingStop();
     }
 
     public void findGasStation(int sortBy) { // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:휘발유가순, 4: 경유가순, 5:LPG가순
+
         tMapView.removeAllMarkerItem();
 
         // tMapData 초기화
@@ -414,18 +403,13 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                             }
                             TMapPOIItem item = arrayList.get(i);
                             gasStationAdapter.addItem(new GasStationItem(item.name, item.radius, item.hhPrice, item.ggPrice, item.llPrice, item.telNo, item.menu1, 0, item.frontLat, item.frontLon));
-
                             TMapPoint tpoint = new TMapPoint(Double.parseDouble(item.frontLat), Double.parseDouble(item.frontLon));
                             TMapMarkerItem tItem = new TMapMarkerItem();
-
                             tItem.setTMapPoint(tpoint);
                             tItem.setName(item.name);
                             tItem.setVisible(TMapMarkerItem.VISIBLE);
-
                             tItem.setIcon(tmapMarkerIcon);
-
                             tItem.setPosition(0.5f,1.0f); // 마커의 중심점을 하단, 중앙으로 설정
-
                             tMapView.addMarkerItem(item.name, tItem);
                         }
                         switch (sortBy) {
@@ -436,62 +420,69 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                                 sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
                                 break;
-                            case 2 :
-                                sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByRateBtn.setBackgroundColor(selectedBackgroundColor);
-                                sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
-
-                                gasStationAdapter.sortByRate();
-                                break;
-                            case 3 :
-                                sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByRateBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByGasolinePriceBtn.setBackgroundColor(selectedBackgroundColor);
-                                sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
-
-                                gasStationAdapter.sortByGasolinePrice();
-                                break;
-                            case 4 :
-                                sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByRateBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByDieselPriceBtn.setBackgroundColor(selectedBackgroundColor);
-                                sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
-
-                                gasStationAdapter.sortByDieselPrice();
-                                break;
-                            case 5 :
-                                sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByRateBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByLpgPriceBtn.setBackgroundColor(selectedBackgroundColor);
-
-                                gasStationAdapter.sortByLpgPrice();
-                                break;
+                                case 2 :
+                                    sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
+                                    sortByRateBtn.setBackgroundColor(selectedBackgroundColor);
+                                    sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
+                                    sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
+                                    sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
+                                    gasStationAdapter.sortByRate();
+                                    break; case 3 : sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
+                                    sortByRateBtn.setBackgroundColor(originalBackgroundColor);
+                                    sortByGasolinePriceBtn.setBackgroundColor(selectedBackgroundColor);
+                                    sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
+                                    sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
+                                    gasStationAdapter.sortByGasolinePrice();
+                                    break; case 4 : sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
+                                    sortByRateBtn.setBackgroundColor(originalBackgroundColor);
+                                    sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
+                                    sortByDieselPriceBtn.setBackgroundColor(selectedBackgroundColor);
+                                    sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
+                                    gasStationAdapter.sortByDieselPrice();
+                                    break; case 5 : sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
+                                    sortByRateBtn.setBackgroundColor(originalBackgroundColor);
+                                    sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
+                                    sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
+                                    sortByLpgPriceBtn.setBackgroundColor(selectedBackgroundColor);
+                                    gasStationAdapter.sortByLpgPrice();
+                                    break;
                         }
                         gasStationListView.setAdapter(gasStationAdapter);
-
                         gasStationListView.setVisibility(View.VISIBLE);
                         sortByDistanceBtn.setVisibility(View.VISIBLE);
                         sortByRateBtn.setVisibility(View.VISIBLE);
                         sortByGasolinePriceBtn.setVisibility(View.VISIBLE);
                         sortByDieselPriceBtn.setVisibility(View.VISIBLE);
                         sortByLpgPriceBtn.setVisibility(View.VISIBLE);
-
                         nowSort = sortBy;
-
                         tMapView.removeAllTMapCircle();
-
                         tMapCircle.setCenterPoint( nowPoint );
                         tMapView.addTMapCircle("Circle", tMapCircle);
                     }
                 });
             }
         });
+
+        tMapView.setOnApiKeyListener(new TMapView.OnApiKeyListenerCallback() {
+            @Override
+            public void SKTMapApikeySucceed() {
+                findGasStation(sttSort);
+            }
+
+            @Override
+            public void SKTMapApikeyFailed(String s) {
+                Log.d(TAG, "인증실패");
+            }
+        });
+
+        gasStationListView.setVisibility(View.VISIBLE);
+        sortByDistanceBtn.setVisibility(View.VISIBLE);
+        sortByRateBtn.setVisibility(View.VISIBLE);
+        sortByGasolinePriceBtn.setVisibility(View.VISIBLE);
+        sortByDieselPriceBtn.setVisibility(View.VISIBLE);
+        sortByLpgPriceBtn.setVisibility(View.VISIBLE);
+
+        loadingStop();
     }
 
     @Override
@@ -588,5 +579,31 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     @Override
     public boolean onPressUpEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
         return false;
+    }
+
+    private void checkPermission() {
+
+        if (checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        else {
+            String[] permissionArr = {android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+            requestPermissions(permissionArr, 100);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 100
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+        }
+        else {
+            Toast.makeText(this, "위치 권한이 없음", Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 }

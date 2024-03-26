@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     TextView isAdminTxt;
     TextView toSttBtn;
     TextView sttStatus;
+    Button toFindParkBtn;
     Button toFindGasStationBtn;
 
     @Override
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         isAdminTxt = findViewById(R.id.isAdmin);
         toSttBtn = findViewById(R.id.toSttBtn);
         sttStatus = findViewById(R.id.sttStatus);
+        toFindParkBtn = findViewById(R.id.toFindParkBtn);
         toFindGasStationBtn = findViewById(R.id.toFindGasStationBtn);
 
         nowIdTxt.setText(loginId);
@@ -100,6 +102,15 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 if (sttService != null) {
                     sttService.startListeningForMainCommand();
                 }
+            }
+        });
+
+        toFindParkBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent findParkIntent = new Intent(getApplicationContext(), FindParkActivity.class);
+                findParkIntent.putExtra("sttSort", 1);
+                startActivity(findParkIntent);
             }
         });
 
