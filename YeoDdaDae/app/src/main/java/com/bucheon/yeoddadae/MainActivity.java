@@ -1,5 +1,7 @@
 package com.bucheon.yeoddadae;
 
+import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -13,12 +15,20 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.skt.Tmap.TMapView;
+
 public class MainActivity extends AppCompatActivity implements SttService.SttCallback {
+
+    final int loginIntentRequestCode = 1;
+
+    boolean apiKeyCertified;
 
     String loginId = null;
     boolean isAdmin = false;
 
     private Intent serviceIntent;
+
+    private SttService sttService;
 
     private SttService.SttCallback sttCallback = new SttService.SttCallback() {
         @Override
@@ -31,8 +41,6 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             MainActivity.this.onUpdateUI(message);
         }
     };
-
-    private SttService sttService;
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -48,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         }
     };
 
-    final int loginIntentRequestCode = 1;
+    private static String API_KEY = "iqTSQ2hMuj8E7t2sy3WYA5m73LuX4iUD5iHgwRGf";
 
     Button toLoginBtn;
     TextView nowIdTxt;
@@ -70,6 +78,22 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         sttStatus = findViewById(R.id.sttStatus);
         toFindParkBtn = findViewById(R.id.toFindParkBtn);
         toFindGasStationBtn = findViewById(R.id.toFindGasStationBtn);
+
+        TMapView tMapView = new TMapView(this);
+        tMapView.setSKTMapApiKey(API_KEY);
+        tMapView.setOnApiKeyListener(new TMapView.OnApiKeyListenerCallback() {
+            @Override
+            public void SKTMapApikeySucceed() {
+                Log.d(TAG, "키 인증 성공");
+                apiKeyCertified = true;
+            }
+
+            @Override
+            public void SKTMapApikeyFailed(String s) {
+                Log.d(TAG, "키 인증 실패");
+                apiKeyCertified = false;
+            }
+        });
 
         nowIdTxt.setText(loginId);
         isAdminTxt.setText(Boolean.toString(isAdmin));
@@ -108,18 +132,28 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         toFindParkBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent findParkIntent = new Intent(getApplicationContext(), FindParkActivity.class);
-                findParkIntent.putExtra("sttSort", 1);
-                startActivity(findParkIntent);
+                if (apiKeyCertified) {
+                    Intent findParkIntent = new Intent(getApplicationContext(), FindParkActivity.class);
+                    findParkIntent.putExtra("SortBy", 1);
+                    startActivity(findParkIntent);
+                }
+                else {
+                    Log.d(TAG, "인증되지 않아 액티비티 start 할 수 없음");
+                }
             }
         });
 
         toFindGasStationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                findGasStationIntent.putExtra("sttSort", 1);
-                startActivity(findGasStationIntent);
+                if (apiKeyCertified) {
+                    Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                    findGasStationIntent.putExtra("SortBy", 1);
+                    startActivity(findGasStationIntent);
+                }
+                else {
+                    Log.d(TAG, "인증되지 않아 액티비티 start 할 수 없음");
+                }
             }
         });
     }
@@ -188,27 +222,27 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         else if (mainCommand.contains("주유소")) {
             if (mainCommand.contains("가까") || mainCommand.contains("가깝") || mainCommand.contains("근접") || mainCommand.contains("인접") || mainCommand.contains("거리")) {
                 Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                findGasStationIntent.putExtra("sttSort", 1);
+                findGasStationIntent.putExtra("SortBy", 1);
                 startActivity(findGasStationIntent);
             }
             else if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
                 Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                findGasStationIntent.putExtra("sttSort", 2);
+                findGasStationIntent.putExtra("SortBy", 2);
                 startActivity(findGasStationIntent);
             }
             else if (mainCommand.contains("휘발") || mainCommand.contains("가솔린")) {
                 Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                findGasStationIntent.putExtra("sttSort", 3);
+                findGasStationIntent.putExtra("SortBy", 3);
                 startActivity(findGasStationIntent);
             }
             else if (mainCommand.contains("경유") || mainCommand.contains("디젤")) {
                 Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                findGasStationIntent.putExtra("sttSort", 4);
+                findGasStationIntent.putExtra("SortBy", 4);
                 startActivity(findGasStationIntent);
             }
             else if (mainCommand.contains("LPG") || mainCommand.contains("엘피지")) {
                 Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                findGasStationIntent.putExtra("sttSort", 5);
+                findGasStationIntent.putExtra("SortBy", 5);
                 startActivity(findGasStationIntent);
             }
         }

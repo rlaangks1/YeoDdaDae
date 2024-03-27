@@ -48,10 +48,9 @@ import java.util.HashMap;
 public class FindGasStationActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback, TMapView.OnClickListenerCallback {
     private static final int PERMISSION_REQUEST_CODE = 1;
 
-    boolean apiKeyCertified = false; // API KEY 인증됨 여부
     boolean firstOnLocationChangeCalled = false; // onLocationChange가 처음 불림 여부
 
-    int sttSort;
+    int recievedSort;
     int nowSort;
 
     ListView gasStationListView;
@@ -104,8 +103,8 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
 
         // 메인액티비티에서 정렬기준 받기
         Intent inIntent = getIntent();
-        sttSort = inIntent.getIntExtra("sttSort", 0);
-        if (sttSort == 0) {
+        recievedSort = inIntent.getIntExtra("SortBy", 0);
+        if (recievedSort == 0) {
             Log.d(TAG, "sttSort가 0임 (오류)");
             finish();
         }
@@ -197,7 +196,6 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
 
         // TMapView 생성 및 API Key 설정
         tMapView = new TMapView(this);
-        tMapView.setSKTMapApiKey( API_KEY );
         LinearLayout linearLayoutTmap = (LinearLayout)findViewById(R.id.linearLayoutTmap);
         linearLayoutTmap.addView( tMapView );
 
@@ -218,20 +216,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         // TMapCircle 추가
         tMapView.addTMapCircle("Circle", tMapCircle);
 
-        tMapView.setOnApiKeyListener(new TMapView.OnApiKeyListenerCallback() { // 키 인증되면
-            @Override
-            public void SKTMapApikeySucceed() { // 키인증 성공
-                Log.d(TAG, "키 인증 성공");
-                apiKeyCertified = true;
-
-                findGasStation(sttSort);
-            }
-
-            @Override
-            public void SKTMapApikeyFailed(String s) { // 키인증 실패
-                Log.d(TAG, "인증실패, " + s);
-            }
-        });
+        findGasStation(recievedSort);
 
         // 버튼 클릭 이벤트 리스너들
         gpsBtn.setOnClickListener(new View.OnClickListener() { // GPS 현재 위치로 맵 중심점 이동
@@ -590,7 +575,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
 
         if (!firstOnLocationChangeCalled) {
             tMapView.setCenterPoint(lon, lat);
-            findGasStation(sttSort);
+            findGasStation(recievedSort);
             firstOnLocationChangeCalled = true;
         }
     }
