@@ -54,6 +54,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     int nowSort;
 
     ListView gasStationListView;
+    Button findGasStationBackBtn;
     Button zoomOutBtn;
     Button zoomInBtn;
     Button gpsBtn;
@@ -111,6 +112,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
 
         // 뷰 정의
         gasStationListView = findViewById(R.id.gasStationListView);
+        findGasStationBackBtn = findViewById(R.id.findGasStationBackBtn);
         zoomOutBtn = findViewById(R.id.zoomOutBtn);
         zoomInBtn = findViewById(R.id.zoomInBtn);
         gpsBtn = findViewById(R.id.gpsBtn);
@@ -129,7 +131,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         tmapStartMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_start_marker);
         tmapSelectedMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_selected_marker);
 
-        // 로딩까지 뷰 없애기
+        // 로딩 완료까지 뷰 없애기
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -175,26 +177,25 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         }
     }
 
-    private void init() {
-        // 현재 위치 받기
+    private void init() { // 초기화
+        // 최초 위치 한 번 받기
         Location currentLocation = SDKManager.getInstance().getCurrentPosition();
         lat = currentLocation.getLatitude();
         lon = currentLocation.getLongitude();
         nowPoint = new TMapPoint(lat, lon);
 
-        // GPSManager 설정
+        // TMapGpsManager 설정
         gpsManager = new TMapGpsManager(this);
         gpsManager.setMinTime(1000); // ms단위
         gpsManager.setMinDistance(1); // m단위
         gpsManager.setProvider(gpsManager.GPS_PROVIDER);
         gpsManager.OpenGps();
-        // 가상머신 말고 실제 기기에선 필요
-        /*
+        /* 가상머신 말고 실제 기기로 실내에서 사용 시 필요
         gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
         gpsManager.OpenGps();
         */
 
-        // TMapView 생성 및 API Key 설정
+        // TMapView 생성 및 보이기
         tMapView = new TMapView(this);
         LinearLayout linearLayoutTmap = (LinearLayout)findViewById(R.id.linearLayoutTmap);
         linearLayoutTmap.addView( tMapView );
@@ -219,6 +220,13 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         findGasStation(recievedSort);
 
         // 버튼 클릭 이벤트 리스너들
+        findGasStationBackBtn.setOnClickListener(new View.OnClickListener() { // 액티비티 종료
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         gpsBtn.setOnClickListener(new View.OnClickListener() { // GPS 현재 위치로 맵 중심점 이동
             @Override
             public void onClick(View v) {
@@ -290,7 +298,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         gasStationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // 클릭한 gasStation의 정보를 가져옵니다.
+                // 클릭한 GasStationItem을 가져옴
                 GasStationItem clickedGasStation = (GasStationItem) parent.getItemAtPosition(position);
 
                 Log.d(TAG, "리스트뷰에서 주유소 아이템 클릭함 : " + clickedGasStation.getName() + ", " + clickedGasStation.getRadius() + ", " + clickedGasStation.getGasolinePrice()
@@ -302,12 +310,12 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                 tempGasStationAdapter.addItem(clickedGasStation);
                 gasStationListView.setAdapter(tempGasStationAdapter);
 
+                // 도착점 설정
                 naviEndPoint = new TMapPoint (clickedGasStation.getLat(), clickedGasStation.getLon());
                 naviEndPointName = clickedGasStation.getName();
 
-                TMapData tmapdata = new TMapData();
-
                 // 길 찾기 및 선 표시
+                TMapData tmapdata = new TMapData();
                 tmapdata.findPathData(nowPoint, naviEndPoint, new TMapData.FindPathDataListenerCallback() {
                     @Override
                     public void onFindPathData(TMapPolyLine polyLine) {
@@ -388,11 +396,10 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     }
 
     public void findGasStation(int sortBy) { // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:휘발유가순, 4: 경유가순, 5:LPG가순
+        Log.d (TAG, "findGasStation 시작");
         tMapView.removeAllMarkerItem();
 
-        // tMapData 초기화
         tMapData = new TMapData();
-
         tMapData.findAroundNamePOI(nowPoint, "주유소", 3, 200, new TMapData.FindAroundNamePOIListenerCallback ()
         {
             @Override
@@ -406,10 +413,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                         gasStationAdapter = new GasStationAdapter();
 
                         for (int i = 0; i < arrayList.size(); i++) {
-
                             if (arrayList.size() == 0) {
-                                // 디스플레이 매트릭스를 가져옴
-                                DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
                                 gasStationListView.getLayoutParams().height = 0;
                                 gasStationListView.requestLayout();
                             }
@@ -431,6 +435,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                                 gasStationListView.getLayoutParams().height = (int) px;
                                 gasStationListView.requestLayout();
                             }
+
                             TMapPOIItem item = arrayList.get(i);
                             gasStationAdapter.addItem(new GasStationItem(item.name, item.radius, item.hhPrice, item.ggPrice, item.llPrice, item.telNo, item.menu1, 0, item.frontLat, item.frontLon));
                             TMapPoint tpoint = new TMapPoint(Double.parseDouble(item.frontLat), Double.parseDouble(item.frontLon));
@@ -442,6 +447,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                             tItem.setPosition(0.5f,1.0f); // 마커의 중심점을 하단, 중앙으로 설정
                             tMapView.addMarkerItem(item.name, tItem);
                         }
+
                         switch (sortBy) {
                             case 1 :
                                 sortByDistanceBtn.setBackgroundColor(selectedBackgroundColor);
@@ -450,41 +456,49 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                                 sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
                                 break;
-                                case 2 :
+                            case 2 :
                                     sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
                                     sortByRateBtn.setBackgroundColor(selectedBackgroundColor);
                                     sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
                                     sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
                                     sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
                                     gasStationAdapter.sortByRate();
-                                    break; case 3 : sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
-                                    sortByRateBtn.setBackgroundColor(originalBackgroundColor);
-                                    sortByGasolinePriceBtn.setBackgroundColor(selectedBackgroundColor);
-                                    sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
-                                    sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
-                                    gasStationAdapter.sortByGasolinePrice();
-                                    break; case 4 : sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
-                                    sortByRateBtn.setBackgroundColor(originalBackgroundColor);
-                                    sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
-                                    sortByDieselPriceBtn.setBackgroundColor(selectedBackgroundColor);
-                                    sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
-                                    gasStationAdapter.sortByDieselPrice();
-                                    break; case 5 : sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
-                                    sortByRateBtn.setBackgroundColor(originalBackgroundColor);
-                                    sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
-                                    sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
-                                    sortByLpgPriceBtn.setBackgroundColor(selectedBackgroundColor);
-                                    gasStationAdapter.sortByLpgPrice();
                                     break;
+                            case 3 :
+                                sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
+                                sortByRateBtn.setBackgroundColor(originalBackgroundColor);
+                                sortByGasolinePriceBtn.setBackgroundColor(selectedBackgroundColor);
+                                sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
+                                sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
+                                gasStationAdapter.sortByGasolinePrice();
+                                break;
+                            case 4 : sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
+                                sortByRateBtn.setBackgroundColor(originalBackgroundColor);
+                                sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
+                                sortByDieselPriceBtn.setBackgroundColor(selectedBackgroundColor);
+                                sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
+                                gasStationAdapter.sortByDieselPrice();
+                                break;
+                            case 5 : sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
+                                sortByRateBtn.setBackgroundColor(originalBackgroundColor);
+                                sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
+                                sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
+                                sortByLpgPriceBtn.setBackgroundColor(selectedBackgroundColor);
+                                gasStationAdapter.sortByLpgPrice();
+                                break;
                         }
+
                         gasStationListView.setAdapter(gasStationAdapter);
+
                         gasStationListView.setVisibility(View.VISIBLE);
                         sortByDistanceBtn.setVisibility(View.VISIBLE);
                         sortByRateBtn.setVisibility(View.VISIBLE);
                         sortByGasolinePriceBtn.setVisibility(View.VISIBLE);
                         sortByDieselPriceBtn.setVisibility(View.VISIBLE);
                         sortByLpgPriceBtn.setVisibility(View.VISIBLE);
+
                         nowSort = sortBy;
+
                         tMapView.removeAllTMapCircle();
                         tMapCircle.setCenterPoint( nowPoint );
                         tMapView.addTMapCircle("Circle", tMapCircle);
@@ -574,8 +588,8 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         tMapView.setLocationPoint(lon, lat);
 
         if (!firstOnLocationChangeCalled) {
+            loadingStart();
             tMapView.setCenterPoint(lon, lat);
-            findGasStation(recievedSort);
             firstOnLocationChangeCalled = true;
         }
     }

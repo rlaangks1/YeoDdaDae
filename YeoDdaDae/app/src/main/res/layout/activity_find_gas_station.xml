@@ -123,6 +123,14 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toTopOf="@id/zoomOutBtn"
                 app:layout_constraintLeft_toLeftOf="parent" />
+
+            <Button
+                android:id="@+id/gpsBtn"
+                android:text="GPS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/zoomInBtn"
+                app:layout_constraintLeft_toLeftOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -131,8 +139,8 @@
             android:layout_gravity="bottom|right" >
 
             <Button
-                android:id="@+id/gpsBtn"
-                android:text="GPS"
+                android:id="@+id/findGasStationBackBtn"
+                android:text="←"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"

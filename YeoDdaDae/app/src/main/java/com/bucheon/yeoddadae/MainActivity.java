@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         toFindParkBtn = findViewById(R.id.toFindParkBtn);
         toFindGasStationBtn = findViewById(R.id.toFindGasStationBtn);
 
+        // TMapView 인증 (앱 종료까지 유효)
         TMapView tMapView = new TMapView(this);
         tMapView.setSKTMapApiKey(API_KEY);
         tMapView.setOnApiKeyListener(new TMapView.OnApiKeyListenerCallback() {
