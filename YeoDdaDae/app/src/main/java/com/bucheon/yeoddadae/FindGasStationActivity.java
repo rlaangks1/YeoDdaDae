@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -136,11 +137,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
             @Override
             public void run() {
                 gasStationListView.setVisibility(View.GONE);
-                sortByDistanceBtn.setVisibility(View.GONE);
-                sortByRateBtn.setVisibility(View.GONE);
-                sortByGasolinePriceBtn.setVisibility(View.GONE);
-                sortByDieselPriceBtn.setVisibility(View.GONE);
-                sortByLpgPriceBtn.setVisibility(View.GONE);
+                gasStationSortHorizontalScrollView.setVisibility(View.GONE);
             }
         });
 
@@ -388,16 +385,14 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
 
         // 뷰 보이기
         gasStationListView.setVisibility(View.VISIBLE);
-        sortByDistanceBtn.setVisibility(View.VISIBLE);
-        sortByRateBtn.setVisibility(View.VISIBLE);
-        sortByGasolinePriceBtn.setVisibility(View.VISIBLE);
-        sortByDieselPriceBtn.setVisibility(View.VISIBLE);
-        sortByLpgPriceBtn.setVisibility(View.VISIBLE);
+        gasStationSortHorizontalScrollView.setVisibility(View.VISIBLE);
     }
 
     public void findGasStation(int sortBy) { // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:휘발유가순, 4: 경유가순, 5:LPG가순
         Log.d (TAG, "findGasStation 시작");
         tMapView.removeAllMarkerItem();
+
+        gasStationAdapter = new GasStationAdapter();
 
         tMapData = new TMapData();
         tMapData.findAroundNamePOI(nowPoint, "주유소", 3, 200, new TMapData.FindAroundNamePOIListenerCallback ()
@@ -407,35 +402,33 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        if (arrayList.size() == 0) {
+                            gasStationListView.getLayoutParams().height = 0;
+                            gasStationListView.requestLayout();
+                        }
+                        else if(arrayList.size() == 1) {
+                            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                            float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
+                            gasStationListView.getLayoutParams().height = (int) px;
+                            gasStationListView.requestLayout();
+                        }
+                        else if (arrayList.size() == 2) {
+                            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                            float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, displayMetrics);
+                            gasStationListView.getLayoutParams().height = (int) px;
+                            gasStationListView.requestLayout();
+                        }
+                        else {
+                            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                            float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, displayMetrics);
+                            gasStationListView.getLayoutParams().height = (int) px;
+                            gasStationListView.requestLayout();
+                        }
+
                         int originalBackgroundColor = Color.rgb(128,128,128);
                         int selectedBackgroundColor = Color.rgb(0,0,255);
 
-                        gasStationAdapter = new GasStationAdapter();
-
                         for (int i = 0; i < arrayList.size(); i++) {
-                            if (arrayList.size() == 0) {
-                                gasStationListView.getLayoutParams().height = 0;
-                                gasStationListView.requestLayout();
-                            }
-                            else if(arrayList.size() == 1) {
-                                DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-                                float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
-                                gasStationListView.getLayoutParams().height = (int) px;
-                                gasStationListView.requestLayout();
-                            }
-                            else if (arrayList.size() == 2) {
-                                DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-                                float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, displayMetrics);
-                                gasStationListView.getLayoutParams().height = (int) px;
-                                gasStationListView.requestLayout();
-                            }
-                            else {
-                                DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-                                float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, displayMetrics);
-                                gasStationListView.getLayoutParams().height = (int) px;
-                                gasStationListView.requestLayout();
-                            }
-
                             TMapPOIItem item = arrayList.get(i);
                             gasStationAdapter.addItem(new GasStationItem(item.name, item.radius, item.hhPrice, item.ggPrice, item.llPrice, item.telNo, item.menu1, 0, item.frontLat, item.frontLon));
                             TMapPoint tpoint = new TMapPoint(Double.parseDouble(item.frontLat), Double.parseDouble(item.frontLon));
@@ -457,13 +450,13 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                                 sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
                                 break;
                             case 2 :
-                                    sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
-                                    sortByRateBtn.setBackgroundColor(selectedBackgroundColor);
-                                    sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
-                                    sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
-                                    sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
-                                    gasStationAdapter.sortByRate();
-                                    break;
+                                sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
+                                sortByRateBtn.setBackgroundColor(selectedBackgroundColor);
+                                sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
+                                sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
+                                sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
+                                gasStationAdapter.sortByRate();
+                                break;
                             case 3 :
                                 sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByRateBtn.setBackgroundColor(originalBackgroundColor);
@@ -472,14 +465,16 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                                 sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
                                 gasStationAdapter.sortByGasolinePrice();
                                 break;
-                            case 4 : sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
+                            case 4 :
+                                sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByRateBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByDieselPriceBtn.setBackgroundColor(selectedBackgroundColor);
                                 sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
                                 gasStationAdapter.sortByDieselPrice();
                                 break;
-                            case 5 : sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
+                            case 5 :
+                                sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByRateBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
@@ -487,25 +482,21 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                                 gasStationAdapter.sortByLpgPrice();
                                 break;
                         }
-
-                        gasStationListView.setAdapter(gasStationAdapter);
-
-                        gasStationListView.setVisibility(View.VISIBLE);
-                        sortByDistanceBtn.setVisibility(View.VISIBLE);
-                        sortByRateBtn.setVisibility(View.VISIBLE);
-                        sortByGasolinePriceBtn.setVisibility(View.VISIBLE);
-                        sortByDieselPriceBtn.setVisibility(View.VISIBLE);
-                        sortByLpgPriceBtn.setVisibility(View.VISIBLE);
-
-                        nowSort = sortBy;
-
-                        tMapView.removeAllTMapCircle();
-                        tMapCircle.setCenterPoint( nowPoint );
-                        tMapView.addTMapCircle("Circle", tMapCircle);
                     }
                 });
             }
         });
+
+        gasStationListView.setAdapter(gasStationAdapter);
+        gasStationListView.setVisibility(View.VISIBLE);
+        gasStationSortHorizontalScrollView.setVisibility(View.VISIBLE);
+
+        nowSort = sortBy;
+
+        tMapView.removeAllTMapCircle();
+        tMapCircle.setCenterPoint( nowPoint );
+        tMapView.addTMapCircle("Circle", tMapCircle);
+
         loadingStop();
     }
 
@@ -590,6 +581,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         if (!firstOnLocationChangeCalled) {
             loadingStart();
             tMapView.setCenterPoint(lon, lat);
+            findGasStation(recievedSort);
             firstOnLocationChangeCalled = true;
         }
     }

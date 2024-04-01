@@ -1,23 +1,31 @@
 package com.bucheon.yeoddadae;
 
 public class ParkItem {
+    private int type; // 0:??, 1:일반, 2:공영, 3:공유, 4:조건
     private String name;
     private String radius;
-    private String gasolinePrice; // 휘발유가
-    private String dieselPrice; // 경유가
-    private String lpgPrice; // LPG가
+    private String parkPrice;
     private String phone;
     private String addition;
     private int starRate; // 0:☆☆☆☆☆, 5: ★★★★★
     private double lat;
     private double lon;
 
-    public ParkItem(String name, String radius, String gasolinePrice, String dieselPrice, String lpgPrice, String phone, String addition, int starRate, String lat, String lon) {
+    public ParkItem(int type, String name, String radius, String parkPrice, String phone, String addition, int starRate, String lat, String lon) {
+        if (type == 0) {
+            if (name.contains("공영")) {
+                this.type = 2;
+            }
+            else {
+                this.type = 1;
+            }
+        }
+        else {
+            this.type = type;
+        }
         this.name = name;
         this.radius = radius;
-        this.gasolinePrice = gasolinePrice;
-        this.dieselPrice = dieselPrice;
-        this.lpgPrice = lpgPrice;
+        this.parkPrice = parkPrice;
         this.phone = phone;
         this.addition = addition;
         this.starRate = starRate;
@@ -25,6 +33,9 @@ public class ParkItem {
         this.lon = Double.parseDouble(lon);
     }
 
+    public int getType() {
+        return type;
+    }
     public String getName() {
         return name;
     }
@@ -33,16 +44,8 @@ public class ParkItem {
         return radius;
     }
 
-    public String getGasolinePrice() {
-        return gasolinePrice;
-    }
-
-    public String getDieselPrice() {
-        return dieselPrice;
-    }
-
-    public String getLpgPrice() {
-        return lpgPrice;
+    public String getParkPrice() {
+        return parkPrice;
     }
 
     public String getPhone() {

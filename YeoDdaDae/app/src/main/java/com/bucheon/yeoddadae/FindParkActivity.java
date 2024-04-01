@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -40,7 +41,12 @@ import com.skt.Tmap.TMapView;
 import com.skt.Tmap.poi_item.TMapPOIItem;
 import com.skt.tmap.engine.navigation.SDKManager;
 
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 public class FindParkActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback, TMapView.OnClickListenerCallback {
     private static final int PERMISSION_REQUEST_CODE = 1;
@@ -50,6 +56,8 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     int recievedSort;
     int nowSort;
 
+    int clickParkType;
+
     ListView parkListView;
     Button findParkBackBtn;
     Button zoomOutBtn;
@@ -58,11 +66,15 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     HorizontalScrollView parkSortHorizontalScrollView;
     Button sortByDistanceBtn;
     Button sortByRateBtn;
-    Button sortByGasolinePriceBtn;
-    Button sortByDieselPriceBtn;
-    Button sortByLpgPriceBtn;
+    Button sortByParkPriceBtn;
     Button cancelNaviBtn;
     Button toStartNaviBtn;
+    Button searchStartBtn;
+    ConstraintLayout searchConstraintLayout;
+    EditText searchEdTxt;
+    Button searchBtn;
+    Button searchBackBtn;
+    ListView searchParkListView;
 
     AlertDialog loadingAlert;
 
@@ -70,6 +82,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     Bitmap tmapMarkerIcon;
     Bitmap tmapStartMarkerIcon;
     Bitmap tmapSelectedMarkerIcon;
+    Bitmap tmapShareParkMarkerIcon;
 
     // 경복궁
     double lat = 37.578611; // 위도
@@ -114,25 +127,29 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         parkSortHorizontalScrollView = findViewById(R.id.parkSortHorizontalScrollView);
         sortByDistanceBtn = findViewById(R.id.sortByDistanceBtn);
         sortByRateBtn = findViewById(R.id.sortByRateBtn);
+        sortByParkPriceBtn = findViewById(R.id.sortByParkPriceBtn);
         cancelNaviBtn = findViewById(R.id.cancelNaviBtn);
         toStartNaviBtn = findViewById(R.id.toStartNaviBtn);
+        searchStartBtn = findViewById(R.id.searchStartBtn);
+        searchConstraintLayout = findViewById(R.id.searchConstraintLayout);
+        searchEdTxt = findViewById(R.id.searchEdTxt);
+        searchBtn = findViewById(R.id.searchBtn);
+        searchBackBtn = findViewById(R.id.searchBackBtn);
+        searchParkListView = findViewById(R.id.searchParkListView);
 
         // Bitmap 정의
         tmapMyLocationIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_my_location);
         tmapMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_marker);
-        tmapStartMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_start_marker);
         tmapSelectedMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_selected_marker);
+        tmapStartMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_start_marker);
+        tmapShareParkMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_share_park_marker);
 
         // 로딩 완료까지 뷰 없애기
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 parkListView.setVisibility(View.GONE);
-                sortByDistanceBtn.setVisibility(View.GONE);
-                sortByRateBtn.setVisibility(View.GONE);
-                sortByGasolinePriceBtn.setVisibility(View.GONE);
-                sortByDieselPriceBtn.setVisibility(View.GONE);
-                sortByLpgPriceBtn.setVisibility(View.GONE);
+                parkSortHorizontalScrollView.setVisibility(View.GONE);
             }
         });
         // 권한 확인 후 초기화
@@ -262,27 +279,11 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             }
         });
 
-        sortByGasolinePriceBtn.setOnClickListener(new View.OnClickListener() {
+        sortByParkPriceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadingStart();
                 findPark(3);
-            }
-        });
-
-        sortByDieselPriceBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadingStart();
-                findPark(4);
-            }
-        });
-
-        sortByLpgPriceBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadingStart();
-                findPark(5);
             }
         });
 
@@ -292,8 +293,8 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                 // 클릭한 ParkItem을 가져옴
                 ParkItem clickedPark = (ParkItem) parent.getItemAtPosition(position);
 
-                Log.d(TAG, "리스트뷰에서 주유소 아이템 클릭함 : " + clickedPark.getName() + ", " + clickedPark.getRadius() + ", " + clickedPark.getGasolinePrice()
-                        + ", " +  clickedPark.getDieselPrice() + ", " + clickedPark.getLpgPrice() + ", " + clickedPark.getPhone() + ", " + clickedPark.getAddition()
+                Log.d(TAG, "리스트뷰에서 주유소 아이템 클릭함 : " + clickedPark.getName() + ", " + clickedPark.getRadius() + ", " + clickedPark.getParkPrice()
+                        + ", " + clickedPark.getPhone() + ", " + clickedPark.getAddition()
                         + ", " + clickedPark.getStarRate() + ", " + clickedPark.getLat() + ", " + clickedPark.getLon());
 
                 // parkListView에 clickedPark만 있도록
@@ -311,7 +312,12 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     @Override
                     public void onFindPathData(TMapPolyLine polyLine) {
                         if (selectedMarker != null) {
-                            selectedMarker.setIcon(tmapMarkerIcon);
+                            if (clickedPark.getType() == 3) {
+                                selectedMarker.setIcon(tmapShareParkMarkerIcon);
+                            }
+                            else {
+                                selectedMarker.setIcon(tmapMarkerIcon);
+                            }
                         }
 
                         tMapView.setTMapPathIcon(tmapStartMarkerIcon, null);
@@ -339,6 +345,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                 parkName.setLayoutParams(params);
 
                                 parkSortHorizontalScrollView.setVisibility(View.GONE);
+                                searchStartBtn.setVisibility(View.GONE);
                                 cancelNaviBtn.setVisibility(View.VISIBLE);
                                 toStartNaviBtn.setVisibility(View.VISIBLE);
                             }
@@ -357,6 +364,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                         tMapView.removeTMapPath();
 
                         parkSortHorizontalScrollView.setVisibility(View.VISIBLE);
+                        searchStartBtn.setVisibility(View.VISIBLE);
                         cancelNaviBtn.setVisibility(View.GONE);
                         toStartNaviBtn.setVisibility(View.GONE);
 
@@ -377,58 +385,129 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             }
         });
 
+        searchStartBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        searchConstraintLayout.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        });
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!searchEdTxt.getText().toString().equals("")) {
+                    tMapData = new TMapData();
+                    tMapData.findAllPOI(searchEdTxt.getText().toString(), new TMapData.FindAllPOIListenerCallback() {
+                        @Override
+                        public void onFindAllPOI(ArrayList<TMapPOIItem> arrayList) {
+                            SearchParkAdapter spa = new SearchParkAdapter();
+
+                            for (int i = 0; i < arrayList.size(); i++) {
+                                TMapPOIItem item = arrayList.get(i);
+                                spa.addItem(new ParkItem(0, item.name, item.radius, item.fee, item.telNo, item.additionalInfo, 0, item.frontLat, item.frontLon));
+                            }
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    searchParkListView.setAdapter(spa);
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        });
+        searchBackBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        searchConstraintLayout.setVisibility(View.GONE);
+                    }
+                });
+            }
+        });
+
         // 뷰 보이기
         parkListView.setVisibility(View.VISIBLE);
-        sortByDistanceBtn.setVisibility(View.VISIBLE);
-        sortByRateBtn.setVisibility(View.VISIBLE);
-        sortByGasolinePriceBtn.setVisibility(View.VISIBLE);
-        sortByDieselPriceBtn.setVisibility(View.VISIBLE);
-        sortByLpgPriceBtn.setVisibility(View.VISIBLE);
+        parkSortHorizontalScrollView.setVisibility(View.VISIBLE);
     }
 
     public void findPark(int sortBy) { // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:휘발유가순, 4: 경유가순, 5:LPG가순
         Log.d (TAG, "findPark 시작");
         tMapView.removeAllMarkerItem();
 
+        parkAdapter = new ParkAdapter();
+
+        FirestoreDatabase fd = new FirestoreDatabase();
+        fd.findSharePark(lat, lon, 3, new OnFirestoreDataLoadedListener() {
+            @Override
+            public void onDataLoaded(Object data) {
+                ArrayList<ParkItem> dataList = (ArrayList<ParkItem>) data;
+
+                for (ParkItem item : dataList) {
+                    parkAdapter.addItem(item);
+                    TMapPoint tpoint = new TMapPoint(item.getLat(), item.getLon());
+                    TMapMarkerItem tItem = new TMapMarkerItem();
+                    tItem.setTMapPoint(tpoint);
+                    tItem.setName(item.getName());
+                    tItem.setVisible(TMapMarkerItem.VISIBLE);
+                    tItem.setIcon(tmapShareParkMarkerIcon);
+                    tItem.setPosition(0.5f,1.0f); // 마커의 중심점을 하단, 중앙으로 설정
+                    tMapView.addMarkerItem(item.getName(), tItem);
+                }
+            }
+
+            @Override
+            public void onDataLoadError(String errorMessage) {
+                Log.e("FirestoreDataError", errorMessage);
+            }
+        });
+
+
         tMapData = new TMapData();
-        tMapData.findAroundNamePOI(nowPoint, "주유소", 3, 200, new TMapData.FindAroundNamePOIListenerCallback ()
+        tMapData.findAroundNamePOI(nowPoint, "주차장", 3, 200, new TMapData.FindAroundNamePOIListenerCallback ()
         {
             @Override
             public void onFindAroundNamePOI(ArrayList<TMapPOIItem> arrayList) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        if (arrayList.size() == 0) {
+                            parkListView.getLayoutParams().height = 0;
+                            parkListView.requestLayout();
+                        }
+                        else if(arrayList.size() == 1) {
+                            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                            float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
+                            parkListView.getLayoutParams().height = (int) px;
+                            parkListView.requestLayout();
+                        }
+                        else if (arrayList.size() == 2) {
+                            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                            float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, displayMetrics);
+                            parkListView.getLayoutParams().height = (int) px;
+                            parkListView.requestLayout();
+                        }
+                        else {
+                            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                            float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, displayMetrics);
+                            parkListView.getLayoutParams().height = (int) px;
+                            parkListView.requestLayout();
+                        }
+
                         int originalBackgroundColor = Color.rgb(128,128,128);
                         int selectedBackgroundColor = Color.rgb(0,0,255);
 
-                        parkAdapter = new ParkAdapter();
-
                         for (int i = 0; i < arrayList.size(); i++) {
-                            if (arrayList.size() == 0) {
-                                parkListView.getLayoutParams().height = 0;
-                                parkListView.requestLayout();
-                            }
-                            else if(arrayList.size() == 1) {
-                                DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-                                float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
-                                parkListView.getLayoutParams().height = (int) px;
-                                parkListView.requestLayout();
-                            }
-                            else if (arrayList.size() == 2) {
-                                DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-                                float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, displayMetrics);
-                                parkListView.getLayoutParams().height = (int) px;
-                                parkListView.requestLayout();
-                            }
-                            else {
-                                DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-                                float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, displayMetrics);
-                                parkListView.getLayoutParams().height = (int) px;
-                                parkListView.requestLayout();
-                            }
-
                             TMapPOIItem item = arrayList.get(i);
-                            parkAdapter.addItem(new ParkItem(item.name, item.radius, item.hhPrice, item.ggPrice, item.llPrice, item.telNo, item.menu1, 0, item.frontLat, item.frontLon));
+
+                            parkAdapter.addItem(new ParkItem(0, item.name, item.radius, item.fee, item.telNo, item.additionalInfo, 0, item.frontLat, item.frontLon));
                             TMapPoint tpoint = new TMapPoint(Double.parseDouble(item.frontLat), Double.parseDouble(item.frontLon));
                             TMapMarkerItem tItem = new TMapMarkerItem();
                             tItem.setTMapPoint(tpoint);
@@ -443,60 +522,37 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                             case 1 :
                                 sortByDistanceBtn.setBackgroundColor(selectedBackgroundColor);
                                 sortByRateBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
+                                sortByParkPriceBtn.setBackgroundColor(originalBackgroundColor);
+                                parkAdapter.sortByDistance();
                                 break;
                             case 2 :
                                 sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByRateBtn.setBackgroundColor(selectedBackgroundColor);
-                                sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
+                                sortByParkPriceBtn.setBackgroundColor(originalBackgroundColor);
                                 parkAdapter.sortByRate();
                                 break;
                             case 3 :
                                 sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByRateBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByGasolinePriceBtn.setBackgroundColor(selectedBackgroundColor);
-                                sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
-                                parkAdapter.sortByGasolinePrice();
-                                break;
-                            case 4 : sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByRateBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByDieselPriceBtn.setBackgroundColor(selectedBackgroundColor);
-                                sortByLpgPriceBtn.setBackgroundColor(originalBackgroundColor);
-                                parkAdapter.sortByDieselPrice();
-                                break;
-                            case 5 : sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByRateBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByLpgPriceBtn.setBackgroundColor(selectedBackgroundColor);
-                                parkAdapter.sortByLpgPrice();
+                                sortByParkPriceBtn.setBackgroundColor(selectedBackgroundColor);
+                                parkAdapter.sortByParkPrice();
                                 break;
                         }
-
-                        parkListView.setAdapter(parkAdapter);
-
-                        parkListView.setVisibility(View.VISIBLE);
-                        sortByDistanceBtn.setVisibility(View.VISIBLE);
-                        sortByRateBtn.setVisibility(View.VISIBLE);
-                        sortByGasolinePriceBtn.setVisibility(View.VISIBLE);
-                        sortByDieselPriceBtn.setVisibility(View.VISIBLE);
-                        sortByLpgPriceBtn.setVisibility(View.VISIBLE);
-
-                        nowSort = sortBy;
-
-                        tMapView.removeAllTMapCircle();
-                        tMapCircle.setCenterPoint( nowPoint );
-                        tMapView.addTMapCircle("Circle", tMapCircle);
                     }
                 });
             }
         });
+        parkListView.setAdapter(parkAdapter);
+
+        parkListView.setVisibility(View.VISIBLE);
+        parkSortHorizontalScrollView.setVisibility(View.VISIBLE);
+
+        nowSort = sortBy;
+
+        tMapView.removeAllTMapCircle();
+        tMapCircle.setCenterPoint( nowPoint );
+        tMapView.addTMapCircle("Circle", tMapCircle);
+
         loadingStop();
     }
 
@@ -523,8 +579,15 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                 @Override
                 public void onFindPathData(TMapPolyLine polyLine) {
                     if (selectedMarker != null) {
-                        selectedMarker.setIcon(tmapMarkerIcon);
+                        if (clickParkType == 3) {
+                            selectedMarker.setIcon(tmapShareParkMarkerIcon);
+                        }
+                        else {
+                            selectedMarker.setIcon(tmapMarkerIcon);
+                        }
                     }
+
+                    clickParkType = clickedPark.getType();
 
                     tMapView.setTMapPathIcon(tmapStartMarkerIcon, null);
                     endMarker.setIcon(tmapSelectedMarkerIcon);
@@ -550,6 +613,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                             parkName.setLayoutParams(params);
 
                             parkSortHorizontalScrollView.setVisibility(View.GONE);
+                            searchStartBtn.setVisibility(View.GONE);
                             cancelNaviBtn.setVisibility(View.VISIBLE);
                             toStartNaviBtn.setVisibility(View.VISIBLE);
                         }
@@ -581,6 +645,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         if (!firstOnLocationChangeCalled) {
             loadingStart();
             tMapView.setCenterPoint(lon, lat);
+            findPark(recievedSort);
             firstOnLocationChangeCalled = true;
         }
     }

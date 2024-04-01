@@ -17,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.skt.Tmap.TMapView;
 
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity implements SttService.SttCallback {
 
     final int loginIntentRequestCode = 1;
