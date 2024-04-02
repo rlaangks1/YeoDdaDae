@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bt_mybooking"
+        android:enabled="true"
+        android:icon="@drawable/ic_mybook"
+        android:title="나의예약" />
+    <item
+        android:id="@+id/bt_ticket"
+        android:enabled="true"
+        android:icon="@drawable/ic_ticket"
+        android:title="정기권구매" />
+    <item
+        android:id="@+id/bt_register"
+        android:enabled="true"
+        android:icon="@drawable/ic_register"
+        android:title="주차장등록" />
+    <item
+        android:id="@+id/bt_info"
+        android:enabled="true"
+        android:icon="@drawable/ic_info"
+        android:title="서비스안내" />
+    <item
+        android:id="@+id/bt_customer_service"
+        android:enabled="true"
+        android:icon="@drawable/ic_servicecenter"
+        android:title="고객센터" />
+</menu>

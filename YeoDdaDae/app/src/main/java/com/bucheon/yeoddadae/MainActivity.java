@@ -32,9 +32,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.app_start);
 
         Button toLoginBtn = (Button) findViewById(R.id.toLoginBtn);
+        Button toJoinMembershipBtn = (Button) findViewById(R.id.btn_join_membership);
+
         TextView nowIdTxt = (TextView) findViewById(R.id.nowId);
         TextView isAdminTxt = (TextView) findViewById(R.id.isAdmin);
         TextView toSttBtn = (TextView) findViewById(R.id.toSttBtn);
@@ -43,6 +45,24 @@ public class MainActivity extends AppCompatActivity {
         isAdminTxt.setText(Boolean.toString(isAdmin));
 
         toLoginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View v) {
+                if (loginId == null) {
+                    Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivityForResult(loginIntent, loginIntentRequestCode);
+                }
+                else {
+                    loginId = null;
+                    isAdmin = false;
+
+                    nowIdTxt.setText(loginId);
+                    isAdminTxt.setText(Boolean.toString(isAdmin));
+
+                    toLoginBtn.setText("로그인");
+                }
+            }
+        });
+        toJoinMembershipBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
                 if (loginId == null) {

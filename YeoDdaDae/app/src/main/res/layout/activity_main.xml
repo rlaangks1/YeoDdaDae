@@ -1,66 +1,190 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8" ?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/hello"
-        android:text="Hello World!"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/main_frame" >
+
+        <RelativeLayout
+            android:id="@+id/android_sma"
+            android:layout_width="410dp"
+            android:layout_height="730dp"
+            android:clipToOutline="true"
+            android:background="#FFFFFF">
+
+            <View
+                android:id="@+id/main_image"
+                android:layout_width="99dp"
+                android:layout_height="36dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/main_image" />
+
+            <ImageButton
+                android:id="@+id/image_3"
+                android:layout_width="46dp"
+                android:layout_height="38dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="356dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/menu_bar" />
+
+            <ImageButton
+                android:id="@+id/rectangle_2"
+                android:layout_width="385dp"
+                android:layout_height="121dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="11dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="72dp"
+                android:background="@color/main"
+                android:text="YourButtonText1" />
+
+            <ImageView
+                android:id="@+id/image_4"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="37dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="107dp"
+                android:background="@drawable/parking_image"
+                />
+
+            <TextView
+                android:id="@+id/find_parkin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="135dp"
+                android:layout_marginTop="90dp"
+                android:gravity="top"
+                android:text="@string/find_parkin"
+                android:textAppearance="@style/find_parkin" />
+
+            <ImageButton
+                android:id="@+id/rectangle_3"
+                android:layout_width="385dp"
+                android:layout_height="121dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="11dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="204dp"
+                android:background="@color/main"
+                android:text="YourButtonText3" />
+
+            <ImageView
+                android:id="@+id/image_5"
+                android:layout_width="47dp"
+                android:layout_height="72dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="39dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="228dp"
+                android:background="@drawable/gas_station"
+                android:text="YourButtonText4" />
+
+            <TextView
+                android:id="@+id/find_gas_st"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="135dp"
+                android:layout_marginTop="223dp"
+                android:gravity="top"
+                android:text="@string/find_gas_st"
+                android:textAppearance="@style/find_gas_st" />
+
+            <ImageButton
+                android:id="@+id/rectangle_5"
+                android:layout_width="385dp"
+                android:layout_height="121dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="338dp"
+                android:background="@color/main"
+                android:text="YourButtonText5" />
+
+            <ImageView
+                android:id="@+id/image_6"
+                android:layout_width="74dp"
+                android:layout_height="64dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="25dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="371dp"
+                android:background="@drawable/car_booking"
+                android:text="YourButtonText6" />
+
+
+            <TextView
+                android:id="@+id/car_booking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="134dp"
+                android:layout_marginTop="355dp"
+                android:gravity="top"
+                android:text="@string/car_booking"
+                android:textAppearance="@style/car_booking" />
+
+            <ImageButton
+                android:id="@+id/button"
+                android:layout_width="140dp"
+                android:layout_height="60dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="197dp"
+                android:background="@drawable/round_button"
+                android:text="음성을\n인식해주세요" />
+
+            <ImageView
+                android:id="@+id/image_1"
+                android:layout_width="25dp"
+                android:layout_height="32dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="267dp"
+                android:layout_marginTop="484dp"
+                android:background="@drawable/microphone" />
+
+            <TextView
+                android:id="@+id/some_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="301dp"
+                android:layout_marginTop="485dp"
+                android:gravity="top"
+                android:text="@string/microphone"
+                android:textAppearance="@style/microphone" />
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/toLoginBtn"
-        android:text="로그인"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/hello" />
-
-    <TextView
-        android:id="@+id/nowId"
-        android:text="현재ID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toLoginBtn" />
-
-    <TextView
-        android:id="@+id/isAdmin"
-        android:text="관리자여부"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nowId" />
-
-    <Button
-        android:id="@+id/toSttBtn"
-        android:text="음성인식"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/isAdmin" />
-
-    <TextView
-        android:id="@+id/stt"
-        android:text="temptemp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toSttBtn" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/main"
+        app:menu="@menu/bottom_nav" />
 
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
