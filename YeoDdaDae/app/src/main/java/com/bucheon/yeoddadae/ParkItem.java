@@ -1,7 +1,7 @@
 package com.bucheon.yeoddadae;
 
 public class ParkItem {
-    private int type; // 0:??, 1:일반, 2:공영, 3:공유, 4:조건
+    private int type; // 0:??, 1:일반, 2:공영, 3:공유, 4:조건, 123:주소, 456:장소
     private String name;
     private String radius;
     private String parkPrice;
