@@ -1,55 +1,117 @@
 package com.bucheon.yeoddadae;
 
-import static android.content.ContentValues.TAG;
+import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Handler;
-import android.speech.RecognitionListener;
-import android.speech.RecognizerIntent;
-import android.speech.SpeechRecognizer;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.List;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+import com.skt.Tmap.TMapView;
+
+import java.io.IOException;
+
+public class MainActivity extends AppCompatActivity implements SttService.SttCallback {
+
+    final int loginIntentRequestCode = 1;
+
+    boolean apiKeyCertified;
 
     String loginId = null;
     boolean isAdmin = false;
 
-    final int loginIntentRequestCode = 1;
-    final int sttIntentRequestCode = 2;
+    private Intent serviceIntent;
 
-    private SpeechRecognizer speechRecognizer;
-    private final Handler handler = new Handler();
+    private SttService sttService;
 
+    private SttService.SttCallback sttCallback = new SttService.SttCallback() {
+        @Override
+        public void onMainCommandReceived(String mainCommand) {
+            MainActivity.this.onMainCommandReceived(mainCommand);
+        }
+
+        @Override
+        public void onUpdateUI(String message) {
+            MainActivity.this.onUpdateUI(message);
+        }
+    };
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            SttService.SttBinder binder = (SttService.SttBinder) service;
+            sttService = binder.getService();
+            sttService.setSttCallback(sttCallback);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            // 필요한 경우 연결이 끊겼을 때 처리
+        }
+    };
+
+    private static String API_KEY = "iqTSQ2hMuj8E7t2sy3WYA5m73LuX4iUD5iHgwRGf";
+
+    Button toLoginBtn;
+    TextView nowIdTxt;
+    TextView isAdminTxt;
+    TextView toSttBtn;
+    TextView sttStatus;
+    Button toFindParkBtn;
+    Button toFindGasStationBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button toLoginBtn = (Button) findViewById(R.id.toLoginBtn);
-        TextView nowIdTxt = (TextView) findViewById(R.id.nowId);
-        TextView isAdminTxt = (TextView) findViewById(R.id.isAdmin);
-        TextView toSttBtn = (TextView) findViewById(R.id.toSttBtn);
+        toLoginBtn = findViewById(R.id.toLoginBtn);
+        nowIdTxt = findViewById(R.id.nowId);
+        isAdminTxt = findViewById(R.id.isAdmin);
+        toSttBtn = findViewById(R.id.toSttBtn);
+        sttStatus = findViewById(R.id.sttStatus);
+        toFindParkBtn = findViewById(R.id.toFindParkBtn);
+        toFindGasStationBtn = findViewById(R.id.toFindGasStationBtn);
+
+        // TMapView 인증 (앱 종료까지 유효)
+        TMapView tMapView = new TMapView(this);
+        tMapView.setSKTMapApiKey(API_KEY);
+        tMapView.setOnApiKeyListener(new TMapView.OnApiKeyListenerCallback() {
+            @Override
+            public void SKTMapApikeySucceed() {
+                Log.d(TAG, "키 인증 성공");
+                apiKeyCertified = true;
+            }
+
+            @Override
+            public void SKTMapApikeyFailed(String s) {
+                Log.d(TAG, "키 인증 실패");
+                apiKeyCertified = false;
+            }
+        });
 
         nowIdTxt.setText(loginId);
         isAdminTxt.setText(Boolean.toString(isAdmin));
 
+        serviceIntent = new Intent(this, SttService.class);
+        startService(serviceIntent);
+        bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+
         toLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick (View v) {
+            public void onClick(View v) {
                 if (loginId == null) {
                     Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivityForResult(loginIntent, loginIntentRequestCode);
-                }
-                else {
+                } else {
                     loginId = null;
                     isAdmin = false;
 
@@ -64,24 +126,56 @@ public class MainActivity extends AppCompatActivity {
         toSttBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent sttIntent = new Intent(getApplicationContext(), SttActivity.class);
-                startActivityForResult(sttIntent, sttIntentRequestCode);
+                if (sttService != null) {
+                    sttService.startListeningForMainCommand();
+                }
             }
         });
 
-        // SpeechRecognizer 초기화
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(getApplicationContext());
-        // 웨이크업 워드를 듣기 시작
-        startListeningForWakeUpWord();
+        toFindParkBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (apiKeyCertified) {
+                    Intent findParkIntent = new Intent(getApplicationContext(), FindParkActivity.class);
+                    findParkIntent.putExtra("SortBy", 1);
+                    startActivity(findParkIntent);
+                }
+                else {
+                    Log.d(TAG, "인증되지 않아 액티비티 start 할 수 없음");
+                }
+            }
+        });
+
+        toFindGasStationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (apiKeyCertified) {
+                    Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                    findGasStationIntent.putExtra("SortBy", 1);
+                    startActivity(findGasStationIntent);
+                }
+                else {
+                    Log.d(TAG, "인증되지 않아 액티비티 start 할 수 없음");
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sttService.stopListening();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startService(serviceIntent);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        Button toLoginBtn = (Button) findViewById(R.id.toLoginBtn);
-        TextView nowIdTxt = (TextView) findViewById(R.id.nowId);
-        TextView isAdminTxt = (TextView) findViewById(R.id.isAdmin);
 
         if (requestCode == loginIntentRequestCode) {
             if (resultCode == RESULT_OK) {
@@ -94,180 +188,83 @@ public class MainActivity extends AppCompatActivity {
                 toLoginBtn.setText("로그아웃");
             }
         }
+        startService(serviceIntent);
     }
 
-    private void startListeningForWakeUpWord() {
-        // 음성 인식을 위한 Intent 생성
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR"); // 언어를 한국어로 설정
+    @Override
+    public void onMainCommandReceived(String mainCommand) {
+        Log.d("TAG", "MainActivity에서 받은 명령: " + mainCommand);
 
-        // 듣기 시작
-        speechRecognizer.startListening(intent);
-
-        // RecognitionListener 설정
-        speechRecognizer.setRecognitionListener(new RecognitionListener() {
-            @Override
-            public void onReadyForSpeech(Bundle params) {
-                // 이 메소드에 대한 구현은 필요하지 않습니다
+        if (mainCommand.contains("로그인")) {
+            if (loginId == null) {
+                Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivityForResult(loginIntent, loginIntentRequestCode);
+            } else {
+                Log.d("TAG", "이미 로그인 상태임");
             }
+        }
+        else if (mainCommand.contains("로그아웃")) {
+            if (loginId != null) {
+                loginId = null;
+                isAdmin = false;
 
-            @Override
-            public void onResults(Bundle results) {
-                List<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                Button toLoginBtn = findViewById(R.id.toLoginBtn);
+                TextView nowIdTxt = findViewById(R.id.nowId);
+                TextView isAdminTxt = findViewById(R.id.isAdmin);
 
-                if (matches != null && matches.size() > 0) {
-                    String wakeUpWord = matches.get(0);
+                nowIdTxt.setText(loginId);
+                isAdminTxt.setText(Boolean.toString(isAdmin));
 
-                    // 웨이크업 워드가 감지되었는지 확인
-                    if (wakeUpWord.contains("여따대")) {
-                        // UI 업데이트
-                        TextView stt = findViewById(R.id.stt);
-                        stt.setText("듣는 중");
-
-                        // 5초 후에 메인 명령을 듣기 시작
-                        handler.postDelayed(() -> startListeningForMainCommand(), 5000);
-                    } else {
-                        // 계속해서 웨이크업 워드를 듣기 시작
-                        startListeningForWakeUpWord();
-                    }
-                }
+                toLoginBtn.setText("로그인");
             }
-
-            @Override
-            public void onError(int error) {
-                // 필요하다면 음성인식 오류를 처리합니다
+            else {
+                Log.d("TAG", "이미 로그아웃 상태임");
             }
-
-            // 추가된 메소드
-            @Override
-            public void onRmsChanged(float rmsdB) {
-                // 이 메소드에 대한 구현은 필요하지 않습니다
+        }
+        // 사투리도 처리????
+        else if (mainCommand.contains("주유소")) {
+            if (mainCommand.contains("가까") || mainCommand.contains("가깝") || mainCommand.contains("근접") || mainCommand.contains("인접") || mainCommand.contains("거리")) {
+                Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                findGasStationIntent.putExtra("SortBy", 1);
+                startActivity(findGasStationIntent);
             }
-
-            @Override
-            public void onBeginningOfSpeech() {
-                // 이 메소드에 대한 구현은 필요하지 않습니다
+            else if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
+                Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                findGasStationIntent.putExtra("SortBy", 2);
+                startActivity(findGasStationIntent);
             }
-
-            @Override
-            public void onBufferReceived(byte[] buffer) {
-                // 이 메소드에 대한 구현은 필요하지 않습니다
+            else if (mainCommand.contains("휘발") || mainCommand.contains("가솔린")) {
+                Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                findGasStationIntent.putExtra("SortBy", 3);
+                startActivity(findGasStationIntent);
             }
-
-            @Override
-            public void onEndOfSpeech() {
-                // 이 메소드에 대한 구현은 필요하지 않습니다
+            else if (mainCommand.contains("경유") || mainCommand.contains("디젤")) {
+                Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                findGasStationIntent.putExtra("SortBy", 4);
+                startActivity(findGasStationIntent);
             }
-
-            @Override
-            public void onPartialResults(Bundle partialResults) {
-                // 이 메소드에 대한 구현은 필요하지 않습니다
+            else if (mainCommand.contains("LPG") || mainCommand.contains("엘피지")) {
+                Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                findGasStationIntent.putExtra("SortBy", 5);
+                startActivity(findGasStationIntent);
             }
-
-            @Override
-            public void onEvent(int eventType, Bundle params) {
-                // 이 메소드에 대한 구현은 필요하지 않습니다
-            }
-        });
+        }
+        else {}
     }
-    private void startListeningForMainCommand() {
-        // 음성 인식을 위한 Intent 생성
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR"); // 언어를 한국어로 설정
 
-        // 듣기 시작
-        speechRecognizer.startListening(intent);
-
-        // RecognitionListener 설정
-        speechRecognizer.setRecognitionListener(new RecognitionListener() {
+    @Override
+    public void onUpdateUI(String message) {
+        runOnUiThread(new Runnable() {
             @Override
-            public void onReadyForSpeech(Bundle params) {
-                // 이 메소드에 대한 구현은 필요하지 않습니다
+            public void run() {
+                sttStatus.setText(message);
             }
-
-            @Override
-            public void onBeginningOfSpeech() {
-
-            }
-
-            @Override
-            public void onRmsChanged(float v) {
-
-            }
-
-            @Override
-            public void onBufferReceived(byte[] bytes) {
-
-            }
-
-            @Override
-            public void onEndOfSpeech() {
-
-            }
-
-            @Override
-            public void onError(int i) {
-
-            }
-
-            @Override
-            public void onResults(Bundle results) {
-                String mainCommand;
-                List<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-
-                if (matches != null && matches.size() > 0) {
-                    mainCommand = matches.get(0);
-
-                    if (mainCommand.contains("로그인")) {
-                        if (loginId == null) {
-                            Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
-                            startActivityForResult(loginIntent, loginIntentRequestCode);
-                        }
-
-                    }
-                    else if (mainCommand.contains("로그아웃")) {
-                        if (loginId != null) {
-                            loginId = null;
-                            isAdmin = false;
-
-                            Button toLoginBtn = (Button) findViewById(R.id.toLoginBtn);
-                            TextView nowIdTxt = (TextView) findViewById(R.id.nowId);
-                            TextView isAdminTxt = (TextView) findViewById(R.id.isAdmin);
-
-                            nowIdTxt.setText(loginId);
-                            isAdminTxt.setText(Boolean.toString(isAdmin));
-
-                            toLoginBtn.setText("로그인");
-                        }
-                    }
-                }
-
-                // 다시 웨이크업 워드를 듣기 시작
-                startListeningForWakeUpWord();
-            }
-
-            @Override
-            public void onPartialResults(Bundle bundle) {
-
-            }
-
-            @Override
-            public void onEvent(int i, Bundle bundle) {
-
-            }
-
-            // ... (다른 RecognitionListener 메소드)
         });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // SpeechRecognizer 자원 해제
-        if (speechRecognizer != null) {
-            speechRecognizer.destroy();
-        }
+        unbindService(serviceConnection);
     }
 }
