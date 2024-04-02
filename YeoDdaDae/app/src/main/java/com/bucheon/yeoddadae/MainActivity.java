@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     TextView toSttBtn;
     TextView sttStatus;
     Button mapBtn;
+    Button toShareParkBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         toSttBtn = findViewById(R.id.toSttBtn);
         sttStatus = findViewById(R.id.sttStatus);
         mapBtn = findViewById(R.id.mapBtn);
+        toShareParkBtn = findViewById(R.id.toShareParkBtn);
 
         nowIdTxt.setText(loginId);
         isAdminTxt.setText(Boolean.toString(isAdmin));
@@ -112,6 +114,14 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 startActivity(mapIntent);
             }
         });
+        toShareParkBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent shareParkIntent = new Intent(getApplicationContext(), ShareParkActivity.class);
+                startActivity(shareParkIntent);
+            }
+        });
+
     }
 
     @Override
