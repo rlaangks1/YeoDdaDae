@@ -1,7 +1,6 @@
 package com.bucheon.yeoddadae;
 
 import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
-import static android.content.ContentValues.TAG;
 
 import android.content.ComponentName;
 import android.content.Context;
