@@ -1,6 +1,7 @@
 package com.bucheon.yeoddadae;
 
 import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
+import static android.content.ContentValues.TAG;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     TextView sttStatus;
     Button toFindParkBtn;
     Button toFindGasStationBtn;
+    Button toShareParkBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         sttStatus = findViewById(R.id.sttStatus);
         toFindParkBtn = findViewById(R.id.toFindParkBtn);
         toFindGasStationBtn = findViewById(R.id.toFindGasStationBtn);
+        toShareParkBtn = findViewById(R.id.toShareParkBtn);
 
         // TMapView 인증 (앱 종료까지 유효)
         TMapView tMapView = new TMapView(this);
@@ -139,8 +142,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                     Intent findParkIntent = new Intent(getApplicationContext(), FindParkActivity.class);
                     findParkIntent.putExtra("SortBy", 1);
                     startActivity(findParkIntent);
-                }
-                else {
+                } else {
                     Log.d(TAG, "인증되지 않아 액티비티 start 할 수 없음");
                 }
             }
@@ -153,12 +155,20 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                     Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
                     findGasStationIntent.putExtra("SortBy", 1);
                     startActivity(findGasStationIntent);
-                }
-                else {
+                } else {
                     Log.d(TAG, "인증되지 않아 액티비티 start 할 수 없음");
                 }
             }
         });
+
+        toShareParkBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent shareParkIntent = new Intent(getApplicationContext(), ShareParkActivity.class);
+                startActivity(shareParkIntent);
+            }
+        });
+
     }
 
     @Override
@@ -202,8 +212,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             } else {
                 Log.d("TAG", "이미 로그인 상태임");
             }
-        }
-        else if (mainCommand.contains("로그아웃")) {
+        } else if (mainCommand.contains("로그아웃")) {
             if (loginId != null) {
                 loginId = null;
                 isAdmin = false;
@@ -216,40 +225,36 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 isAdminTxt.setText(Boolean.toString(isAdmin));
 
                 toLoginBtn.setText("로그인");
-            }
-            else {
+            } else {
                 Log.d("TAG", "이미 로그아웃 상태임");
             }
         }
         // 사투리도 처리????
         else if (mainCommand.contains("주유소")) {
-            if (mainCommand.contains("가까") || mainCommand.contains("가깝") || mainCommand.contains("근접") || mainCommand.contains("인접") || mainCommand.contains("거리")) {
+            if (mainCommand.contains("가까") || mainCommand.contains("가깝") || mainCommand.contains("근접")
+                    || mainCommand.contains("인접") || mainCommand.contains("거리")) {
                 Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
                 findGasStationIntent.putExtra("SortBy", 1);
                 startActivity(findGasStationIntent);
-            }
-            else if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
+            } else if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
                 Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
                 findGasStationIntent.putExtra("SortBy", 2);
                 startActivity(findGasStationIntent);
-            }
-            else if (mainCommand.contains("휘발") || mainCommand.contains("가솔린")) {
+            } else if (mainCommand.contains("휘발") || mainCommand.contains("가솔린")) {
                 Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
                 findGasStationIntent.putExtra("SortBy", 3);
                 startActivity(findGasStationIntent);
-            }
-            else if (mainCommand.contains("경유") || mainCommand.contains("디젤")) {
+            } else if (mainCommand.contains("경유") || mainCommand.contains("디젤")) {
                 Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
                 findGasStationIntent.putExtra("SortBy", 4);
                 startActivity(findGasStationIntent);
-            }
-            else if (mainCommand.contains("LPG") || mainCommand.contains("엘피지")) {
+            } else if (mainCommand.contains("LPG") || mainCommand.contains("엘피지")) {
                 Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
                 findGasStationIntent.putExtra("SortBy", 5);
                 startActivity(findGasStationIntent);
             }
+        } else {
         }
-        else {}
     }
 
     @Override

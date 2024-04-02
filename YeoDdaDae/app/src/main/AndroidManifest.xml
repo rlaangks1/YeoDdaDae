@@ -28,6 +28,7 @@
         <activity android:name=".FindParkActivity"/>
         <activity android:name=".FindGasStationActivity"/>
         <activity android:name=".NavigationActivity"/>
+        <activity android:name=".ShareParkActivity"/>
         <service
             android:name=".SttService"
             android:enabled="true"
