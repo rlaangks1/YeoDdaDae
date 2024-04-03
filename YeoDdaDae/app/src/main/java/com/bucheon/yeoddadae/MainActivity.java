@@ -100,8 +100,13 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             }
         });
 
-        nowIdTxt.setText(loginId);
-        isAdminTxt.setText(Boolean.toString(isAdmin));
+        if (loginId == null) {
+            nowIdTxt.setText("미 로그인 상태");
+        }
+        else {
+            nowIdTxt.setText(loginId);
+        }
+        isAdminTxt.setText("관리자여부 : " + isAdmin);
 
         serviceIntent = new Intent(this, SttService.class);
         startService(serviceIntent);
@@ -117,8 +122,13 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                     loginId = null;
                     isAdmin = false;
 
-                    nowIdTxt.setText(loginId);
-                    isAdminTxt.setText(Boolean.toString(isAdmin));
+                    if (loginId == null) {
+                        nowIdTxt.setText("미 로그인 상태");
+                    }
+                    else {
+                        nowIdTxt.setText(loginId);
+                    }
+                    isAdminTxt.setText("관리자여부 : " + isAdmin);
 
                     toLoginBtn.setText("로그인");
                 }
@@ -191,8 +201,13 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 loginId = data.getStringExtra("loginId");
                 isAdmin = data.getBooleanExtra("isAdmin", false);
 
-                nowIdTxt.setText(loginId);
-                isAdminTxt.setText(Boolean.toString(isAdmin));
+                if (loginId == null) {
+                    nowIdTxt.setText("미 로그인 상태");
+                }
+                else {
+                    nowIdTxt.setText(loginId);
+                }
+                isAdminTxt.setText("관리자여부 : " + isAdmin);
 
                 toLoginBtn.setText("로그아웃");
             }
@@ -204,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     public void onMainCommandReceived(String mainCommand) {
         Log.d("TAG", "MainActivity에서 받은 명령: " + mainCommand);
 
+        // 로그인
         if (mainCommand.contains("로그인")) {
             if (loginId == null) {
                 Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -211,7 +227,10 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             } else {
                 Log.d("TAG", "이미 로그인 상태임");
             }
-        } else if (mainCommand.contains("로그아웃")) {
+        }
+
+        // 로그아웃
+        else if (mainCommand.contains("로그아웃")) {
             if (loginId != null) {
                 loginId = null;
                 isAdmin = false;
@@ -220,14 +239,21 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 TextView nowIdTxt = findViewById(R.id.nowId);
                 TextView isAdminTxt = findViewById(R.id.isAdmin);
 
-                nowIdTxt.setText(loginId);
-                isAdminTxt.setText(Boolean.toString(isAdmin));
+                if (loginId == null) {
+                    nowIdTxt.setText("미 로그인 상태");
+                }
+                else {
+                    nowIdTxt.setText(loginId);
+                }
+                isAdminTxt.setText("관리자여부 : " + isAdmin);
 
                 toLoginBtn.setText("로그인");
             } else {
                 Log.d("TAG", "이미 로그아웃 상태임");
             }
         }
+
+        // 주유소찾기
         // 사투리도 처리????
         else if (mainCommand.contains("주유소")) {
             if (mainCommand.contains("가까") || mainCommand.contains("가깝") || mainCommand.contains("근접")
@@ -252,7 +278,11 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 findGasStationIntent.putExtra("SortBy", 5);
                 startActivity(findGasStationIntent);
             }
-        } else {
+        }
+
+        // 모두 아님 (서비스 다시시작)
+        else {
+            startService(serviceIntent);
         }
     }
 
