@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,10 +21,8 @@ import com.skt.Tmap.TMapView;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements SttService.SttCallback {
-
-    final int loginIntentRequestCode = 1;
-
     boolean apiKeyCertified;
+    private String API_KEY = "iqTSQ2hMuj8E7t2sy3WYA5m73LuX4iUD5iHgwRGf";
 
     String loginId = null;
     boolean isAdmin = false;
@@ -58,32 +57,32 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         }
     };
 
-    private static String API_KEY = "iqTSQ2hMuj8E7t2sy3WYA5m73LuX4iUD5iHgwRGf";
-
-    Button toLoginBtn;
     TextView nowIdTxt;
     TextView isAdminTxt;
-    TextView toSttBtn;
     TextView sttStatus;
-    Button toFindParkBtn;
-    Button toFindGasStationBtn;
+    ImageButton toSttImgBtn;
+    ImageButton toFindParkImgBtn;
+    ImageButton toFindGasStationImgBtn;
     Button toShareParkBtn;
+    Button logoutBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.app_start);
+        setContentView(R.layout.activity_main);
 
-        Button toJoinMembershipBtn = (Button) findViewById(R.id.btn_join_membership);
-
-        toLoginBtn = findViewById(R.id.toLoginBtn);
-        nowIdTxt = findViewById(R.id.nowId);
-        isAdminTxt = findViewById(R.id.isAdmin);
-        toSttBtn = findViewById(R.id.toSttBtn);
-        sttStatus = findViewById(R.id.sttStatus);
-        toFindParkBtn = findViewById(R.id.toFindParkBtn);
-        toFindGasStationBtn = findViewById(R.id.toFindGasStationBtn);
+        nowIdTxt = findViewById(R.id.nowIdTxt);
+        isAdminTxt = findViewById(R.id.isAdminTxt);
+        sttStatus = findViewById(R.id.sttStatusTxt);
+        toSttImgBtn = findViewById(R.id.toSttImgBtn);
+        toFindParkImgBtn = findViewById(R.id.toFindParkImgBtn);
+        toFindGasStationImgBtn = findViewById(R.id.toFindGasStationImgBtn);
         toShareParkBtn = findViewById(R.id.toShareParkBtn);
+        logoutBtn = findViewById(R.id.logoutBtn);
+
+        Intent inIntent = getIntent();
+        loginId = inIntent.getStringExtra("loginId");
+        isAdmin = inIntent.getBooleanExtra("isAdmin", false);
 
         // TMapView 인증 (앱 종료까지 유효)
         TMapView tMapView = new TMapView(this);
@@ -102,60 +101,16 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             }
         });
 
-        if (loginId == null) {
-            nowIdTxt.setText("미 로그인 상태");
-        }
-        else {
+        if (loginId != null) {
             nowIdTxt.setText(loginId);
+            isAdminTxt.setText("관리자여부 : " + isAdmin);
         }
-        isAdminTxt.setText("관리자여부 : " + isAdmin);
 
         serviceIntent = new Intent(this, SttService.class);
         startService(serviceIntent);
         bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
-        toLoginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (loginId == null) {
-                    Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivityForResult(loginIntent, loginIntentRequestCode);
-                } else {
-                    loginId = null;
-                    isAdmin = false;
-
-                    if (loginId == null) {
-                        nowIdTxt.setText("미 로그인 상태");
-                    }
-                    else {
-                        nowIdTxt.setText(loginId);
-                    }
-                    isAdminTxt.setText("관리자여부 : " + isAdmin);
-
-                    toLoginBtn.setText("로그인");
-                }
-            }
-        });
-        toJoinMembershipBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v) {
-                if (loginId == null) {
-                    Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivityForResult(loginIntent, loginIntentRequestCode);
-                }
-                else {
-                    loginId = null;
-                    isAdmin = false;
-
-                    nowIdTxt.setText(loginId);
-                    isAdminTxt.setText(Boolean.toString(isAdmin));
-
-                    toLoginBtn.setText("로그인");
-                }
-            }
-        });
-
-        toSttBtn.setOnClickListener(new View.OnClickListener() {
+        toSttImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (sttService != null) {
@@ -164,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             }
         });
 
-        toFindParkBtn.setOnClickListener(new View.OnClickListener() {
+        toFindParkImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (apiKeyCertified) {
@@ -177,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             }
         });
 
-        toFindGasStationBtn.setOnClickListener(new View.OnClickListener() {
+        toFindGasStationImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (apiKeyCertified) {
@@ -198,6 +153,14 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             }
         });
 
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent logoutIntent = new Intent (getApplicationContext(), StartActivity.class);
+                startActivity(logoutIntent);
+                finish();
+            }
+        });
     }
 
     @Override
@@ -216,6 +179,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        /*
         if (requestCode == loginIntentRequestCode) {
             if (resultCode == RESULT_OK) {
                 loginId = data.getStringExtra("loginId");
@@ -232,44 +196,19 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 toLoginBtn.setText("로그아웃");
             }
         }
-        startService(serviceIntent);
+        */
     }
 
     @Override
     public void onMainCommandReceived(String mainCommand) {
         Log.d("TAG", "MainActivity에서 받은 명령: " + mainCommand);
 
-        // 로그인
-        if (mainCommand.contains("로그인")) {
-            if (loginId == null) {
-                Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivityForResult(loginIntent, loginIntentRequestCode);
-            } else {
-                Log.d("TAG", "이미 로그인 상태임");
-            }
-        }
-
         // 로그아웃
-        else if (mainCommand.contains("로그아웃")) {
+        if (mainCommand.contains("로그아웃")) {
             if (loginId != null) {
-                loginId = null;
-                isAdmin = false;
-
-                Button toLoginBtn = findViewById(R.id.toLoginBtn);
-                TextView nowIdTxt = findViewById(R.id.nowId);
-                TextView isAdminTxt = findViewById(R.id.isAdmin);
-
-                if (loginId == null) {
-                    nowIdTxt.setText("미 로그인 상태");
-                }
-                else {
-                    nowIdTxt.setText(loginId);
-                }
-                isAdminTxt.setText("관리자여부 : " + isAdmin);
-
-                toLoginBtn.setText("로그인");
-            } else {
-                Log.d("TAG", "이미 로그아웃 상태임");
+                Intent logoutIntent = new Intent (getApplicationContext(), StartActivity.class);
+                startActivity(logoutIntent);
+                finish();
             }
         }
 

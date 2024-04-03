@@ -9,13 +9,16 @@ import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.FirebaseApp;
+
 public class LoginActivity extends AppCompatActivity {
+    FirestoreDatabase fd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        FirestoreDatabase fd = new FirestoreDatabase();
+        fd = new FirestoreDatabase();
 
         ImageButton backBtn = (ImageButton) findViewById(R.id.loginBackBtn);
         EditText idTxt = (EditText) findViewById(R.id.loginIdTxt);
@@ -65,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent registerIntent = new Intent(getApplicationContext(), RegisterAccount.class);
+                Intent registerIntent = new Intent(getApplicationContext(), RegisterActivity.class);
                 startActivity(registerIntent);
             }
         });

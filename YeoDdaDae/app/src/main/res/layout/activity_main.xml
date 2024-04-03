@@ -38,7 +38,7 @@
                 android:background="@drawable/menu_bar" />
 
             <ImageButton
-                android:id="@+id/rectangle_2"
+                android:id="@+id/toFindParkImgBtn"
                 android:layout_width="385dp"
                 android:layout_height="121dp"
                 android:layout_alignParentLeft="true"
@@ -56,8 +56,7 @@
                 android:layout_marginLeft="37dp"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="107dp"
-                android:background="@drawable/parking_image"
-                />
+                android:background="@drawable/parking_image" />
 
             <TextView
                 android:id="@+id/find_parkin"
@@ -72,7 +71,7 @@
                 android:textAppearance="@style/find_parkin" />
 
             <ImageButton
-                android:id="@+id/rectangle_3"
+                android:id="@+id/toFindGasStationImgBtn"
                 android:layout_width="385dp"
                 android:layout_height="121dp"
                 android:layout_alignParentLeft="true"
@@ -141,7 +140,7 @@
                 android:textAppearance="@style/car_booking" />
 
             <ImageButton
-                android:id="@+id/button"
+                android:id="@+id/toSttImgBtn"
                 android:layout_width="140dp"
                 android:layout_height="60dp"
                 android:layout_alignParentEnd="true"
@@ -172,9 +171,7 @@
                 android:gravity="top"
                 android:text="@string/microphone"
                 android:textAppearance="@style/microphone" />
-
         </RelativeLayout>
-
     </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -187,21 +184,38 @@
         app:menu="@menu/bottom_nav" />
 
     <Button
-        android:id="@+id/toFindGasStationBtn"
-        android:text="주유소찾기"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toFindParkBtn" />
-
-    <Button
         android:id="@+id/toShareParkBtn"
         android:text="주차장 공유"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toFindGasStationBtn" />
+        android:layout_marginTop="450dp"/>
+
+    <TextView
+        android:id="@+id/nowIdTxt"
+        android:text="로그인아이디"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="500dp"/>
+
+    <TextView
+        android:id="@+id/isAdminTxt"
+        android:text="관리자여부"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="520dp"/>
+
+    <TextView
+        android:id="@+id/sttStatusTxt"
+        android:text="음성인식상태"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="540dp"/>
+
+    <Button
+        android:id="@+id/logoutBtn"
+        android:text="로그아웃"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="560dp"/>
 
 </RelativeLayout>
