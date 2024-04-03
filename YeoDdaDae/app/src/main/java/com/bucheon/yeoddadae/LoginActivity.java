@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,7 +17,7 @@ public class LoginActivity extends AppCompatActivity {
 
         FirestoreDatabase fd = new FirestoreDatabase();
 
-        Button backBtn = (Button) findViewById(R.id.loginBackBtn);
+        ImageButton backBtn = (ImageButton) findViewById(R.id.loginBackBtn);
         EditText idTxt = (EditText) findViewById(R.id.loginIdTxt);
         EditText pwTxt = (EditText) findViewById(R.id.loginPwTxt);
         Button loginBtn = (Button) findViewById(R.id.loginBtn);

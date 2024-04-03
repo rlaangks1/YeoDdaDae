@@ -72,7 +72,9 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.app_start);
+
+        Button toJoinMembershipBtn = (Button) findViewById(R.id.btn_join_membership);
 
         toLoginBtn = findViewById(R.id.toLoginBtn);
         nowIdTxt = findViewById(R.id.nowId);
@@ -129,6 +131,24 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                         nowIdTxt.setText(loginId);
                     }
                     isAdminTxt.setText("관리자여부 : " + isAdmin);
+
+                    toLoginBtn.setText("로그인");
+                }
+            }
+        });
+        toJoinMembershipBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View v) {
+                if (loginId == null) {
+                    Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivityForResult(loginIntent, loginIntentRequestCode);
+                }
+                else {
+                    loginId = null;
+                    isAdmin = false;
+
+                    nowIdTxt.setText(loginId);
+                    isAdminTxt.setText(Boolean.toString(isAdmin));
 
                     toLoginBtn.setText("로그인");
                 }
