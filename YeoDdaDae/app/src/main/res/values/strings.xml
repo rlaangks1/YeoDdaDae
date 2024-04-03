@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Eoddadae</string>
+    <string name="app_name">YeoDdaDae</string>
     <string name="new_start">주차의 새로운 시작</string>
     <string name="already_user">가입된 회원이십니까?</string>
     <string name="login">로그인</string>
@@ -33,4 +33,21 @@
     <string name="customer_service2">고객센터</string>
     <string name="manager_info1">관리자 정보</string>
     <string name="manager_info2">성명\n\n나이\n\n사업연혁</string>
+
+    <string-array name="time_units">
+        <item>30분</item>
+        <item>1시간</item>
+        <item>6시간</item>
+        <item>24시간</item>
+    </string-array>
+    <string-array name="time_array">
+        <item>30분</item>
+        <item>1시간</item>
+        <item>1시간30분</item>
+        <item>2시간</item>
+        <item>3시간</item>
+        <item>4시간</item>
+        <item>12시간</item>
+        <item>24시간</item>
+    </string-array>
 </resources>
