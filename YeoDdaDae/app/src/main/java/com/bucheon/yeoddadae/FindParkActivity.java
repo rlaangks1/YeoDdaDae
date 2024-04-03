@@ -154,6 +154,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                 parkSortHorizontalScrollView.setVisibility(View.GONE);
             }
         });
+
         // 권한 확인 후 초기화
         checkPermission();
     }
@@ -161,7 +162,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     private void checkPermission() {
         if (checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "권한 있음");
+            Log.d(TAG, "권한 이미 있음");
             init();
         }
         else {
@@ -223,11 +224,17 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         tMapCircle.setCircleWidth(0);
         tMapCircle.setAreaColor(Color.rgb(0, 0, 0));
         tMapCircle.setAreaAlpha(25);
-
-        // TMapCircle 추가
         tMapView.addTMapCircle("Circle", tMapCircle);
 
         findPark(recievedSort);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                parkListView.setVisibility(View.VISIBLE);
+                parkSortHorizontalScrollView.setVisibility(View.VISIBLE);
+            }
+        });
 
         // 버튼 클릭 이벤트 리스너들
         findParkBackBtn.setOnClickListener(new View.OnClickListener() { // 액티비티 종료
@@ -286,74 +293,6 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             public void onClick(View v) {
                 loadingStart();
                 findPark(3);
-            }
-        });
-
-        parkListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // 클릭한 ParkItem을 가져옴
-                ParkItem clickedPark = (ParkItem) parent.getItemAtPosition(position);
-
-                Log.d(TAG, "리스트뷰에서 주유소 아이템 클릭함 : " + clickedPark.getName() + ", " + clickedPark.getRadius() + ", " + clickedPark.getParkPrice()
-                        + ", " + clickedPark.getPhone() + ", " + clickedPark.getAddition()
-                        + ", " + clickedPark.getStarRate() + ", " + clickedPark.getLat() + ", " + clickedPark.getLon());
-
-                // parkListView에 clickedPark만 있도록
-                ParkAdapter tempParkAdapter = new ParkAdapter();
-                tempParkAdapter.addItem(clickedPark);
-                parkListView.setAdapter(tempParkAdapter);
-
-                // 도착점 설정
-                naviEndPoint = new TMapPoint (clickedPark.getLat(), clickedPark.getLon());
-                naviEndPointName = clickedPark.getName();
-
-                // 길 찾기 및 선 표시
-                TMapData tmapdata = new TMapData();
-                tmapdata.findPathData(nowPoint, naviEndPoint, new TMapData.FindPathDataListenerCallback() {
-                    @Override
-                    public void onFindPathData(TMapPolyLine polyLine) {
-                        if (selectedMarker != null) {
-                            if (clickedPark.getType() == 3) {
-                                selectedMarker.setIcon(tmapShareParkMarkerIcon);
-                            }
-                            else {
-                                selectedMarker.setIcon(tmapMarkerIcon);
-                            }
-                        }
-
-                        tMapView.setTMapPathIcon(tmapStartMarkerIcon, null);
-                        TMapMarkerItem endMarker = tMapView.getMarkerItemFromID(clickedPark.getName());
-                        endMarker.setIcon(tmapSelectedMarkerIcon);
-
-                        selectedMarker = endMarker;
-
-                        tMapView.addTMapPath(polyLine);
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-                                float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
-                                parkListView.getLayoutParams().height = (int) px;
-                                parkListView.requestLayout();
-
-                                TextView parkOrder = findViewById(R.id.parkOrder);
-                                parkOrder.setVisibility(View.GONE);
-
-                                TextView parkName = findViewById(R.id.parkName);
-                                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) parkName.getLayoutParams();
-                                params.leftToLeft = R.id.parkItemConstraintLayout;
-                                parkName.setLayoutParams(params);
-
-                                parkSortHorizontalScrollView.setVisibility(View.GONE);
-                                searchStartBtn.setVisibility(View.GONE);
-                                cancelNaviBtn.setVisibility(View.VISIBLE);
-                                toStartNaviBtn.setVisibility(View.VISIBLE);
-                            }
-                        });
-                    }
-                });
             }
         });
 
@@ -422,7 +361,6 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                     if (arrayList == null) {
                                         return;
                                     }
-
                                     for (int i = 0; i < arrayList.size(); i++) {
                                         TMapPOIItem item = arrayList.get(i);
                                         spa.addItem(new ParkItem(456, item.name, item.radius, null, item.telNo, null, 0, item.frontLat, item.frontLon));
@@ -441,6 +379,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                 }
             }
         });
+
         searchBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -448,6 +387,74 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     @Override
                     public void run() {
                         searchConstraintLayout.setVisibility(View.GONE);
+                    }
+                });
+            }
+        });
+
+        parkListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // 클릭한 ParkItem을 가져옴
+                ParkItem clickedPark = (ParkItem) parent.getItemAtPosition(position);
+
+                Log.d(TAG, "리스트뷰에서 주유소 아이템 클릭함 : " + clickedPark.getName() + ", " + clickedPark.getRadius() + ", " + clickedPark.getParkPrice()
+                        + ", " + clickedPark.getPhone() + ", " + clickedPark.getAddition()
+                        + ", " + clickedPark.getStarRate() + ", " + clickedPark.getLat() + ", " + clickedPark.getLon());
+
+                // parkListView에 clickedPark만 있도록
+                ParkAdapter pa = new ParkAdapter();
+                pa.addItem(clickedPark);
+                parkListView.setAdapter(pa);
+
+                // 도착점 설정
+                naviEndPoint = new TMapPoint (clickedPark.getLat(), clickedPark.getLon());
+                naviEndPointName = clickedPark.getName();
+
+                // 길 찾기 및 선 표시
+                TMapData tmapdata = new TMapData();
+                tmapdata.findPathData(nowPoint, naviEndPoint, new TMapData.FindPathDataListenerCallback() {
+                    @Override
+                    public void onFindPathData(TMapPolyLine polyLine) {
+                        if (selectedMarker != null) {
+                            if (clickedPark.getType() == 3) {
+                                selectedMarker.setIcon(tmapShareParkMarkerIcon);
+                            }
+                            else {
+                                selectedMarker.setIcon(tmapMarkerIcon);
+                            }
+                        }
+
+                        tMapView.setTMapPathIcon(tmapStartMarkerIcon, null);
+                        TMapMarkerItem endMarker = tMapView.getMarkerItemFromID(clickedPark.getName());
+                        endMarker.setIcon(tmapSelectedMarkerIcon);
+
+                        selectedMarker = endMarker;
+
+                        tMapView.addTMapPath(polyLine);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                                float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
+                                parkListView.getLayoutParams().height = (int) px;
+                                parkListView.requestLayout();
+
+                                TextView parkOrder = findViewById(R.id.parkOrder);
+                                parkOrder.setVisibility(View.GONE);
+
+                                TextView parkName = findViewById(R.id.parkName);
+                                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) parkName.getLayoutParams();
+                                params.leftToLeft = R.id.parkItemConstraintLayout;
+                                parkName.setLayoutParams(params);
+
+                                parkSortHorizontalScrollView.setVisibility(View.GONE);
+                                searchStartBtn.setVisibility(View.GONE);
+                                cancelNaviBtn.setVisibility(View.VISIBLE);
+                                toStartNaviBtn.setVisibility(View.VISIBLE);
+                            }
+                        });
                     }
                 });
             }
@@ -489,10 +496,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                 searchConstraintLayout.setVisibility(View.GONE);
             }
         });
-
-        // 뷰 보이기
-        parkListView.setVisibility(View.VISIBLE);
-        parkSortHorizontalScrollView.setVisibility(View.VISIBLE);
+        // init 끝
     }
 
     public void findPark(int sortBy) { // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:휘발유가순, 4: 경유가순, 5:LPG가순
@@ -503,6 +507,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
 
         parkAdapter = new ParkAdapter();
 
+        // 공유 주차장 찾기
         FirestoreDatabase fd = new FirestoreDatabase();
         fd.findSharePark(centerPoint.getLatitude(), centerPoint.getLongitude(), 3, new OnFirestoreDataLoadedListener() {
             @Override
@@ -527,8 +532,8 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                 Log.e("FirestoreDataError", errorMessage);
             }
         });
-
-
+        
+        // 보통 주차장 찾기
         tMapData = new TMapData();
         tMapData.findAroundNamePOI(centerPoint, "주차장", 3, 200, new TMapData.FindAroundNamePOIListenerCallback ()
         {
