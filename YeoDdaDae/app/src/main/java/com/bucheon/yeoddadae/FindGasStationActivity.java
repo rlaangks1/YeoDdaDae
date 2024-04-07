@@ -331,6 +331,8 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                tMapView.setCenterPoint(selectedMarker.longitude, selectedMarker.latitude);
+
                                 DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
                                 float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
                                 gasStationListView.getLayoutParams().height = (int) px;
@@ -536,6 +538,8 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            tMapView.setCenterPoint(selectedMarker.longitude, selectedMarker.latitude);
+
                             DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
                             float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
                             gasStationListView.getLayoutParams().height = (int) px;

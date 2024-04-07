@@ -3,7 +3,6 @@ package com.bucheon.yeoddadae;
 import static android.content.ContentValues.TAG;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -28,7 +27,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -43,12 +41,7 @@ import com.skt.Tmap.TMapView;
 import com.skt.Tmap.poi_item.TMapPOIItem;
 import com.skt.tmap.engine.navigation.SDKManager;
 
-import org.xml.sax.SAXException;
-
-import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 public class FindParkActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback, TMapView.OnClickListenerCallback {
     private static final int PERMISSION_REQUEST_CODE = 1;
@@ -90,10 +83,10 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     double lat = 37.578611; // 위도
     double lon = 126.977222; // 경도
 
-    private static String CLIENT_ID = "";
-    private static String API_KEY = "iqTSQ2hMuj8E7t2sy3WYA5m73LuX4iUD5iHgwRGf";
-    private static String USER_KEY = ""; // USER KEY 입력 필수 아님 : Copy License 기준 서비스 운영시 필요
-    private static String DEVICE_KEY = "";
+    private final String CLIENT_ID = "";
+    private final String API_KEY = "iqTSQ2hMuj8E7t2sy3WYA5m73LuX4iUD5iHgwRGf";
+    private final String USER_KEY = ""; // USER KEY 입력 필수 아님 : Copy License 기준 서비스 운영시 필요
+    private final String DEVICE_KEY = "";
 
     TMapPoint nowPoint = new TMapPoint(lat, lon);
     TMapPoint naviEndPoint;
@@ -111,14 +104,6 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
 
         // 로딩 시작
         loadingStart();
-
-        // 메인액티비티에서 정렬기준 받기
-        Intent inIntent = getIntent();
-        recievedSort = inIntent.getIntExtra("SortBy", 0);
-        if (recievedSort == 0) {
-            Log.d(TAG, "sttSort가 0임 (오류)");
-            finish();
-        }
 
         // 뷰 정의
         parkListView = findViewById(R.id.parkListView);
@@ -138,6 +123,14 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         searchBtn = findViewById(R.id.searchBtn);
         searchBackBtn = findViewById(R.id.searchBackBtn);
         searchListView = findViewById(R.id.searchListView);
+
+        // 메인액티비티에서 정렬기준 받기
+        Intent inIntent = getIntent();
+        recievedSort = inIntent.getIntExtra("SortBy", 0);
+        if (recievedSort == 0) {
+            Log.d(TAG, "sttSort가 0임 (오류)");
+            finish();
+        }
 
         // Bitmap 정의
         tmapMyLocationIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_my_location);
@@ -228,14 +221,6 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
 
         findPark(recievedSort);
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                parkListView.setVisibility(View.VISIBLE);
-                parkSortHorizontalScrollView.setVisibility(View.VISIBLE);
-            }
-        });
-
         // 버튼 클릭 이벤트 리스너들
         findParkBackBtn.setOnClickListener(new View.OnClickListener() { // 액티비티 종료
             @Override
@@ -296,7 +281,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             }
         });
 
-        cancelNaviBtn.setOnClickListener(new View.OnClickListener() {
+        cancelNaviBtn.setOnClickListener(new View.OnClickListener() { // 네비게이션 취소
             @Override
             public void onClick(View v) {
                 runOnUiThread(new Runnable() {
@@ -315,7 +300,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             }
         });
 
-        toStartNaviBtn.setOnClickListener(new View.OnClickListener() {
+        toStartNaviBtn.setOnClickListener(new View.OnClickListener() { // 네비게이션 시작
             @Override
             public void onClick(View v) {
                 Intent naviIntent = new Intent(getApplicationContext(), NavigationActivity.class);
@@ -326,7 +311,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             }
         });
 
-        searchStartBtn.setOnClickListener(new View.OnClickListener() {
+        searchStartBtn.setOnClickListener(new View.OnClickListener() { // 검색창 띄우기
             @Override
             public void onClick(View v) {
                 runOnUiThread(new Runnable() {
@@ -337,7 +322,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                 });
             }
         });
-        searchBtn.setOnClickListener(new View.OnClickListener() {
+        searchBtn.setOnClickListener(new View.OnClickListener() { // 검색 시작
             @Override
             public void onClick(View v) {
                 if (!searchEdTxt.getText().toString().equals("")) {
@@ -380,7 +365,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             }
         });
 
-        searchBackBtn.setOnClickListener(new View.OnClickListener() {
+        searchBackBtn.setOnClickListener(new View.OnClickListener() { // 검색창 닫기
             @Override
             public void onClick(View v) {
                 runOnUiThread(new Runnable() {
@@ -392,7 +377,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             }
         });
 
-        parkListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        parkListView.setOnItemClickListener(new AdapterView.OnItemClickListener() { // 주차장 리스트뷰 아이템 클릭
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // 클릭한 ParkItem을 가져옴
@@ -436,6 +421,8 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                tMapView.setCenterPoint(selectedMarker.longitude, selectedMarker.latitude);
+
                                 DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
                                 float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
                                 parkListView.getLayoutParams().height = (int) px;
@@ -460,7 +447,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             }
         });
 
-        searchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        searchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() { // 주소,장소 검색 리스트뷰 아이템 클릭
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // 클릭한 ParkItem을 가져옴
@@ -492,12 +479,12 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     tItem.setIcon(tmapShareParkMarkerIcon);
                     tItem.setPosition(0.5f,1.0f); // 마커의 중심점을 하단, 중앙으로 설정
                     tMapView.addMarkerItem(clickedPark.getName(), tItem);
+                    tMapView.setZoomLevel(10);
                 }
                 searchConstraintLayout.setVisibility(View.GONE);
             }
         });
-        // init 끝
-    }
+    } // init 끝
 
     public void findPark(int sortBy) { // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:휘발유가순, 4: 경유가순, 5:LPG가순
         Log.d (TAG, "findPark 시작");
@@ -663,6 +650,8 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            tMapView.setCenterPoint(selectedMarker.longitude, selectedMarker.latitude);
+
                             DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
                             float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
                             parkListView.getLayoutParams().height = (int) px;

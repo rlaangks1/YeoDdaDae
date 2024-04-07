@@ -17,7 +17,7 @@ import java.util.List;
 
 public class SttService extends Service {
 
-    private static final String TAG = "SttService";
+    private final String TAG = "SttService";
     private SpeechRecognizer speechRecognizer;
     private SttCallback sttCallback;
     private boolean isListeningForWakeUpWord = false;
@@ -37,19 +37,12 @@ public class SttService extends Service {
     public void onCreate() {
         super.onCreate();
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
-        AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         listenForWakeUpWord();
         return START_STICKY;
-    }
-
-    private void stopContinuousListening() {
-        if (speechRecognizer != null) {
-            speechRecognizer.destroy();
-        }
     }
 
     public void startListeningForMainCommand() {
@@ -59,8 +52,10 @@ public class SttService extends Service {
         }
     }
 
-    public void stopListening() {
-        stopContinuousListening();
+    public void stopContinuousListening() {
+        if (speechRecognizer != null) {
+            speechRecognizer.destroy();
+        }
     }
 
     private void listenForWakeUpWord() {
@@ -99,8 +94,7 @@ public class SttService extends Service {
                     // 웨이크업 워드가 감지되었는지 확인
                     if (wakeUpWord.contains("음성 명령")) {
                         Log.d(TAG, "호출어듣기 : 호출어확인성공");
-                        isListeningForWakeUpWord = false;  // 플래그를 false로 설정
-                        listenForMainCommand();
+                        startListeningForMainCommand();
                     }
                     else {
                         Log.d(TAG, "호출어듣기 : 호출어가아님");
@@ -152,6 +146,8 @@ public class SttService extends Service {
     }
 
     private void listenForMainCommand() {
+        isListeningForWakeUpWord = false;  // 플래그를 false로 설정
+
         // 음성 인식을 위한 Intent 생성
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -189,13 +185,6 @@ public class SttService extends Service {
                         sttCallback.onMainCommandReceived(mainCommand);
                     }
                 }
-
-                // 메인 명령을 처리한 후, 플래그에 따라 웨이크업 워드를 계속 듣을지 결정합니다.
-                /*
-                if (isListeningForWakeUpWord) {
-                    listenForWakeUpWord();
-                }
-                */
             }
 
             @Override

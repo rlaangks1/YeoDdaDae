@@ -2,10 +2,13 @@ package com.bucheon.yeoddadae;
 
 import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
 
+import android.Manifest;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -14,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.skt.Tmap.TMapView;
@@ -21,6 +25,9 @@ import com.skt.Tmap.TMapView;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements SttService.SttCallback {
+    boolean recordAudioPermissionGranted = false;
+    private int PERMISSION_REQUEST_CODE = 1;
+
     boolean apiKeyCertified;
     private String API_KEY = "iqTSQ2hMuj8E7t2sy3WYA5m73LuX4iUD5iHgwRGf";
 
@@ -43,16 +50,20 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         }
     };
 
+    private boolean serviceConnected = false;
+
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             SttService.SttBinder binder = (SttService.SttBinder) service;
             sttService = binder.getService();
             sttService.setSttCallback(sttCallback);
+            serviceConnected = true; // 서비스에 연결되었음을 표시
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            serviceConnected = false; // 서비스 연결 해제됨을 표시
             // 필요한 경우 연결이 끊겼을 때 처리
         }
     };
@@ -101,20 +112,27 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             }
         });
 
+        serviceIntent = new Intent(this, SttService.class);
+        checkPermission();
+
+        if (recordAudioPermissionGranted) {
+            startService(serviceIntent);
+            bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+        }
+
         if (loginId != null) {
             nowIdTxt.setText(loginId);
             isAdminTxt.setText("관리자여부 : " + isAdmin);
         }
 
-        serviceIntent = new Intent(this, SttService.class);
-        startService(serviceIntent);
-        bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-
         toSttImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sttService != null) {
-                    sttService.startListeningForMainCommand();
+                checkPermission();
+                if (recordAudioPermissionGranted) {
+                    if (sttService != null) {
+                        sttService.startListeningForMainCommand();
+                    }
                 }
             }
         });
@@ -166,13 +184,17 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     @Override
     protected void onPause() {
         super.onPause();
-        sttService.stopListening();
+        if (recordAudioPermissionGranted) {
+            sttService.stopContinuousListening();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        startService(serviceIntent);
+        if (recordAudioPermissionGranted) {
+            startService(serviceIntent);
+        }
     }
 
     @Override
@@ -258,6 +280,35 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbindService(serviceConnection);
+        if (serviceConnected) { // 서비스에 연결되어 있다면
+            unbindService(serviceConnection); // 서비스 언바인딩
+            serviceConnected = false; // 플래그 재설정
+        }
+    }
+
+    private void checkPermission() {
+        if (checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "권한 있음");
+            recordAudioPermissionGranted = true;
+        }
+        else {
+            Log.d(TAG, "권한 없음. 요청");
+            String[] permissionArr = {android.Manifest.permission.RECORD_AUDIO};
+            requestPermissions(permissionArr, PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSION_REQUEST_CODE
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "권한요청에서 허가");
+            recordAudioPermissionGranted = true;
+        }
+        else {
+            Log.d (TAG, "권한요청에서 거부or문제");
+        }
     }
 }
