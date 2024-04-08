@@ -16,6 +16,8 @@ import android.widget.Toast;
 import java.util.List;
 
 public class SttService extends Service {
+    int originalStreamVolume;
+    AudioManager amanager;
 
     private final String TAG = "SttService";
     private SpeechRecognizer speechRecognizer;
@@ -37,6 +39,8 @@ public class SttService extends Service {
     public void onCreate() {
         super.onCreate();
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        amanager=(AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        originalStreamVolume = amanager.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
     }
 
     @Override
@@ -66,6 +70,8 @@ public class SttService extends Service {
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR"); // 언어를 한국어로 설정
 
+        amanager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 0, AudioManager.FLAG_PLAY_SOUND);
+
         // 듣기 시작
         speechRecognizer.startListening(intent);
 
@@ -94,6 +100,7 @@ public class SttService extends Service {
                     // 웨이크업 워드가 감지되었는지 확인
                     if (wakeUpWord.contains("음성 명령")) {
                         Log.d(TAG, "호출어듣기 : 호출어확인성공");
+                        amanager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, originalStreamVolume, AudioManager.FLAG_PLAY_SOUND);
                         startListeningForMainCommand();
                     }
                     else {
