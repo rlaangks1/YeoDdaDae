@@ -78,6 +78,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     Bitmap tmapStartMarkerIcon;
     Bitmap tmapSelectedMarkerIcon;
     Bitmap tmapShareParkMarkerIcon;
+    Bitmap tmapSelectedShareParkMarkerIcon;
 
     // 경복궁
     double lat = 37.578611; // 위도
@@ -97,6 +98,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     TMapData tMapData;
     TMapMarkerItem selectedMarker;
     ParkAdapter parkAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,6 +140,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         tmapSelectedMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_selected_marker);
         tmapStartMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_start_marker);
         tmapShareParkMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_share_park_marker);
+        tmapSelectedShareParkMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_selected_share_park_marker);
 
         // 로딩 완료까지 뷰 없애기
         runOnUiThread(new Runnable() {
@@ -333,30 +336,36 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                             if (arrayList == null) {
                                 return;
                             }
+                            Log.d(TAG, arrayList.size()+"");
                             SearchParkAdapter spa = new SearchParkAdapter();
+                            ArrayList<String> addedNames = new ArrayList<>();
 
                             for (int i = 0; i < arrayList.size(); i++) {
                                 TMapPOIItem item = arrayList.get(i);
                                 spa.addItem(new ParkItem(123, item.name, item.radius, null, null, null, 0, item.frontLat, item.frontLon));
+                                addedNames.add(item.name);
                             }
 
                             tMapData.findTitlePOI(searchEdTxt.getText().toString(), new TMapData.FindTitlePOIListenerCallback() {
                                 @Override
-                                public void onFindTitlePOI(ArrayList<TMapPOIItem> arrayList) {
-                                    if (arrayList == null) {
+                                public void onFindTitlePOI(ArrayList<TMapPOIItem> arrayList2) {
+                                    if (arrayList2 == null) {
                                         return;
                                     }
-                                    for (int i = 0; i < arrayList.size(); i++) {
-                                        TMapPOIItem item = arrayList.get(i);
-                                        spa.addItem(new ParkItem(456, item.name, item.radius, null, item.telNo, null, 0, item.frontLat, item.frontLon));
+                                    Log.d(TAG, arrayList2.size()+"");
+                                    for (int i = 0; i < arrayList2.size(); i++) {
+                                        TMapPOIItem item2 = arrayList2.get(i);
+                                        if (!addedNames.contains(item2.name)) {
+                                            spa.addItem(new ParkItem(0, item2.name, item2.radius, null, item2.telNo, null, 0, item2.frontLat, item2.frontLon));
 
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                searchListView.setAdapter(spa);
-                                            }
-                                        });
+                                        }
                                     }
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            searchListView.setAdapter(spa);
+                                        }
+                                    });
                                 }
                             });
                         }
@@ -412,7 +421,12 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
 
                         tMapView.setTMapPathIcon(tmapStartMarkerIcon, null);
                         TMapMarkerItem endMarker = tMapView.getMarkerItemFromID(clickedPark.getName());
-                        endMarker.setIcon(tmapSelectedMarkerIcon);
+                        if (clickedPark.getType() == 3) {
+                            endMarker.setIcon(tmapSelectedShareParkMarkerIcon);
+                        }
+                        else {
+                            endMarker.setIcon(tmapSelectedMarkerIcon);
+                        }
 
                         selectedMarker = endMarker;
 
@@ -641,7 +655,12 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     clickParkType = clickedPark.getType();
 
                     tMapView.setTMapPathIcon(tmapStartMarkerIcon, null);
-                    endMarker.setIcon(tmapSelectedMarkerIcon);
+                    if (clickedPark.getType() == 3) {
+                        endMarker.setIcon(tmapSelectedShareParkMarkerIcon);
+                    }
+                    else {
+                        endMarker.setIcon(tmapSelectedMarkerIcon);
+                    }
 
                     selectedMarker = endMarker;
 

@@ -116,6 +116,14 @@ public class SearchParkAdapter extends BaseAdapter {
             case 3 :
                 parkType.setText("공유");
                 break;
+            case 5 :
+                parkType.setText("장소");
+                break;
+            case 123 :
+                parkType.setText("주소");
+                break;
+            default :
+                parkType.setText("뭐냐고");
         }
 
         parkOrder.setText (Integer.toString(position + 1));
