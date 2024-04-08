@@ -93,6 +93,16 @@
                 app:layout_constraintRight_toRightOf="@id/parkListView"
                 android:visibility="gone"/>
 
+            <Button
+                android:id="@+id/toReservationBtn"
+                android:text="예약하기"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/parkListView"
+                app:layout_constraintLeft_toRightOf="@id/cancelNaviBtn"
+                app:layout_constraintRight_toLeftOf="@id/toStartNaviBtn"
+                android:visibility="gone"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout

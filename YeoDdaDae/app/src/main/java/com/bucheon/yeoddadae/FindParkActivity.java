@@ -64,6 +64,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     Button sortByParkPriceBtn;
     Button cancelNaviBtn;
     Button toStartNaviBtn;
+    Button toReservationBtn;
     Button searchStartBtn;
     ConstraintLayout searchConstraintLayout;
     EditText searchEdTxt;
@@ -92,6 +93,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     TMapPoint nowPoint = new TMapPoint(lat, lon);
     TMapPoint naviEndPoint;
     String naviEndPointName;
+    String reservationFirestoreDocumentId;
     TMapGpsManager gpsManager;
     TMapView tMapView;
     TMapCircle tMapCircle;
@@ -119,6 +121,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         sortByParkPriceBtn = findViewById(R.id.sortByParkPriceBtn);
         cancelNaviBtn = findViewById(R.id.cancelNaviBtn);
         toStartNaviBtn = findViewById(R.id.toStartNaviBtn);
+        toReservationBtn = findViewById(R.id.toReservationBtn);
         searchStartBtn = findViewById(R.id.searchStartBtn);
         searchConstraintLayout = findViewById(R.id.searchConstraintLayout);
         searchEdTxt = findViewById(R.id.searchEdTxt);
@@ -296,6 +299,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                         searchStartBtn.setVisibility(View.VISIBLE);
                         cancelNaviBtn.setVisibility(View.GONE);
                         toStartNaviBtn.setVisibility(View.GONE);
+                        toReservationBtn.setVisibility(View.GONE);
 
                         findPark(nowSort);
                     }
@@ -311,6 +315,15 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                 naviIntent.putExtra("endPointLon", naviEndPoint.getLongitude());
                 naviIntent.putExtra("endPointName", naviEndPointName);
                 startActivity(naviIntent);
+            }
+        });
+
+        toReservationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent reservationIntent = new Intent(getApplicationContext(), ReservationParkActivity.class);
+                reservationIntent.putExtra("fireStoreDocumentId", reservationFirestoreDocumentId);
+                startActivity(reservationIntent);
             }
         });
 
@@ -342,7 +355,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
 
                             for (int i = 0; i < arrayList.size(); i++) {
                                 TMapPOIItem item = arrayList.get(i);
-                                spa.addItem(new ParkItem(123, item.name, item.radius, null, null, null, 0, item.frontLat, item.frontLon));
+                                spa.addItem(new ParkItem(123, item.name, item.radius, null, null, null, 0, item.frontLat, item.frontLon, null));
                                 addedNames.add(item.name);
                             }
 
@@ -356,7 +369,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                     for (int i = 0; i < arrayList2.size(); i++) {
                                         TMapPOIItem item2 = arrayList2.get(i);
                                         if (!addedNames.contains(item2.name)) {
-                                            spa.addItem(new ParkItem(0, item2.name, item2.radius, null, item2.telNo, null, 0, item2.frontLat, item2.frontLon));
+                                            spa.addItem(new ParkItem(0, item2.name, item2.radius, null, item2.telNo, null, 0, item2.frontLat, item2.frontLon, null));
 
                                         }
                                     }
@@ -454,6 +467,10 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                 searchStartBtn.setVisibility(View.GONE);
                                 cancelNaviBtn.setVisibility(View.VISIBLE);
                                 toStartNaviBtn.setVisibility(View.VISIBLE);
+                                if (clickedPark.getType() == 3) {
+                                    reservationFirestoreDocumentId = clickedPark.getFirebaseDocumentId();
+                                    toReservationBtn.setVisibility(View.VISIBLE);
+                                }
                             }
                         });
                     }
@@ -572,7 +589,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                         for (int i = 0; i < arrayList.size(); i++) {
                             TMapPOIItem item = arrayList.get(i);
 
-                            parkAdapter.addItem(new ParkItem(0, item.name, item.radius, item.fee, item.telNo, item.additionalInfo, 0, item.frontLat, item.frontLon));
+                            parkAdapter.addItem(new ParkItem(0, item.name, item.radius, item.fee, item.telNo, item.additionalInfo, 0, item.frontLat, item.frontLon, null));
                             TMapPoint tpoint = new TMapPoint(Double.parseDouble(item.frontLat), Double.parseDouble(item.frontLon));
                             TMapMarkerItem tItem = new TMapMarkerItem();
                             tItem.setTMapPoint(tpoint);
@@ -688,6 +705,10 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                             searchStartBtn.setVisibility(View.GONE);
                             cancelNaviBtn.setVisibility(View.VISIBLE);
                             toStartNaviBtn.setVisibility(View.VISIBLE);
+                            if (clickedPark.getType() == 3) {
+                                reservationFirestoreDocumentId = clickedPark.getFirebaseDocumentId();
+                                toReservationBtn.setVisibility(View.VISIBLE);
+                            }
                         }
                     });
                 }
