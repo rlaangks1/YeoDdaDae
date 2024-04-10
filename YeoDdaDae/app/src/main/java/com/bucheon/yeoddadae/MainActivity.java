@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -235,22 +236,24 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 finish();
             }
         } else if (mainCommand.contains("주유소")) { // 주유소찾기 (사투리도 처리????)
-            if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
-                Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                findGasStationIntent.putExtra("SortBy", 2);
-                startActivity(findGasStationIntent);
-            } else if (mainCommand.contains("휘발") || mainCommand.contains("가솔린")) {
-                Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                findGasStationIntent.putExtra("SortBy", 3);
-                startActivity(findGasStationIntent);
-            } else if (mainCommand.contains("경유") || mainCommand.contains("디젤")) {
-                Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                findGasStationIntent.putExtra("SortBy", 4);
-                startActivity(findGasStationIntent);
-            } else {
-                Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                findGasStationIntent.putExtra("SortBy", 1);
-                startActivity(findGasStationIntent);
+            if (recordAudioPermissionGranted) {
+                if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
+                    Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                    findGasStationIntent.putExtra("SortBy", 2);
+                    startActivity(findGasStationIntent);
+                } else if (mainCommand.contains("휘발") || mainCommand.contains("가솔린")) {
+                    Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                    findGasStationIntent.putExtra("SortBy", 3);
+                    startActivity(findGasStationIntent);
+                } else if (mainCommand.contains("경유") || mainCommand.contains("디젤")) {
+                    Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                    findGasStationIntent.putExtra("SortBy", 4);
+                    startActivity(findGasStationIntent);
+                } else {
+                    Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                    findGasStationIntent.putExtra("SortBy", 1);
+                    startActivity(findGasStationIntent);
+                }
             }
         } else { // 모두 아님 (서비스 다시시작)
             startService(serviceIntent);
