@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent logoutIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
                 startActivity(logoutIntent);
                 finish();
             }
@@ -231,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
 
         if (mainCommand.contains("로그아웃")) { // 로그아웃
             if (loginId != null) {
-                Intent logoutIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
                 startActivity(logoutIntent);
                 finish();
             }

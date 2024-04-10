@@ -676,6 +676,8 @@ public class NavigationActivity extends AppCompatActivity {
         planTypeList.add(RoutePlanType.Traffic_Free);
 
         //길안내 시작
+
+        /*
         navigationFragment.requestRoute(startPoint, TestWayPoint.point, endPoint, true, new TmapUISDK.RouteRequestListener() {
             @Override
             public void onSuccess() {
@@ -689,6 +691,8 @@ public class NavigationActivity extends AppCompatActivity {
                 Log.e(TAG, "onFail " + i + " :: " + s);
             }
         }, planTypeList);
+
+         */
     }
 
 
