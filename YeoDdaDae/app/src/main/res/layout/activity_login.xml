@@ -73,7 +73,7 @@
         android:layout_marginBottom="423dp"
         android:ems="10"
         android:hint="비밀번호"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         android:minHeight="48dp" />
 
     <Button

@@ -8,6 +8,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FieldValue;
+
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
@@ -64,6 +67,8 @@ public class RegisterActivity extends AppCompatActivity {
                                 newAccount.put("id", id);
                                 newAccount.put("pw", pw);
                                 newAccount.put("isAdmin", false);
+                                newAccount.put("registerTime", FieldValue.serverTimestamp()); // Use Firestore server timestamp
+
                                 fd.insertData("account", newAccount);
                                 finish();
                             }
