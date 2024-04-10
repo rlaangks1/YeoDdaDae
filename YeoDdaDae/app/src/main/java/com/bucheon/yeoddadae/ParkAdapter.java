@@ -108,14 +108,22 @@ public class ParkAdapter extends BaseAdapter {
                 parkType.setText("???");
                 break;
             case 1 :
-                parkType.setText("주차장");
+                parkType.setText("일반주차장");
                 break;
             case 2 :
-                parkType.setText("공영");
+                parkType.setText("공영주차장");
                 break;
             case 3 :
-                parkType.setText("공유");
+                parkType.setText("공유주차장");
                 break;
+            case 4 :
+                parkType.setText("주소");
+                break;
+            case 5 :
+                parkType.setText("장소");
+                break;
+            default :
+                parkType.setText("뭐냐고");
         }
 
         parkOrder.setText (Integer.toString(position + 1));
@@ -145,14 +153,16 @@ public class ParkAdapter extends BaseAdapter {
 
         String originalPhoneString = park.getPhone();
         String newPhoneString = "";
-        if (originalPhoneString.length() == 10) {
-            newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 6) + "-" + originalPhoneString.substring(6);
-        }
-        else if (originalPhoneString.length() == 11) {
-            newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 7) + "-" + originalPhoneString.substring(7);
-        }
-        else {
-            newPhoneString = originalPhoneString;
+        if (originalPhoneString != null) {
+            if (originalPhoneString.length() == 10) {
+                newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 6) + "-" + originalPhoneString.substring(6);
+            }
+            else if (originalPhoneString.length() == 11) {
+                newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 7) + "-" + originalPhoneString.substring(7);
+            }
+            else {
+                newPhoneString = originalPhoneString;
+            }
         }
         parkPhone.setText(newPhoneString);
 

@@ -1,7 +1,7 @@
 package com.bucheon.yeoddadae;
 
 public class ParkItem {
-    private int type; // 0:??, 1:일반, 2:공영, 3:공유, 4:조건, 5:장소, 123:주소
+    private int type; // 1:일반, 2:공영, 3:공유, 4:주소, 5:장소
     private String name;
     private String radius;
     private String parkPrice;
@@ -14,7 +14,7 @@ public class ParkItem {
 
     public ParkItem(int type, String name, String radius, String parkPrice, String phone, String addition, int starRate, String lat, String lon, String firestoreDocumentId) {
         if (type == 0) {
-            if (name.contains("주차장")) {
+            if (name.contains("주차")) {
                 if (name.contains("공영")) {
                     this.type = 2;
                 }

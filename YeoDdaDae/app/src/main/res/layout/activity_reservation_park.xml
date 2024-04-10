@@ -49,7 +49,6 @@
         android:id="@+id/sharerNameTxt"
         android:textSize="20sp"
         android:text="공유자명"
-        android:layout_marginTop="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/parkDetailAddressEditTxt"
