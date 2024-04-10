@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent logoutIntent = new Intent (getApplicationContext(), StartActivity.class);
+                Intent logoutIntent = new Intent (getApplicationContext(), LoginActivity.class);
                 startActivity(logoutIntent);
                 finish();
             }
