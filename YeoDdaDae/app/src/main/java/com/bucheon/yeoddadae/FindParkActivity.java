@@ -25,6 +25,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -176,6 +177,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             init();
         }
         else {
+            Toast.makeText(getApplicationContext(), "GPS 권한이 거부되었습니다", Toast.LENGTH_SHORT).show();
             Log.d (TAG, "권한요청에서 거부or문제");
             finish();
         }

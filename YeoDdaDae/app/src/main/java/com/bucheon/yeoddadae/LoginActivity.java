@@ -1,30 +1,32 @@
 package com.bucheon.yeoddadae;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.FirebaseApp;
 
 public class LoginActivity extends AppCompatActivity {
-    FirestoreDatabase fd;
+    FirestoreDatabase fd = new FirestoreDatabase();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        fd = new FirestoreDatabase();
-
-        ImageButton backBtn = (ImageButton) findViewById(R.id.loginBackBtn);
-        EditText idTxt = (EditText) findViewById(R.id.loginIdTxt);
-        EditText pwTxt = (EditText) findViewById(R.id.loginPwTxt);
-        Button loginBtn = (Button) findViewById(R.id.loginBtn);
-        Button registerBtn = (Button) findViewById(R.id.toRegisterBtn);
+        ImageButton backBtn = findViewById(R.id.loginBackBtn);
+        EditText idTxt = findViewById(R.id.loginIdTxt);
+        EditText pwTxt = findViewById(R.id.loginPwTxt);
+        Button loginBtn = findViewById(R.id.loginBtn);
+        Button registerBtn = findViewById(R.id.toRegisterBtn);
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,16 +41,27 @@ public class LoginActivity extends AppCompatActivity {
                 String id = idTxt.getText().toString();
                 String pw = pwTxt.getText().toString();
 
-                if (id.length() <= 5) {
+                if (id.equals("")) {
+                    Toast.makeText(getApplicationContext(), "ID를 입력해주세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                else if (pw.length() <= 5) {
+                else if (pw.equals("")) {
+                    Toast.makeText(getApplicationContext(), "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if (id.length() <= 5 || id.length() >= 21) {
+                    Toast.makeText(getApplicationContext(), "ID는 6~20자 입니다", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if (pw.length() <= 5 || pw.length() >= 21) {
+                    Toast.makeText(getApplicationContext(), "비밀번호는 6~20자 입니다", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 else {
                     fd.login(id, pw, new OnFirestoreDataLoadedListener() {
                         @Override
                         public void onDataLoaded(Object isAdmin) {
+                            Toast.makeText(getApplicationContext(), "로그인 성공", Toast.LENGTH_SHORT).show();
                             Intent resultIntent = new Intent();
                             resultIntent.putExtra("loginId", id);
                             resultIntent.putExtra("isAdmin", (Boolean) isAdmin);
@@ -59,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onDataLoadError(String errorMessage) {
                             // Handle login failure
+                            Toast.makeText(getApplicationContext(), "로그인 실패", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -134,6 +135,9 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                         sttService.startListeningForMainCommand();
                     }
                 }
+                else {
+                    Toast.makeText(getApplicationContext(), "설정에서 마이크 권한을 부여하세요", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -144,8 +148,9 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                     Intent findParkIntent = new Intent(getApplicationContext(), FindParkActivity.class);
                     findParkIntent.putExtra("SortBy", 1);
                     startActivity(findParkIntent);
-                } else {
-                    Log.d(TAG, "인증되지 않아 액티비티 start 할 수 없음");
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -157,8 +162,9 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                     Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
                     findGasStationIntent.putExtra("SortBy", 1);
                     startActivity(findGasStationIntent);
-                } else {
-                    Log.d(TAG, "인증되지 않아 액티비티 start 할 수 없음");
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -225,18 +231,14 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     public void onMainCommandReceived(String mainCommand) {
         Log.d("TAG", "MainActivity에서 받은 명령: " + mainCommand);
 
-        // 로그아웃
-        if (mainCommand.contains("로그아웃")) {
+        if (mainCommand.contains("로그아웃")) { // 로그아웃
             if (loginId != null) {
                 Intent logoutIntent = new Intent (getApplicationContext(), StartActivity.class);
                 startActivity(logoutIntent);
                 finish();
             }
         }
-
-        // 주유소찾기
-        // 사투리도 처리????
-        else if (mainCommand.contains("주유소")) {
+        else if (mainCommand.contains("주유소")) { // 주유소찾기 (사투리도 처리????)
             if (mainCommand.contains("가까") || mainCommand.contains("가깝") || mainCommand.contains("근접")
                     || mainCommand.contains("인접") || mainCommand.contains("거리")) {
                 Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
@@ -260,9 +262,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 startActivity(findGasStationIntent);
             }
         }
-
-        // 모두 아님 (서비스 다시시작)
-        else {
+        else { // 모두 아님 (서비스 다시시작)
             startService(serviceIntent);
         }
     }
@@ -302,12 +302,12 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == PERMISSION_REQUEST_CODE
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == PERMISSION_REQUEST_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "권한요청에서 허가");
             recordAudioPermissionGranted = true;
         }
         else {
+            Toast.makeText(getApplicationContext(), "마이크 권한 거부되었습니다", Toast.LENGTH_SHORT).show();
             Log.d (TAG, "권한요청에서 거부or문제");
         }
     }

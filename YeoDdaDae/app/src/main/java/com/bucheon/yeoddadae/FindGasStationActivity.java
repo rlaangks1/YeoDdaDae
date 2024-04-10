@@ -169,6 +169,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
             init();
         }
         else {
+            Toast.makeText(getApplicationContext(), "GPS 권한이 거부되었습니다", Toast.LENGTH_SHORT).show();
             Log.d (TAG, "권한요청에서 거부or문제");
             finish();
         }

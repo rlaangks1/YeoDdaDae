@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -36,41 +37,46 @@ public class RegisterActivity extends AppCompatActivity {
                 String id = idTxt.getText().toString();
                 String pw = pwTxt.getText().toString();
 
-                if (id.length() <= 5) {
+                if (id.equals("")) {
+                    Toast.makeText(getApplicationContext(), "ID를 입력해주세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                else if (pw.length() <= 5) {
+                else if (pw.equals("")) {
+                    Toast.makeText(getApplicationContext(), "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if (id.length() <= 5 || id.length() >= 21) {
+                    Toast.makeText(getApplicationContext(), "ID는 6~20자이어야 합니다", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if (pw.length() <= 5 || pw.length() >= 21) {
+                    Toast.makeText(getApplicationContext(), "비밀번호는 6~20자이어야 합니다", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 else {
-                    if (!Pattern.matches("^[a-zA-Z0-9]+$", id)) {
-                        return;
-                    }
-                    else if (!Pattern.matches("^[a-zA-Z0-9]+$", id)) {
-                        return;
-                    }
-                    else {
-                        fd.duplicationCheck("account", "id", id,  new OnFirestoreDataLoadedListener() {
-                            @Override
-                            public void onDataLoaded(Object isNotDuplication) {
-                                if ((Boolean) isNotDuplication == true) {
-                                    HashMap<String, Object> newAccount = new HashMap<String, Object>();
-
-                                    newAccount.put("id", id);
-                                    newAccount.put("pw", pw);
-                                    newAccount.put("isAdmin", false);
-
-                                    fd.insertData("account", newAccount);
-                                    finish();
-                                }
+                    fd.duplicationCheck("account", "id", id,  new OnFirestoreDataLoadedListener() {
+                        @Override
+                        public void onDataLoaded(Object isNotDuplication) {
+                            if ((Boolean) isNotDuplication == true) {
+                                Toast.makeText(getApplicationContext(), "회원가입 성공", Toast.LENGTH_SHORT).show();
+                                
+                                HashMap<String, Object> newAccount = new HashMap<String, Object>();
+                                newAccount.put("id", id);
+                                newAccount.put("pw", pw);
+                                newAccount.put("isAdmin", false);
+                                fd.insertData("account", newAccount);
+                                finish();
                             }
-
-                            @Override
-                            public void onDataLoadError(String errorMessage) {
-                                // Handle login failure
+                            else {
+                                Toast.makeText(getApplicationContext(), "중복된 ID가 있습니다", Toast.LENGTH_SHORT).show();
                             }
-                        });
-                    }
+                        }
+                        @Override
+                        public void onDataLoadError(String errorMessage) {
+                            // Handle login failure
+                            Toast.makeText(getApplicationContext(), "회원가입 실패", Toast.LENGTH_SHORT);
+                        }
+                    });
                 }
             }
         });
