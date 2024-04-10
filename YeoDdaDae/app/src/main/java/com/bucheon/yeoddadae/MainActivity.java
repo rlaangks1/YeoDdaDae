@@ -134,8 +134,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                     if (sttService != null) {
                         sttService.startListeningForMainCommand();
                     }
-                }
-                else {
+                } else {
                     Toast.makeText(getApplicationContext(), "설정에서 마이크 권한을 부여하세요", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -148,8 +147,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                     Intent findParkIntent = new Intent(getApplicationContext(), FindParkActivity.class);
                     findParkIntent.putExtra("SortBy", 1);
                     startActivity(findParkIntent);
-                }
-                else {
+                } else {
                     Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -162,8 +160,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                     Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
                     findGasStationIntent.putExtra("SortBy", 1);
                     startActivity(findGasStationIntent);
-                }
-                else {
+                } else {
                     Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -180,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent logoutIntent = new Intent (getApplicationContext(), LoginActivity.class);
+                Intent logoutIntent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(logoutIntent);
                 finish();
             }
@@ -208,23 +205,23 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         super.onActivityResult(requestCode, resultCode, data);
 
         /*
-        if (requestCode == loginIntentRequestCode) {
-            if (resultCode == RESULT_OK) {
-                loginId = data.getStringExtra("loginId");
-                isAdmin = data.getBooleanExtra("isAdmin", false);
-
-                if (loginId == null) {
-                    nowIdTxt.setText("미 로그인 상태");
-                }
-                else {
-                    nowIdTxt.setText(loginId);
-                }
-                isAdminTxt.setText("관리자여부 : " + isAdmin);
-
-                toLoginBtn.setText("로그아웃");
-            }
-        }
-        */
+         * if (requestCode == loginIntentRequestCode) {
+         * if (resultCode == RESULT_OK) {
+         * loginId = data.getStringExtra("loginId");
+         * isAdmin = data.getBooleanExtra("isAdmin", false);
+         * 
+         * if (loginId == null) {
+         * nowIdTxt.setText("미 로그인 상태");
+         * }
+         * else {
+         * nowIdTxt.setText(loginId);
+         * }
+         * isAdminTxt.setText("관리자여부 : " + isAdmin);
+         * 
+         * toLoginBtn.setText("로그아웃");
+         * }
+         * }
+         */
     }
 
     @Override
@@ -233,18 +230,12 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
 
         if (mainCommand.contains("로그아웃")) { // 로그아웃
             if (loginId != null) {
-                Intent logoutIntent = new Intent (getApplicationContext(), StartActivity.class);
+                Intent logoutIntent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(logoutIntent);
                 finish();
             }
-        }
-        else if (mainCommand.contains("주유소")) { // 주유소찾기 (사투리도 처리????)
-            if (mainCommand.contains("가까") || mainCommand.contains("가깝") || mainCommand.contains("근접")
-                    || mainCommand.contains("인접") || mainCommand.contains("거리")) {
-                Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                findGasStationIntent.putExtra("SortBy", 1);
-                startActivity(findGasStationIntent);
-            } else if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
+        } else if (mainCommand.contains("주유소")) { // 주유소찾기 (사투리도 처리????)
+            if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
                 Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
                 findGasStationIntent.putExtra("SortBy", 2);
                 startActivity(findGasStationIntent);
@@ -256,13 +247,12 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
                 findGasStationIntent.putExtra("SortBy", 4);
                 startActivity(findGasStationIntent);
-            } else if (mainCommand.contains("LPG") || mainCommand.contains("엘피지")) {
+            } else {
                 Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                findGasStationIntent.putExtra("SortBy", 5);
+                findGasStationIntent.putExtra("SortBy", 1);
                 startActivity(findGasStationIntent);
             }
-        }
-        else { // 모두 아님 (서비스 다시시작)
+        } else { // 모두 아님 (서비스 다시시작)
             startService(serviceIntent);
         }
     }
@@ -290,25 +280,24 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         if (checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "권한 있음");
             recordAudioPermissionGranted = true;
-        }
-        else {
+        } else {
             Log.d(TAG, "권한 없음. 요청");
-            String[] permissionArr = {android.Manifest.permission.RECORD_AUDIO};
+            String[] permissionArr = { android.Manifest.permission.RECORD_AUDIO };
             requestPermissions(permissionArr, PERMISSION_REQUEST_CODE);
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == PERMISSION_REQUEST_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "권한요청에서 허가");
             recordAudioPermissionGranted = true;
-        }
-        else {
+        } else {
             Toast.makeText(getApplicationContext(), "마이크 권한 거부되었습니다", Toast.LENGTH_SHORT).show();
-            Log.d (TAG, "권한요청에서 거부or문제");
+            Log.d(TAG, "권한요청에서 거부or문제");
         }
     }
 }

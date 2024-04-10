@@ -274,7 +274,7 @@ public class FirestoreDatabase {
                         double distance = (R * c) / 1000; // km 단위
 
                         if (distance <= radiusKiloMeter) {
-                            resultList.add(new ParkItem(3, Integer.toString(i.get()), Double.toString(distance), "10000", (String) document.get("ownerPhone"), "부가", 0, Double.toString(resultLat), Double.toString(resultLon)));
+                            resultList.add(new ParkItem(3, Integer.toString(i.get()), Double.toString(distance), "10000", (String) document.get("ownerPhone"), "부가", 0, Double.toString(resultLat), Double.toString(resultLon), document.getId()));
                             i.getAndIncrement();
                         }
                     }
@@ -288,6 +288,26 @@ public class FirestoreDatabase {
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void loadShareParkInfo (String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+        HashMap<String, Object> hm = new HashMap<>();
+
+        db.collection("sharePark")
+                .document(firestoreDocumentId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // 문서가 존재할 경우 해당 문서의 데이터를 HashMap에 넣음
+                        hm.putAll(documentSnapshot.getData());
+                        listener.onDataLoaded(hm);
+                    } else {
+                        listener.onDataLoadError("해당 문서가 존재하지 않음");
+                    }
+                })
+                .addOnFailureListener(e -> {
                     listener.onDataLoadError(e.getMessage());
                 });
     }

@@ -1,7 +1,7 @@
 package com.bucheon.yeoddadae;
 
 public class ParkItem {
-    private int type; // 0:??, 1:일반, 2:공영, 3:공유, 4:조건, 123:주소, 456:장소
+    private int type; // 1:일반, 2:공영, 3:공유, 4:주소, 5:장소
     private String name;
     private String radius;
     private String parkPrice;
@@ -10,14 +10,20 @@ public class ParkItem {
     private int starRate; // 0:☆☆☆☆☆, 5: ★★★★★
     private double lat;
     private double lon;
+    private String firestoreDocumentId;
 
-    public ParkItem(int type, String name, String radius, String parkPrice, String phone, String addition, int starRate, String lat, String lon) {
+    public ParkItem(int type, String name, String radius, String parkPrice, String phone, String addition, int starRate, String lat, String lon, String firestoreDocumentId) {
         if (type == 0) {
-            if (name.contains("공영")) {
-                this.type = 2;
+            if (name.contains("주차")) {
+                if (name.contains("공영")) {
+                    this.type = 2;
+                }
+                else {
+                    this.type = 1;
+                }
             }
             else {
-                this.type = 1;
+                this.type = 5;
             }
         }
         else {
@@ -31,6 +37,7 @@ public class ParkItem {
         this.starRate = starRate;
         this.lat = Double.parseDouble(lat);
         this.lon = Double.parseDouble(lon);
+        this.firestoreDocumentId = firestoreDocumentId;
     }
 
     public int getType() {
@@ -66,5 +73,9 @@ public class ParkItem {
 
     public double getLon() {
         return lon;
+    }
+
+    public String getFirebaseDocumentId() {
+        return firestoreDocumentId;
     }
 }

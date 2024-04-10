@@ -69,19 +69,6 @@ public class GasStationAdapter extends BaseAdapter {
         }
     }
 
-    public void sortByLpgPrice () {
-        if (items != null && items.size() > 1) {
-            Collections.sort(items, new Comparator<GasStationItem>() {
-                @Override
-                public int compare(GasStationItem o1, GasStationItem o2) {
-                    // Compare by LPG price in ascending order
-                    return Long.compare(Long.parseLong(o1.getLpgPrice()), Long.parseLong(o2.getLpgPrice()));
-                }
-            });
-            notifyDataSetChanged(); // Notify adapter that dataset has changed
-        }
-    }
-
     @Override
     public int getCount() {
         return items.size();
@@ -136,12 +123,6 @@ public class GasStationAdapter extends BaseAdapter {
         number = Long.parseLong(gasStation.getDieselPrice());
         String formattedDieselPriceString = formatter.format(number);
         totalOilPriceString += "휘 " + formattedGasolinePriceString + "/경 " + formattedDieselPriceString;
-        if (Integer.parseInt(gasStation.getLpgPrice()) != 0) {
-            number = Long.parseLong(gasStation.getLpgPrice());
-            String formattedLpgPriceString = formatter.format(number);
-            totalOilPriceString += "/LPG " + formattedLpgPriceString;
-        }
-
         gasStationOilPrice.setText(totalOilPriceString);
 
         gasStationAddition.setText(gasStation.getAddition());
