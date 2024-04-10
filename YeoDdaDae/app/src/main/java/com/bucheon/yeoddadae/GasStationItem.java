@@ -7,19 +7,17 @@ public class GasStationItem {
     private String radius;
     private String gasolinePrice; // 휘발유가
     private String dieselPrice; // 경유가
-    private String lpgPrice; // LPG가
     private String phone;
     private String addition;
     private int starRate; // 0:☆☆☆☆☆, 5: ★★★★★
     private double lat;
     private double lon;
 
-    public GasStationItem(String name, String radius, String gasolinePrice, String dieselPrice, String lpgPrice, String phone, String addition, int starRate, String lat, String lon) {
+    public GasStationItem(String name, String radius, String gasolinePrice, String dieselPrice, String phone, String addition, int starRate, String lat, String lon) {
         this.name = name;
         this.radius = radius;
         this.gasolinePrice = gasolinePrice;
         this.dieselPrice = dieselPrice;
-        this.lpgPrice = lpgPrice;
         this.phone = phone;
         this.addition = addition;
         this.starRate = starRate;
@@ -41,10 +39,6 @@ public class GasStationItem {
 
     public String getDieselPrice() {
         return dieselPrice;
-    }
-
-    public String getLpgPrice() {
-        return lpgPrice;
     }
 
     public String getPhone() {

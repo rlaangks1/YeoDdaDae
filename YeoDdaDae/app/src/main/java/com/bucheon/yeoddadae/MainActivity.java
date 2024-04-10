@@ -237,26 +237,24 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         // 주유소찾기
         // 사투리도 처리????
         else if (mainCommand.contains("주유소")) {
-            if (mainCommand.contains("가까") || mainCommand.contains("가깝") || mainCommand.contains("근접")
-                    || mainCommand.contains("인접") || mainCommand.contains("거리")) {
-                Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                findGasStationIntent.putExtra("SortBy", 1);
-                startActivity(findGasStationIntent);
-            } else if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
+             if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
                 Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
                 findGasStationIntent.putExtra("SortBy", 2);
                 startActivity(findGasStationIntent);
-            } else if (mainCommand.contains("휘발") || mainCommand.contains("가솔린")) {
+            }
+             else if (mainCommand.contains("휘발") || mainCommand.contains("가솔린")) {
                 Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
                 findGasStationIntent.putExtra("SortBy", 3);
                 startActivity(findGasStationIntent);
-            } else if (mainCommand.contains("경유") || mainCommand.contains("디젤")) {
+            }
+             else if (mainCommand.contains("경유") || mainCommand.contains("디젤")) {
                 Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
                 findGasStationIntent.putExtra("SortBy", 4);
                 startActivity(findGasStationIntent);
-            } else if (mainCommand.contains("LPG") || mainCommand.contains("엘피지")) {
+            }
+            else {
                 Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                findGasStationIntent.putExtra("SortBy", 5);
+                findGasStationIntent.putExtra("SortBy", 1);
                 startActivity(findGasStationIntent);
             }
         }
