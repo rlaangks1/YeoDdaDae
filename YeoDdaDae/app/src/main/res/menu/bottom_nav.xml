@@ -1,28 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:cnb_unselectedColor="#666666">
+
     <item
-        android:id="@+id/bt_mybooking"
+        android:id="@+id/mybookBtn"
         android:enabled="true"
-        android:icon="@drawable/ic_mybook"
+        android:icon="@drawable/mybook"
+        android:cnb_iconColor="@color/sub"
         android:title="나의예약" />
     <item
-        android:id="@+id/bt_ticket"
+        android:id="@+id/ticketBtn"
         android:enabled="true"
-        android:icon="@drawable/ic_ticket"
+        android:icon="@drawable/ticket"
+        android:cnb_iconColor="@color/sub"
         android:title="정기권구매" />
     <item
-        android:id="@+id/bt_register"
+        android:id="@+id/parkregisterBtn"
         android:enabled="true"
-        android:icon="@drawable/ic_register"
+        android:icon="@drawable/park_register"
+        android:cnb_iconColor="@color/sub"
         android:title="주차장등록" />
     <item
-        android:id="@+id/bt_info"
+        android:id="@+id/infoBtn"
         android:enabled="true"
-        android:icon="@drawable/ic_info"
+        android:icon="@drawable/info"
+        android:cnb_iconColor="@color/sub"
         android:title="서비스안내" />
     <item
-        android:id="@+id/bt_customer_service"
+        android:id="@+id/servicecenterBtn"
         android:enabled="true"
-        android:icon="@drawable/ic_servicecenter"
+        android:icon="@drawable/service_center"
+        android:cnb_iconColor="@color/sub"
         android:title="고객센터" />
 </menu>

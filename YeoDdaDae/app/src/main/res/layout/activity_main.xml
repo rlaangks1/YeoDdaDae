@@ -1,221 +1,300 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <FrameLayout
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/mainicon" />
+
+    <ImageButton
+        android:id="@+id/loginBackBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:src="@drawable/menubar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/toFindParkImgBtn"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/main_frame" >
+        android:layout_marginTop="70dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="540dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:background="@color/main"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+         />
 
-        <RelativeLayout
-            android:id="@+id/android_sma"
-            android:layout_width="410dp"
-            android:layout_height="730dp"
-            android:clipToOutline="true"
-            android:background="#FFFFFF">
+    <ImageView
+        android:id="@+id/toFindParkImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/toFindParkImgBtn"
+        android:layout_alignTop="@+id/toFindParkImgBtn"
+        android:layout_alignBottom="@+id/toFindParkImgBtn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="12dp"
+        android:background="@drawable/find_parking"
+        app:layout_constraintBottom_toBottomOf="@+id/toFindParkImgBtn"
+        app:layout_constraintStart_toStartOf="@+id/toFindParkImgBtn"
+        app:layout_constraintTop_toTopOf="@+id/toFindParkImgBtn"
+        />
 
-            <View
-                android:id="@+id/main_image"
-                android:layout_width="99dp"
-                android:layout_height="36dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/main_image" />
+    <TextView
+        android:id="@+id/toFindParkTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:gravity="top"
+        android:text="@string/find_parkin"
+        android:textAppearance="@style/find_parkin"
+        app:layout_constraintBottom_toBottomOf="@+id/toFindParkImgBtn"
+        app:layout_constraintEnd_toEndOf="@+id/toFindParkImgBtn"
+        app:layout_constraintStart_toEndOf="@+id/toFindParkImg"
+        app:layout_constraintTop_toTopOf="@+id/toFindParkImgBtn"
+         />
 
-            <ImageButton
-                android:id="@+id/image_3"
-                android:layout_width="46dp"
-                android:layout_height="38dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="356dp"
-                android:layout_marginTop="7dp"
-                android:background="@drawable/menu_bar" />
-
-            <ImageButton
-                android:id="@+id/toFindParkImgBtn"
-                android:layout_width="385dp"
-                android:layout_height="121dp"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="11dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="72dp"
-                android:background="@color/main"
-                android:text="YourButtonText1" />
-
-            <ImageView
-                android:id="@+id/image_4"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="37dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="107dp"
-                android:background="@drawable/parking_image" />
-
-            <TextView
-                android:id="@+id/find_parkin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="135dp"
-                android:layout_marginTop="90dp"
-                android:gravity="top"
-                android:text="@string/find_parkin"
-                android:textAppearance="@style/find_parkin" />
-
-            <ImageButton
-                android:id="@+id/toFindGasStationImgBtn"
-                android:layout_width="385dp"
-                android:layout_height="121dp"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="11dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="204dp"
-                android:background="@color/main"
-                android:text="YourButtonText3" />
-
-            <ImageView
-                android:id="@+id/image_5"
-                android:layout_width="47dp"
-                android:layout_height="72dp"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="39dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="228dp"
-                android:background="@drawable/gas_station"
-                android:text="YourButtonText4" />
-
-            <TextView
-                android:id="@+id/find_gas_st"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="135dp"
-                android:layout_marginTop="223dp"
-                android:gravity="top"
-                android:text="@string/find_gas_st"
-                android:textAppearance="@style/find_gas_st" />
-
-            <ImageButton
-                android:id="@+id/rectangle_5"
-                android:layout_width="385dp"
-                android:layout_height="121dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="338dp"
-                android:background="@color/main"
-                android:text="YourButtonText5" />
-
-            <ImageView
-                android:id="@+id/image_6"
-                android:layout_width="74dp"
-                android:layout_height="64dp"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="25dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="371dp"
-                android:background="@drawable/car_booking"
-                android:text="YourButtonText6" />
+    <ImageButton
+        android:id="@+id/toFindGasStationImgBtn"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toFindParkImgBtn"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="200dp"
+        android:layout_marginBottom="400dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@color/main"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toFindParkImgBtn" />
 
 
-            <TextView
-                android:id="@+id/car_booking"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="134dp"
-                android:layout_marginTop="355dp"
-                android:gravity="top"
-                android:text="@string/car_booking"
-                android:textAppearance="@style/car_booking" />
+    <ImageView
+        android:id="@+id/toFindGasStationImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/toFindParkImgBtn"
+        android:layout_alignTop="@+id/toFindParkImgBtn"
+        android:layout_alignBottom="@+id/toFindParkImgBtn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/find_gasstation"
+        app:layout_constraintStart_toStartOf="@+id/toFindGasStationImgBtn"
+        app:layout_constraintTop_toBottomOf="@+id/toFindParkImgBtn" />
 
-            <ImageButton
-                android:id="@+id/toSttImgBtn"
-                android:layout_width="140dp"
-                android:layout_height="60dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="197dp"
-                android:background="@drawable/round_button"
-                android:text="음성을\n인식해주세요" />
+    <TextView
+        android:id="@+id/toFindGasStationTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="10dp"
+        android:gravity="top"
+        android:text="@string/find_gas_st"
+        android:textAppearance="@style/find_gas_st"
+        app:layout_constraintEnd_toEndOf="@+id/toFindGasStationImgBtn"
+        app:layout_constraintStart_toStartOf="@+id/toFindGasStationImgBtn"
+        app:layout_constraintTop_toTopOf="@+id/toFindGasStationImg" />
 
-            <ImageView
-                android:id="@+id/image_1"
-                android:layout_width="25dp"
-                android:layout_height="32dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="267dp"
-                android:layout_marginTop="484dp"
-                android:background="@drawable/microphone" />
+    <ImageButton
+        android:id="@+id/toCarBookingBtn"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="341dp"
+        android:layout_marginBottom="250dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/main"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toFindGasStationImgBtn" />
 
-            <TextView
-                android:id="@+id/some_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="301dp"
-                android:layout_marginTop="485dp"
-                android:gravity="top"
-                android:text="@string/microphone"
-                android:textAppearance="@style/microphone" />
-        </RelativeLayout>
-    </FrameLayout>
+    <ImageView
+        android:id="@+id/toCarBookingImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/toFindParkImgBtn"
+        android:layout_alignTop="@+id/toFindParkImgBtn"
+        android:layout_alignBottom="@+id/toFindParkImgBtn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="268dp"
+        android:background="@drawable/car_booking"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/toCarBookingBtn" />
+
+    <TextView
+        android:id="@+id/toCarBookingTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="292dp"
+        android:gravity="top"
+        android:text="@string/car_booking"
+        android:textAppearance="@style/car_booking"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/toCarBookingBtn" />
+
+    <ImageButton
+        android:id="@+id/toSttImgBtn"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toFindParkImgBtn"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="250dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="500dp"
+        android:layout_marginBottom="170dp"
+        android:background="@drawable/round_button"
+        android:text="음성을\n인식해주세요"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toCarBookingBtn"
+         />
+
+    <ImageView
+        android:id="@+id/toSttMicrophone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="260dp"
+        android:layout_marginRight="120dp"
+        android:layout_marginTop="510dp"
+        android:layout_marginBottom="180dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/microphone"
+        app:layout_constraintBottom_toBottomOf="@+id/toSttImgBtn"
+        app:layout_constraintStart_toStartOf ="@+id/toSttImgBtn"
+        app:layout_constraintTop_toTopOf="@+id/toSttImgBtn" />
+
+    <TextView
+        android:id="@+id/toSttTxt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="295dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="510dp"
+        android:layout_marginBottom="180dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:gravity="top"
+        android:text="@string/microphone"
+        android:textAppearance="@style/microphone"
+        app:layout_constraintBottom_toBottomOf="@+id/toSttImgBtn"
+        app:layout_constraintEnd_toEndOf="@+id/toSttImgBtn"
+        app:layout_constraintStart_toEndOf="@+id/toSttMicrophone"
+        app:layout_constraintTop_toTopOf="@+id/toSttImgBtn" />
+
+    <Button
+        android:id="@+id/toShareParkBtn"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="265dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="565dp"
+        android:layout_marginBottom="120dp"
+        android:background="@drawable/round_button"
+        android:text="주차장 공유"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toSttImgBtn" />
+
+    <Button
+        android:id="@+id/logoutBtn"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="265dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="612dp"
+        android:layout_marginBottom="75dp"
+        android:background="@drawable/round_button"
+        android:text="로그아웃"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toShareParkBtn" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="660dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="@color/main"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logoutBtn"
         app:menu="@menu/bottom_nav" />
-
-    <Button
-        android:id="@+id/toShareParkBtn"
-        android:text="주차장 공유"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="450dp"/>
 
     <TextView
         android:id="@+id/nowIdTxt"
-        android:text="로그인아이디"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="500dp"/>
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="200dp"
+        android:text="로그인아이디"
+        app:layout_constraintEnd_toStartOf="@+id/loginBackBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/isAdminTxt"
-        android:text="관리자여부"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="520dp"/>
+        android:layout_marginLeft="200dp"
+        android:text="관리자여부"
+        app:layout_constraintEnd_toStartOf="@+id/loginBackBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nowIdTxt" />
 
     <TextView
         android:id="@+id/sttStatusTxt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="520dp"
+        android:layout_marginBottom="190dp"
+        android:layout_marginLeft="140dp"
+        android:layout_marginRight="190dp"
         android:text="음성인식상태"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="540dp"/>
+        app:layout_constraintBottom_toBottomOf="@+id/toSttImgBtn"
+        app:layout_constraintEnd_toStartOf="@+id/toSttImgBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/toSttImgBtn" />
 
-    <Button
-        android:id="@+id/logoutBtn"
-        android:text="로그아웃"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="560dp"/>
 
-</RelativeLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
