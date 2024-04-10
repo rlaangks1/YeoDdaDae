@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                     startActivity(findParkIntent);
                 } else {
                     Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
+                    tMapView.setSKTMapApiKey(API_KEY);
                 }
             }
         });
@@ -163,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                     startActivity(findGasStationIntent);
                 } else {
                     Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
+                    tMapView.setSKTMapApiKey(API_KEY);
                 }
             }
         });
@@ -235,8 +237,8 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 startActivity(logoutIntent);
                 finish();
             }
-        } else if (mainCommand.contains("주유소")) { // 주유소찾기 (사투리도 처리????)
-            if (recordAudioPermissionGranted) {
+        } else if (mainCommand.contains("주유")) { // 주유소찾기 (사투리도 처리????)
+            if (apiKeyCertified) {
                 if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
                     Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
                     findGasStationIntent.putExtra("SortBy", 2);
