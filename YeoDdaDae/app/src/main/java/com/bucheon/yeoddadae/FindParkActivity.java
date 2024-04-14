@@ -45,6 +45,7 @@ import com.skt.tmap.engine.navigation.SDKManager;
 import java.util.ArrayList;
 
 public class FindParkActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback, TMapView.OnClickListenerCallback {
+    String loginId;
     private static final int PERMISSION_REQUEST_CODE = 1;
 
     boolean firstOnLocationChangeCalled = false; // onLocationChange가 처음 불림 여부
@@ -141,15 +142,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         searchBtn = findViewById(R.id.searchBtn);
         searchBackBtn = findViewById(R.id.searchBackBtn);
         searchListView = findViewById(R.id.searchListView);
-
-        // 메인액티비티에서 정렬기준 받기
-        Intent inIntent = getIntent();
-        recievedSort = inIntent.getIntExtra("SortBy", 0);
-        if (recievedSort == 0) {
-            Log.d(TAG, "sttSort가 0임 (오류)");
-            finish();
-        }
-
+        
         // Bitmap 정의
         tmapMyLocationIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_my_location);
         tmapMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_marker);
@@ -158,6 +151,19 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         tmapShareParkMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_share_park_marker);
         tmapSelectedShareParkMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_selected_share_park_marker);
         tmapSearchPlaceMarker = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_search_place_marker);
+
+        // 메인액티비티에서 정렬기준 받기
+        Intent inIntent = getIntent();
+        recievedSort = inIntent.getIntExtra("SortBy", 0);
+        loginId = inIntent.getStringExtra("loginId");
+        if (recievedSort == 0) {
+            Log.d(TAG, "sttSort가 0임 (오류)");
+            finish();
+        }
+        if (loginId == null || loginId.equals("")) {
+            Log.d(TAG, "loginId가 전달되지 않음 (오류)");
+            finish();
+        }
 
         // 로딩 완료까지 뷰 없애기
         runOnUiThread(new Runnable() {
@@ -334,6 +340,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             @Override
             public void onClick(View v) {
                 Intent reservationIntent = new Intent(getApplicationContext(), ReservationParkActivity.class);
+                reservationIntent.putExtra("loginId", loginId);
                 reservationIntent.putExtra("fireStoreDocumentId", reservationFirestoreDocumentId);
                 startActivity(reservationIntent);
             }

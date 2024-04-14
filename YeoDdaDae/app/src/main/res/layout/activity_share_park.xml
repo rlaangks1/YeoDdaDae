@@ -1,216 +1,241 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ShareParkActivity">
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+
+    <Button
+        android:id="@+id/shareParkBackBtn"
+        android:text="back"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:context=".ShareParkActivity">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/shareParkBackBtn"
-            android:text="back"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/shareParkBackBtn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:fillViewport="true">
 
-        <TextView
-            android:id="@+id/parkAddressTxt"
-            android:text="주차장 주소"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/shareParkBackBtn"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <EditText
-            android:id="@+id/parkAddressEditTxt"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/parkAddressTxt"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <TextView
-            android:id="@+id/parkDetailAddressTxt"
-            android:textSize="20sp"
-            android:text="주차장 상세주소"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/parkAddressEditTxt"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <EditText
-            android:id="@+id/parkDetailAddressEditTxt"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/parkDetailAddressTxt"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <TextView
-            android:id="@+id/sharerNameTxt"
-            android:textSize="20sp"
-            android:text="공유자명"
-            android:layout_marginTop="30dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/parkDetailAddressEditTxt"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <EditText
-            android:id="@+id/sharerNameEditTxt"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/sharerNameTxt"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <TextView
-            android:id="@+id/sharerPhoneTxt"
-            android:textSize="20sp"
-            android:text="공유자 전화번호"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/sharerNameEditTxt"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <EditText
-            android:id="@+id/sharerPhoneEditTxt"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/sharerPhoneTxt"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <TextView
-            android:id="@+id/sharerEmailTxt"
-            android:textSize="20sp"
-            android:text="공유자 이메일"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/sharerPhoneEditTxt"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <EditText
-            android:id="@+id/sharerEmailEditTxt"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/sharerEmailTxt"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <TextView
-            android:id="@+id/sharerRelationTxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:text="공유자의 주차장과의 관계"
-            android:textSize="20sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sharerEmailEditTxt" />
-
-        <EditText
-            android:id="@+id/sharerRelationEditTxt"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/sharerRelationTxt"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <!-- 주차장 가격 관련 뷰들 -->
-        <TextView
-            android:id="@+id/parkPriceTxt"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="주차장 가격"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sharerRelationEditTxt" />
-
-        <Spinner
-            android:id="@+id/timeSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="@id/parkPriceTxt"
-            app:layout_constraintTop_toBottomOf="@id/parkPriceTxt"
-            tools:listitem="@android:layout/simple_spinner_dropdown_item" />
-
-        <EditText
-            android:id="@+id/priceEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="직접 입력"
-            app:layout_constraintStart_toEndOf="@+id/timeSpinner"
-            app:layout_constraintTop_toTopOf="@+id/timeSpinner" />
-
-        <CalendarView
-            android:id="@+id/calendarView"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@id/timeSpinner"
-            android:layout_marginBottom="16dp"
-            app:layout_constraintBottom_toTopOf="@id/registrationBtn"/>
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:nestedScrollingEnabled="false"
+            android:fillViewport="true">
 
+            <TextView
+                android:id="@+id/parkAddressTxt"
+                android:text="주차장 주소"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"/>
 
-        <TextView
-            android:id="@+id/selectedDateTextView"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/calendarView"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="16dp"/>
+            <Button
+                android:id="@+id/gpsBtn"
+                android:text="GPS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/parkAddressTxt"
+                app:layout_constraintStart_toEndOf="@+id/parkAddressTxt"
+                android:layout_marginLeft="20dp" />
 
-        <TextView
-            android:id="@+id/timeSelectionTxt"
-            android:text="시간 선택:"
-            android:textSize="18sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/calendarView"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="16dp"/>
+            <TextView
+                android:id="@+id/parkNewAddressContentTxt"
+                android:textSize="18sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/gpsBtn"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
 
-        <Spinner
-            android:id="@+id/tmSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/timeSelectionTxt"
-            app:layout_constraintStart_toStartOf="parent"/>
+            <TextView
+                android:id="@+id/parkOldAddressContentTxt"
+                android:textSize="16sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/parkNewAddressContentTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
 
-        <Button
-            android:id="@+id/reservationButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="예약하기"
-            android:textSize="20sp"
-            app:layout_constraintTop_toBottomOf="@id/tmSpinner"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp"/>
+            <TextView
+                android:id="@+id/parkDetailAddressTxt"
+                android:textSize="15sp"
+                android:text="주차장 상세주소"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/parkOldAddressContentTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="20dp"/>
 
-        <Button
-            android:id="@+id/registrationBtn"
-            android:text="등록신청"
-            android:textSize="20sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+            <EditText
+                android:id="@+id/parkDetailAddressEditTxt"
+                android:textSize="20sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/parkDetailAddressTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <TextView
+                android:id="@+id/sharerNameTxt"
+                android:textSize="15sp"
+                android:text="공유자명"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/parkDetailAddressEditTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="20dp"/>
+
+            <EditText
+                android:id="@+id/sharerNameEditTxt"
+                android:textSize="20sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/sharerNameTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+            <TextView
+                android:id="@+id/sharerPhoneTxt"
+                android:textSize="15sp"
+                android:text="공유자 전화번호"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/sharerNameEditTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="20dp"/>
+
+            <EditText
+                android:id="@+id/sharerPhoneEditTxt"
+                android:textSize="20sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/sharerPhoneTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+            <TextView
+                android:id="@+id/sharerEmailTxt"
+                android:textSize="15sp"
+                android:text="공유자 이메일"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/sharerPhoneEditTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="20dp"/>
+
+            <EditText
+                android:id="@+id/sharerEmailEditTxt"
+                android:textSize="20sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/sharerEmailTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+            <TextView
+                android:id="@+id/sharerRelationTxt"
+                android:text="공유자의 주차장과의 관계"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/sharerEmailEditTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="20dp"/>
+
+            <EditText
+                android:id="@+id/sharerRelationEditTxt"
+                android:textSize="20sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/sharerRelationTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <TextView
+                android:id="@+id/parkPriceTxt"
+                android:text="주차장 가격"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/sharerRelationEditTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="20dp"/>
+
+            <TextView
+                android:id="@+id/pricePerHourTxt"
+                android:text="1시간 당 / "
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/parkPriceEditTxt"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <EditText
+                android:id="@+id/parkPriceEditTxt"
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/parkPriceTxt"
+                app:layout_constraintLeft_toRightOf="@+id/pricePerHourTxt" />
+
+            <TextView
+                android:id="@+id/parkDateTxt"
+                android:text="공유 시간"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/parkPriceEditTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="20dp" />
+
+            <Button
+                android:id="@+id/resetBtn"
+                android:text="reset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/parkDateTxt"
+                app:layout_constraintStart_toEndOf="@+id/parkDateTxt"
+                android:layout_marginLeft="20dp" />
+
+            <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+                android:id="@+id/parkDateCalendar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/resetBtn"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:mcv_selectionMode="multiple"
+                app:mcv_firstDayOfWeek="monday"
+                app:mcv_showOtherDates="all" />
+
+            <ListView
+                android:id="@+id/parkTimeListView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@+id/parkDateCalendar"
+                app:layout_constraintLeft_toLeftOf="parent" >
+            </ListView>
+
+            <Button
+                android:id="@+id/registrationBtn"
+                android:text="예약하기"
+                android:textSize="20sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/parkTimeListView"
+                android:layout_marginTop="0dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,6 +11,7 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven("https://devrepo.tmapadmin.com/repository/tmap-sdk-release/")
+        maven("https://jitpack.io")
     }
 }
 
