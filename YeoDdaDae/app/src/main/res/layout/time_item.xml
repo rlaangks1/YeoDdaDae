@@ -17,7 +17,7 @@
 
     <EditText
         android:id="@+id/startTime"
-        android:text="오전 00:00"
+        android:text="오전 12:00"
         android:textSize="15dp"
         android:gravity="center"
         android:layout_width="0dp"
@@ -32,7 +32,7 @@
 
     <EditText
         android:id="@+id/endTime"
-        android:text="오전 00:00"
+        android:text="오전 12:00"
         android:textSize="15dp"
         android:gravity="center"
         android:layout_width="0dp"

@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -25,6 +26,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -53,6 +57,8 @@ public class ShareParkActivity extends AppCompatActivity {
 
     double lat;
     double lon;
+
+    TimeAdapter ta;
 
     Button shareParkBackBtn;
     TextView parkNewAddressContentTxt;
@@ -92,7 +98,7 @@ public class ShareParkActivity extends AppCompatActivity {
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
 
-        TimeAdapter ta = new TimeAdapter();
+        ta = new TimeAdapter();
         parkTimeListView.setAdapter(ta);
 
         gpsBtn.setOnClickListener(new View.OnClickListener() {
@@ -174,40 +180,93 @@ public class ShareParkActivity extends AppCompatActivity {
         registrationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String parkDetailAddress = parkDetailAddressEditTxt.getText().toString();
+                String ownerName = sharerNameEditTxt.getText().toString();
+                String ownerPhone = sharerPhoneEditTxt.getText().toString();
+                String ownerEmail = sharerEmailEditTxt.getText().toString();
+                String ownerParkingRelation = sharerRelationEditTxt.getText().toString();
+                int price;
 
-                try {
-                    Integer.parseInt(parkPriceEditTxt.getText().toString());
-                }
-                catch (NumberFormatException e) {
+                if (Double.valueOf(lat) == null || Double.valueOf(lon) == null) {
+                    Toast.makeText(getApplicationContext(), "GPS로 주소를 찾으세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                else if (parkDetailAddress.equals("")){
+                    Toast.makeText(getApplicationContext(), "상세주소를 입력하세요", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if (ownerName.equals("")) {
+                    Toast.makeText(getApplicationContext(), "공유자명을 입력하세요", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if (ownerPhone.equals("")) {
+                    Toast.makeText(getApplicationContext(), "전화번호를 입력하세요", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else {
+                    String regex = "^010[0-9]{8}$"; // 010으로 시작하고, 그 뒤에 8자리 숫자가 온다는 정규식
+                    Pattern pattern = Pattern.compile(regex);
+                    Matcher matcher = pattern.matcher(ownerPhone);
+                    if (!matcher.matches()) {
+                        Toast.makeText(getApplicationContext(), "유효하지 않은 전화번호입니다", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                if (ownerEmail.equals("")) {
+                    Toast.makeText(getApplicationContext(), "이메일을 입력하세요", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else {
+                    String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+                    Pattern pattern = Pattern.compile(regex);
+                    Matcher matcher = pattern.matcher(ownerEmail);
+                    if (!matcher.matches()) {
+                        Toast.makeText(getApplicationContext(), "유효하지 않은 이메일입니다", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                if (ownerParkingRelation.equals("")) {
+                    Toast.makeText(getApplicationContext(), "주차장과의 관계를 입력하세요", Toast.LENGTH_SHORT).show();
+                }
+                else if (parkPriceEditTxt.getText().toString().equals("")) {
+                    Toast.makeText(getApplicationContext(), "가격을 설정하세요", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    try {
+                        Integer.parseInt(parkPriceEditTxt.getText().toString());
+                        price = Integer.parseInt(parkPriceEditTxt.getText().toString());
+                    }
+                    catch (NumberFormatException e) {
+                        Toast.makeText(getApplicationContext(), "가격을 숫자로 입력하세요", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    
+                    if (ta.getAllTime() == null) {
+                        Toast.makeText(getApplicationContext(), "시간설정이 잘못되었습니다", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        HashMap<String, Object> hm = new HashMap<>();
 
-                if (true) { // 유효성 검사 (price유의)
-                    String parkDetailAddress = parkDetailAddressEditTxt.getText().toString();
-                    String ownerName = sharerNameEditTxt.getText().toString();
-                    String ownerPhone = sharerPhoneEditTxt.getText().toString();
-                    String ownerEmail = sharerEmailEditTxt.getText().toString();
-                    String ownerParkingRelation = sharerRelationEditTxt.getText().toString();
-                    int price = Integer.parseInt(parkPriceEditTxt.getText().toString());
+                        hm.put("ownerId", loginId);
+                        hm.put("lat", lat);
+                        hm.put("lon", lon);
+                        hm.put("time", ta.getAllTime());
+                        hm.put("parkDetailAddress", parkDetailAddress);
+                        hm.put("ownerName", ownerName);
+                        hm.put("ownerPhone", ownerPhone);
+                        hm.put("ownerEmail", ownerEmail);
+                        hm.put("ownerParkingRelation", ownerParkingRelation);
+                        hm.put("price", price);
+                        hm.put("upTime", FieldValue.serverTimestamp());
+                        hm.put("isApproval", false);
 
-                    HashMap<String, Object> hm = new HashMap<>();
-                    hm.put("ownerId", loginId);
-                    hm.put("lat", lat);
-                    hm.put("lon", lon);
-                    hm.put("parkDetailAddress", parkDetailAddress);
-                    hm.put("ownerName", ownerName);
-                    hm.put("ownerPhone", ownerPhone);
-                    hm.put("ownerEmail", ownerEmail);
-                    hm.put("ownerParkingRelation", ownerParkingRelation);
-                    hm.put("price", price);
-                    hm.put("isApproval", false);
+                        FirestoreDatabase fd = new FirestoreDatabase();
+                        fd.insertData("sharePark", hm);
 
-                    FirestoreDatabase fd = new FirestoreDatabase();
-                    fd.insertData("sharePark", hm);
+                        Toast.makeText(getApplicationContext(), "공유주차장 등록 신청되었습니다", Toast.LENGTH_SHORT).show();
 
-                    Toast.makeText(getApplicationContext(), "공유주차장 등록 신청되었습니다", Toast.LENGTH_SHORT).show();
-
-                    finish();
+                        finish();
+                    }
                 }
             }
         });

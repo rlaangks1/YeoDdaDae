@@ -78,6 +78,7 @@
             <EditText
                 android:id="@+id/parkDetailAddressEditTxt"
                 android:textSize="20sp"
+                android:maxLength="30"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/parkDetailAddressTxt"
@@ -97,6 +98,7 @@
             <EditText
                 android:id="@+id/sharerNameEditTxt"
                 android:textSize="20sp"
+                android:maxLength="30"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/sharerNameTxt"
@@ -107,6 +109,7 @@
                 android:id="@+id/sharerPhoneTxt"
                 android:textSize="15sp"
                 android:text="공유자 전화번호"
+                android:maxLength="11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/sharerNameEditTxt"
@@ -135,6 +138,7 @@
             <EditText
                 android:id="@+id/sharerEmailEditTxt"
                 android:textSize="20sp"
+                android:maxLength="40"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/sharerEmailTxt"
@@ -154,6 +158,7 @@
             <EditText
                 android:id="@+id/sharerRelationEditTxt"
                 android:textSize="20sp"
+                android:maxLength="30"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/sharerRelationTxt"
@@ -176,16 +181,28 @@
                 android:textSize="12sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/parkPriceEditTxt"
                 app:layout_constraintBottom_toBottomOf="@id/parkPriceEditTxt"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
                 android:id="@+id/parkPriceEditTxt"
                 android:textSize="20sp"
+                android:maxLength="5"
+                android:inputType="number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/parkPriceTxt"
                 app:layout_constraintLeft_toRightOf="@+id/pricePerHourTxt" />
+
+            <TextView
+                android:text="원"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/parkPriceEditTxt"
+                app:layout_constraintBottom_toBottomOf="@id/parkPriceEditTxt"
+                app:layout_constraintLeft_toRightOf="@id/parkPriceEditTxt" />
 
             <TextView
                 android:id="@+id/parkDateTxt"

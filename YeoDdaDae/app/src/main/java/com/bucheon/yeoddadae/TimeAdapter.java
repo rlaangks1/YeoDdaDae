@@ -22,10 +22,12 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class TimeAdapter extends BaseAdapter {
@@ -84,9 +86,33 @@ public class TimeAdapter extends BaseAdapter {
         }
     }
 
-    public String toString() {
-        String n = "";
-        return n;
+    public HashMap<String, ArrayList<String>> getAllTime() {
+        HashMap<String, ArrayList<String>> hm = new HashMap<>();
+
+        if (items.size() == 0) {
+            hm = null;
+            return hm;
+        }
+
+        for (TimeItem item : items) {
+            CalendarDay cd = item.getDate();
+            String cdString = "" + cd.getYear() + cd.getMonth() + cd.getDay();
+            String itemStartTime = item.getStartTime();
+            String itemEndTime = item.getEndTime();
+            if (itemEndTime == "0000") {
+                itemEndTime = "2400";
+            }
+
+            if ((itemStartTime != itemEndTime) && (itemStartTime.compareTo(itemEndTime) < 0)) {
+                hm.put(cdString, new ArrayList<>(Arrays.asList(itemStartTime, itemEndTime)));
+            }
+            else {
+                hm = null;
+                return hm;
+            }
+        }
+
+        return hm;
     }
 
     @Override
