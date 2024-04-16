@@ -312,6 +312,28 @@ public class FirestoreDatabase {
                 });
     }
 
+    public void loadAnotherReservations(String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+        db.collection("reservation")
+                .whereEqualTo("shareParkDocumentName", firestoreDocumentId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    // 쿼리 결과에서 문서들을 순회하며 shareParkDocumentName 값을 추출하여 Map에 저장
+                    HashMap<String,  HashMap<String, ArrayList<String>>> resultMap = new HashMap<>();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
+                        String documentId = documentSnapshot.getId(); // 문서의 ID를 가져옴
+                        HashMap<String, ArrayList<String>> times = (HashMap<String, ArrayList<String>>) documentSnapshot.get("time");
+                        // Map에 저장, 여기서는 문서 ID를 키로, shareParkDocumentName 값을 값으로 사용
+                        resultMap.put(documentId, times);
+                    }
+                    // 결과 Map을 리스너의 onDataLoaded 메서드를 통해 전달
+                    listener.onDataLoaded(resultMap);
+                })
+                .addOnFailureListener(e -> {
+                    // 조회 실패 시 리스너의 onDataLoadError 메서드를 통해 오류 메시지 전달
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
     public void my (OnFirestoreDataLoadedListener listener) {
         Log.d (TAG, "my 호출됨");
         new Thread(new Runnable() {
