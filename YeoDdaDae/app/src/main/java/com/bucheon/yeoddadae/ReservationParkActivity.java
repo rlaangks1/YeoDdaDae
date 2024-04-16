@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,12 +30,15 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class ReservationParkActivity extends AppCompatActivity {
     String loginId;
     String reservationFirestoreDocumentId;
 
+    HashMap<String, ArrayList<String>> shareTime;
     HashMap<String,  HashMap<String, ArrayList<String>>> anotherReservations;
 
     TimeAdapter ta;
@@ -96,59 +100,88 @@ public class ReservationParkActivity extends AppCompatActivity {
             public void onDataLoaded(Object data) {
                 HashMap<String, Object> hm = (HashMap<String, Object>) data;
 
-                for (String key : hm.keySet()) {
-                    Object value = hm.get(key);
-                    Log.d(TAG, "Key: " + key + ", Value: " + value);
-
-                    TMapData tMapData = new TMapData();
-                    tMapData.reverseGeocoding((Double) hm.get("lat"), (Double) hm.get("lon"), "A10", new TMapData.reverseGeocodingListenerCallback() {
-                        @Override
-                        public void onReverseGeocoding(TMapAddressInfo tMapAddressInfo) {
-                            if (tMapAddressInfo != null) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        String [] adrresses = tMapAddressInfo.strFullAddress.split(",");
-
-                                        reservationParkNewAddressContentTxt.setText(adrresses[2]);
-                                        reservationParkOldAddressContentTxt.setText(adrresses[1]);
-                                    }
-                                });
-                            }
-                        }
-                    });
-
-                    String originalPhoneString = (String) hm.get("ownerPhone");
-                    String newPhoneString = "";
-                    if (originalPhoneString != null) {
-                        if (originalPhoneString.length() == 10) {
-                            newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 6) + "-" + originalPhoneString.substring(6);
-                        }
-                        else if (originalPhoneString.length() == 11) {
-                            newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 7) + "-" + originalPhoneString.substring(7);
-                        }
-                        else {
-                            newPhoneString = originalPhoneString;
+                TMapData tMapData = new TMapData();
+                tMapData.reverseGeocoding((Double) hm.get("lat"), (Double) hm.get("lon"), "A10", new TMapData.reverseGeocodingListenerCallback() {
+                    @Override
+                    public void onReverseGeocoding(TMapAddressInfo tMapAddressInfo) {
+                        if (tMapAddressInfo != null) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    String [] adrresses = tMapAddressInfo.strFullAddress.split(",");
+                                    reservationParkNewAddressContentTxt.setText(adrresses[2]);
+                                    reservationParkOldAddressContentTxt.setText(adrresses[1]);
+                                }
+                            });
                         }
                     }
-                    String finalNewPhoneString = newPhoneString;
-
-                    DecimalFormat formatter = new DecimalFormat("#,###");
-                    int number = ((Long) hm.get("price")).intValue();
-                    String newPriceString = formatter.format(number);
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            reservationParkDetailAddressContentTxt.setText((String) hm.get("parkDetailAddress"));
-                            reservationSharerNameContentTxt.setText((String) hm.get("ownerName"));
-                            reservationSharerPhoneContentTxt.setText(finalNewPhoneString);
-                            reservationSharerEmailContentTxt.setText((String) hm.get("ownerEmail"));
-                            reservationSharerRelationContentTxt.setText((String) hm.get("ownerParkingRelation"));
-                            reservationPriceContentTxt.setText(newPriceString);
-                        }
-                    });
+                });
+                String originalPhoneString = (String) hm.get("ownerPhone");
+                String newPhoneString = "";
+                if (originalPhoneString != null) {
+                    if (originalPhoneString.length() == 10) {
+                        newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 6) + "-" + originalPhoneString.substring(6);
+                    }
+                    else if (originalPhoneString.length() == 11) {
+                        newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 7) + "-" + originalPhoneString.substring(7);
+                    }
+                    else {
+                        newPhoneString = originalPhoneString;
+                    }
                 }
+                String finalNewPhoneString = newPhoneString;
+                DecimalFormat formatter = new DecimalFormat("#,###");
+                int number = ((Long) hm.get("price")).intValue();
+                String newPriceString = formatter.format(number);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        reservationParkDetailAddressContentTxt.setText((String) hm.get("parkDetailAddress"));
+                        reservationSharerNameContentTxt.setText((String) hm.get("ownerName"));
+                        reservationSharerPhoneContentTxt.setText(finalNewPhoneString);
+                        reservationSharerEmailContentTxt.setText((String) hm.get("ownerEmail"));
+                        reservationSharerRelationContentTxt.setText((String) hm.get("ownerParkingRelation"));
+                        reservationPriceContentTxt.setText(newPriceString);
+                    }
+                });
+
+                shareTime = (HashMap<String, ArrayList<String>>) hm.get("time");
+
+
+                HashSet<CalendarDay> enabledDays = new HashSet<>();
+                for (String key : shareTime.keySet()) {
+                    int year = Integer.parseInt(key.substring(0, 4));
+                    int month = Integer.parseInt(key.substring(4, 6));
+                    int day = Integer.parseInt(key.substring(6));
+
+                    CalendarDay calendarDay = CalendarDay.from(year, month, day);
+                    enabledDays.add(calendarDay);
+                }
+
+                Calendar calendar = Calendar.getInstance();
+                int currentYear = calendar.get(Calendar.YEAR);
+                int currentMonth = calendar.get(Calendar.MONTH);
+                int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+                CalendarDay currentCalendarDay = CalendarDay.from(currentYear, currentMonth + 1, currentDay);
+                calendar.add(Calendar.DAY_OF_MONTH, 99);
+                int futureYear = calendar.get(Calendar.YEAR);
+                int futureMonth = calendar.get(Calendar.MONTH);
+                int futureDay = calendar.get(Calendar.DAY_OF_MONTH);
+                CalendarDay futureCalendarDay = CalendarDay.from(futureYear, futureMonth + 1, futureDay);
+
+                reservationParkDateCalendar.state().edit()
+                        .setMinimumDate(currentCalendarDay)
+                        .setMaximumDate(futureCalendarDay)
+                        .commit();
+
+                // 모든 날짜를 비활성화하는 Decorator 추가
+                reservationParkDateCalendar.addDecorator(new DisableAllDaysDecorator());
+                reservationParkDateCalendar.invalidateDecorators();
+
+                // 선택 가능한 날짜들만 활성화하는 Decorator 추가
+                EnableSpecificDaysDecorator enableDecorator = new EnableSpecificDaysDecorator(enabledDays);
+                reservationParkDateCalendar.addDecorator(enableDecorator);
+                reservationParkDateCalendar.invalidateDecorators();
             }
 
             @Override
@@ -185,7 +218,7 @@ public class ReservationParkActivity extends AppCompatActivity {
                         }
 
                         // 로그 메세지 출력
-                        Log.d("FirestoreData", "Outer Key: " + outerKey + ", Inner Key: " + innerKey + ", Values: " + valuesStringBuilder.toString());
+                        Log.d("FirestoreData", "Outer Key: " + outerKey + ", Inner Key: " + innerKey + ", Values: " + valuesStringBuilder);
                     }
                 }
             }
@@ -202,7 +235,7 @@ public class ReservationParkActivity extends AppCompatActivity {
                 for (CalendarDay element : ta.clear()) {
                     reservationParkDateCalendar.setDateSelected(element, false);
                 }
-                setTotalHeightofListView(reservationParkTimeListView, ta);
+                setTotalHeightofListView(reservationParkTimeListView);
             }
         });
 
@@ -223,22 +256,8 @@ public class ReservationParkActivity extends AppCompatActivity {
             }
         });
 
-        Calendar calendar = Calendar.getInstance();
-        int currentYear = calendar.get(Calendar.YEAR);
-        int currentMonth = calendar.get(Calendar.MONTH);
-        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
-        CalendarDay currentCalendarDay = CalendarDay.from(currentYear, currentMonth + 1, currentDay);
 
-        calendar.add(Calendar.DAY_OF_MONTH, 99);
-        int futureYear = calendar.get(Calendar.YEAR);
-        int futureMonth = calendar.get(Calendar.MONTH);
-        int futureDay = calendar.get(Calendar.DAY_OF_MONTH);
-        CalendarDay futureCalendarDay = CalendarDay.from(futureYear, futureMonth + 1, futureDay);
 
-        reservationParkDateCalendar.state().edit()
-                .setMinimumDate(currentCalendarDay)
-                .setMaximumDate(futureCalendarDay)
-                .commit();
 
         reservationParkDateCalendar.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
@@ -247,12 +266,12 @@ public class ReservationParkActivity extends AppCompatActivity {
                     Log.d(TAG, "선택한 날짜: " + date.getYear() + "년 " + date.getMonth() + "월 " + date.getDay() + "일");
                     ta.addItem(new TimeItem(date));
                     ta.sortByDate();
-                    setTotalHeightofListView(reservationParkTimeListView, ta);
+                    setTotalHeightofListView(reservationParkTimeListView);
                 }
                 else {
                     Log.d(TAG, "선택 해제 한 날짜: " + date.getYear() + "년 " + date.getMonth() + "월 " + date.getDay() + "일");
                     ta.removeItem(ta.findItem(date));
-                    setTotalHeightofListView(reservationParkTimeListView, ta);
+                    setTotalHeightofListView(reservationParkTimeListView);
                 }
             }
         });
@@ -270,19 +289,33 @@ public class ReservationParkActivity extends AppCompatActivity {
 
                 FirestoreDatabase fd = new FirestoreDatabase();
                 fd.insertData("reservation", hm);
+
+                Toast.makeText(getApplicationContext(), "예약되었습니다", Toast.LENGTH_SHORT).show();
+
+                finish();
             }
         });
     }
 
-    public void setTotalHeightofListView(ListView listView, TimeAdapter ta) {
-        int totalHeight = 0;
-        for (int i = 0; i < ta.getCount(); i++) {
-            View mView = ta.getView(i, null, listView);
-            mView.measure( View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-            totalHeight += mView.getMeasuredHeight();
-        }
+    public void setTotalHeightofListView(ListView listView) {
+        int numberOfItems = ta.getCount();
+        int itemHeight = dpToPx(60); // 아이템 높이를 dp 단위로 변환하여 사용
+
+        // Calculate total height of all items.
+        int totalItemsHeight = numberOfItems * itemHeight;
+
+        // Calculate total height of all item dividers.
+        int totalDividersHeight = listView.getDividerHeight() * (numberOfItems - 1);
+
+        // Set list height.
         ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = (totalHeight + (listView.getDividerHeight() * (ta.getCount() - 1)))/2;
-        listView.setLayoutParams(params); listView.requestLayout();
+        params.height = totalItemsHeight + totalDividersHeight;
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
+
+    private int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
     }
 }

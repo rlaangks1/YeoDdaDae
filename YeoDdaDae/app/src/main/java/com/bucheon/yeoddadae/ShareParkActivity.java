@@ -115,7 +115,7 @@ public class ShareParkActivity extends AppCompatActivity {
                 for (CalendarDay element : ta.clear()) {
                     parkDateCalendar.setDateSelected(element, false);
                 }
-                setTotalHeightofListView(parkTimeListView, ta);
+                setTotalHeightofListView(parkTimeListView);
             }
         });
 
@@ -160,12 +160,12 @@ public class ShareParkActivity extends AppCompatActivity {
                     Log.d(TAG, "선택한 날짜: " + date.getYear() + "년 " + date.getMonth() + "월 " + date.getDay() + "일");
                     ta.addItem(new TimeItem(date));
                     ta.sortByDate();
-                    setTotalHeightofListView(parkTimeListView, ta);
+                    setTotalHeightofListView(parkTimeListView);
                 }
                 else {
                     Log.d(TAG, "선택 해제 한 날짜: " + date.getYear() + "년 " + date.getMonth() + "월 " + date.getDay() + "일");
                     ta.removeItem(ta.findItem(date));
-                    setTotalHeightofListView(parkTimeListView, ta);
+                    setTotalHeightofListView(parkTimeListView);
                 }
             }
         });
@@ -272,16 +272,26 @@ public class ShareParkActivity extends AppCompatActivity {
         });
     }
 
-    public void setTotalHeightofListView(ListView listView, TimeAdapter ta) {
-        int totalHeight = 0;
-        for (int i = 0; i < ta.getCount(); i++) {
-            View mView = ta.getView(i, null, listView);
-            mView.measure( View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-            totalHeight += mView.getMeasuredHeight();
-        }
+    public void setTotalHeightofListView(ListView listView) {
+        int numberOfItems = ta.getCount();
+        int itemHeight = dpToPx(60); // 아이템 높이를 dp 단위로 변환하여 사용
+
+        // Calculate total height of all items.
+        int totalItemsHeight = numberOfItems * itemHeight;
+
+        // Calculate total height of all item dividers.
+        int totalDividersHeight = listView.getDividerHeight() * (numberOfItems - 1);
+
+        // Set list height.
         ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = (totalHeight + (listView.getDividerHeight() * (ta.getCount() - 1)))/2;
-        listView.setLayoutParams(params); listView.requestLayout();
+        params.height = totalItemsHeight + totalDividersHeight;
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
+
+    private int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
     }
 
     @Override

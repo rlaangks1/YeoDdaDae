@@ -96,7 +96,25 @@ public class TimeAdapter extends BaseAdapter {
 
         for (TimeItem item : items) {
             CalendarDay cd = item.getDate();
-            String cdString = "" + cd.getYear() + cd.getMonth() + cd.getDay();
+            String cdMonth;
+            String cdDay;
+
+            if (cd.getMonth() < 10) {
+                cdMonth = "0" + cd.getMonth();
+            }
+            else {
+                cdMonth = cd.getMonth() + "";
+            }
+
+            if (cd.getDay() < 10) {
+                cdDay = "0" + cd.getDay();
+            }
+            else {
+                cdDay = cd.getDay() + "";
+            }
+
+            String cdString = cd.getYear() + cdMonth + cdDay;
+
             String itemStartTime = item.getStartTime();
             String itemEndTime = item.getEndTime();
             if (itemEndTime == "0000") {

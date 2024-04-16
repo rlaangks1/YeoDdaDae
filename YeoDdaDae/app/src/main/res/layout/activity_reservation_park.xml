@@ -24,10 +24,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:overScrollMode="never"
-            android:nestedScrollingEnabled="false"
-            android:fillViewport="true">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/reservationParkAddressTxt"
@@ -180,7 +177,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/reservationPriceContentTxt"
                 app:layout_constraintBottom_toBottomOf="@id/reservationPriceContentTxt"
-                app:layout_constraintLeft_toRightOf="@id/reservationPriceContentTxt" />
+                app:layout_constraintLeft_toRightOf="@id/reservationPriceContentTxt"
+                android:layout_marginLeft="5dp"/>
 
             <TextView
                 android:id="@+id/reservationParkDateTxt"
@@ -215,7 +213,7 @@
             <ListView
                 android:id="@+id/reservationParkTimeListView"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/reservationParkDateCalendar"
                 app:layout_constraintLeft_toLeftOf="parent" >
             </ListView>
