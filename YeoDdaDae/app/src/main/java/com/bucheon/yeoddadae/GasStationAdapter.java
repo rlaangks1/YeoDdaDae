@@ -48,8 +48,13 @@ public class GasStationAdapter extends BaseAdapter {
             Collections.sort(items, new Comparator<GasStationItem>() {
                 @Override
                 public int compare(GasStationItem o1, GasStationItem o2) {
-                    // Compare by gasoline price in ascending order
-                    return Long.compare(Long.parseLong(o1.getGasolinePrice()), Long.parseLong(o2.getGasolinePrice()));
+                    if (o1.getGasolinePrice().equals("0") && !o2.getGasolinePrice().equals("0")) {
+                        return 1;
+                    } else if (!o1.getGasolinePrice().equals("0") && o2.getGasolinePrice().equals("0")) {
+                        return -1;
+                    } else {
+                        return Long.compare(Long.parseLong(o1.getGasolinePrice()), Long.parseLong(o2.getGasolinePrice()));
+                    }
                 }
             });
             notifyDataSetChanged(); // Notify adapter that dataset has changed
@@ -62,7 +67,60 @@ public class GasStationAdapter extends BaseAdapter {
                 @Override
                 public int compare(GasStationItem o1, GasStationItem o2) {
                     // Compare by diesel price in ascending order
-                    return Long.compare(Long.parseLong(o1.getDieselPrice()), Long.parseLong(o2.getDieselPrice()));
+                    if (o1.getDieselPrice().equals("0") && !o2.getDieselPrice().equals("0")) {
+                        // o1의 가격이 "0"인 경우, o2를 더 우선시한다.
+                        return 1;
+                    } else if (!o1.getDieselPrice().equals("0") && o2.getDieselPrice().equals("0")) {
+                        // o2의 가격이 "0"인 경우, o1을 더 우선시한다.
+                        return -1;
+                    } else {
+                        // 둘 다 "0"이거나 둘 다 "0"이 아닌 경우, 일반적인 비교 수행
+                        return Long.compare(Long.parseLong(o1.getDieselPrice()), Long.parseLong(o2.getDieselPrice()));
+                    }
+                }
+            });
+            notifyDataSetChanged(); // Notify adapter that dataset has changed
+        }
+    }
+
+    public void sortByHighGasolinePrice() {
+        if (items != null && items.size() > 1) {
+            Collections.sort(items, new Comparator<GasStationItem>() {
+                @Override
+                public int compare(GasStationItem o1, GasStationItem o2) {
+                    // Compare by diesel price in ascending order
+                    if (o1.getHighGasolinePrice().equals("0") && !o2.getHighGasolinePrice().equals("0")) {
+                        // o1의 가격이 "0"인 경우, o2를 더 우선시한다.
+                        return 1;
+                    } else if (!o1.getHighGasolinePrice().equals("0") && o2.getHighGasolinePrice().equals("0")) {
+                        // o2의 가격이 "0"인 경우, o1을 더 우선시한다.
+                        return -1;
+                    } else {
+                        // 둘 다 "0"이거나 둘 다 "0"이 아닌 경우, 일반적인 비교 수행
+                        return Long.compare(Long.parseLong(o1.getHighGasolinePrice()), Long.parseLong(o2.getHighGasolinePrice()));
+                    }
+                }
+            });
+            notifyDataSetChanged(); // Notify adapter that dataset has changed
+        }
+    }
+
+    public void sortByHighDieselPrice() {
+        if (items != null && items.size() > 1) {
+            Collections.sort(items, new Comparator<GasStationItem>() {
+                @Override
+                public int compare(GasStationItem o1, GasStationItem o2) {
+                    // Compare by diesel price in ascending order
+                    if (o1.getHighDieselPrice().equals("0") && !o2.getHighDieselPrice().equals("0")) {
+                        // o1의 가격이 "0"인 경우, o2를 더 우선시한다.
+                        return 1;
+                    } else if (!o1.getHighDieselPrice().equals("0") && o2.getHighDieselPrice().equals("0")) {
+                        // o2의 가격이 "0"인 경우, o1을 더 우선시한다.
+                        return -1;
+                    } else {
+                        // 둘 다 "0"이거나 둘 다 "0"이 아닌 경우, 일반적인 비교 수행
+                        return Long.compare(Long.parseLong(o1.getHighDieselPrice()), Long.parseLong(o2.getHighDieselPrice()));
+                    }
                 }
             });
             notifyDataSetChanged(); // Notify adapter that dataset has changed
@@ -98,6 +156,7 @@ public class GasStationAdapter extends BaseAdapter {
         TextView gasStationOrder = convertView.findViewById(R.id.gasStationOrder);
         TextView gasStationName = convertView.findViewById(R.id.gasStationName);
         TextView gasStationDistance = convertView.findViewById(R.id.gasStationDistance);
+        TextView gasStationBrand = convertView.findViewById(R.id.gasStationBrand);
         TextView gasStationOilPrice = convertView.findViewById(R.id.gasStationOilPrice);
         TextView gasStationAddition = convertView.findViewById(R.id.gasStationAddition);
         TextView gasStationStarRate = convertView.findViewById(R.id.gasStationStarRate);
@@ -114,6 +173,8 @@ public class GasStationAdapter extends BaseAdapter {
         String formattedDistanceString = formatter.format(number);
         gasStationDistance.setText(formattedDistanceString + "km");
 
+        gasStationBrand.setText(gasStation.getBrand());
+
         String totalOilPriceString = "";
         // 숫자 포맷 지정
         formatter = new DecimalFormat("#,###");
@@ -123,6 +184,17 @@ public class GasStationAdapter extends BaseAdapter {
         number = Long.parseLong(gasStation.getDieselPrice());
         String formattedDieselPriceString = formatter.format(number);
         totalOilPriceString += "휘 " + formattedGasolinePriceString + "/경 " + formattedDieselPriceString;
+
+        if (!gasStation.getHighGasolinePrice().equals("0")) {
+            number = Long.parseLong(gasStation.getHighGasolinePrice());
+            String formattedHighGasolinePriceString = formatter.format(number);
+            totalOilPriceString += "/고급휘 " + formattedHighGasolinePriceString;
+        }
+        if (!gasStation.getHighDieselPrice().equals("0")) {
+            number = Long.parseLong(gasStation.getHighDieselPrice());
+            String formattedHighDieselPriceString = formatter.format(number);
+            totalOilPriceString += "/고급경 " + formattedHighDieselPriceString;
+        }
         gasStationOilPrice.setText(totalOilPriceString);
 
         gasStationAddition.setText(gasStation.getAddition());

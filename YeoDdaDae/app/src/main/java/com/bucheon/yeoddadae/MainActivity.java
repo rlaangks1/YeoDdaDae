@@ -146,10 +146,12 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             public void onClick(View v) {
                 if (apiKeyCertified) {
                     Intent findParkIntent = new Intent(getApplicationContext(), FindParkActivity.class);
+                    findParkIntent.putExtra("loginId", loginId);
                     findParkIntent.putExtra("SortBy", 1);
                     startActivity(findParkIntent);
                 } else {
                     Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
+                    tMapView.setSKTMapApiKey(API_KEY);
                 }
             }
         });
@@ -163,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                     startActivity(findGasStationIntent);
                 } else {
                     Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
+                    tMapView.setSKTMapApiKey(API_KEY);
                 }
             }
         });
@@ -170,8 +173,15 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         toShareParkBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent shareParkIntent = new Intent(getApplicationContext(), ShareParkActivity.class);
-                startActivity(shareParkIntent);
+                if (apiKeyCertified) {
+                    Intent shareParkIntent = new Intent(getApplicationContext(), ShareParkActivity.class);
+                    shareParkIntent.putExtra("loginId", loginId);
+                    startActivity(shareParkIntent);
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
+                    tMapView.setSKTMapApiKey(API_KEY);
+                }
             }
         });
 
@@ -235,8 +245,8 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 startActivity(logoutIntent);
                 finish();
             }
-        } else if (mainCommand.contains("주유소")) { // 주유소찾기 (사투리도 처리????)
-            if (recordAudioPermissionGranted) {
+        } else if (mainCommand.contains("주유")) { // 주유소찾기 (사투리도 처리????)
+            if (apiKeyCertified) {
                 if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
                     Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
                     findGasStationIntent.putExtra("SortBy", 2);
