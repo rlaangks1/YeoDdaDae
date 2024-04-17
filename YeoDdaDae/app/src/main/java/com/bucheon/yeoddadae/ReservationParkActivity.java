@@ -29,8 +29,10 @@ import org.threeten.bp.LocalDate;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -52,9 +54,12 @@ public class ReservationParkActivity extends AppCompatActivity {
     TextView reservationSharerEmailContentTxt;
     TextView reservationSharerRelationContentTxt;
     TextView reservationPriceContentTxt;
+    TextView reservationShareTimeContentTxt;
+    TextView reservationedTimeContentTxt;
     Button resetBtn;
     MaterialCalendarView reservationParkDateCalendar;
     ListView reservationParkTimeListView;
+    TextView reservationTotalPriceContentTxt;
     Button reservationBtn;
 
     @Override
@@ -71,9 +76,12 @@ public class ReservationParkActivity extends AppCompatActivity {
         reservationSharerEmailContentTxt = findViewById(R.id.reservationSharerEmailContentTxt);
         reservationSharerRelationContentTxt = findViewById(R.id.reservationSharerRelationContentTxt);
         reservationPriceContentTxt = findViewById(R.id.reservationPriceContentTxt);
+        reservationShareTimeContentTxt = findViewById(R.id.reservationShareTimeContentTxt);
+        reservationedTimeContentTxt = findViewById(R.id.reservationedTimeContentTxt);
         resetBtn = findViewById(R.id.resetBtn);
         reservationParkDateCalendar = findViewById(R.id.reservationParkDateCalendar);
         reservationParkTimeListView = findViewById(R.id.reservationParkTimeListView);
+        reservationTotalPriceContentTxt = findViewById(R.id.reservationTotalPriceContentTxt);
         reservationBtn = findViewById(R.id.reservationBtn);
 
         Intent inIntent = getIntent();
@@ -147,6 +155,29 @@ public class ReservationParkActivity extends AppCompatActivity {
 
                 shareTime = (HashMap<String, ArrayList<String>>) hm.get("time");
 
+                List<String> keys = new ArrayList<>(shareTime.keySet());
+                Collections.sort(keys);
+
+                StringBuilder textBuilder = new StringBuilder();
+                for (String key : keys) {
+                    ArrayList<String> values = shareTime.get(key);
+
+                    int year = Integer.parseInt(key.substring(0, 4));
+                    int month = Integer.parseInt(key.substring(4, 6));
+                    int day = Integer.parseInt(key.substring(6));
+
+                    String startTimeString = values.get(0).substring(0,2) + ":" + values.get(0).substring(2);
+                    String endTimeString = values.get(1).substring(0,2) + ":" + values.get(1).substring(2);
+
+                    textBuilder.append(year + "년 " + month + "월 " + day + "일 " + startTimeString + "부터 " + endTimeString + "까지\n");
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        reservationShareTimeContentTxt.setText(textBuilder.toString());
+                    }
+                });
+
 
                 HashSet<CalendarDay> enabledDays = new HashSet<>();
                 for (String key : shareTime.keySet()) {
@@ -198,29 +229,42 @@ public class ReservationParkActivity extends AppCompatActivity {
             public void onDataLoaded(Object data) {
                 anotherReservations = (HashMap<String,  HashMap<String, ArrayList<String>>>) data;
 
+                ArrayList<String> al = new ArrayList<>();
 
-                // anotherReservations의 내용을 로깅
-                for (Map.Entry<String, HashMap<String, ArrayList<String>>> outerEntry : anotherReservations.entrySet()) {
-                    String outerKey = outerEntry.getKey();
-                    HashMap<String, ArrayList<String>> innerMap = outerEntry.getValue();
+                for (Map.Entry<String, HashMap<String, ArrayList<String>>> entry : anotherReservations.entrySet()) {
+                    HashMap<String, ArrayList<String>> shareTime = entry.getValue();
 
-                    for (Map.Entry<String, ArrayList<String>> innerEntry : innerMap.entrySet()) {
-                        String innerKey = innerEntry.getKey();
-                        ArrayList<String> valuesList = innerEntry.getValue();
+                    List<String> keys = new ArrayList<>(shareTime.keySet());
+                    Collections.sort(keys);
 
-                        // ArrayList<String>의 각 값들을 하나의 문자열로 결합
-                        StringBuilder valuesStringBuilder = new StringBuilder();
-                        for (String value : valuesList) {
-                            if (valuesStringBuilder.length() > 0) {
-                                valuesStringBuilder.append(", ");
-                            }
-                            valuesStringBuilder.append(value);
-                        }
+                    for (String key : keys) {
+                        ArrayList<String> values = shareTime.get(key);
 
-                        // 로그 메세지 출력
-                        Log.d("FirestoreData", "Outer Key: " + outerKey + ", Inner Key: " + innerKey + ", Values: " + valuesStringBuilder);
+                        int year = Integer.parseInt(key.substring(0, 4));
+                        int month = Integer.parseInt(key.substring(4, 6));
+                        int day = Integer.parseInt(key.substring(6));
+
+                        String startTimeString = values.get(0).substring(0, 2) + ":" + values.get(0).substring(2);
+                        String endTimeString = values.get(1).substring(0, 2) + ":" + values.get(1).substring(2);
+
+                        al.add(year + "년 " + month + "월 " + day + "일 " + startTimeString + "부터 " + endTimeString + "까지\n");
                     }
                 }
+                Collections.sort(al);
+
+                String tempString = "";
+                for (String s : al) {
+                    tempString += s;
+
+                }
+                final String reservationsText = tempString;
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        reservationedTimeContentTxt.setText(reservationsText);
+                    }
+                });
             }
 
             @Override
@@ -255,9 +299,6 @@ public class ReservationParkActivity extends AppCompatActivity {
                 return calendarHeaderBuilder.toString();
             }
         });
-
-
-
 
         reservationParkDateCalendar.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
