@@ -99,6 +99,14 @@ public class ReservationParkActivity extends AppCompatActivity {
         ta = new TimeAdapter(this);
         reservationParkTimeListView.setAdapter(ta);
 
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                reservationTotalPriceContentTxt.setText("무료");
+                reservationWonTxt.setVisibility(View.GONE);
+            }
+        });
+
         reservationBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -291,6 +299,7 @@ public class ReservationParkActivity extends AppCompatActivity {
                     reservationParkDateCalendar.setDateSelected(element, false);
                 }
                 setTotalHeightofListView(reservationParkTimeListView);
+                calculatePrice();
             }
         });
 
@@ -319,11 +328,13 @@ public class ReservationParkActivity extends AppCompatActivity {
                     ta.addItem(new TimeItem(date));
                     ta.sortByDate();
                     setTotalHeightofListView(reservationParkTimeListView);
+                    calculatePrice();
                 }
                 else {
                     Log.d(TAG, "선택 해제 한 날짜: " + date.getYear() + "년 " + date.getMonth() + "월 " + date.getDay() + "일");
                     ta.removeItem(ta.findItem(date));
                     setTotalHeightofListView(reservationParkTimeListView);
+                    calculatePrice();
                 }
             }
         });
@@ -335,7 +346,7 @@ public class ReservationParkActivity extends AppCompatActivity {
                 boolean isNotInAnotherReservationTime = true;
 
                 HashMap<String, ArrayList<String>> targetTimes = ta.getAllTime();
-                HashSet<String> keys = (HashSet<String>) targetTimes.keySet();
+                Set<String> keys = targetTimes.keySet();
 
                 for (String key : keys) {
                     ArrayList<String> tTimes = targetTimes.get(key);
@@ -347,11 +358,27 @@ public class ReservationParkActivity extends AppCompatActivity {
                     }
                 }
 
-                if (isNotInAnotherReservationTime) {
+                Loop1 :
+                for (String key : keys) {
+                    ArrayList<String> tTimes = targetTimes.get(key);
 
+                    Set<String> anotherKeys = anotherReservations.keySet();
+                    for (String anotherKey : anotherKeys) {
+                        HashMap<String, ArrayList<String>> temp = anotherReservations.get(anotherKey);
+                        ArrayList<String> aTimes = temp.get(key);
+
+                        if (aTimes != null && !isNotOverlapping(tTimes.get(0), tTimes.get(1), aTimes.get(0), aTimes.get(1))) {
+                            isNotInAnotherReservationTime = false;
+                            break Loop1;
+                        }
+                    }
                 }
-                else if (isNotInAnotherReservationTime) {
 
+                if (!isInReservationTime) {
+                    Toast.makeText(getApplicationContext(), "공유 시간 범위 내에 있지 않습니다", Toast.LENGTH_SHORT).show();
+                }
+                else if (!isNotInAnotherReservationTime) {
+                    Toast.makeText(getApplicationContext(), "다른 예약 시간과 겹칩니다", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     HashMap<String, Object> hm = new HashMap<>();
