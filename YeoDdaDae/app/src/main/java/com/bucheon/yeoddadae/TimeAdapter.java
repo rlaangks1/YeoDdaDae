@@ -31,7 +31,15 @@ import java.util.HashMap;
 import java.util.Locale;
 
 public class TimeAdapter extends BaseAdapter {
+    private ReservationParkActivity mActivity;
     ArrayList<TimeItem> items = new ArrayList<>();
+
+
+    public TimeAdapter() {}
+
+    public TimeAdapter(ReservationParkActivity activity) {
+        mActivity = activity;
+    }
 
     public void addItem(TimeItem item) {
         items.add(item);
@@ -64,6 +72,28 @@ public class TimeAdapter extends BaseAdapter {
         return null; // 못 찾은 경우 null 반환
     }
 
+    public int getTotalMinute () {
+        int totalMinutes = 0;
+
+        for (TimeItem item : items) {
+            int startHour = Integer.parseInt(item.getStartTime().substring(0, 2));
+            int startMinute = Integer.parseInt(item.getStartTime().substring(2, 4));
+            int endHour = Integer.parseInt(item.getEndTime().substring(0, 2));
+            int endMinute = Integer.parseInt(item.getEndTime().substring(2, 4));
+
+            int startTimeInMinutes = startHour * 60 + startMinute;
+            int endTimeInMinutes = endHour * 60 + endMinute;
+
+            if (endTimeInMinutes == 0) {
+                endTimeInMinutes = 24 * 60;
+            }
+
+            totalMinutes += (endTimeInMinutes - startTimeInMinutes);
+        }
+
+        return totalMinutes;
+    }
+
     public void sortByDate () {
         if (items != null && items.size() > 1) {
             Collections.sort(items, new Comparator<TimeItem>() {
@@ -87,6 +117,7 @@ public class TimeAdapter extends BaseAdapter {
     }
 
     public HashMap<String, ArrayList<String>> getAllTime() {
+        sortByDate();
         HashMap<String, ArrayList<String>> hm = new HashMap<>();
 
         if (items.size() == 0) {
@@ -205,6 +236,10 @@ public class TimeAdapter extends BaseAdapter {
                         time.setStartTime(timeString);
                         hour[0] = Integer.parseInt(time.getStartTime().substring(0, 2));
                         minute[0] = Integer.parseInt(time.getStartTime().substring(2, 4));
+
+                        if (mActivity != null) {
+                            mActivity.calculatePrice();
+                        }
                     }
                 }, hour[0], minute[0], false); // is24HourView를 false로 설정
 
@@ -246,6 +281,10 @@ public class TimeAdapter extends BaseAdapter {
                         time.setEndTime(timeString);
                         hour[0] = Integer.parseInt(time.getStartTime().substring(0, 2));
                         minute[0] = Integer.parseInt(time.getStartTime().substring(2, 4));
+
+                        if (mActivity != null) {
+                            mActivity.calculatePrice();
+                        }
                     }
                 }, hour[0], minute[0], false); // is24HourView를 false로 설정
 

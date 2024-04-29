@@ -40,6 +40,8 @@ public class ReservationParkActivity extends AppCompatActivity {
     String loginId;
     String reservationFirestoreDocumentId;
 
+    int pricePerHour = -1;
+
     HashMap<String, ArrayList<String>> shareTime;
     HashMap<String,  HashMap<String, ArrayList<String>>> anotherReservations;
 
@@ -54,6 +56,7 @@ public class ReservationParkActivity extends AppCompatActivity {
     TextView reservationSharerEmailContentTxt;
     TextView reservationSharerRelationContentTxt;
     TextView reservationPriceContentTxt;
+    TextView reservationWonTxt;
     TextView reservationShareTimeContentTxt;
     TextView reservationedTimeContentTxt;
     Button resetBtn;
@@ -76,6 +79,7 @@ public class ReservationParkActivity extends AppCompatActivity {
         reservationSharerEmailContentTxt = findViewById(R.id.reservationSharerEmailContentTxt);
         reservationSharerRelationContentTxt = findViewById(R.id.reservationSharerRelationContentTxt);
         reservationPriceContentTxt = findViewById(R.id.reservationPriceContentTxt);
+        reservationWonTxt = findViewById(R.id.reservationWonTxt);
         reservationShareTimeContentTxt = findViewById(R.id.reservationShareTimeContentTxt);
         reservationedTimeContentTxt = findViewById(R.id.reservationedTimeContentTxt);
         resetBtn = findViewById(R.id.resetBtn);
@@ -92,7 +96,7 @@ public class ReservationParkActivity extends AppCompatActivity {
             finish();
         }
 
-        ta = new TimeAdapter();
+        ta = new TimeAdapter(this);
         reservationParkTimeListView.setAdapter(ta);
 
         reservationBackBtn.setOnClickListener(new View.OnClickListener() {
@@ -140,7 +144,9 @@ public class ReservationParkActivity extends AppCompatActivity {
                 String finalNewPhoneString = newPhoneString;
                 DecimalFormat formatter = new DecimalFormat("#,###");
                 int number = ((Long) hm.get("price")).intValue();
+                pricePerHour = number;
                 String newPriceString = formatter.format(number);
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -262,7 +268,12 @@ public class ReservationParkActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        reservationedTimeContentTxt.setText(reservationsText);
+                        if (reservationsText.equals("")) {
+                            reservationedTimeContentTxt.setText("없음");
+                        }
+                        else {
+                            reservationedTimeContentTxt.setText(reservationsText);
+                        }
                     }
                 });
             }
@@ -320,20 +331,44 @@ public class ReservationParkActivity extends AppCompatActivity {
         reservationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HashMap<String, Object> hm = new HashMap<>();
+                boolean isInReservationTime = true;
+                boolean isNotInAnotherReservationTime = true;
 
-                hm.put("shareParkDocumentName", reservationFirestoreDocumentId);
-                hm.put("id", loginId);
-                hm.put("time", ta.getAllTime());
-                hm.put("isCancelled", false);
-                hm.put("upTime", FieldValue.serverTimestamp());
+                HashMap<String, ArrayList<String>> targetTimes = ta.getAllTime();
+                HashSet<String> keys = (HashSet<String>) targetTimes.keySet();
 
-                FirestoreDatabase fd = new FirestoreDatabase();
-                fd.insertData("reservation", hm);
+                for (String key : keys) {
+                    ArrayList<String> tTimes = targetTimes.get(key);
+                    ArrayList<String> cTimes = shareTime.get(key);
 
-                Toast.makeText(getApplicationContext(), "예약되었습니다", Toast.LENGTH_SHORT).show();
+                    if (cTimes == null || !isInBetweenTime(tTimes.get(0), tTimes.get(1), cTimes.get(0), cTimes.get(1))) {
+                        isInReservationTime = false;
+                        break;
+                    }
+                }
 
-                finish();
+                if (isNotInAnotherReservationTime) {
+
+                }
+                else if (isNotInAnotherReservationTime) {
+
+                }
+                else {
+                    HashMap<String, Object> hm = new HashMap<>();
+
+                    hm.put("shareParkDocumentName", reservationFirestoreDocumentId);
+                    hm.put("id", loginId);
+                    hm.put("time", ta.getAllTime());
+                    hm.put("isCancelled", false);
+                    hm.put("upTime", FieldValue.serverTimestamp());
+
+                    FirestoreDatabase fd = new FirestoreDatabase();
+                    fd.insertData("reservation", hm);
+
+                    Toast.makeText(getApplicationContext(), "예약되었습니다", Toast.LENGTH_SHORT).show();
+
+                    finish();
+                }
             }
         });
     }
@@ -358,5 +393,43 @@ public class ReservationParkActivity extends AppCompatActivity {
     private int dpToPx(int dp) {
         float density = getResources().getDisplayMetrics().density;
         return Math.round(dp * density);
+    }
+
+    public void calculatePrice () {
+        if (pricePerHour != -1) {
+            int totalPrice = ta.getTotalMinute() * pricePerHour / 60;
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (totalPrice == 0) {
+                        reservationTotalPriceContentTxt.setText("무료");
+                        reservationWonTxt.setVisibility(View.GONE);
+                    }
+                    else {
+                        reservationTotalPriceContentTxt.setText(Integer.toString(totalPrice));
+                        reservationWonTxt.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+        }
+    }
+
+    public boolean isInBetweenTime (String targetStartTime, String targetEndTime, String compareStartTime, String compareEndTime) {
+        int targetStart = Integer.parseInt(targetStartTime);
+        int targetEnd = Integer.parseInt(targetEndTime);
+        int compareStart = Integer.parseInt(compareStartTime);
+        int compareEnd = Integer.parseInt(compareEndTime);
+
+        return targetStart >= compareStart && targetEnd <= compareEnd;
+    }
+
+    public boolean isNotOverlapping(String targetStartTime, String targetEndTime, String compareStartTime, String compareEndTime) {
+        int targetStart = Integer.parseInt(targetStartTime);
+        int targetEnd = Integer.parseInt(targetEndTime);
+        int compareStart = Integer.parseInt(compareStartTime);
+        int compareEnd = Integer.parseInt(compareEndTime);
+
+        return targetEnd <= compareStart || targetStart >= compareEnd;
     }
 }
