@@ -13,6 +13,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,8 +27,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FirestoreDatabase {
@@ -238,16 +242,69 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void findSharePark(double nowLat, double nowLon, double radiusKiloMeter, OnFirestoreDataLoadedListener listener) {
+    public void findSharePark(String id, double nowLat, double nowLon, double radiusKiloMeter, OnFirestoreDataLoadedListener listener) {
         List<ParkItem> resultList = new ArrayList<>();
+        if (id == null || id.equals("")) {
+            Log.d(TAG, "아이디가 null이거나 빈 문자열임");
+            return;
+        }
 
-        AtomicInteger i= new AtomicInteger(1);
+        AtomicInteger i = new AtomicInteger(1);
 
         db.collection("sharePark")
                 .whereEqualTo("isApproval", true)
+                .whereNotEqualTo("ownerId", id)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        Calendar ca = Calendar.getInstance();
+
+                        int year = ca.get(Calendar.YEAR);
+                        int month = ca.get(Calendar.MONTH) + 1;
+                        int day = ca.get(Calendar.DAY_OF_MONTH);
+                        int hour = ca.get(Calendar.HOUR_OF_DAY);
+                        int minute = ca.get(Calendar.MINUTE);
+
+                        String nowString = "";
+                        nowString += year;
+                        if (month < 10) {
+                            nowString += "0";
+                        }
+                        nowString += month;
+                        if (day < 10) {
+                            nowString += "0";
+                        }
+                        nowString += day;
+                        if (hour < 10) {
+                            nowString += "0";
+                        }
+                        nowString += hour;
+                        if (minute < 10) {
+                            nowString += "0";
+                        }
+                        nowString += minute;
+                        Log.d(TAG, "현재 시각 : " + nowString);
+
+                        HashMap<String, ArrayList<String>> shareTime = (HashMap<String, ArrayList<String>>) document.get("time");
+                        Set<String> shareTimeDays = shareTime.keySet();
+
+                        boolean isAllBefore = true;
+
+                        for (String shareTimeDay : shareTimeDays) {
+                            String shareTimeString = shareTimeDay + shareTime.get(shareTimeDay).get(1);
+
+                            if (Long.parseLong(nowString) <= Long.parseLong(shareTimeString)) {
+                                isAllBefore = false;
+                                break;
+                            }
+                        }
+
+                        if (isAllBefore) {
+                            Log.d(TAG, "모든 공유주차장이 지난 시간임");
+                            listener.onDataLoaded(null);
+                            return;
+                        }
+
                         Double resultLat = (Double) document.get("lat");
                         Double resultLon = (Double) document.get("lon");
 
@@ -265,9 +322,7 @@ public class FirestoreDatabase {
                         double deltaLon = lon2Rad - lon1Rad;
 
                         // Haversine 공식 적용
-                        double a = Math.pow(Math.sin(deltaLat / 2), 2) +
-                                Math.cos(lat1Rad) * Math.cos(lat2Rad) *
-                                        Math.pow(Math.sin(deltaLon / 2), 2);
+                        double a = Math.pow(Math.sin(deltaLat / 2), 2) + Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.pow(Math.sin(deltaLon / 2), 2);
                         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
                         // 거리 계산

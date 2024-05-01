@@ -342,8 +342,62 @@ public class ReservationParkActivity extends AppCompatActivity {
         reservationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean isNotAfterNow = true;
                 boolean isInReservationTime = true;
                 boolean isNotInAnotherReservationTime = true;
+
+                ta.sortByDate();
+
+                Calendar ca = Calendar.getInstance();
+
+                int year = ca.get(Calendar.YEAR);
+                int month = ca.get(Calendar.MONTH) + 1;
+                int day = ca.get(Calendar.DAY_OF_MONTH);
+                int hour = ca.get(Calendar.HOUR_OF_DAY);
+                int minute = ca.get(Calendar.MINUTE);
+
+                String nowString = "";
+                nowString += year;
+                if (month < 10) {
+                    nowString += "0";
+                }
+                nowString += month;
+                if (day < 10) {
+                    nowString += "0";
+                }
+                nowString += day;
+                if (hour < 10) {
+                    nowString += "0";
+                }
+                nowString += hour;
+                if (minute < 10) {
+                    nowString += "0";
+                }
+                nowString += minute;
+                Log.d(TAG, "현재 시각 : " + nowString);
+
+                CalendarDay shareTimeCalendarDay = ((TimeItem) ta.getItem(ta.getCount()-1)).getDate();
+
+                int shareYear = shareTimeCalendarDay.getYear();
+                int shareMonth = shareTimeCalendarDay.getMonth();
+                int shareDay = shareTimeCalendarDay.getDay();
+
+                String shareEndTimeString = "";
+
+                shareEndTimeString += shareYear;
+                if (shareMonth < 10) {
+                    shareEndTimeString += "0";
+                }
+                shareEndTimeString += shareMonth;
+                if (shareDay < 10) {
+                    shareEndTimeString += "0";
+                }
+                shareEndTimeString += shareDay + ((TimeItem) ta.getItem(ta.getCount()-1)).getEndTime();
+                Log.d(TAG, "예약 마지막 시간 : " + shareEndTimeString);
+
+                if (Long.parseLong(nowString) > Long.parseLong(shareEndTimeString)) {
+                    isNotAfterNow = false;
+                }
 
                 HashMap<String, ArrayList<String>> targetTimes = ta.getAllTime();
                 Set<String> keys = targetTimes.keySet();
@@ -374,7 +428,10 @@ public class ReservationParkActivity extends AppCompatActivity {
                     }
                 }
 
-                if (!isInReservationTime) {
+                if (!isNotAfterNow) {
+                    Toast.makeText(getApplicationContext(), "현재 시각 이후로 예약하세요", Toast.LENGTH_SHORT).show();
+                }
+                else if (!isInReservationTime) {
                     Toast.makeText(getApplicationContext(), "공유 시간 범위 내에 있지 않습니다", Toast.LENGTH_SHORT).show();
                 }
                 else if (!isNotInAnotherReservationTime) {
