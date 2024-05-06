@@ -65,7 +65,7 @@ public class TimeAdapter extends BaseAdapter {
 
     public TimeItem findItem(CalendarDay date) {
         for (TimeItem item : items) {
-            if (item.getDate() == date) {
+            if (item.getDate().equals(date)) {
                 return item;
             }
         }
@@ -214,7 +214,7 @@ public class TimeAdapter extends BaseAdapter {
                     @Override
                     public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
                         String timeFormat;
-                        int amPmHour = 0;
+                        int amPmHour;
                         if (selectedHour >= 12) {
                             timeFormat = "오후";
                             if (selectedHour > 12) {
@@ -222,7 +222,8 @@ public class TimeAdapter extends BaseAdapter {
                             } else {
                                 amPmHour = selectedHour;
                             }
-                        } else {
+                        }
+                        else {
                             timeFormat = "오전";
                             if (selectedHour == 0) {
                                 amPmHour = 12;
@@ -252,14 +253,14 @@ public class TimeAdapter extends BaseAdapter {
         endTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int[] hour = {Integer.parseInt(time.getStartTime().substring(0, 2))};
-                int[] minute = {Integer.parseInt(time.getStartTime().substring(2, 4))};
+                int[] hour = {Integer.parseInt(time.getEndTime().substring(0, 2))};
+                int[] minute = {Integer.parseInt(time.getEndTime().substring(2, 4))};
 
                 TimePickerDialog timePickerDialog = new TimePickerDialog(context, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
                         String timeFormat;
-                        int amPmHour = 0;
+                        int amPmHour;
                         if (selectedHour >= 12) {
                             timeFormat = "오후";
                             if (selectedHour > 12) {

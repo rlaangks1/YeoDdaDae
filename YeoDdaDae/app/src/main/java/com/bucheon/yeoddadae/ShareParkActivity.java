@@ -55,8 +55,8 @@ public class ShareParkActivity extends AppCompatActivity {
     final int gpsIntentRequestCode = 1;
     String loginId;
 
-    double lat;
-    double lon;
+    double lat = 0;
+    double lon = 0;
 
     TimeAdapter ta;
 
@@ -187,7 +187,7 @@ public class ShareParkActivity extends AppCompatActivity {
                 String ownerParkingRelation = sharerRelationEditTxt.getText().toString();
                 int price;
 
-                if (Double.valueOf(lat) == null || Double.valueOf(lon) == null) {
+                if (lat == 0 || lon == 0) {
                     Toast.makeText(getApplicationContext(), "GPS로 주소를 찾으세요", Toast.LENGTH_SHORT).show();
                     return;
                 }

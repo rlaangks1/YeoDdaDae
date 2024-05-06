@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -244,101 +245,53 @@ public class FirestoreDatabase {
 
     public void findSharePark(String id, double nowLat, double nowLon, double radiusKiloMeter, OnFirestoreDataLoadedListener listener) {
         List<ParkItem> resultList = new ArrayList<>();
+
         if (id == null || id.equals("")) {
             Log.d(TAG, "아이디가 null이거나 빈 문자열임");
             return;
         }
 
-        AtomicInteger i = new AtomicInteger(1);
+        int[] i = {1};
+        Timestamp now = Timestamp.now();
 
         db.collection("sharePark")
                 .whereEqualTo("isApproval", true)
                 .whereNotEqualTo("ownerId", id)
+                .whereGreaterThan("upTime", now)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (DocumentSnapshot document : queryDocumentSnapshots) {
-                        Calendar ca = Calendar.getInstance();
-
-                        int year = ca.get(Calendar.YEAR);
-                        int month = ca.get(Calendar.MONTH) + 1;
-                        int day = ca.get(Calendar.DAY_OF_MONTH);
-                        int hour = ca.get(Calendar.HOUR_OF_DAY);
-                        int minute = ca.get(Calendar.MINUTE);
-
-                        String nowString = "";
-                        nowString += year;
-                        if (month < 10) {
-                            nowString += "0";
-                        }
-                        nowString += month;
-                        if (day < 10) {
-                            nowString += "0";
-                        }
-                        nowString += day;
-                        if (hour < 10) {
-                            nowString += "0";
-                        }
-                        nowString += hour;
-                        if (minute < 10) {
-                            nowString += "0";
-                        }
-                        nowString += minute;
-                        Log.d(TAG, "현재 시각 : " + nowString);
-
-                        HashMap<String, ArrayList<String>> shareTime = (HashMap<String, ArrayList<String>>) document.get("time");
-                        Set<String> shareTimeDays = shareTime.keySet();
-
-                        boolean isAllBefore = true;
-
-                        for (String shareTimeDay : shareTimeDays) {
-                            String shareTimeString = shareTimeDay + shareTime.get(shareTimeDay).get(1);
-
-                            if (Long.parseLong(nowString) <= Long.parseLong(shareTimeString)) {
-                                isAllBefore = false;
-                                break;
-                            }
-                        }
-
-                        if (isAllBefore) {
-                            Log.d(TAG, "모든 공유주차장이 지난 시간임");
-                            listener.onDataLoaded(null);
-                            return;
-                        }
-
                         Double resultLat = (Double) document.get("lat");
                         Double resultLon = (Double) document.get("lon");
 
-                        // 지구 반경 (미터)
-                        final double R = 6371e3;
+                        final double R = 6371e3; // 지구 반경 (미터)
 
-                        // 위도 및 경도를 라디안으로 변환
-                        double lat1Rad = Math.toRadians(nowLat);
+                        double lat1Rad = Math.toRadians(nowLat); // 위도 및 경도를 라디안으로 변환
                         double lon1Rad = Math.toRadians(nowLon);
                         double lat2Rad = Math.toRadians(resultLat);
                         double lon2Rad = Math.toRadians(resultLon);
 
-                        // 위도 및 경도의 차이 계산
-                        double deltaLat = lat2Rad - lat1Rad;
+                        double deltaLat = lat2Rad - lat1Rad; // 위도 및 경도의 차이 계산
                         double deltaLon = lon2Rad - lon1Rad;
 
                         // Haversine 공식 적용
                         double a = Math.pow(Math.sin(deltaLat / 2), 2) + Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.pow(Math.sin(deltaLon / 2), 2);
                         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-                        // 거리 계산
-                        double distance = (R * c) / 1000; // km 단위
+                        double distance = (R * c) / 1000; // 거리 계산 km 단위
 
                         if (distance <= radiusKiloMeter) {
-                            resultList.add(new ParkItem(3, Integer.toString(i.get()), Double.toString(distance), "10000", (String) document.get("ownerPhone"), "부가", 0, Double.toString(resultLat), Double.toString(resultLon), document.getId()));
-                            i.getAndIncrement();
+                            resultList.add(new ParkItem(3, Integer.toString(i[0]), Double.toString(distance), "10000", (String) document.get("ownerPhone"), "부가", 0, Double.toString(resultLat), Double.toString(resultLon), document.getId()));
+                            i[0]++;
                         }
                     }
-                    if (resultList != null) {
-                        Log.d(TAG, "데이터 검색 성공");
+                    if (resultList != null && resultList.size() != 0) {
+                        Log.d(TAG, "공유주차장 검색 성공. 결과 수 : " + resultList.size());
                         listener.onDataLoaded(resultList);
                     }
                     else {
-                        Log.d(TAG, "해당 데이터가 없음");
+                        Log.d(TAG, "해당 공유주차장이 없음");
+                        listener.onDataLoaded(null);
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -385,6 +338,29 @@ public class FirestoreDatabase {
                 })
                 .addOnFailureListener(e -> {
                     // 조회 실패 시 리스너의 onDataLoadError 메서드를 통해 오류 메시지 전달
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void loadMyReservations (String loginId, OnFirestoreDataLoadedListener listener) {
+        db.collection("reservation")
+                .whereEqualTo("id", loginId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+
+                    }
+                    if (resultList != null && resultList.size() != 0) {
+                        Log.d(TAG, "공유주차장 검색 성공. 결과 수 : " + resultList.size());
+                        listener.onDataLoaded(resultList);
+                    }
+                    else {
+                        Log.d(TAG, "해당 공유주차장이 없음");
+                        listener.onDataLoaded(null);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
                     listener.onDataLoadError(e.getMessage());
                 });
     }

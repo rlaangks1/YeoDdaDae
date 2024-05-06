@@ -105,7 +105,7 @@
                 android:textAppearance="@style/find_gas_st" />
 
             <ImageButton
-                android:id="@+id/rectangle_5"
+                android:id="@+id/toMyReservationImgBtn"
                 android:layout_width="385dp"
                 android:layout_height="121dp"
                 android:layout_alignParentLeft="true"

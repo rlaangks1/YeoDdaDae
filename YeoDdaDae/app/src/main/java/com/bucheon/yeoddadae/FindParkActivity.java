@@ -165,6 +165,13 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             finish();
         }
 
+        findParkBackBtn.setOnClickListener(new View.OnClickListener() { // 액티비티 종료
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         // 로딩 완료까지 뷰 없애기
         runOnUiThread(new Runnable() {
             @Override
@@ -249,13 +256,6 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         findPark(recievedSort);
 
         // 버튼 클릭 이벤트 리스너들
-        findParkBackBtn.setOnClickListener(new View.OnClickListener() { // 액티비티 종료
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
         gpsBtn.setOnClickListener(new View.OnClickListener() { // GPS 현재 위치로 맵 중심점 이동
             @Override
             public void onClick(View v) {

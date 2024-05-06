@@ -284,7 +284,7 @@
 
             <Button
                 android:id="@+id/reservationBtn"
-                android:text="예약하기"
+                android:text="예약"
                 android:textSize="20sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
