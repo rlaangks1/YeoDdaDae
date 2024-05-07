@@ -19,7 +19,7 @@
     <string name="find_parkin">주차장 찾기\n Find parking lot</string>
     <string name="find_gas_st">주유소 찾기\n Find gas station</string>
     <string name="car_booking">주차장 예약\n Car booking</string>
-    <string name="microphone">음성을\n 인식해주세요</string>
+    <string name="microphone">음성인식</string>
     <string name="mybooking">나의 예약</string>
     <string name="ticket">정기권구매</string>
     <string name="car_register">주차장등록</string>
@@ -34,13 +34,20 @@
     <string name="manager_info1">관리자 정보</string>
     <string name="manager_info2">성명\n\n나이\n\n사업연혁</string>
 
-    <string-array name="custom_weekdays">
-        <item>월</item>
-        <item>화</item>
-        <item>수</item>
-        <item>목</item>
-        <item>금</item>
-        <item>토</item>
-        <item>일</item>
+    <string-array name="time_units">
+        <item>30분</item>
+        <item>1시간</item>
+        <item>6시간</item>
+        <item>24시간</item>
+    </string-array>
+    <string-array name="time_array">
+        <item>30분</item>
+        <item>1시간</item>
+        <item>1시간30분</item>
+        <item>2시간</item>
+        <item>3시간</item>
+        <item>4시간</item>
+        <item>12시간</item>
+        <item>24시간</item>
     </string-array>
 </resources>
