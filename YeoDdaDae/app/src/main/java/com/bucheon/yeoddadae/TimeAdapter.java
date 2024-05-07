@@ -31,7 +31,15 @@ import java.util.HashMap;
 import java.util.Locale;
 
 public class TimeAdapter extends BaseAdapter {
+    private ReservationParkActivity mActivity;
     ArrayList<TimeItem> items = new ArrayList<>();
+
+
+    public TimeAdapter() {}
+
+    public TimeAdapter(ReservationParkActivity activity) {
+        mActivity = activity;
+    }
 
     public void addItem(TimeItem item) {
         items.add(item);
@@ -57,11 +65,33 @@ public class TimeAdapter extends BaseAdapter {
 
     public TimeItem findItem(CalendarDay date) {
         for (TimeItem item : items) {
-            if (item.getDate() == date) {
+            if (item.getDate().equals(date)) {
                 return item;
             }
         }
         return null; // 못 찾은 경우 null 반환
+    }
+
+    public int getTotalMinute () {
+        int totalMinutes = 0;
+
+        for (TimeItem item : items) {
+            int startHour = Integer.parseInt(item.getStartTime().substring(0, 2));
+            int startMinute = Integer.parseInt(item.getStartTime().substring(2, 4));
+            int endHour = Integer.parseInt(item.getEndTime().substring(0, 2));
+            int endMinute = Integer.parseInt(item.getEndTime().substring(2, 4));
+
+            int startTimeInMinutes = startHour * 60 + startMinute;
+            int endTimeInMinutes = endHour * 60 + endMinute;
+
+            if (endTimeInMinutes == 0) {
+                endTimeInMinutes = 24 * 60;
+            }
+
+            totalMinutes += (endTimeInMinutes - startTimeInMinutes);
+        }
+
+        return totalMinutes;
     }
 
     public void sortByDate () {
@@ -87,11 +117,11 @@ public class TimeAdapter extends BaseAdapter {
     }
 
     public HashMap<String, ArrayList<String>> getAllTime() {
+        sortByDate();
         HashMap<String, ArrayList<String>> hm = new HashMap<>();
 
         if (items.size() == 0) {
-            hm = null;
-            return hm;
+            return null;
         }
 
         for (TimeItem item : items) {
@@ -125,8 +155,7 @@ public class TimeAdapter extends BaseAdapter {
                 hm.put(cdString, new ArrayList<>(Arrays.asList(itemStartTime, itemEndTime)));
             }
             else {
-                hm = null;
-                return hm;
+                return null;
             }
         }
 
@@ -183,7 +212,7 @@ public class TimeAdapter extends BaseAdapter {
                     @Override
                     public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
                         String timeFormat;
-                        int amPmHour = 0;
+                        int amPmHour;
                         if (selectedHour >= 12) {
                             timeFormat = "오후";
                             if (selectedHour > 12) {
@@ -191,7 +220,8 @@ public class TimeAdapter extends BaseAdapter {
                             } else {
                                 amPmHour = selectedHour;
                             }
-                        } else {
+                        }
+                        else {
                             timeFormat = "오전";
                             if (selectedHour == 0) {
                                 amPmHour = 12;
@@ -205,6 +235,10 @@ public class TimeAdapter extends BaseAdapter {
                         time.setStartTime(timeString);
                         hour[0] = Integer.parseInt(time.getStartTime().substring(0, 2));
                         minute[0] = Integer.parseInt(time.getStartTime().substring(2, 4));
+
+                        if (mActivity != null) {
+                            mActivity.calculatePrice();
+                        }
                     }
                 }, hour[0], minute[0], false); // is24HourView를 false로 설정
 
@@ -217,14 +251,14 @@ public class TimeAdapter extends BaseAdapter {
         endTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int[] hour = {Integer.parseInt(time.getStartTime().substring(0, 2))};
-                int[] minute = {Integer.parseInt(time.getStartTime().substring(2, 4))};
+                int[] hour = {Integer.parseInt(time.getEndTime().substring(0, 2))};
+                int[] minute = {Integer.parseInt(time.getEndTime().substring(2, 4))};
 
                 TimePickerDialog timePickerDialog = new TimePickerDialog(context, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
                         String timeFormat;
-                        int amPmHour = 0;
+                        int amPmHour;
                         if (selectedHour >= 12) {
                             timeFormat = "오후";
                             if (selectedHour > 12) {
@@ -246,6 +280,10 @@ public class TimeAdapter extends BaseAdapter {
                         time.setEndTime(timeString);
                         hour[0] = Integer.parseInt(time.getStartTime().substring(0, 2));
                         minute[0] = Integer.parseInt(time.getStartTime().substring(2, 4));
+
+                        if (mActivity != null) {
+                            mActivity.calculatePrice();
+                        }
                     }
                 }, hour[0], minute[0], false); // is24HourView를 false로 설정
 

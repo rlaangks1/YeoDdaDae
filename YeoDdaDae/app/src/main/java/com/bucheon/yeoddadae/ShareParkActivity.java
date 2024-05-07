@@ -6,6 +6,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -55,8 +56,8 @@ public class ShareParkActivity extends AppCompatActivity {
     final int gpsIntentRequestCode = 1;
     String loginId;
 
-    double lat;
-    double lon;
+    double lat = 0;
+    double lon = 0;
 
     TimeAdapter ta;
 
@@ -187,89 +188,158 @@ public class ShareParkActivity extends AppCompatActivity {
                 String ownerParkingRelation = sharerRelationEditTxt.getText().toString();
                 int price;
 
-                if (Double.valueOf(lat) == null || Double.valueOf(lon) == null) {
+                if (lat == 0 || lon == 0) {
                     Toast.makeText(getApplicationContext(), "GPS로 주소를 찾으세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                else if (parkDetailAddress.equals("")){
+
+                if (parkDetailAddress.equals("")) {
                     Toast.makeText(getApplicationContext(), "상세주소를 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                else if (ownerName.equals("")) {
+
+                if (ownerName.equals("")) {
                     Toast.makeText(getApplicationContext(), "공유자명을 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                else if (ownerPhone.equals("")) {
+
+                if (ownerPhone.equals("")) {
                     Toast.makeText(getApplicationContext(), "전화번호를 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
+                } else if (!isValidPhoneNumber(ownerPhone)) {
+                    Toast.makeText(getApplicationContext(), "유효하지 않은 전화번호입니다", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-                else {
-                    String regex = "^010[0-9]{8}$"; // 010으로 시작하고, 그 뒤에 8자리 숫자가 온다는 정규식
-                    Pattern pattern = Pattern.compile(regex);
-                    Matcher matcher = pattern.matcher(ownerPhone);
-                    if (!matcher.matches()) {
-                        Toast.makeText(getApplicationContext(), "유효하지 않은 전화번호입니다", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
+
                 if (ownerEmail.equals("")) {
                     Toast.makeText(getApplicationContext(), "이메일을 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
+                } else if (!isValidEmail(ownerEmail)) {
+                    Toast.makeText(getApplicationContext(), "유효하지 않은 이메일입니다", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-                else {
-                    String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-                    Pattern pattern = Pattern.compile(regex);
-                    Matcher matcher = pattern.matcher(ownerEmail);
-                    if (!matcher.matches()) {
-                        Toast.makeText(getApplicationContext(), "유효하지 않은 이메일입니다", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
+
                 if (ownerParkingRelation.equals("")) {
                     Toast.makeText(getApplicationContext(), "주차장과의 관계를 입력하세요", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-                else if (parkPriceEditTxt.getText().toString().equals("")) {
+
+                String priceText = parkPriceEditTxt.getText().toString();
+                if (priceText.equals("")) {
                     Toast.makeText(getApplicationContext(), "가격을 설정하세요", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-                else {
-                    try {
-                        Integer.parseInt(parkPriceEditTxt.getText().toString());
-                        price = Integer.parseInt(parkPriceEditTxt.getText().toString());
-                    }
-                    catch (NumberFormatException e) {
-                        Toast.makeText(getApplicationContext(), "가격을 숫자로 입력하세요", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    
-                    if (ta.getAllTime() == null) {
-                        Toast.makeText(getApplicationContext(), "시간설정이 잘못되었습니다", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        HashMap<String, Object> hm = new HashMap<>();
 
-                        hm.put("ownerId", loginId);
-                        hm.put("lat", lat);
-                        hm.put("lon", lon);
-                        hm.put("time", ta.getAllTime());
-                        hm.put("parkDetailAddress", parkDetailAddress);
-                        hm.put("ownerName", ownerName);
-                        hm.put("ownerPhone", ownerPhone);
-                        hm.put("ownerEmail", ownerEmail);
-                        hm.put("ownerParkingRelation", ownerParkingRelation);
-                        hm.put("price", price);
-                        hm.put("upTime", FieldValue.serverTimestamp());
-                        hm.put("isApproval", false);
-
-                        FirestoreDatabase fd = new FirestoreDatabase();
-                        fd.insertData("sharePark", hm);
-
-                        Toast.makeText(getApplicationContext(), "공유주차장 등록 신청되었습니다", Toast.LENGTH_SHORT).show();
-
-                        finish();
-                    }
+                try {
+                    price = Integer.parseInt(priceText);
+                } catch (NumberFormatException e) {
+                    Toast.makeText(getApplicationContext(), "가격을 숫자로 입력하세요", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+
+                if (ta.getAllTime() == null) {
+                    Toast.makeText(getApplicationContext(), "시간설정이 잘못되었습니다", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (isShareTimeAfterNow()) {
+                    Toast.makeText(getApplicationContext(), "현재시각 이후로 공유하세요", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                HashMap<String, Object> hm = new HashMap<>();
+                hm.put("ownerId", loginId);
+                hm.put("lat", lat);
+                hm.put("lon", lon);
+                hm.put("time", ta.getAllTime());
+                hm.put("parkDetailAddress", parkDetailAddress);
+                hm.put("ownerName", ownerName);
+                hm.put("ownerPhone", ownerPhone);
+                hm.put("ownerEmail", ownerEmail);
+                hm.put("ownerParkingRelation", ownerParkingRelation);
+                hm.put("price", price);
+                hm.put("upTime", FieldValue.serverTimestamp());
+                hm.put("isApproval", false);
+
+                FirestoreDatabase fd = new FirestoreDatabase();
+                fd.insertData("sharePark", hm);
+
+                Toast.makeText(getApplicationContext(), "공유주차장 등록 신청되었습니다", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
+    }
+
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        String regex = "^010[0-9]{8}$"; // 010으로 시작하고, 그 뒤에 8자리 숫자가 온다는 정규식
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(phoneNumber);
+        return matcher.matches();
+    }
+
+    private boolean isValidEmail(String email) {
+        String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    private boolean isShareTimeAfterNow() {
+        boolean isAfterNow = true;
+
+        Calendar ca = Calendar.getInstance();
+
+        int year = ca.get(Calendar.YEAR);
+        int month = ca.get(Calendar.MONTH) + 1;
+        int day = ca.get(Calendar.DAY_OF_MONTH);
+        int hour = ca.get(Calendar.HOUR_OF_DAY);
+        int minute = ca.get(Calendar.MINUTE);
+
+        String nowString = "";
+        nowString += year;
+        if (month < 10) {
+            nowString += "0";
+        }
+        nowString += month;
+        if (day < 10) {
+            nowString += "0";
+        }
+        nowString += day;
+        if (hour < 10) {
+            nowString += "0";
+        }
+        nowString += hour;
+        if (minute < 10) {
+            nowString += "0";
+        }
+        nowString += minute;
+        Log.d(TAG, "현재 시각 : " + nowString);
+
+        ta.sortByDate();
+        CalendarDay shareTimeFirstDay = ((TimeItem) ta.getItem(0)).getDate();
+
+        int shareYear = shareTimeFirstDay.getYear();
+        int shareMonth = shareTimeFirstDay.getMonth();
+        int shareDay = shareTimeFirstDay.getDay();
+
+        String shareStartTimeString = "";
+
+        shareStartTimeString += shareYear;
+        if (shareMonth < 10) {
+            shareStartTimeString += "0";
+        }
+        shareStartTimeString += shareMonth;
+        if (shareDay < 10) {
+            shareStartTimeString += "0";
+        }
+        shareStartTimeString += shareDay + ((TimeItem) ta.getItem(0)).getStartTime();
+        Log.d(TAG, "공유 처음 시간 : " + shareStartTimeString);
+
+        if (Long.parseLong(nowString) <= Long.parseLong(shareStartTimeString)) {
+            isAfterNow = false;
+        }
+
+        return isAfterNow;
     }
 
     public void setTotalHeightofListView(ListView listView) {
