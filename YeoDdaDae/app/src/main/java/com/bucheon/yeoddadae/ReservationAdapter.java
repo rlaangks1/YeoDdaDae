@@ -7,63 +7,49 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.google.firebase.Timestamp;
+import com.skt.Tmap.TMapData;
+import com.skt.Tmap.address_info.TMapAddressInfo;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ReservationAdapter extends BaseAdapter {
-    ArrayList<ParkItem> items = new ArrayList<ParkItem>();
+    ArrayList<ReservationItem> items = new ArrayList<ReservationItem>();
 
-    public void addItem(ParkItem item) {
+    public void addItem(ReservationItem item) {
         items.add(item);
+        notifyDataSetChanged();
     }
 
-    public ParkItem findItem(String parkItemName) {
-        for (ParkItem item : items) {
-            if (item.getName().equals(parkItemName)) {
+    public ReservationItem findItem(String id, Timestamp ts) {
+        for (ReservationItem item : items) {
+            if (item.getId().equals(id) && item.getUpTime().equals(ts)) {
                 return item;
             }
         }
         return null; // 못 찾은 경우 null 반환
     }
 
-    public void sortByDistance () {
+    public void sortByUpTime() {
         if (items != null && items.size() > 1) {
-            Collections.sort(items, new Comparator<ParkItem>() {
+            Collections.sort(items, new Comparator<ReservationItem>() {
                 @Override
-                public int compare(ParkItem o1, ParkItem o2) {
-                    // Compare by star rate in descending order
-                    return Double.compare(Double.parseDouble(o1.getRadius()), Double.parseDouble(o2.getRadius()));
-                }
-            });
-            notifyDataSetChanged(); // Notify adapter that dataset has changed
-        }
-    }
+                public int compare(ReservationItem o1, ReservationItem o2) {
+                    Timestamp upTime1 = o1.getUpTime();
+                    Timestamp upTime2 = o2.getUpTime();
 
-    public void sortByRate () {
-        if (items != null && items.size() > 1) {
-            Collections.sort(items, new Comparator<ParkItem>() {
-                @Override
-                public int compare(ParkItem o1, ParkItem o2) {
-                    // Compare by star rate in descending order
-                    return Integer.compare(o2.getStarRate(), o1.getStarRate());
+                    // Timestamp를 Date로 변환 후 비교
+                    // 오름차순 정렬입니다. 내림차순으로 하고 싶다면 o2와 o1의 위치를 바꿉니다.
+                    return upTime1.toDate().compareTo(upTime2.toDate());
                 }
             });
-            notifyDataSetChanged(); // Notify adapter that dataset has changed
-        }
-    }
-
-    public void sortByParkPrice () {
-        if (items != null && items.size() > 1) {
-            Collections.sort(items, new Comparator<ParkItem>() {
-                @Override
-                public int compare(ParkItem o1, ParkItem o2) {
-                    // Compare by gasoline price in ascending order
-                    return Long.compare(Long.parseLong(o1.getParkPrice()), Long.parseLong(o2.getParkPrice()));
-                }
-            });
-            notifyDataSetChanged(); // Notify adapter that dataset has changed
+            notifyDataSetChanged(); // 데이터셋이 변경됨을 어댑터에 알림
         }
     }
 
@@ -85,86 +71,70 @@ public class ReservationAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Context context = parent.getContext();
-        ParkItem park = items.get(position);
+        ReservationItem reservation = items.get(position);
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.park_item, parent, false);
+            convertView = inflater.inflate(R.layout.reservation_item, parent, false);
         }
 
         // 파인드 뷰
-        TextView parkOrder = convertView.findViewById(R.id.parkOrder);
-        TextView parkName = convertView.findViewById(R.id.parkName);
-        TextView parkType = convertView.findViewById(R.id.parkType);
-        TextView parkDistance = convertView.findViewById(R.id.parkDistance);
-        TextView parkPrice = convertView.findViewById(R.id.parkPrice);
-        TextView parkAddition = convertView.findViewById(R.id.parkAddition);
-        TextView parkStarRate = convertView.findViewById(R.id.parkStarRate);
-        TextView parkPhone = convertView.findViewById(R.id.parkPhone);
+        TextView shareParkInfoTxt = convertView.findViewById(R.id.shareParkInfoTxt);
+        TextView reservationTimeTxt = convertView.findViewById(R.id.reservationTimeTxt);
+        TextView upTimeTxt = convertView.findViewById(R.id.upTimeTxt);
+
+        FirestoreDatabase fd = new FirestoreDatabase();
 
         // 뷰 내용
-        switch (park.getType()) {
-            case 0 :
-                parkType.setText("???");
-                break;
-            case 1 :
-                parkType.setText("일반주차장");
-                break;
-            case 2 :
-                parkType.setText("공영주차장");
-                break;
-            case 3 :
-                parkType.setText("공유주차장");
-                break;
-            case 4 :
-                parkType.setText("주소");
-                break;
-            case 5 :
-                parkType.setText("장소");
-                break;
-            default :
-                parkType.setText("뭐냐고");
-        }
+        fd.loadShareParkInfo(reservation.getShareParkDocumentName(), new OnFirestoreDataLoadedListener() {
+            @Override
+            public void onDataLoaded(Object data) {
+                HashMap<String, Object> hm = (HashMap<String, Object>) data;
 
-        parkOrder.setText (Integer.toString(position + 1));
-        parkName.setText(park.getName());
+                double lat = (double) hm.get("lat");
+                double lon = (double) hm.get("lon");
+                String detailAddress = (String) hm.get("parkDetailAddress");
 
-        // 숫자 포맷 지정 (세 번째 자리에서 반올림)
-        DecimalFormat formatter = new DecimalFormat("#.##");
-        // 소수로 파싱 후, 포맷 적용하여 새로운 문자열 생성
-        double number = Double.parseDouble(park.getRadius());
-        String formattedDistanceString = formatter.format(number);
-        parkDistance.setText(formattedDistanceString + "km");
-
-        String parkPriceValue = park.getParkPrice();
-        if (parkPriceValue != null && !parkPriceValue.equals("null")) {
-            formatter = new DecimalFormat("#,###");
-            number = Double.parseDouble(parkPriceValue);
-            String formattedPriceString = formatter.format(number);
-            parkPrice.setText("시간 당 " + formattedPriceString + "원");
-        }
-        else {
-            parkPrice.setText("");
-        }
-
-        parkAddition.setText(park.getAddition());
-
-        parkStarRate.setText(Integer.toString(park.getStarRate()));
-
-        String originalPhoneString = park.getPhone();
-        String newPhoneString = "";
-        if (originalPhoneString != null) {
-            if (originalPhoneString.length() == 10) {
-                newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 6) + "-" + originalPhoneString.substring(6);
+                TMapData tMapdata = new TMapData();
+                tMapdata.reverseGeocoding(lat, lon, "A10", new TMapData.reverseGeocodingListenerCallback() {
+                    @Override
+                    public void onReverseGeocoding(TMapAddressInfo tMapAddressInfo) {
+                        if (tMapAddressInfo != null) {
+                            String [] adrresses = tMapAddressInfo.strFullAddress.split(",");
+                            shareParkInfoTxt.setText(adrresses[2] + " / " + detailAddress);
+                        }
+                    }
+                });
             }
-            else if (originalPhoneString.length() == 11) {
-                newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 7) + "-" + originalPhoneString.substring(7);
+
+            @Override
+            public void onDataLoadError(String errorMessage) {
+                shareParkInfoTxt.setText("오류 " + errorMessage);
             }
-            else {
-                newPhoneString = originalPhoneString;
-            }
+        });
+
+        HashMap<String, ArrayList<String>> hm = reservation.getReservationTime();
+        ArrayList<String> keys = new ArrayList<>(hm.keySet());
+        Collections.sort(keys);
+
+        String reservationTimeString = "";
+        for (String key : keys) {
+            int year = Integer.parseInt(key.substring(0, 4));
+            int month = Integer.parseInt(key.substring(4, 6));
+            int day = Integer.parseInt(key.substring(6, 8));
+
+            String startTimeHour = hm.get(key).get(0).substring(0,2);
+            String startTimeMinute = hm.get(key).get(0).substring(2,4);
+            String endTimeHour = hm.get(key).get(1).substring(0,2);
+            String endTimeMinute = hm.get(key).get(1).substring(2,4);
+
+            reservationTimeString += year + "년 " + month + "월 " + day + "일 " + startTimeHour + ":" + startTimeMinute + "부터 " + endTimeHour + ":" + endTimeMinute + "까지\n";
         }
-        parkPhone.setText(newPhoneString);
+        reservationTimeString = reservationTimeString.substring(0, reservationTimeString.length() - 1); // 마지막 줄바꿈 제거
+
+        reservationTimeTxt.setText(reservationTimeString);
+
+        upTimeTxt.setText(reservation.getUpTime().toString());
 
         return convertView;
     }

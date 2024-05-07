@@ -121,8 +121,7 @@ public class TimeAdapter extends BaseAdapter {
         HashMap<String, ArrayList<String>> hm = new HashMap<>();
 
         if (items.size() == 0) {
-            hm = null;
-            return hm;
+            return null;
         }
 
         for (TimeItem item : items) {
@@ -156,8 +155,7 @@ public class TimeAdapter extends BaseAdapter {
                 hm.put(cdString, new ArrayList<>(Arrays.asList(itemStartTime, itemEndTime)));
             }
             else {
-                hm = null;
-                return hm;
+                return null;
             }
         }
 
