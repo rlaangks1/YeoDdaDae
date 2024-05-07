@@ -181,12 +181,47 @@
                 android:layout_marginLeft="5dp"/>
 
             <TextView
+                android:id="@+id/reservationShareTimeTxt"
+                android:text="공유 시간"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/reservationPriceContentTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="20dp"/>
+
+            <TextView
+                android:id="@+id/reservationShareTimeContentTxt"
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/reservationShareTimeTxt"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <TextView
+                android:id="@+id/reservationedTimeTxt"
+                android:text="다른 예약된 시간"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/reservationShareTimeContentTxt"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <TextView
+                android:id="@+id/reservationedTimeContentTxt"
+                android:textSize="20sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/reservationedTimeTxt"
+                app:layout_constraintLeft_toLeftOf="parent" />
+
+            <TextView
                 android:id="@+id/reservationParkDateTxt"
                 android:text="예약 시간"
                 android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/reservationPriceContentTxt"
+                app:layout_constraintTop_toBottomOf="@id/reservationedTimeContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="20dp" />
 
@@ -215,16 +250,45 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/reservationParkDateCalendar"
-                app:layout_constraintLeft_toLeftOf="parent" >
+                app:layout_constraintLeft_toLeftOf="parent">
             </ListView>
+
+            <TextView
+                android:id="@+id/reservationTotalPriceTxt"
+                android:text="총 금액"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/reservationParkTimeListView"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="20dp"  />
+
+            <TextView
+                android:id="@+id/reservationTotalPriceContentTxt"
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/reservationTotalPriceTxt"
+                app:layout_constraintLeft_toLeftOf="parent" />
+
+            <TextView
+                android:id="@+id/reservationWonTxt"
+                android:text="원"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/reservationTotalPriceContentTxt"
+                app:layout_constraintBottom_toBottomOf="@+id/reservationTotalPriceContentTxt"
+                app:layout_constraintLeft_toRightOf="@+id/reservationTotalPriceContentTxt"
+                android:layout_marginLeft="5dp"/>
 
             <Button
                 android:id="@+id/reservationBtn"
-                android:text="예약하기"
+                android:text="예약"
                 android:textSize="20sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/reservationParkTimeListView"
+                app:layout_constraintTop_toBottomOf="@id/reservationTotalPriceContentTxt"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"/>
 

@@ -9,10 +9,12 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,8 +28,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FirestoreDatabase {
@@ -238,52 +243,55 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void findSharePark(double nowLat, double nowLon, double radiusKiloMeter, OnFirestoreDataLoadedListener listener) {
+    public void findSharePark(String id, double nowLat, double nowLon, double radiusKiloMeter, OnFirestoreDataLoadedListener listener) {
         List<ParkItem> resultList = new ArrayList<>();
 
-        AtomicInteger i= new AtomicInteger(1);
+        if (id == null || id.equals("")) {
+            Log.d(TAG, "아이디가 null이거나 빈 문자열임");
+            return;
+        }
+
+        int[] i = {1};
+        Timestamp now = Timestamp.now();
 
         db.collection("sharePark")
                 .whereEqualTo("isApproval", true)
+                .whereNotEqualTo("ownerId", id)
+                .whereLessThan("upTime", now)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (DocumentSnapshot document : queryDocumentSnapshots) {
                         Double resultLat = (Double) document.get("lat");
                         Double resultLon = (Double) document.get("lon");
 
-                        // 지구 반경 (미터)
-                        final double R = 6371e3;
+                        final double R = 6371e3; // 지구 반경 (미터)
 
-                        // 위도 및 경도를 라디안으로 변환
-                        double lat1Rad = Math.toRadians(nowLat);
+                        double lat1Rad = Math.toRadians(nowLat); // 위도 및 경도를 라디안으로 변환
                         double lon1Rad = Math.toRadians(nowLon);
                         double lat2Rad = Math.toRadians(resultLat);
                         double lon2Rad = Math.toRadians(resultLon);
 
-                        // 위도 및 경도의 차이 계산
-                        double deltaLat = lat2Rad - lat1Rad;
+                        double deltaLat = lat2Rad - lat1Rad; // 위도 및 경도의 차이 계산
                         double deltaLon = lon2Rad - lon1Rad;
 
                         // Haversine 공식 적용
-                        double a = Math.pow(Math.sin(deltaLat / 2), 2) +
-                                Math.cos(lat1Rad) * Math.cos(lat2Rad) *
-                                        Math.pow(Math.sin(deltaLon / 2), 2);
+                        double a = Math.pow(Math.sin(deltaLat / 2), 2) + Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.pow(Math.sin(deltaLon / 2), 2);
                         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-                        // 거리 계산
-                        double distance = (R * c) / 1000; // km 단위
+                        double distance = (R * c) / 1000; // 거리 계산 km 단위
 
                         if (distance <= radiusKiloMeter) {
-                            resultList.add(new ParkItem(3, Integer.toString(i.get()), Double.toString(distance), "10000", (String) document.get("ownerPhone"), "부가", 0, Double.toString(resultLat), Double.toString(resultLon), document.getId()));
-                            i.getAndIncrement();
+                            resultList.add(new ParkItem(3, Integer.toString(i[0]), Double.toString(distance), "10000", (String) document.get("ownerPhone"), "부가", 0, Double.toString(resultLat), Double.toString(resultLon), document.getId()));
+                            i[0]++;
                         }
                     }
-                    if (resultList != null) {
-                        Log.d(TAG, "데이터 검색 성공");
+                    if (resultList != null && resultList.size() != 0) {
+                        Log.d(TAG, "공유주차장 검색 성공. 결과 수 : " + resultList.size());
                         listener.onDataLoaded(resultList);
                     }
                     else {
-                        Log.d(TAG, "해당 데이터가 없음");
+                        Log.d(TAG, "해당 공유주차장이 없음");
+                        listener.onDataLoaded(null);
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -303,7 +311,8 @@ public class FirestoreDatabase {
                         // 문서가 존재할 경우 해당 문서의 데이터를 HashMap에 넣음
                         hm.putAll(documentSnapshot.getData());
                         listener.onDataLoaded(hm);
-                    } else {
+                    }
+                    else {
                         listener.onDataLoadError("해당 문서가 존재하지 않음");
                     }
                 })
@@ -315,21 +324,50 @@ public class FirestoreDatabase {
     public void loadAnotherReservations(String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
         db.collection("reservation")
                 .whereEqualTo("shareParkDocumentName", firestoreDocumentId)
+                .whereEqualTo("isCancelled", false)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    // 쿼리 결과에서 문서들을 순회하며 shareParkDocumentName 값을 추출하여 Map에 저장
                     HashMap<String,  HashMap<String, ArrayList<String>>> resultMap = new HashMap<>();
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
-                        String documentId = documentSnapshot.getId(); // 문서의 ID를 가져옴
+                        String documentId = documentSnapshot.getId();
                         HashMap<String, ArrayList<String>> times = (HashMap<String, ArrayList<String>>) documentSnapshot.get("time");
-                        // Map에 저장, 여기서는 문서 ID를 키로, shareParkDocumentName 값을 값으로 사용
                         resultMap.put(documentId, times);
                     }
-                    // 결과 Map을 리스너의 onDataLoaded 메서드를 통해 전달
+                    if (resultMap.size() > 0 && resultMap != null) {
+                        Log.d (TAG, "다른 예약들 찾기 성공 갯수 : " + resultMap.size());
+                    }
+                    else {
+                        Log.d(TAG, "다른 예약이 없음");
+                    }
                     listener.onDataLoaded(resultMap);
                 })
                 .addOnFailureListener(e -> {
-                    // 조회 실패 시 리스너의 onDataLoadError 메서드를 통해 오류 메시지 전달
+                    Log.d(TAG, e.getMessage());
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void loadMyReservations (String loginId, OnFirestoreDataLoadedListener listener) {
+        db.collection("reservation")
+                .whereEqualTo("id", loginId)
+                .orderBy("upTime")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    ArrayList<HashMap<String, Object>> resultArrayList = new ArrayList<>();
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        HashMap<String, Object> data = new HashMap<>(documentSnapshot.getData());
+                        resultArrayList.add(data);
+                    }
+                    if (resultArrayList.size() > 0 && resultArrayList != null) {
+                        Log.d (TAG, "내 예약들 찾기 성공 갯수 : " + resultArrayList.size());
+                    }
+                    else {
+                        Log.d(TAG, "내 예약이 없음");
+                    }
+                    listener.onDataLoaded(resultArrayList);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
                     listener.onDataLoadError(e.getMessage());
                 });
     }

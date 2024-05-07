@@ -165,6 +165,13 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             finish();
         }
 
+        findParkBackBtn.setOnClickListener(new View.OnClickListener() { // 액티비티 종료
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         // 로딩 완료까지 뷰 없애기
         runOnUiThread(new Runnable() {
             @Override
@@ -249,13 +256,6 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         findPark(recievedSort);
 
         // 버튼 클릭 이벤트 리스너들
-        findParkBackBtn.setOnClickListener(new View.OnClickListener() { // 액티비티 종료
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
         gpsBtn.setOnClickListener(new View.OnClickListener() { // GPS 현재 위치로 맵 중심점 이동
             @Override
             public void onClick(View v) {
@@ -628,7 +628,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     return;
                 }
                 FirestoreDatabase fd = new FirestoreDatabase();
-                fd.findSharePark(centerPoint.getLatitude(), centerPoint.getLongitude(), 3, new OnFirestoreDataLoadedListener() {
+                fd.findSharePark(loginId, centerPoint.getLatitude(), centerPoint.getLongitude(), 3, new OnFirestoreDataLoadedListener() {
                     @Override
                     public void onDataLoaded(Object data) {
                         tMapView.removeAllTMapCircle();
@@ -649,18 +649,20 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                             tMapView.addMarkerItem(item.name, tItem);
                         }
 
-                        ArrayList<ParkItem> dataList = (ArrayList<ParkItem>) data;
+                        if (data != null) {
+                            ArrayList<ParkItem> dataList = (ArrayList<ParkItem>) data;
 
-                        for (ParkItem item : dataList) { // Firestore 검색
-                            parkAdapter.addItem(item);
-                            TMapPoint tpoint = new TMapPoint(item.getLat(), item.getLon());
-                            TMapMarkerItem tItem = new TMapMarkerItem();
-                            tItem.setTMapPoint(tpoint);
-                            tItem.setName(item.getName());
-                            tItem.setVisible(TMapMarkerItem.VISIBLE);
-                            tItem.setIcon(tmapShareParkMarkerIcon);
-                            tItem.setPosition(0.5f,1.0f); // 마커의 중심점을 하단, 중앙으로 설정
-                            tMapView.addMarkerItem(item.getName(), tItem);
+                            for (ParkItem item : dataList) { // Firestore 검색
+                                parkAdapter.addItem(item);
+                                TMapPoint tpoint = new TMapPoint(item.getLat(), item.getLon());
+                                TMapMarkerItem tItem = new TMapMarkerItem();
+                                tItem.setTMapPoint(tpoint);
+                                tItem.setName(item.getName());
+                                tItem.setVisible(TMapMarkerItem.VISIBLE);
+                                tItem.setIcon(tmapShareParkMarkerIcon);
+                                tItem.setPosition(0.5f,1.0f); // 마커의 중심점을 하단, 중앙으로 설정
+                                tMapView.addMarkerItem(item.getName(), tItem);
+                            }
                         }
 
                         runOnUiThread(new Runnable() {
