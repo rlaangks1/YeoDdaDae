@@ -38,6 +38,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
@@ -60,7 +61,7 @@ public class ShareParkActivity extends AppCompatActivity {
 
     TimeAdapter ta;
 
-    Button shareParkBackBtn;
+    ImageButton shareParkBackBtn;
     TextView parkNewAddressContentTxt;
     TextView parkOldAddressContentTxt;
     Button gpsBtn;
@@ -70,10 +71,10 @@ public class ShareParkActivity extends AppCompatActivity {
     EditText sharerEmailEditTxt;
     EditText sharerRelationEditTxt;
     EditText parkPriceEditTxt;
-    Button resetBtn;
+    ImageButton resetBtn;
     MaterialCalendarView parkDateCalendar;
     ListView parkTimeListView;
-    Button registrationBtn;
+    ImageButton registrationBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
