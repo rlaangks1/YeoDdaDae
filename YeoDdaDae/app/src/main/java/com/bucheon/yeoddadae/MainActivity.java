@@ -175,9 +175,15 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         toMyReservationImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myReservationIntent = new Intent(getApplicationContext(), MyReservationActivity.class);
-                myReservationIntent.putExtra("loginId", loginId);
-                startActivity(myReservationIntent);
+                if (apiKeyCertified) {
+                    Intent myReservationIntent = new Intent(getApplicationContext(), MyReservationActivity.class);
+                    myReservationIntent.putExtra("loginId", loginId);
+                    startActivity(myReservationIntent);
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
+                    tMapView.setSKTMapApiKey(API_KEY);
+                }
             }
         });
 

@@ -6,7 +6,7 @@
 
     <TextView
         android:id="@+id/shareParkInfoTxt"
-        android:text="wqeqewqe"
+        android:text="주소"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -16,7 +16,7 @@
 
     <TextView
         android:id="@+id/reservationTimeTxt"
-        android:text="qeweqe"
+        android:text="예약시간"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="@+id/shareParkInfoTxt"

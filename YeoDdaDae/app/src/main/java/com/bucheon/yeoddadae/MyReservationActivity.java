@@ -33,7 +33,7 @@ public class MyReservationActivity extends AppCompatActivity {
         detailBtn = findViewById(R.id.detailBtn);
 
         FirestoreDatabase fd = new FirestoreDatabase();
-        ReservationAdapter ra = new ReservationAdapter();
+        ReservationAdapter ra = new ReservationAdapter(MyReservationActivity.this);
         myReservationListView.setAdapter(ra);
 
         fd.loadMyReservations(loginId, new OnFirestoreDataLoadedListener() {
