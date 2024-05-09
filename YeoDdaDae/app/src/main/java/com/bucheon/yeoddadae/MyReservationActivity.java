@@ -1,10 +1,15 @@
 package com.bucheon.yeoddadae;
 
+import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -47,15 +52,23 @@ public class MyReservationActivity extends AppCompatActivity {
                     String shareParkDocumentName = (String) oneReservation.get("shareParkDocumentName");
                     HashMap<String, ArrayList<String>> reservationTime = (HashMap<String, ArrayList<String>>) oneReservation.get("time");
                     Timestamp upTime = (Timestamp) oneReservation.get("upTime");
+                    String documentId = (String) oneReservation.get("documentId");
 
-
-                    ra.addItem(new ReservationItem(id, isCancelled, shareParkDocumentName, reservationTime, upTime));
+                    ra.addItem(new ReservationItem(id, isCancelled, shareParkDocumentName, reservationTime, upTime, documentId));
                 }
             }
 
             @Override
             public void onDataLoadError(String errorMessage) {
+            }
+        });
 
+        myReservationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent toReservationInformationActivityIntent = new Intent(getApplicationContext(), ReservationInformationActivity.class);
+                toReservationInformationActivityIntent.putExtra("documentId", ((ReservationItem) ra.getItem(position)).getDocumentId());
+                startActivity(toReservationInformationActivityIntent);
             }
         });
 

@@ -28,6 +28,7 @@
         <activity android:name=".MainActivity"/>
         <activity android:name=".FindParkActivity"/>
         <activity android:name=".MyReservationActivity"/>
+        <activity android:name=".ReservationInformationActivity"/>
         <activity android:name=".ReservationParkActivity"/>
         <activity android:name=".FindGasStationActivity"/>
         <activity android:name=".NavigationActivity"/>

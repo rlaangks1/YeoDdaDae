@@ -356,6 +356,7 @@ public class FirestoreDatabase {
                     ArrayList<HashMap<String, Object>> resultArrayList = new ArrayList<>();
                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         HashMap<String, Object> data = new HashMap<>(documentSnapshot.getData());
+                        data.put("documentId", documentSnapshot.getId());
                         resultArrayList.add(data);
                     }
                     if (resultArrayList.size() > 0 && resultArrayList != null) {

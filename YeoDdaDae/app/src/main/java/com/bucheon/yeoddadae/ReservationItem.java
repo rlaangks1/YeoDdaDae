@@ -11,13 +11,15 @@ public class ReservationItem {
     String shareParkDocumentName;
     HashMap<String, ArrayList<String>> reservationTime;
     Timestamp upTime;
+    String documentId;
 
-    public ReservationItem(String id, boolean isCancelled, String shareParkDocumentName, HashMap<String, ArrayList<String>> reservationTime, Timestamp upTime) {
+    public ReservationItem(String id, boolean isCancelled, String shareParkDocumentName, HashMap<String, ArrayList<String>> reservationTime, Timestamp upTime, String documentId) {
         this.id = id;
         this.isCancelled = isCancelled;
         this.shareParkDocumentName = shareParkDocumentName;
         this.reservationTime = reservationTime;
         this.upTime = upTime;
+        this.documentId = documentId;
     }
 
     public String getId() {
@@ -38,5 +40,9 @@ public class ReservationItem {
 
     public Timestamp getUpTime() {
         return upTime;
+    }
+
+    public String getDocumentId() {
+        return documentId;
     }
 }
