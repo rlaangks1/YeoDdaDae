@@ -356,6 +356,7 @@ public class FirestoreDatabase {
                     ArrayList<HashMap<String, Object>> resultArrayList = new ArrayList<>();
                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         HashMap<String, Object> data = new HashMap<>(documentSnapshot.getData());
+                        data.put("documentId", documentSnapshot.getId());
                         resultArrayList.add(data);
                     }
                     if (resultArrayList.size() > 0 && resultArrayList != null) {
@@ -365,6 +366,65 @@ public class FirestoreDatabase {
                         Log.d(TAG, "내 예약이 없음");
                     }
                     listener.onDataLoaded(resultArrayList);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void loadReservation (String loginId, String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+        HashMap<String, Object> hm = new HashMap<>();
+
+        db.collection("reservation")
+                .document(firestoreDocumentId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        if(documentSnapshot.get("id").equals(loginId)) {
+                            hm.putAll(documentSnapshot.getData());
+                            listener.onDataLoaded(hm);
+                        }
+                        else {
+                            listener.onDataLoadError("아이디가 일치하지 않음");
+                        }
+                    }
+                    else {
+                        listener.onDataLoadError("해당 문서가 존재하지 않음");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void cancelReservation(String loginId, String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+        db.collection("reservation")
+                .document(firestoreDocumentId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        if(documentSnapshot.get("id").equals(loginId)) {
+                            db.collection("reservation")
+                                    .document(firestoreDocumentId)
+                                    .update("isCancelled", true)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Log.d(TAG, "예약 취소 성공");
+                                        listener.onDataLoaded(1);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.d(TAG, "예약 취소 실패");
+                                        listener.onDataLoadError(e.getMessage());
+                                    });
+                        }
+                        else {
+                            Log.d(TAG, "ID가 일치하지 않음");
+                            listener.onDataLoadError("ID가 일치하지 않음");
+                        }
+                    }
+                    else {
+                        listener.onDataLoadError("문서가 존재하지 않음");
+                    }
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "데이터 검색 오류", e);
