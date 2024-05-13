@@ -1,15 +1,11 @@
 package com.bucheon.yeoddadae;
 
-import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,16 +14,19 @@ import com.google.firebase.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MyReservationActivity extends AppCompatActivity {
+public class MyReportDiscountParkActivity extends AppCompatActivity {
     String loginId;
 
-    Button myReservationBackBtn;
-    ListView myReservationListView;
+    Button myReportBackBtn;
+    ListView myReportBackBtnListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_reservation);
+        setContentView(R.layout.activity_my_report_discount_park);
+
+        myReportBackBtn = findViewById(R.id.myReportBackBtn);
+        myReportBackBtnListView = findViewById(R.id.myReportBackBtnListView);
     }
 
     @Override
@@ -37,11 +36,9 @@ public class MyReservationActivity extends AppCompatActivity {
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
 
-        myReservationBackBtn = findViewById(R.id.myReservationBackBtn);
-        myReservationListView = findViewById(R.id.myReservationListView);
-
+        /*
         FirestoreDatabase fd = new FirestoreDatabase();
-        ReservationAdapter ra = new ReservationAdapter(MyReservationActivity.this);
+        ReservationAdapter ra = new ReservationAdapter(MyReportDiscountParkActivity.this);
         myReservationListView.setAdapter(ra);
 
         fd.loadMyReservations(loginId, new OnFirestoreDataLoadedListener() {
@@ -82,5 +79,7 @@ public class MyReservationActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+         */
     }
 }
