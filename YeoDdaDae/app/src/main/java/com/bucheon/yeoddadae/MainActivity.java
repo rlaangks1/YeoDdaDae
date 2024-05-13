@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     ImageButton toFindGasStationImgBtn;
     ImageButton toMyReservationImgBtn;
     Button toShareParkBtn;
+    Button toMyReportDiscountParkBtn;
     Button logoutBtn;
 
     private Intent serviceIntent;
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         toFindGasStationImgBtn = findViewById(R.id.toFindGasStationImgBtn);
         toMyReservationImgBtn = findViewById(R.id.toMyReservationImgBtn);
         toShareParkBtn = findViewById(R.id.toShareParkBtn);
+        toMyReportDiscountParkBtn = findViewById(R.id.toMyReportDiscountParkBtn);
         logoutBtn = findViewById(R.id.logoutBtn);
 
         Intent inIntent = getIntent();
@@ -199,6 +201,15 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                     Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
                     tMapView.setSKTMapApiKey(API_KEY);
                 }
+            }
+        });
+
+        toMyReportDiscountParkBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myReportDiscountIntent = new Intent(getApplicationContext(), MyReportDiscountParkActivity.class);
+                myReportDiscountIntent.putExtra("loginId", loginId);
+                startActivity(myReportDiscountIntent);
             }
         });
 

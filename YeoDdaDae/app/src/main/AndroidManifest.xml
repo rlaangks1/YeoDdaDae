@@ -30,10 +30,12 @@
         <activity android:name=".MyReservationActivity"/>
         <activity android:name=".ReservationInformationActivity"/>
         <activity android:name=".ReservationParkActivity"/>
+        <activity android:name=".PaymentActivity"/>
         <activity android:name=".FindGasStationActivity"/>
         <activity android:name=".NavigationActivity"/>
         <activity android:name=".ShareParkActivity"/>
         <activity android:name=".GpsCertificationActivity"/>
+        <activity android:name=".MyReportDiscountParkActivity"/>
         <service
             android:name=".SttService"
             android:enabled="true"

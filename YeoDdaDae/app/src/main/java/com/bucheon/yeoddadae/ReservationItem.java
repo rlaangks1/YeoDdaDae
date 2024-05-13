@@ -26,7 +26,7 @@ public class ReservationItem {
         return id;
     }
 
-    public boolean isCancelled() {
+    public boolean getIsCancelled() {
         return isCancelled;
     }
 

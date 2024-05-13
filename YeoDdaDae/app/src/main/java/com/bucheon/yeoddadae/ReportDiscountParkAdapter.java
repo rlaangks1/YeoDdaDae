@@ -12,33 +12,30 @@ import com.google.firebase.Timestamp;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.address_info.TMapAddressInfo;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Locale;
-import java.util.Set;
 
-public class ReservationAdapter extends BaseAdapter {
-    ArrayList<ReservationItem> items = new ArrayList<ReservationItem>();
+public class ReportDiscountParkAdapter extends BaseAdapter {
+    ArrayList<ReportDiscountParkItem> items = new ArrayList<>();
     Activity activity;
 
-    public ReservationAdapter (Activity activity) {
+    public ReportDiscountParkAdapter(Activity activity) {
         this.activity = activity;
     }
 
-    public void addItem(ReservationItem item) {
+    public void addItem(ReportDiscountParkItem item) {
         items.add(item);
         notifyDataSetChanged();
     }
 
-    public ReservationItem findItem(String id, Timestamp ts) {
-        for (ReservationItem item : items) {
-            if (item.getId().equals(id) && item.getUpTime().equals(ts)) {
+    public ReportDiscountParkItem findItem(String poiId, String id) {
+        for (ReportDiscountParkItem item : items) {
+            if (item.getPoiId().equals(poiId) && item.getId().equals(id)) {
                 return item;
             }
         }

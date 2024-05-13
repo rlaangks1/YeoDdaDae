@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.FieldValue;
@@ -37,10 +38,12 @@ import java.util.Map;
 import java.util.Set;
 
 public class ReservationParkActivity extends AppCompatActivity {
+    final int paymentRequestCode = 1;
     String loginId;
     String reservationFirestoreDocumentId;
 
     int pricePerHour = -1;
+    int totalPrice;
 
     HashMap<String, ArrayList<String>> shareTime;
     HashMap<String,  HashMap<String, ArrayList<String>>> anotherReservations;
@@ -150,6 +153,7 @@ public class ReservationParkActivity extends AppCompatActivity {
                     }
                 }
                 String finalNewPhoneString = newPhoneString;
+
                 DecimalFormat formatter = new DecimalFormat("#,###");
                 int number = ((Long) hm.get("price")).intValue();
                 pricePerHour = number;
@@ -232,9 +236,7 @@ public class ReservationParkActivity extends AppCompatActivity {
             @Override
             public void onDataLoadError(String errorMessage) {
                 Log.d(TAG, errorMessage);
-                Intent intent = getIntent();
                 finish();
-                startActivity(intent);
             }
         });
 
@@ -438,20 +440,12 @@ public class ReservationParkActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "다른 예약 시간과 겹칩니다", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    HashMap<String, Object> hm = new HashMap<>();
-
-                    hm.put("shareParkDocumentName", reservationFirestoreDocumentId);
-                    hm.put("id", loginId);
-                    hm.put("time", ta.getAllTime());
-                    hm.put("isCancelled", false);
-                    hm.put("upTime", FieldValue.serverTimestamp());
-
-                    FirestoreDatabase fd = new FirestoreDatabase();
-                    fd.insertData("reservation", hm);
-
-                    Toast.makeText(getApplicationContext(), "예약되었습니다", Toast.LENGTH_SHORT).show();
-
-                    finish();
+                    Intent toPaymentIntent = new Intent(getApplicationContext(), PaymentActivity.class);
+                    toPaymentIntent.putExtra("shareParkDocumentName", reservationFirestoreDocumentId);
+                    toPaymentIntent.putExtra("id", loginId);
+                    toPaymentIntent.putExtra("time", ta.getAllTime());
+                    toPaymentIntent.putExtra("price", totalPrice);
+                    startActivityForResult(toPaymentIntent, paymentRequestCode);
                 }
             }
         });
@@ -481,7 +475,7 @@ public class ReservationParkActivity extends AppCompatActivity {
 
     public void calculatePrice () {
         if (pricePerHour != -1) {
-            int totalPrice = ta.getTotalMinute() * pricePerHour / 60;
+            totalPrice = ta.getTotalMinute() * pricePerHour / 60;
 
             runOnUiThread(new Runnable() {
                 @Override
@@ -515,5 +509,17 @@ public class ReservationParkActivity extends AppCompatActivity {
         int compareEnd = Integer.parseInt(compareEndTime);
 
         return targetEnd <= compareStart || targetStart >= compareEnd;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == paymentRequestCode) {
+            if (resultCode == RESULT_OK) {
+                finish();
+            }
+            else if (resultCode == RESULT_CANCELED) {}
+        }
     }
 }
