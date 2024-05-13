@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,10 +23,10 @@ public class RegisterActivity extends AppCompatActivity {
 
         FirestoreDatabase fd = new FirestoreDatabase();
 
-        Button backBtn = (Button) findViewById(R.id.registerBackBtn);
+        ImageButton backBtn = (ImageButton) findViewById(R.id.registerBackBtn);
         EditText idTxt = (EditText) findViewById(R.id.registerIdTxt);
         EditText pwTxt = (EditText) findViewById(R.id.registerPwTxt);
-        Button registerBtn = (Button) findViewById(R.id.registerBtn);
+        ImageButton registerBtn = (ImageButton) findViewById(R.id.registerBtn);
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
