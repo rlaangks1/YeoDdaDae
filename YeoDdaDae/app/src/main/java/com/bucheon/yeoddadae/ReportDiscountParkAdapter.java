@@ -43,6 +43,7 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
     }
 
     public void sortByUpTime() {
+        /*
         if (items != null && items.size() > 1) {
             Collections.sort(items, new Comparator<ReservationItem>() {
                 @Override
@@ -57,6 +58,8 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
             });
             notifyDataSetChanged(); // 데이터셋이 변경됨을 어댑터에 알림
         }
+
+         */
     }
 
     @Override
@@ -76,6 +79,7 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        /*
         Context context = parent.getContext();
         ReservationItem reservation = items.get(position);
 
@@ -162,6 +166,8 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
         String dateString = sdf.format(date);
         upTimeTxt.setText(dateString);
+
+         */
 
         return convertView;
     }

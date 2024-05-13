@@ -64,6 +64,7 @@
 
     <EditText
         android:id="@+id/registerPwTxt"
+        android:inputType="textPassword"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
         android:maxLength="30"

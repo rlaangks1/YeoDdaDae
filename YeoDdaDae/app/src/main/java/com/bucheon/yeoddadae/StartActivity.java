@@ -22,11 +22,10 @@ import com.skt.Tmap.TMapView;
 
 public class StartActivity extends AppCompatActivity {
     final int loginIntentRequestCode = 1;
-    final int adminIntentRequestCode = 2; // Changed request code to be different
     String loginId;
     boolean isAdmin;
     ImageButton toLoginBtn;
-    ImageButton toAdminBtn;
+    ImageButton loginSkipBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +33,8 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
 
         toLoginBtn = findViewById(R.id.toLoginBtn);
+        loginSkipBtn = findViewById(R.id.loginSkipBtn);
+
         toLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,12 +43,14 @@ public class StartActivity extends AppCompatActivity {
             }
         });
 
-        toAdminBtn = findViewById(R.id.toAdminBtn);
-        toAdminBtn.setOnClickListener(new View.OnClickListener() {
+        loginSkipBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent adminIntent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivityForResult(adminIntent, adminIntentRequestCode);
+                Intent skipLoginIntent = new Intent(getApplicationContext(), MainActivity.class);
+                skipLoginIntent.putExtra("loginId", "kim111");
+                skipLoginIntent.putExtra("isAdmin", true);
+                startActivity(skipLoginIntent);
+                finish();
             }
         });
     }
@@ -61,10 +64,10 @@ public class StartActivity extends AppCompatActivity {
                 loginId = data.getStringExtra("loginId");
                 isAdmin = data.getBooleanExtra("isAdmin", false);
 
-                Intent MainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
-                MainActivityIntent.putExtra("loginId", loginId);
-                MainActivityIntent.putExtra("isAdmin", isAdmin); // No need to cast here
-                startActivity(MainActivityIntent);
+                Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+                mainActivityIntent.putExtra("loginId", loginId);
+                mainActivityIntent.putExtra("isAdmin", isAdmin);
+                startActivity(mainActivityIntent);
                 finish();
             }
         }
