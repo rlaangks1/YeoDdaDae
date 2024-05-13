@@ -22,9 +22,11 @@ import com.skt.Tmap.TMapView;
 
 public class StartActivity extends AppCompatActivity {
     final int loginIntentRequestCode = 1;
+    final int adminIntentRequestCode = 2; // Changed request code to be different
     String loginId;
     boolean isAdmin;
-    Button toLoginBtn;
+    ImageButton toLoginBtn;
+    ImageButton toAdminBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,15 @@ public class StartActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivityForResult(loginIntent, loginIntentRequestCode);
+            }
+        });
+
+        toAdminBtn = findViewById(R.id.toAdminBtn);
+        toAdminBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent adminIntent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivityForResult(adminIntent, adminIntentRequestCode);
             }
         });
     }
@@ -52,7 +63,7 @@ public class StartActivity extends AppCompatActivity {
 
                 Intent MainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
                 MainActivityIntent.putExtra("loginId", loginId);
-                MainActivityIntent.putExtra("isAdmin", (Boolean) isAdmin);
+                MainActivityIntent.putExtra("isAdmin", isAdmin); // No need to cast here
                 startActivity(MainActivityIntent);
                 finish();
             }

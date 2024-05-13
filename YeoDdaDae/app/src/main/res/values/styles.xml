@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="maincolorText">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#9DE3F9</item>
+    </style>
+
+    <style name="subcolorText">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#1FB4F1</item>
+    </style>
     <!-- styles.xml -->
     <style name="new_start">
         <item name="android:textSize">15sp</item>

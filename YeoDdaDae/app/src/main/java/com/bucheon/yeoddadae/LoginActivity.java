@@ -25,8 +25,8 @@ public class LoginActivity extends AppCompatActivity {
         ImageButton backBtn = findViewById(R.id.loginBackBtn);
         EditText idTxt = findViewById(R.id.loginIdTxt);
         EditText pwTxt = findViewById(R.id.loginPwTxt);
-        Button loginBtn = findViewById(R.id.loginBtn);
-        Button registerBtn = findViewById(R.id.toRegisterBtn);
+        ImageButton loginBtn = findViewById(R.id.loginBtn);
+        ImageButton registerBtn = findViewById(R.id.toRegisterBtn);
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
