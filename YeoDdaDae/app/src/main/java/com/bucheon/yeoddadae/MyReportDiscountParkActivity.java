@@ -19,6 +19,7 @@ public class MyReportDiscountParkActivity extends AppCompatActivity {
 
     Button myReportBackBtn;
     ListView myReportBackBtnListView;
+    Button toAddReportBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,7 @@ public class MyReportDiscountParkActivity extends AppCompatActivity {
 
         myReportBackBtn = findViewById(R.id.myReportBackBtn);
         myReportBackBtnListView = findViewById(R.id.myReportBackBtnListView);
+        toAddReportBtn = findViewById(R.id.toAddReportBtn);
     }
 
     @Override
@@ -73,13 +75,20 @@ public class MyReportDiscountParkActivity extends AppCompatActivity {
             }
         });
 
-        myReservationBackBtn.setOnClickListener(new View.OnClickListener() {
+         */
+
+        myReportBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
 
-         */
+        toAddReportBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
     }
 }

@@ -43,23 +43,13 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
     }
 
     public void sortByUpTime() {
-        /*
-        if (items != null && items.size() > 1) {
-            Collections.sort(items, new Comparator<ReservationItem>() {
-                @Override
-                public int compare(ReservationItem o1, ReservationItem o2) {
-                    Timestamp upTime1 = o1.getUpTime();
-                    Timestamp upTime2 = o2.getUpTime();
-
-                    // Timestamp를 Date로 변환 후 비교
-                    // 오름차순 정렬입니다. 내림차순으로 하고 싶다면 o2와 o1의 위치를 바꿉니다.
-                    return upTime1.toDate().compareTo(upTime2.toDate());
-                }
-            });
-            notifyDataSetChanged(); // 데이터셋이 변경됨을 어댑터에 알림
-        }
-
-         */
+        Collections.sort(items, new Comparator<ReportDiscountParkItem>() {
+            @Override
+            public int compare(ReportDiscountParkItem o1, ReportDiscountParkItem o2) {
+                return o1.getUpTime().compareTo(o2.getUpTime());
+            }
+        });
+        notifyDataSetChanged();
     }
 
     @Override
@@ -79,20 +69,25 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        /*
+
         Context context = parent.getContext();
-        ReservationItem reservation = items.get(position);
+        ReportDiscountParkItem reservation = items.get(position);
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.reservation_item, parent, false);
+            convertView = inflater.inflate(R.layout.report_discount_park_item, parent, false);
         }
 
         // 파인드 뷰
-        TextView shareParkInfoTxt = convertView.findViewById(R.id.shareParkInfoTxt);
-        TextView reservationTimeTxt = convertView.findViewById(R.id.reservationTimeTxt);
-        TextView reservationIsCancelledTxt = convertView.findViewById(R.id.reservationIsCancelledTxt);
-        TextView upTimeTxt = convertView.findViewById(R.id.upTimeTxt);
+        TextView reportDiscountParkAddressTxt = convertView.findViewById(R.id.reportDiscountParkAddressTxt);
+        TextView reportDiscountParkConditionAndDiscountTxt = convertView.findViewById(R.id.reportDiscountParkConditionAndDiscountTxt);
+        TextView reportDiscountParkIsCancelledTxt = convertView.findViewById(R.id.reportDiscountParkIsCancelledTxt);
+        TextView reportDiscountParkUpTimeTxt = convertView.findViewById(R.id.reportDiscountParkUpTimeTxt);
+
+
+
+
+        /*
 
         FirestoreDatabase fd = new FirestoreDatabase();
         // 뷰 내용
