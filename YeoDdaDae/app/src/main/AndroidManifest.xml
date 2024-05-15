@@ -36,6 +36,7 @@
         <activity android:name=".ShareParkActivity"/>
         <activity android:name=".GpsCertificationActivity"/>
         <activity android:name=".MyReportDiscountParkActivity"/>
+        <activity android:name=".AddReportDiscountParkActivity"/>
         <service
             android:name=".SttService"
             android:enabled="true"
