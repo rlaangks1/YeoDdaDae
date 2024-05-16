@@ -14,10 +14,11 @@ public class ReportDiscountParkItem {
     int rateMistakeCount;
     int rateWrongCount;
     boolean isCancelled;
+    boolean isApproval;
     Timestamp upTime;
     String documentId;
 
-    public ReportDiscountParkItem(String poiId, String id, String condition, String discount, int ratePerfectCount, int rateMistakeCount, int rateWrongCount, boolean isCancelled, Timestamp upTime, String documentId) {
+    public ReportDiscountParkItem(String poiId, String id, String condition, String discount, int ratePerfectCount, int rateMistakeCount, int rateWrongCount, boolean isCancelled, boolean isApproval, Timestamp upTime, String documentId) {
         this.poiId = poiId;
         this.id = id;
         this.condition = condition;
@@ -26,6 +27,7 @@ public class ReportDiscountParkItem {
         this.rateMistakeCount = rateMistakeCount;
         this.rateWrongCount = rateWrongCount;
         this.isCancelled = isCancelled;
+        this.isApproval = isApproval;
         this.upTime = upTime;
         this.documentId = documentId;
     }
@@ -60,6 +62,10 @@ public class ReportDiscountParkItem {
 
     public boolean isCancelled() {
         return isCancelled;
+    }
+
+    public boolean isApproval() {
+        return isApproval;
     }
 
     public Timestamp getUpTime() {

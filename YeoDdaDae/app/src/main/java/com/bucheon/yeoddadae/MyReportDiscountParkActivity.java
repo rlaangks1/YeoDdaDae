@@ -87,7 +87,9 @@ public class MyReportDiscountParkActivity extends AppCompatActivity {
         toAddReportBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+                Intent addReportIntent = new Intent(getApplicationContext(), AddReportDiscountParkActivity.class);
+                addReportIntent.putExtra("loginId", loginId);
+                startActivity(addReportIntent);
             }
         });
     }

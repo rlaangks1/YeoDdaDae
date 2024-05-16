@@ -281,7 +281,7 @@ public class FirestoreDatabase {
                         double distance = (R * c) / 1000; // 거리 계산 km 단위
 
                         if (distance <= radiusKiloMeter) {
-                            resultList.add(new ParkItem(3, Integer.toString(i[0]), Double.toString(distance), "10000", (String) document.get("ownerPhone"), "부가", 0, Double.toString(resultLat), Double.toString(resultLon), document.getId()));
+                            resultList.add(new ParkItem(3, Integer.toString(i[0]), Double.toString(distance), "10000", (String) document.get("ownerPhone"), "부가", 0, Double.toString(resultLat), Double.toString(resultLon), null, document.getId()));
                             i[0]++;
                         }
                     }

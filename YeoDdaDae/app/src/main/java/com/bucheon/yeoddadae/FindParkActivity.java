@@ -375,10 +375,10 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                 TMapPOIItem item = arrayList.get(i);
 
                                 if (item.firstNo.equals("0") && item.secondNo.equals("0")) {
-                                    spa.addItem(new ParkItem(4, item.name, item.radius, null, null, null, 0, item.frontLat, item.frontLon, null));
+                                    spa.addItem(new ParkItem(4, item.name, item.radius, null, null, null, 0, item.frontLat, item.frontLon, item.id, null));
                                 }
                                 else {
-                                    spa.addItem(new ParkItem(0, item.name, item.radius, null, null, null, 0, item.frontLat, item.frontLon, null));
+                                    spa.addItem(new ParkItem(0, item.name, item.radius, null, null, null, 0, item.frontLat, item.frontLon, item.id, null));
                                 }
                             }
 
@@ -638,7 +638,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                         for (int i = 0; i < arrayList.size(); i++) { // TMAP 검색
                             TMapPOIItem item = arrayList.get(i);
 
-                            parkAdapter.addItem(new ParkItem(0, item.name, item.radius, item.fee, item.telNo, item.additionalInfo, 0, item.frontLat, item.frontLon, null));
+                            parkAdapter.addItem(new ParkItem(0, item.name, item.radius, item.fee, item.telNo, item.additionalInfo, 0, item.frontLat, item.frontLon, item.id, null));
                             TMapPoint tpoint = new TMapPoint(Double.parseDouble(item.frontLat), Double.parseDouble(item.frontLon));
                             TMapMarkerItem tItem = new TMapMarkerItem();
                             tItem.setTMapPoint(tpoint);
