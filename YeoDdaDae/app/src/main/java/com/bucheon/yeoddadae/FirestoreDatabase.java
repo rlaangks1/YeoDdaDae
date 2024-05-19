@@ -13,6 +13,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
@@ -350,7 +351,7 @@ public class FirestoreDatabase {
     public void loadMyReservations (String loginId, OnFirestoreDataLoadedListener listener) {
         db.collection("reservation")
                 .whereEqualTo("id", loginId)
-                .orderBy("upTime")
+                .orderBy("upTime", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     ArrayList<HashMap<String, Object>> resultArrayList = new ArrayList<>();
@@ -418,13 +419,159 @@ public class FirestoreDatabase {
                                     });
                         }
                         else {
-                            Log.d(TAG, "ID가 일치하지 않음");
                             listener.onDataLoadError("ID가 일치하지 않음");
                         }
                     }
                     else {
                         listener.onDataLoadError("문서가 존재하지 않음");
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void loadMyReports (String loginId, OnFirestoreDataLoadedListener listener) {
+        db.collection("reportDiscountPark")
+                .whereEqualTo("reporterId", loginId)
+                .orderBy("upTime", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    ArrayList<HashMap<String, Object>> resultArrayList = new ArrayList<>();
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        HashMap<String, Object> data = new HashMap<>(documentSnapshot.getData());
+                        data.put("documentId", documentSnapshot.getId());
+                        resultArrayList.add(data);
+                    }
+                    if (resultArrayList.size() > 0 && resultArrayList != null) {
+                        Log.d (TAG, "내 제보들 찾기 성공 갯수 : " + resultArrayList.size());
+                    }
+                    else {
+                        Log.d(TAG, "내 제보가 없음");
+                    }
+                    listener.onDataLoaded(resultArrayList);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void loadMyOneReport (String loginId, String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+        HashMap<String, Object> hm = new HashMap<>();
+
+        db.collection("reportDiscountPark")
+                .document(firestoreDocumentId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        if(documentSnapshot.get("reporterId").equals(loginId)) {
+                            hm.putAll(documentSnapshot.getData());
+                            listener.onDataLoaded(hm);
+                        }
+                        else {
+                            listener.onDataLoadError("아이디가 일치하지 않음");
+                        }
+                    }
+                    else {
+                        listener.onDataLoadError("해당 문서가 존재하지 않음");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void cancelReport (String loginId, String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+        db.collection("reportDiscountPark")
+                .document(firestoreDocumentId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        if(documentSnapshot.get("reporterId").equals(loginId)) {
+                            if (!(boolean) documentSnapshot.get("isApproval")) {
+                                db.collection("reportDiscountPark")
+                                        .document(firestoreDocumentId)
+                                        .update("isCancelled", true)
+                                        .addOnSuccessListener(aVoid -> {
+                                            Log.d(TAG, "제보 취소 성공");
+                                            listener.onDataLoaded(1);
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.d(TAG, "제보 취소 실패");
+                                            listener.onDataLoadError(e.getMessage());
+                                        });
+                            }
+                            else {
+                                Log.d(TAG, "dsdsdsdsddssds");
+                                listener.onDataLoadError("승인된 제보임");
+                            }
+                        }
+                        else {
+                            listener.onDataLoadError("ID가 일치하지 않음");
+                        }
+                    }
+                    else {
+                        listener.onDataLoadError("문서가 존재하지 않음");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void loadAnotherReports (int targetDistanceKM, double nowLat, double nowLon, String loginId, OnFirestoreDataLoadedListener listener) {
+        db.collection("reportDiscountPark")
+                .whereNotEqualTo("reporterId", loginId)
+                .whereEqualTo("isApproval", false)
+                .whereEqualTo("isCancelled", false)
+                .orderBy("upTime", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    ArrayList<HashMap<String, Object>> resultArrayList = new ArrayList<>();
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+
+                        if (targetDistanceKM == 0) {
+                            HashMap<String, Object> data = new HashMap<>(documentSnapshot.getData());
+                            data.put("documentId", documentSnapshot.getId());
+                            resultArrayList.add(data);
+                        }
+                        else {
+                            Double resultLat = (Double) documentSnapshot.get("poiLat");
+                            Double resultLon = (Double) documentSnapshot.get("poiLon");
+
+                            final double R = 6371e3; // 지구 반경 (미터)
+
+                            double lat1Rad = Math.toRadians(nowLat); // 위도 및 경도를 라디안으로 변환
+                            double lon1Rad = Math.toRadians(nowLon);
+                            double lat2Rad = Math.toRadians(resultLat);
+                            double lon2Rad = Math.toRadians(resultLon);
+
+                            double deltaLat = lat2Rad - lat1Rad; // 위도 및 경도의 차이 계산
+                            double deltaLon = lon2Rad - lon1Rad;
+
+                            // Haversine 공식 적용
+                            double a = Math.pow(Math.sin(deltaLat / 2), 2) + Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.pow(Math.sin(deltaLon / 2), 2);
+                            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+                            double distance = (R * c) / 1000; // 거리 계산 km 단위
+
+                            if (distance <= targetDistanceKM) {
+                                HashMap<String, Object> data = new HashMap<>(documentSnapshot.getData());
+                                data.put("documentId", documentSnapshot.getId());
+                                resultArrayList.add(data);
+                            }
+                        }
+                    }
+                    if (resultArrayList.size() > 0 && resultArrayList != null) {
+                        Log.d (TAG, "제보들 찾기 성공 갯수 : " + resultArrayList.size());
+                    }
+                    else {
+                        Log.d(TAG, "제보가 없음");
+                    }
+                    listener.onDataLoaded(resultArrayList);
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "데이터 검색 오류", e);

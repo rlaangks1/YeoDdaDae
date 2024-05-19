@@ -6,21 +6,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ReportDiscountParkItem {
-    String poiId;
-    String id;
+    String reporterId;
+    String parkName;
     String condition;
-    String discount;
-    int ratePerfectCount;
-    int rateMistakeCount;
-    int rateWrongCount;
+    long discount;
+    long ratePerfectCount;
+    long rateMistakeCount;
+    long rateWrongCount;
     boolean isCancelled;
     boolean isApproval;
     Timestamp upTime;
+    String poiId;
     String documentId;
 
-    public ReportDiscountParkItem(String poiId, String id, String condition, String discount, int ratePerfectCount, int rateMistakeCount, int rateWrongCount, boolean isCancelled, boolean isApproval, Timestamp upTime, String documentId) {
-        this.poiId = poiId;
-        this.id = id;
+    public ReportDiscountParkItem(String reporterId, String parkName, String condition, long discount, long ratePerfectCount, long rateMistakeCount, long rateWrongCount, boolean isCancelled, boolean isApproval, Timestamp upTime, String poiId, String documentId) {
+        this.reporterId = reporterId;
+        this.parkName = parkName;
         this.condition = condition;
         this.discount = discount;
         this.ratePerfectCount = ratePerfectCount;
@@ -29,34 +30,35 @@ public class ReportDiscountParkItem {
         this.isCancelled = isCancelled;
         this.isApproval = isApproval;
         this.upTime = upTime;
+        this.poiId = poiId;
         this.documentId = documentId;
     }
 
-    public String getPoiId() {
-        return poiId;
+    public String getReporterId() {
+        return reporterId;
     }
 
-    public String getId() {
-        return id;
+    public String getParkName() {
+        return parkName;
     }
 
     public String getCondition() {
         return condition;
     }
 
-    public String getDiscount() {
+    public long getDiscount() {
         return discount;
     }
 
-    public int getRatePerfectCount() {
+    public long getRatePerfectCount() {
         return ratePerfectCount;
     }
 
-    public int getRateMistakeCount() {
+    public long getRateMistakeCount() {
         return rateMistakeCount;
     }
 
-    public int getRateWrongCount() {
+    public long getRateWrongCount() {
         return rateWrongCount;
     }
 
@@ -70,6 +72,10 @@ public class ReportDiscountParkItem {
 
     public Timestamp getUpTime() {
         return upTime;
+    }
+
+    public String getPoiId() {
+        return poiId;
     }
 
     public String getDocumentId() {

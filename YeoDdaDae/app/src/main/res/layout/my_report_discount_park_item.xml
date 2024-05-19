@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
-        android:id="@+id/reportDiscountParkNameTxt"
+        android:id="@+id/reportDiscountParkAddressTxt"
         android:text="주차장 이름"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,8 +19,8 @@
         android:text="조건 / 혜택"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/reportDiscountParkNameTxt"
-        app:layout_constraintLeft_toLeftOf="@+id/reportDiscountParkNameTxt"/>
+        app:layout_constraintTop_toBottomOf="@+id/reportDiscountParkAddressTxt"
+        app:layout_constraintLeft_toLeftOf="@+id/reportDiscountParkAddressTxt"/>
 
     <TextView
         android:id="@+id/reportDiscountParkRateTxt"
@@ -31,12 +31,13 @@
         app:layout_constraintLeft_toLeftOf="@+id/reportDiscountParkConditionAndDiscountTxt"/>
 
     <TextView
-        android:id="@+id/reportDiscountParkIDTxt"
-        android:text="ID"
+        android:id="@+id/reportDiscountParkIsCancelledTxt"
+        android:text="취소됨"
+        android:textColor="@color/red"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@+id/reportDiscountParkNameTxt"
+        app:layout_constraintLeft_toLeftOf="@+id/reportDiscountParkAddressTxt"
         android:layout_marginBottom="10dp"/>
 
     <TextView
