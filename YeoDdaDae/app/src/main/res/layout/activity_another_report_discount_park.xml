@@ -7,13 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".AnotherReportDiscountParkActivity">
 
-    <Button
+    <ImageButton
         android:id="@+id/anotherReportBackBtn"
-        android:text="back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        android:src="@drawable/backbtn"
+        android:background="@android:color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/anotherReportDistanceSpinner"
@@ -38,29 +39,54 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp" />
 
-    <Button
+    <ImageButton
         android:id="@+id/toAddReportBtn"
-        android:text="제보"
         android:textSize="20dp"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="180dp"
+        android:layout_height="40dp"
+        android:background="@drawable/round_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/toMyreportBtn"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp" />
 
-    <Button
+    <TextView
+        android:id="@+id/toAddReportTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="제보"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/toAddReportBtn"
+        app:layout_constraintEnd_toEndOf="@+id/toAddReportBtn"
+        app:layout_constraintStart_toStartOf="@+id/toAddReportBtn"
+        app:layout_constraintTop_toTopOf="@+id/toAddReportBtn" />
+
+    <ImageButton
         android:id="@+id/toMyreportBtn"
         android:text="내 제보"
         android:textSize="20dp"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="180dp"
+        android:layout_height="40dp"
+        android:background="@drawable/round_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/toAddReportBtn"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"/>
+
+    <TextView
+        android:id="@+id/toMyReportTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="내 제보"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/toMyreportBtn"
+        app:layout_constraintEnd_toEndOf="@+id/toMyreportBtn"
+        app:layout_constraintStart_toStartOf="@+id/toMyreportBtn"
+        app:layout_constraintTop_toTopOf="@+id/toMyreportBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
