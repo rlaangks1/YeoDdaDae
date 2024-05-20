@@ -55,6 +55,7 @@
         android:textSize="20dp"
         android:hint="아이디"
         android:textColorHint="@color/main"
+        android:backgroundTint="@color/sub"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userFace"
@@ -69,6 +70,7 @@
         android:textSize="20dp"
         android:hint="비밀번호"
         android:textColorHint="@color/main"
+        android:backgroundTint="@color/sub"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/loginIdTxt" />
