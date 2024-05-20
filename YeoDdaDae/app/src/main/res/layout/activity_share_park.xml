@@ -7,11 +7,13 @@
     android:layout_height="match_parent"
     tools:context=".ShareParkActivity">
 
-    <Button
+    <ImageButton
         android:id="@+id/shareParkBackBtn"
         android:text="back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@drawable/backbtn"
+        android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,19 +31,22 @@
                 android:id="@+id/parkAddressTxt"
                 android:text="주차장 주소"
                 android:textSize="15sp"
+                android:textColor="@color/blue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"/>
 
-            <Button
+            <ImageButton
                 android:id="@+id/gpsBtn"
-                android:text="GPS"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="85dp"
+                android:layout_height="50dp"
+                android:src="@drawable/gps"
+                android:background="@android:color/transparent"
                 app:layout_constraintTop_toTopOf="@+id/parkAddressTxt"
                 app:layout_constraintStart_toEndOf="@+id/parkAddressTxt"
                 android:layout_marginLeft="20dp" />
+
 
             <TextView
                 android:id="@+id/parkNewAddressContentTxt"
@@ -64,6 +69,7 @@
             <TextView
                 android:id="@+id/parkDetailAddressTxt"
                 android:textSize="15sp"
+                android:textColor="@color/blue"
                 android:text="주차장 상세주소"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -79,6 +85,7 @@
                 android:maxLines="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/sub"
                 app:layout_constraintTop_toBottomOf="@id/parkDetailAddressTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
@@ -87,6 +94,7 @@
                 android:id="@+id/sharerNameTxt"
                 android:text="공유자명"
                 android:textSize="15sp"
+                android:textColor="@color/blue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/parkDetailAddressEditTxt"
@@ -101,6 +109,7 @@
                 android:maxLines="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/sub"
                 app:layout_constraintTop_toBottomOf="@id/sharerNameTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
@@ -108,6 +117,7 @@
             <TextView
                 android:id="@+id/sharerPhoneTxt"
                 android:textSize="15sp"
+                android:textColor="@color/blue"
                 android:text="공유자 전화번호"
                 android:maxLength="11"
                 android:layout_width="wrap_content"
@@ -124,6 +134,7 @@
                 android:maxLines="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/sub"
                 app:layout_constraintTop_toBottomOf="@id/sharerPhoneTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
@@ -131,6 +142,7 @@
             <TextView
                 android:id="@+id/sharerEmailTxt"
                 android:textSize="15sp"
+                android:textColor="@color/blue"
                 android:text="공유자 이메일"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -146,6 +158,7 @@
                 android:maxLines="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/sub"
                 app:layout_constraintTop_toBottomOf="@id/sharerEmailTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
@@ -154,6 +167,7 @@
                 android:id="@+id/sharerRelationTxt"
                 android:text="공유자의 주차장과의 관계"
                 android:textSize="15sp"
+                android:textColor="@color/blue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/sharerEmailEditTxt"
@@ -168,6 +182,7 @@
                 android:maxLines="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/sub"
                 app:layout_constraintTop_toBottomOf="@id/sharerRelationTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
@@ -176,6 +191,7 @@
                 android:id="@+id/parkPriceTxt"
                 android:text="주차장 가격"
                 android:textSize="15sp"
+                android:textColor="@color/blue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/sharerRelationEditTxt"
@@ -186,6 +202,7 @@
                 android:id="@+id/pricePerHourTxt"
                 android:text="1시간 당 / "
                 android:textSize="12sp"
+                android:textColor="@color/blue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/parkPriceEditTxt"
@@ -200,12 +217,14 @@
                 android:maxLines="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/sub"
                 app:layout_constraintTop_toBottomOf="@id/parkPriceTxt"
                 app:layout_constraintLeft_toRightOf="@+id/pricePerHourTxt" />
 
             <TextView
                 android:text="원"
                 android:textSize="12sp"
+                android:textColor="@color/blue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/parkPriceEditTxt"
@@ -216,6 +235,7 @@
             <TextView
                 android:id="@+id/parkDateTxt"
                 android:text="공유 시간"
+                android:textColor="@color/blue"
                 android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -223,11 +243,13 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="20dp" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/resetBtn"
                 android:text="reset"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:src="@drawable/reset"
+                android:background="@android:color/transparent"
                 app:layout_constraintTop_toTopOf="@+id/parkDateTxt"
                 app:layout_constraintStart_toEndOf="@+id/parkDateTxt"
                 android:layout_marginLeft="20dp" />
@@ -251,15 +273,29 @@
                 app:layout_constraintLeft_toLeftOf="parent" >
             </ListView>
 
-            <Button
+            <ImageButton
                 android:id="@+id/registrationBtn"
+                android:layout_width="410dp"
+                android:layout_height="40dp"
+                android:background="@drawable/round_button"
                 android:text="공유"
                 android:textSize="20sp"
-                android:layout_width="match_parent"
+                app:layout_constraintEnd_toEndOf="@+id/parkOldAddressContentTxt"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/parkTimeListView" />
+
+            <TextView
+                android:id="@+id/registrationTxt"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/parkTimeListView"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"/>
+                android:text="공유하기"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                app:layout_constraintBottom_toBottomOf="@+id/registrationBtn"
+                app:layout_constraintEnd_toEndOf="@+id/registrationBtn"
+                app:layout_constraintStart_toStartOf="@+id/registrationBtn"
+                app:layout_constraintTop_toTopOf="@+id/registrationBtn" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
