@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     ImageButton toMyReservationImgBtn;
     ImageButton toShareParkBtn;
     ImageButton logoutBtn;
-    Button toMyReportDiscountParkBtn;
+    ImageButton toMyReportDiscountParkBtn;
 
     private Intent serviceIntent;
 
