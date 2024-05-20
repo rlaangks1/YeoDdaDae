@@ -207,9 +207,15 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         toMyReportDiscountParkBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myReportDiscountIntent = new Intent(getApplicationContext(), MyReportDiscountParkActivity.class);
-                myReportDiscountIntent.putExtra("loginId", loginId);
-                startActivity(myReportDiscountIntent);
+                if (apiKeyCertified) {
+                    Intent AnotherReportDiscountParkIntent = new Intent(getApplicationContext(), AnotherReportDiscountParkActivity.class);
+                    AnotherReportDiscountParkIntent.putExtra("loginId", loginId);
+                    startActivity(AnotherReportDiscountParkIntent);
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
+                    tMapView.setSKTMapApiKey(API_KEY);
+                }
             }
         });
 

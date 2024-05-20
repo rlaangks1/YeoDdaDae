@@ -43,4 +43,11 @@
         <item>토</item>
         <item>일</item>
     </string-array>
+
+    <string-array name="my_spinner_distance_items">
+        <item>무제한</item>
+        <item>5Km</item>
+        <item>3Km</item>
+        <item>1Km</item>
+    </string-array>
 </resources>

@@ -134,7 +134,7 @@ public class ReservationAdapter extends BaseAdapter {
         });
 
         if (reservation.getIsCancelled()) {
-            reservationIsCancelledTxt.setText("취소됨");
+            reservationIsCancelledTxt.setVisibility(View.VISIBLE);
         }
         else {
             reservationIsCancelledTxt.setVisibility(View.GONE);

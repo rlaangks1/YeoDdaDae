@@ -10,9 +10,10 @@ public class ParkItem {
     private int starRate; // 0:☆☆☆☆☆, 5: ★★★★★
     private double lat;
     private double lon;
+    private String poiId;
     private String firestoreDocumentId;
 
-    public ParkItem(int type, String name, String radius, String parkPrice, String phone, String addition, int starRate, String lat, String lon, String firestoreDocumentId) {
+    public ParkItem(int type, String name, String radius, String parkPrice, String phone, String addition, int starRate, String lat, String lon, String poiId, String firestoreDocumentId) {
         if (type == 0) {
             if (name.contains("주차")) {
                 if (name.contains("공영")) {
@@ -37,6 +38,7 @@ public class ParkItem {
         this.starRate = starRate;
         this.lat = Double.parseDouble(lat);
         this.lon = Double.parseDouble(lon);
+        this.poiId = poiId;
         this.firestoreDocumentId = firestoreDocumentId;
     }
 
@@ -73,6 +75,10 @@ public class ParkItem {
 
     public double getLon() {
         return lon;
+    }
+
+    public String getPoiId() {
+        return poiId;
     }
 
     public String getFirebaseDocumentId() {
