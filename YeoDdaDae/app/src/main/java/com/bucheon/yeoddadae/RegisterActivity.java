@@ -68,6 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 newAccount.put("id", id);
                                 newAccount.put("pw", pw);
                                 newAccount.put("isAdmin", false);
+                                newAccount.put("ydPoint", 0);
                                 newAccount.put("registerTime", FieldValue.serverTimestamp()); // Use Firestore server timestamp
 
                                 fd.insertData("account", newAccount);

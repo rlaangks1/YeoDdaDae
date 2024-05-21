@@ -47,8 +47,8 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent skipLoginIntent = new Intent(getApplicationContext(), MainActivity.class);
-                skipLoginIntent.putExtra("loginId", "kim111");
-                skipLoginIntent.putExtra("isAdmin", true);
+                skipLoginIntent.putExtra("loginId", "user111");
+                skipLoginIntent.putExtra("isAdmin", false);
                 startActivity(skipLoginIntent);
                 finish();
             }

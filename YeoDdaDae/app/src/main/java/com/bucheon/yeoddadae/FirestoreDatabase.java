@@ -244,6 +244,42 @@ public class FirestoreDatabase {
                 });
     }
 
+    public void payByYdPoint(String id, int price, OnFirestoreDataLoadedListener listener) {
+        db.collection("account")
+                .whereEqualTo("id", id)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.size() > 0) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+                        Long ydPoint = document.getLong("ydPoint");
+
+                        if (ydPoint != null && ydPoint >= price) {
+                            db.collection("account")
+                                    .document(document.getId())
+                                    .update("ydPoint", ydPoint - price)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Log.d(TAG, "포인트 차감 성공");
+                                        listener.onDataLoaded(true);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.d(TAG, "포인트 차감 실패", e);
+                                        listener.onDataLoadError("포인트 차감에 실패했습니다.");
+                                    });
+                        } else {
+                            Log.d(TAG, "포인트 부족");
+                            listener.onDataLoadError("포인트가 부족합니다.");
+                        }
+                    } else {
+                        Log.d(TAG, "해당 ID의 계정 없음");
+                        listener.onDataLoadError("해당 ID의 계정을 찾을 수 없습니다.");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
     public void findSharePark(String id, double nowLat, double nowLon, double radiusKiloMeter, OnFirestoreDataLoadedListener listener) {
         List<ParkItem> resultList = new ArrayList<>();
 
