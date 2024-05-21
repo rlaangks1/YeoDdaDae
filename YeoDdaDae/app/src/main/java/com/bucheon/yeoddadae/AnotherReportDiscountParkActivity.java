@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -28,11 +29,11 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
     double nowLon;
     TMapGpsManager gpsManager;
 
-    Button anotherReportBackBtn;
+    ImageButton anotherReportBackBtn;
     Spinner anotherReportDistanceSpinner;
     ListView anotherReportListView;
-    Button toAddReportBtn;
-    Button toMyreportBtn;
+    ImageButton toAddReportBtn;
+    ImageButton toMyreportBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

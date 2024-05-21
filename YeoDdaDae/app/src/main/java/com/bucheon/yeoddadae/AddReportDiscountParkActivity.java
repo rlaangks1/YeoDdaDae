@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -31,11 +32,11 @@ public class AddReportDiscountParkActivity extends AppCompatActivity {
     SearchParkAdapter spa;
 
 
-    Button addReportDiscountParkBackBtn;
+    ImageButton addReportDiscountParkBackBtn;
     EditText addReportDiscountParkAddressContentEditTxt;
     EditText addReportDiscountParkConditionContentEditTxt;
     EditText addReportDiscountParkBenefitContentEditTxt;
-    Button reportBtn;
+    ImageButton reportBtn;
     ConstraintLayout findLocationConstLayout;
     Button findBackBtn;
     EditText searchContentEditTxt;

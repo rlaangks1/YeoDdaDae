@@ -223,13 +223,24 @@
         app:layout_constraintTop_toBottomOf="@+id/logoutBtn"
         app:menu="@menu/bottom_nav" />
 
-    <Button
+    <ImageButton
         android:id="@+id/toMyReportDiscountParkBtn"
-        android:text="할인주차장 제보"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:background="@drawable/round_button"
         app:layout_constraintLeft_toLeftOf="@+id/bottom_navigation"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation" />
+
+    <TextView
+        android:id="@+id/toMyReportDiscountParkTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="할인주차장 제보"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/toMyReportDiscountParkBtn"
+        app:layout_constraintEnd_toEndOf="@+id/toMyReportDiscountParkBtn"
+        app:layout_constraintStart_toStartOf="@+id/toMyReportDiscountParkBtn"
+        app:layout_constraintTop_toTopOf="@+id/toMyReportDiscountParkBtn" />
 
     <TextView
         android:id="@+id/nowIdTxt"

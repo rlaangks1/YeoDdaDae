@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -58,10 +59,10 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     boolean isItemSelected;
 
     ListView parkListView;
-    Button findParkBackBtn;
-    Button zoomOutBtn;
-    Button zoomInBtn;
-    Button gpsBtn;
+    ImageButton findParkBackBtn;
+    ImageButton zoomOutBtn;
+    ImageButton zoomInBtn;
+    ImageButton gpsBtn;
     HorizontalScrollView parkSortHorizontalScrollView;
     Button sortByDistanceBtn;
     Button sortByRateBtn;
@@ -69,7 +70,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     Button cancelNaviBtn;
     Button toStartNaviBtn;
     Button toReservationBtn;
-    Button searchStartBtn;
+    ImageButton searchStartBtn;
     ConstraintLayout searchConstraintLayout;
     EditText searchEdTxt;
     Button searchBtn;
