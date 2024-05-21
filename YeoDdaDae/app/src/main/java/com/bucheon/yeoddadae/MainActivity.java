@@ -22,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.skt.Tmap.TMapTapi;
 import com.skt.Tmap.TMapView;
 
 import java.io.IOException;
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     boolean recordAudioPermissionGranted = false;
     private int PERMISSION_REQUEST_CODE = 1;
 
-    boolean apiKeyCertified = false;
+    boolean apiKeyCertified = true;
     private String API_KEY = "iqTSQ2hMuj8E7t2sy3WYA5m73LuX4iUD5iHgwRGf";
 
     String loginId = null;
@@ -101,22 +102,32 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         loginId = inIntent.getStringExtra("loginId");
         isAdmin = inIntent.getBooleanExtra("isAdmin", false);
 
-        // TMapView 인증 (앱 종료까지 유효)
-        TMapView tMapView = new TMapView(this);
-        tMapView.setSKTMapApiKey(API_KEY);
-        tMapView.setOnApiKeyListener(new TMapView.OnApiKeyListenerCallback() {
-            @Override
-            public void SKTMapApikeySucceed() {
-                Log.d(TAG, "키 인증 성공");
-                apiKeyCertified = true;
-            }
+        if (savedInstanceState == null) { // 최초 실행인지 확인
+            // TMapAPI 인증 (앱 종료까지 유효)
+            TMapTapi tmaptapi = new TMapTapi(this);
+            tmaptapi.setOnAuthenticationListener(new TMapTapi.OnAuthenticationListenerCallback() {
+                @Override
+                public void SKTMapApikeySucceed() {
+                    Log.d(TAG, "키 인증 성공");
+                    apiKeyCertified = true;
+                }
 
-            @Override
-            public void SKTMapApikeyFailed(String s) {
-                Log.d(TAG, "키 인증 실패");
-                apiKeyCertified = false;
-            }
-        });
+                @Override
+                public void SKTMapApikeyFailed(String s) {
+                    Log.d(TAG, "키 인증 실패");
+                    finish();
+                    apiKeyCertified = false;
+                }
+            });
+            tmaptapi.setSKTMapAuthentication(API_KEY);
+        }
+
+        if (isAdmin) {
+            Intent toAdminIntent =new Intent(getApplicationContext(), AdminMainActivity.class);
+            toAdminIntent.putExtra("loginId", loginId);
+            startActivity(toAdminIntent);
+            finish();
+        }
 
         serviceIntent = new Intent(this, SttService.class);
         checkPermission();
@@ -155,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                     startActivity(findParkIntent);
                 } else {
                     Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                    tMapView.setSKTMapApiKey(API_KEY);
+                    //tMapView.setSKTMapApiKey(API_KEY);
                 }
             }
         });
@@ -169,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                     startActivity(findGasStationIntent);
                 } else {
                     Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                    tMapView.setSKTMapApiKey(API_KEY);
+                    //tMapView.setSKTMapApiKey(API_KEY);
                 }
             }
         });
@@ -184,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                    tMapView.setSKTMapApiKey(API_KEY);
+                    //tMapView.setSKTMapApiKey(API_KEY);
                 }
             }
         });
@@ -199,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                    tMapView.setSKTMapApiKey(API_KEY);
+                    //tMapView.setSKTMapApiKey(API_KEY);
                 }
             }
         });
@@ -214,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                    tMapView.setSKTMapApiKey(API_KEY);
+                    //tMapView.setSKTMapApiKey(API_KEY);
                 }
             }
         });
@@ -223,6 +234,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             @Override
             public void onClick(View v) {
                 Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
+                loginId = null;
                 startActivity(logoutIntent);
                 finish();
             }

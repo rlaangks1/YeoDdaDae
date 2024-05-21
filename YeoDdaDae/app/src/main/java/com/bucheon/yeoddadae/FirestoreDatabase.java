@@ -244,6 +244,42 @@ public class FirestoreDatabase {
                 });
     }
 
+    public void payByYdPoint(String id, int price, OnFirestoreDataLoadedListener listener) {
+        db.collection("account")
+                .whereEqualTo("id", id)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.size() > 0) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+                        Long ydPoint = document.getLong("ydPoint");
+
+                        if (ydPoint != null && ydPoint >= price) {
+                            db.collection("account")
+                                    .document(document.getId())
+                                    .update("ydPoint", ydPoint - price)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Log.d(TAG, "포인트 차감 성공");
+                                        listener.onDataLoaded(true);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.d(TAG, "포인트 차감 실패", e);
+                                        listener.onDataLoadError("포인트 차감에 실패했습니다.");
+                                    });
+                        } else {
+                            Log.d(TAG, "포인트 부족");
+                            listener.onDataLoadError("포인트가 부족합니다.");
+                        }
+                    } else {
+                        Log.d(TAG, "해당 ID의 계정 없음");
+                        listener.onDataLoadError("해당 ID의 계정을 찾을 수 없습니다.");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
     public void findSharePark(String id, double nowLat, double nowLon, double radiusKiloMeter, OnFirestoreDataLoadedListener listener) {
         List<ParkItem> resultList = new ArrayList<>();
 
@@ -572,6 +608,37 @@ public class FirestoreDatabase {
                         Log.d(TAG, "제보가 없음");
                     }
                     listener.onDataLoaded(resultArrayList);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void loadRateCount (String loginId, String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+        int[] perfectCount = {0};
+        int[] mistakeCount = {0};
+        int[] wrongCount = {0};
+
+        db.collection("rateReport")
+                .whereEqualTo("reportDocumentID", firestoreDocumentId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        String rate = documentSnapshot.getString("rate");
+                        if (rate.equals("perfect")) {
+                            perfectCount[0]++;
+                        }
+                        else if (rate.equals("mistake")) {
+                            perfectCount[0]++;
+                        }
+                        else if (rate.equals("wrong")) {
+                            perfectCount[0]++;
+                        }
+                    }
+
+                    int [] result = {perfectCount[0], mistakeCount[0], wrongCount[0]};
+                    listener.onDataLoaded(result);
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "데이터 검색 오류", e);

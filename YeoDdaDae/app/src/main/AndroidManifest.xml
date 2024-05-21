@@ -39,6 +39,8 @@
         <activity android:name=".AddReportDiscountParkActivity"/>
         <activity android:name=".ReportDiscountParkInformationActivity"/>
         <activity android:name=".AnotherReportDiscountParkActivity"/>
+        <activity android:name=".RateAnotherReportDiscountParkActivity"/>
+        <activity android:name=".AdminMainActivity"/>
         <service
             android:name=".SttService"
             android:enabled="true"
