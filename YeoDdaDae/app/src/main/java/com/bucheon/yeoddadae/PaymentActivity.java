@@ -43,10 +43,12 @@ public class PaymentActivity extends AppCompatActivity {
     String loginId;
     HashMap<String, ArrayList<String>> reservationTime;
     int price;
+    long ydPoint;
+    FirestoreDatabase fd;
 
     Button paymentBackBtn;
     TextView paymentTotalPriceContentTxt;
-    HorizontalScrollView paymentMethodContentScrollView;
+    TextView paymentYdPointContentTxt;
     Button paymentPayBtn;
 
 
@@ -57,7 +59,7 @@ public class PaymentActivity extends AppCompatActivity {
 
         paymentBackBtn = findViewById(R.id.paymentBackBtn);
         paymentTotalPriceContentTxt = findViewById(R.id.paymentTotalPriceContentTxt);
-        paymentMethodContentScrollView = findViewById(R.id.paymentMethodContentScrollView);
+        paymentYdPointContentTxt = findViewById(R.id.paymentYdPointContentTxt);
         paymentPayBtn = findViewById(R.id.paymentPayBtn);
 
         Intent inIntent = getIntent();
@@ -71,9 +73,24 @@ public class PaymentActivity extends AppCompatActivity {
             finish();
         }
 
+        fd = new FirestoreDatabase();
+        fd.loadYdPoint(loginId, new OnFirestoreDataLoadedListener() {
+            @Override
+            public void onDataLoaded(Object data) {
+                ydPoint = (long) data;
+            }
+
+            @Override
+            public void onDataLoadError(String errorMessage) {
+                finish();
+            }
+        });
+
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                paymentYdPointContentTxt.setText(Long.toString(ydPoint));
                 paymentTotalPriceContentTxt.setText(Integer.toString(price));
             }
         });
@@ -90,7 +107,7 @@ public class PaymentActivity extends AppCompatActivity {
         paymentPayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirestoreDatabase fd = new FirestoreDatabase();
+                fd = new FirestoreDatabase();
                 fd.payByYdPoint(loginId, price, new OnFirestoreDataLoadedListener() {
                     @Override
                     public void onDataLoaded(Object data) {
@@ -115,12 +132,11 @@ public class PaymentActivity extends AppCompatActivity {
                         setResult(RESULT_OK, returnIntent);
 
                         finish();
-
                     }
 
                     @Override
                     public void onDataLoadError(String errorMessage) {
-
+                        Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
                     }
                 });
             }

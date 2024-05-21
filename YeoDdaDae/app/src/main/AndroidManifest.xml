@@ -26,6 +26,7 @@
         <activity android:name=".LoginActivity"/>
         <activity android:name=".RegisterActivity"/>
         <activity android:name=".MainActivity"/>
+        <activity android:name=".YdPointChargeActivity"/>
         <activity android:name=".FindParkActivity"/>
         <activity android:name=".MyReservationActivity"/>
         <activity android:name=".ReservationInformationActivity"/>

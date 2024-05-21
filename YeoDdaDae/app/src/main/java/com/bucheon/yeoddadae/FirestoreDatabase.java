@@ -244,6 +244,29 @@ public class FirestoreDatabase {
                 });
     }
 
+    public void loadYdPoint(String id, OnFirestoreDataLoadedListener listener) {
+        db.collection("account")
+                .whereEqualTo("id", id)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.size() > 0) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+
+                        long ydPoint = (long) document.get("ydPoint");
+
+                        Log.d(TAG, "로그인 성공");
+                        listener.onDataLoaded(ydPoint);
+                    }
+                    else {
+                        listener.onDataLoadError("해당 문서가 없음");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "로그인 중 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
     public void payByYdPoint(String id, int price, OnFirestoreDataLoadedListener listener) {
         db.collection("account")
                 .whereEqualTo("id", id)
@@ -266,8 +289,44 @@ public class FirestoreDatabase {
                                         listener.onDataLoadError("포인트 차감에 실패했습니다.");
                                     });
                         } else {
-                            Log.d(TAG, "포인트 부족");
-                            listener.onDataLoadError("포인트가 부족합니다.");
+                            Log.d(TAG, "포인트가 부족합니다");
+                            listener.onDataLoadError("포인트가 부족합니다");
+                        }
+                    } else {
+                        Log.d(TAG, "해당 ID의 계정 없음");
+                        listener.onDataLoadError("해당 ID의 계정을 찾을 수 없습니다.");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void chargeYdPoint(String id, int price, OnFirestoreDataLoadedListener listener) {
+        db.collection("account")
+                .whereEqualTo("id", id)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.size() > 0) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+                        Long ydPoint = document.getLong("ydPoint");
+
+                        if (ydPoint != null) {
+                            db.collection("account")
+                                    .document(document.getId())
+                                    .update("ydPoint", ydPoint + price)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Log.d(TAG, "포인트 충전 성공");
+                                        listener.onDataLoaded(true);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.d(TAG, "포인트 충전 실패", e);
+                                        listener.onDataLoadError("포인트 충전에 실패했습니다.");
+                                    });
+                        } else {
+                            Log.d(TAG, "ydPoint 값이 null입니다");
+                            listener.onDataLoadError("ydPoint 값이 null입니다.");
                         }
                     } else {
                         Log.d(TAG, "해당 ID의 계정 없음");
@@ -494,6 +553,26 @@ public class FirestoreDatabase {
                 });
     }
 
+    public void loadOneReport (String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+        HashMap<String, Object> hm = new HashMap<>();
+
+        db.collection("reportDiscountPark")
+                .document(firestoreDocumentId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        hm.putAll(documentSnapshot.getData());
+                        listener.onDataLoaded(hm);
+                    }
+                    else {
+                        listener.onDataLoadError("해당 문서가 존재하지 않음");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
     public void loadMyOneReport (String loginId, String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
         HashMap<String, Object> hm = new HashMap<>();
 
@@ -615,7 +694,7 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void loadRateCount (String loginId, String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+    public void loadRateCount (String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
         int[] perfectCount = {0};
         int[] mistakeCount = {0};
         int[] wrongCount = {0};
@@ -630,15 +709,80 @@ public class FirestoreDatabase {
                             perfectCount[0]++;
                         }
                         else if (rate.equals("mistake")) {
-                            perfectCount[0]++;
+                            mistakeCount[0]++;
                         }
                         else if (rate.equals("wrong")) {
-                            perfectCount[0]++;
+                            wrongCount[0]++;
                         }
                     }
 
                     int [] result = {perfectCount[0], mistakeCount[0], wrongCount[0]};
                     listener.onDataLoaded(result);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void updateRate (int clickedBtn, String loginId, String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+        // clickedBtn은 0 : 완벽, 1 : 실수있음, 2 : 완전히 틀림
+
+        String[] rate = {""};
+        switch (clickedBtn) {
+            case 0:
+                rate[0] = "perfect";
+                break;
+            case 1:
+                rate[0] = "mistake";
+                break;
+            case 2:
+                rate[0] = "wrong";
+                break;
+        }
+
+        // 먼저 해당 조건에 맞는 문서가 있는지 확인
+        db.collection("rateReport")
+                .whereEqualTo("id", loginId)
+                .whereEqualTo("reportDocumentID", firestoreDocumentId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            // 문서 삭제
+                            if (documentSnapshot.get("rate").equals(rate[0])) {
+                                documentSnapshot.getReference().delete()
+                                        .addOnSuccessListener(aVoid -> {
+                                            listener.onDataLoaded("평가 삭제됨 : " + rate[0]);
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.d(TAG, "문서 삭제 오류", e);
+                                            listener.onDataLoadError(e.getMessage());
+                                        });
+                            }
+                            // 문서 rate 수정
+                            else {
+                                documentSnapshot.getReference().update("rate", rate[0])
+                                        .addOnSuccessListener(aVoid -> {
+                                            listener.onDataLoaded("평가 수정됨 : " + rate[0]);
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.d(TAG, "문서 업데이트 오류", e);
+                                            listener.onDataLoadError(e.getMessage());
+                                        });
+                            }
+                        }
+                    }
+                    else {
+                        // 문서가 존재하지 않으면 새로 추가
+                        HashMap<String, Object> data = new HashMap<>();
+                        data.put("id", loginId);
+                        data.put("reportDocumentID", firestoreDocumentId);
+                        data.put("rate", rate[0]);
+                        
+                        insertData("rateReport", data);
+                        listener.onDataLoaded("새로 평가함 : " + rate[0]);
+                    }
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "데이터 검색 오류", e);

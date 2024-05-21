@@ -210,12 +210,19 @@
         app:layout_constraintStart_toStartOf="@+id/toMyReportDiscountParkBtn"
         app:layout_constraintTop_toTopOf="@+id/toMyReportDiscountParkBtn" />
 
+    <Button
+        android:id="@+id/toYdPointChargeBtn"
+        android:text="여따대포인트 충전"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toLeftOf="@+id/toShareParkBtn"
+        app:layout_constraintTop_toTopOf="@+id/toShareParkBtn" />
+
     <ImageButton
         android:id="@+id/logoutBtn"
         android:layout_width="130dp"
         android:layout_height="40dp"
         android:background="@drawable/round_button"
-        android:text="로그아웃"
         app:layout_constraintRight_toLeftOf="@+id/toMyReportDiscountParkBtn"
         app:layout_constraintBottom_toBottomOf="@+id/toMyReportDiscountParkBtn" />
 
