@@ -579,6 +579,37 @@ public class FirestoreDatabase {
                 });
     }
 
+    public void loadRateCount (String loginId, String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+        int[] perfectCount = {0};
+        int[] mistakeCount = {0};
+        int[] wrongCount = {0};
+
+        db.collection("rateReport")
+                .whereEqualTo("reportDocumentID", firestoreDocumentId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        String rate = documentSnapshot.getString("rate");
+                        if (rate.equals("perfect")) {
+                            perfectCount[0]++;
+                        }
+                        else if (rate.equals("mistake")) {
+                            perfectCount[0]++;
+                        }
+                        else if (rate.equals("wrong")) {
+                            perfectCount[0]++;
+                        }
+                    }
+
+                    int [] result = {perfectCount[0], mistakeCount[0], wrongCount[0]};
+                    listener.onDataLoaded(result);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
     public void my (OnFirestoreDataLoadedListener listener) {
         Log.d (TAG, "my 호출됨");
         new Thread(new Runnable() {
