@@ -34,6 +34,7 @@
         <activity android:name=".PaymentActivity"/>
         <activity android:name=".FindGasStationActivity"/>
         <activity android:name=".NavigationActivity"/>
+        <activity android:name=".MyShareParkActivity"/>
         <activity android:name=".ShareParkActivity"/>
         <activity android:name=".GpsCertificationActivity"/>
         <activity android:name=".MyReportDiscountParkActivity"/>

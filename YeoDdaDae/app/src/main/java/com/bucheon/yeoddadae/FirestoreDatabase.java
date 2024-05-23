@@ -790,6 +790,60 @@ public class FirestoreDatabase {
                 });
     }
 
+    public void loadUnapprovedShareParks(OnFirestoreDataLoadedListener listener) {
+        db.collection("sharePark")
+                .whereEqualTo("isApproval", false)
+                .orderBy("upTime", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    ArrayList<HashMap<String, Object>> resultArrayList = new ArrayList<>();
+                    
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        HashMap<String, Object> data = new HashMap<>(documentSnapshot.getData());
+                        resultArrayList.add(data);
+                    }
+                    
+                    if (resultArrayList.size() > 0 && resultArrayList != null) {
+                        Log.d (TAG, "승인 안된 공유 주차장 찾기 성공 갯수 : " + resultArrayList.size());
+                    }
+                    else {
+                        Log.d(TAG, "승인 안된 공유 주차장이 없음");
+                    }
+                    listener.onDataLoaded(resultArrayList);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void loadMyShareParks(String id, OnFirestoreDataLoadedListener listener) {
+        db.collection("sharePark")
+                .whereEqualTo("ownerId", id)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    ArrayList<HashMap<String, Object>> resultArrayList = new ArrayList<>();
+
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        HashMap<String, Object> data = new HashMap<>(documentSnapshot.getData());
+                        data.put("documentId", documentSnapshot.getId());
+                        resultArrayList.add(data);
+                    }
+
+                    if (resultArrayList.size() > 0 && resultArrayList != null) {
+                        Log.d (TAG, "내 공유 주차장 찾기 성공 갯수 : " + resultArrayList.size());
+                    }
+                    else {
+                        Log.d(TAG, "내 공유 주차장이 없음");
+                    }
+                    listener.onDataLoaded(resultArrayList);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
     public void my (OnFirestoreDataLoadedListener listener) {
         Log.d (TAG, "my 호출됨");
         new Thread(new Runnable() {

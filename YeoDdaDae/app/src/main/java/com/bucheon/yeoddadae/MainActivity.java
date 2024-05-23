@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         loginId = inIntent.getStringExtra("loginId");
         isAdmin = inIntent.getBooleanExtra("isAdmin", false);
 
-        if (savedInstanceState == null) { // 최초 실행인지 확인
+        if (savedInstanceState == null) { // 액티비티 최초 실행인지 확인
             // TMapAPI 인증 (앱 종료까지 유효)
             TMapTapi tmaptapi = new TMapTapi(this);
             tmaptapi.setOnAuthenticationListener(new TMapTapi.OnAuthenticationListenerCallback() {
@@ -168,7 +168,6 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                     startActivity(findParkIntent);
                 } else {
                     Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                    //tMapView.setSKTMapApiKey(API_KEY);
                 }
             }
         });
@@ -182,7 +181,6 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                     startActivity(findGasStationIntent);
                 } else {
                     Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                    //tMapView.setSKTMapApiKey(API_KEY);
                 }
             }
         });
@@ -197,7 +195,6 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                    //tMapView.setSKTMapApiKey(API_KEY);
                 }
             }
         });
@@ -206,13 +203,12 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             @Override
             public void onClick(View v) {
                 if (apiKeyCertified) {
-                    Intent shareParkIntent = new Intent(getApplicationContext(), ShareParkActivity.class);
+                    Intent shareParkIntent = new Intent(getApplicationContext(), MyShareParkActivity.class);
                     shareParkIntent.putExtra("loginId", loginId);
                     startActivity(shareParkIntent);
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                    //tMapView.setSKTMapApiKey(API_KEY);
                 }
             }
         });
@@ -227,7 +223,6 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                    //tMapView.setSKTMapApiKey(API_KEY);
                 }
             }
         });
@@ -277,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
          * if (resultCode == RESULT_OK) {
          * loginId = data.getStringExtra("loginId");
          * isAdmin = data.getBooleanExtra("isAdmin", false);
-         * 
+         *
          * if (loginId == null) {
          * nowIdTxt.setText("미 로그인 상태");
          * }
@@ -285,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
          * nowIdTxt.setText(loginId);
          * }
          * isAdminTxt.setText("관리자여부 : " + isAdmin);
-         * 
+         *
          * toLoginBtn.setText("로그아웃");
          * }
          * }
@@ -359,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-            @NonNull int[] grantResults) {
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == PERMISSION_REQUEST_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

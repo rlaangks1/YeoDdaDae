@@ -106,10 +106,21 @@ public class AddReportDiscountParkActivity extends AppCompatActivity {
                                 TMapPOIItem item = arrayList.get(i);
 
                                 if (item.firstNo.equals("0") && item.secondNo.equals("0")) {
-                                    spa.addItem(new ParkItem(4, item.name, item.radius, null, null, null, 0, item.frontLat, item.frontLon, item.id, null));
+                                    spa.addItem(new ParkItem(4, item.name, item.radius, null, item.telNo, null, 0, item.frontLat, item.frontLon, item.id, null));
                                 }
                                 else {
-                                    spa.addItem(new ParkItem(0, item.name, item.radius, null, null, null, 0, item.frontLat, item.frontLon, item.id, null));
+                                    if (item.name.contains("주차")) {
+                                        if (item.name.contains("공영")) {
+                                            spa.addItem(new ParkItem(2, item.name, item.radius, null, item.telNo, null, 0, item.frontLat, item.frontLon, item.id, null));
+                                        }
+                                        else {
+                                            spa.addItem(new ParkItem(1, item.name, item.radius, null, item.telNo, null, 0, item.frontLat, item.frontLon, item.id, null));
+                                        }
+                                    }
+                                    else {
+                                        spa.addItem(new ParkItem(5, item.name, item.radius, null, item.telNo, null, 0, item.frontLat, item.frontLon, item.id, null));
+                                    }
+
                                 }
                             }
 

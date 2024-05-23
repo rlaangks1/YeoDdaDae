@@ -14,22 +14,7 @@ public class ParkItem {
     private String firestoreDocumentId;
 
     public ParkItem(int type, String name, String radius, String parkPrice, String phone, String addition, int starRate, String lat, String lon, String poiId, String firestoreDocumentId) {
-        if (type == 0) {
-            if (name.contains("주차")) {
-                if (name.contains("공영")) {
-                    this.type = 2;
-                }
-                else {
-                    this.type = 1;
-                }
-            }
-            else {
-                this.type = 5;
-            }
-        }
-        else {
-            this.type = type;
-        }
+        this.type = type;
         this.name = name;
         this.radius = radius;
         this.parkPrice = parkPrice;
