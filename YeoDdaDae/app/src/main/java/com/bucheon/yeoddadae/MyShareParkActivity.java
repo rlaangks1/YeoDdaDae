@@ -1,7 +1,10 @@
 package com.bucheon.yeoddadae;
 
+import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -16,6 +19,8 @@ import java.util.HashMap;
 
 public class MyShareParkActivity extends AppCompatActivity {
     String loginId;
+    ShareParkAdapter spa;
+    FirestoreDatabase fd;
 
     Button myShareParkBackBtn;
     ListView myShareParkListView;
@@ -25,23 +30,22 @@ public class MyShareParkActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_share_park);
+
+        myShareParkBackBtn = findViewById(R.id.myShareParkBackBtn);
+        myShareParkListView = findViewById(R.id.myShareParkListView);
+        myShareParkAddBtn = findViewById(R.id.myShareParkAddBtn);
+
+        Intent inIntent = getIntent();
+        loginId = inIntent.getStringExtra("loginId");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        Intent inIntent = getIntent();
-        loginId = inIntent.getStringExtra("loginId");
+        spa = new ShareParkAdapter(MyShareParkActivity.this);
+        fd = new FirestoreDatabase();
 
-        myShareParkBackBtn = findViewById(R.id.myShareParkBackBtn);
-        myShareParkListView = findViewById(R.id.myShareParkListView);
-        myShareParkAddBtn = findViewById(R.id.myShareParkAddBtn);
-
-        ShareParkAdapter spa = new ShareParkAdapter(MyShareParkActivity.this);
-        myShareParkListView.setAdapter(spa);
-
-        FirestoreDatabase fd = new FirestoreDatabase();
         fd.loadMyShareParks(loginId, new OnFirestoreDataLoadedListener() {
             @Override
             public void onDataLoaded(Object data) {
@@ -53,13 +57,16 @@ public class MyShareParkActivity extends AppCompatActivity {
                     String parkDetailAddress = (String) oneSharePark.get("parkDetailAddress");
                     boolean isApproval = (boolean) oneSharePark.get("isApproval");
                     boolean isCancelled = (boolean) oneSharePark.get("isCancelled");
+                    boolean isCalculated = (boolean) oneSharePark.get("isCalculated");
                     long price = (long) oneSharePark.get("price");
                     HashMap<String, ArrayList<String>> time = (HashMap<String, ArrayList<String>>) oneSharePark.get("time");
                     Timestamp upTime = (Timestamp) oneSharePark.get("upTime");
                     String documentId = (String) oneSharePark.get("documentId");
 
-                    spa.addItem(new ShareParkItem(lat, lon, parkDetailAddress, isApproval, isCancelled, price, time, upTime, documentId));
+                    spa.addItem(new ShareParkItem(lat, lon, parkDetailAddress, isApproval, isCancelled, isCalculated, price, time, upTime, documentId));
                 }
+
+                myShareParkListView.setAdapter(spa);
             }
 
             @Override
@@ -71,12 +78,10 @@ public class MyShareParkActivity extends AppCompatActivity {
         myShareParkListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                /*
-                Intent toReservationInformationActivityIntent = new Intent(getApplicationContext(), ReservationInformationActivity.class);
-                toReservationInformationActivityIntent.putExtra("id", loginId);
-                toReservationInformationActivityIntent.putExtra("documentId", ((ReservationItem) ra.getItem(position)).getDocumentId());
-                startActivity(toReservationInformationActivityIntent);
-                 */
+                Intent toMyShareParkInformationIntent = new Intent(getApplicationContext(), MyShareParkInformationActivity.class);
+                toMyShareParkInformationIntent.putExtra("id", loginId);
+                toMyShareParkInformationIntent.putExtra("documentId", ((ShareParkItem) spa.getItem(position)).getDocumentId());
+                startActivity(toMyShareParkInformationIntent);
             }
         });
 

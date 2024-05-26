@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     ImageButton toMyReservationImgBtn;
     ImageButton toShareParkBtn;
     Button toYdPointChargeBtn;
+    Button toYdPointHistoryBtn;
     ImageButton logoutBtn;
     ImageButton toMyReportDiscountParkBtn;
 
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         toShareParkBtn = findViewById(R.id.toShareParkBtn);
         toMyReportDiscountParkBtn = findViewById(R.id.toMyReportDiscountParkBtn);
         toYdPointChargeBtn = findViewById(R.id.toYdPointChargeBtn);
+        toYdPointHistoryBtn = findViewById(R.id.toYdPointHistoryBtn);
         logoutBtn = findViewById(R.id.logoutBtn);
 
         Intent inIntent = getIntent();
@@ -233,6 +235,13 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 Intent ydPointChargeIntent = new Intent(getApplicationContext(), YdPointChargeActivity.class);
                 ydPointChargeIntent.putExtra("loginId", loginId);
                 startActivity(ydPointChargeIntent);
+            }
+        });
+
+        toYdPointHistoryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 

@@ -1,9 +1,14 @@
 package com.bucheon.yeoddadae;
 
+import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
+
 import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +16,8 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import com.google.firebase.Timestamp;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -25,11 +32,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 public class ShareParkAdapter extends BaseAdapter {
     ArrayList<ShareParkItem> items = new ArrayList<>();
     Activity activity;
+    Calendar ca = Calendar.getInstance();
 
     public ShareParkAdapter (Activity activity) {
         this.activity = activity;
@@ -42,6 +51,11 @@ public class ShareParkAdapter extends BaseAdapter {
 
     public void removeItem(ShareParkItem item) {
         items.remove(item);
+        notifyDataSetChanged();
+    }
+
+    public void clearItem() {
+        items.clear();
         notifyDataSetChanged();
     }
 
@@ -124,15 +138,101 @@ public class ShareParkAdapter extends BaseAdapter {
         shareParkShareTimeTxt.setText(reservationTimeString);
         
         if (sharePark.isCancelled()) {
+            shareParkIsCancelledTxt.setText("취소됨");
+            shareParkIsCancelledTxt.setTextColor(Color.rgb(255, 0, 0));
+            shareParkIsCancelledTxt.setVisibility(View.VISIBLE);
+        }
+        else if (sharePark.isCalculated()) {
+            shareParkIsCancelledTxt.setText("정산됨");
+            shareParkIsCancelledTxt.setTextColor(Color.rgb(0, 255, 0));
             shareParkIsCancelledTxt.setVisibility(View.VISIBLE);
         }
         else if (sharePark.isApproval()) {
-            shareParkIsCancelledTxt.setText("승인됨");
-            shareParkIsCancelledTxt.setTextColor(Color.rgb(0, 0, 255));
-            shareParkIsCancelledTxt.setVisibility(View.VISIBLE);
+            int year = ca.get(Calendar.YEAR);
+            int month = ca.get(Calendar.MONTH) + 1;
+            int day = ca.get(Calendar.DAY_OF_MONTH);
+            int hour = ca.get(Calendar.HOUR_OF_DAY);
+            int minute = ca.get(Calendar.MINUTE);
+            String nowString = "";
+            nowString += year;
+            if (month < 10) {
+                nowString += "0";
+            }
+            nowString += month;
+            if (day < 10) {
+                nowString += "0";
+            }
+            nowString += day;
+            if (hour < 10) {
+                nowString += "0";
+            }
+            nowString += hour;
+            if (minute < 10) {
+                nowString += "0";
+            }
+            nowString += minute;
+
+            HashMap<String, ArrayList<String>> shareTIme = sharePark.getTime();
+            List<String> sortedKeys = new ArrayList<>(shareTIme.keySet());
+            Collections.sort(sortedKeys);
+            String firstTime = sortedKeys.get(0) + shareTIme.get(sortedKeys.get(0)).get(0);
+            String endTime = sortedKeys.get(sortedKeys.size() - 1) + shareTIme.get(sortedKeys.get(sortedKeys.size() - 1)).get(1);
+
+            if (nowString.compareTo(firstTime) < 0) {
+                shareParkIsCancelledTxt.setText("승인됨");
+                shareParkIsCancelledTxt.setTextColor(Color.rgb(0, 0, 255));
+                shareParkIsCancelledTxt.setVisibility(View.VISIBLE);
+            }
+            else if (nowString.compareTo(endTime) < 0){
+                shareParkIsCancelledTxt.setText("사용중");
+                shareParkIsCancelledTxt.setTextColor(Color.rgb(0, 0, 255));
+                shareParkIsCancelledTxt.setVisibility(View.VISIBLE);
+            }
+            else {
+                shareParkIsCancelledTxt.setText("정산 대기 중");
+                shareParkIsCancelledTxt.setTextColor(Color.rgb(0, 0, 255));
+                shareParkIsCancelledTxt.setVisibility(View.VISIBLE);
+            }
         }
         else {
-            shareParkIsCancelledTxt.setVisibility(View.GONE);
+            int year = ca.get(Calendar.YEAR);
+            int month = ca.get(Calendar.MONTH) + 1;
+            int day = ca.get(Calendar.DAY_OF_MONTH);
+            int hour = ca.get(Calendar.HOUR_OF_DAY);
+            int minute = ca.get(Calendar.MINUTE);
+            String nowString = "";
+            nowString += year;
+            if (month < 10) {
+                nowString += "0";
+            }
+            nowString += month;
+            if (day < 10) {
+                nowString += "0";
+            }
+            nowString += day;
+            if (hour < 10) {
+                nowString += "0";
+            }
+            nowString += hour;
+            if (minute < 10) {
+                nowString += "0";
+            }
+            nowString += minute;
+
+            HashMap<String, ArrayList<String>> shareTime = sharePark.getTime();
+            List<String> sortedKeys = new ArrayList<>(shareTime.keySet());
+            Collections.sort(sortedKeys);
+            String firstTime = sortedKeys.get(0) + shareTime.get(sortedKeys.get(0)).get(0);
+
+            if (nowString.compareTo(firstTime) < 0){
+                shareParkIsCancelledTxt.setText("승인 대기 중");
+                shareParkIsCancelledTxt.setTextColor(Color.rgb(0, 0, 255));
+                shareParkIsCancelledTxt.setVisibility(View.VISIBLE);
+            }
+            else {
+                shareParkIsCancelledTxt.setText("승인 실패");
+                shareParkIsCancelledTxt.setVisibility(View.VISIBLE);
+            }
         }
         
         if (sharePark.getPrice() == 0) {
@@ -143,10 +243,12 @@ public class ShareParkAdapter extends BaseAdapter {
         }
 
         Timestamp timestamp = sharePark.getUpTime();
-        Date date = timestamp.toDate();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
-        String dateString = sdf.format(date);
-        shareParkUpTimeTxt.setText(dateString);
+        if (timestamp != null) {
+            Date date = timestamp.toDate();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
+            String dateString = sdf.format(date);
+            shareParkUpTimeTxt.setText(dateString);
+        }
 
         return convertView;
     }

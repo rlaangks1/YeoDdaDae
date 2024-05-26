@@ -26,8 +26,7 @@
 
     <TextView
         android:id="@+id/shareParkIsCancelledTxt"
-        android:text="취소됨"
-        android:textColor="@color/red"
+        android:text="상태"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

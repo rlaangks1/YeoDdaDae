@@ -4,6 +4,7 @@ import static android.graphics.ColorSpace.Model.RGB;
 import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,9 +24,11 @@ import com.skt.Tmap.address_info.TMapAddressInfo;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 public class ReservationInformationActivity extends AppCompatActivity {
@@ -36,7 +39,7 @@ public class ReservationInformationActivity extends AppCompatActivity {
 
     Button reservationInfoBackBtn;
     TextView reservationInfoIdContentTxt;
-    TextView reservationInfoIsCanceledContentTxt;
+    TextView reservationInfoStatusContentTxt;
     TextView reservationInfoUpTimeContentTxt;
     TextView reservationInfoTimeContentTxt;
     TextView reservationInfoPriceContentTxt;
@@ -52,7 +55,7 @@ public class ReservationInformationActivity extends AppCompatActivity {
 
         reservationInfoBackBtn = findViewById(R.id.reservationInfoBackBtn);
         reservationInfoIdContentTxt = findViewById(R.id.reservationInfoIdContentTxt);
-        reservationInfoIsCanceledContentTxt = findViewById(R.id.reservationInfoIsCanceledContentTxt);
+        reservationInfoStatusContentTxt = findViewById(R.id.reservationInfoStatusContentTxt);
         reservationInfoUpTimeContentTxt = findViewById(R.id.reservationInfoUpTimeContentTxt);
         reservationInfoTimeContentTxt = findViewById(R.id.reservationInfoTimeContentTxt);
         reservationInfoPriceContentTxt = findViewById(R.id.reservationInfoPriceContentTxt);
@@ -117,6 +120,9 @@ public class ReservationInformationActivity extends AppCompatActivity {
 
                             @Override
                             public void onDataLoadError(String errorMessage) {
+                                if (errorMessage.equals("예약 시간이 지나서 취소 불가")) {
+                                    Toast.makeText(getApplicationContext(), "예약 시간이 지나서 취소 불가합니다", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         });
                     }
@@ -139,10 +145,57 @@ public class ReservationInformationActivity extends AppCompatActivity {
                 reservationInfoIdContentTxt.setText(documentId);
 
                 boolean isCancelled = (boolean) reservationInfo.get("isCancelled");
-                reservationInfoIsCanceledContentTxt.setText(Boolean.toString(isCancelled));
+
                 if (isCancelled) {
-                    reservationInfoIsCanceledContentTxt.setTextColor(android.graphics.Color.rgb(255, 0, 0));
+                    reservationInfoStatusContentTxt.setText("취소됨");
                     reservationInfoCancelBtn.setVisibility(View.GONE);
+                }
+                else {
+                    Calendar ca = Calendar.getInstance();
+                    int year = ca.get(Calendar.YEAR);
+                    int month = ca.get(Calendar.MONTH) + 1;
+                    int day = ca.get(Calendar.DAY_OF_MONTH);
+                    int hour = ca.get(Calendar.HOUR_OF_DAY);
+                    int minute = ca.get(Calendar.MINUTE);
+                    String nowString = "";
+                    nowString += year;
+                    if (month < 10) {
+                        nowString += "0";
+                    }
+                    nowString += month;
+                    if (day < 10) {
+                        nowString += "0";
+                    }
+                    nowString += day;
+                    if (hour < 10) {
+                        nowString += "0";
+                    }
+                    nowString += hour;
+                    if (minute < 10) {
+                        nowString += "0";
+                    }
+                    nowString += minute;
+
+                    HashMap<String, ArrayList<String>> reservationTime = (HashMap<String, ArrayList<String>>) reservationInfo.get("time");
+                    List<String> sortedKeys = new ArrayList<>(reservationTime.keySet());
+                    Collections.sort(sortedKeys);
+                    String firstTime = sortedKeys.get(0) + reservationTime.get(sortedKeys.get(0)).get(0);
+                    String endTime = sortedKeys.get(sortedKeys.size() - 1) + reservationTime.get(sortedKeys.get(sortedKeys.size() - 1)).get(1);
+
+                    Log.d(TAG, nowString);
+                    Log.d(TAG, firstTime);
+                    Log.d(TAG, endTime);
+
+                    if (nowString.compareTo(firstTime) < 0) {
+                        reservationInfoStatusContentTxt.setText("사용 예정");
+                        reservationInfoCancelBtn.setVisibility(View.VISIBLE);
+                    } else if (nowString.compareTo(endTime) < 0) {
+                        reservationInfoStatusContentTxt.setText("사용 중");
+                        reservationInfoCancelBtn.setVisibility(View.GONE);
+                    } else {
+                        reservationInfoStatusContentTxt.setText("사용 종료");
+                        reservationInfoCancelBtn.setVisibility(View.GONE);
+                    }
                 }
 
                 Timestamp timestamp = (Timestamp) reservationInfo.get("upTime");

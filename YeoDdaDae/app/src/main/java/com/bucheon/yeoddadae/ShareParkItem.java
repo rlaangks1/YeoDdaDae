@@ -11,17 +11,19 @@ public class ShareParkItem {
     private String parkDetailAddress;
     private boolean isApproval;
     private boolean isCancelled;
+    private boolean isCalculated;
     private long price;
     private HashMap<String, ArrayList<String>> time;
     private Timestamp upTime;
     private String documentId;
 
-    public ShareParkItem(double lat, double lon, String parkDetailAddress, boolean isApproval, boolean isCancelled, long price, HashMap<String, ArrayList<String>> time, Timestamp upTime, String documentId) {
+    public ShareParkItem(double lat, double lon, String parkDetailAddress, boolean isApproval, boolean isCancelled, boolean isCalculated, long price, HashMap<String, ArrayList<String>> time, Timestamp upTime, String documentId) {
         this.lat = lat;
         this.lon = lon;
         this.parkDetailAddress = parkDetailAddress;
         this.isApproval = isApproval;
         this.isCancelled = isCancelled;
+        this.isCalculated = isCalculated;
         this.price = price;
         this.time = time;
         this.upTime = upTime;
@@ -46,6 +48,10 @@ public class ShareParkItem {
 
     public boolean isCancelled() {
         return isCancelled;
+    }
+
+    public boolean isCalculated() {
+        return isCalculated;
     }
 
     public long getPrice() {

@@ -344,7 +344,7 @@ public class ReservationParkActivity extends AppCompatActivity {
         reservationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean isNotAfterNow = true;
+                boolean isAfterNow = true;
                 boolean isInReservationTime = true;
                 boolean isNotInAnotherReservationTime = true;
 
@@ -376,7 +376,6 @@ public class ReservationParkActivity extends AppCompatActivity {
                     nowString += "0";
                 }
                 nowString += minute;
-                Log.d(TAG, "현재 시각 : " + nowString);
 
                 CalendarDay shareTimeCalendarDay = ((TimeItem) ta.getItem(ta.getCount()-1)).getDate();
 
@@ -384,21 +383,26 @@ public class ReservationParkActivity extends AppCompatActivity {
                 int shareMonth = shareTimeCalendarDay.getMonth();
                 int shareDay = shareTimeCalendarDay.getDay();
 
+                String shareStartTimeString = "";
                 String shareEndTimeString = "";
 
+                shareStartTimeString += shareYear;
                 shareEndTimeString += shareYear;
                 if (shareMonth < 10) {
+                    shareStartTimeString += "0";
                     shareEndTimeString += "0";
                 }
+                shareStartTimeString += shareMonth;
                 shareEndTimeString += shareMonth;
                 if (shareDay < 10) {
+                    shareStartTimeString += "0";
                     shareEndTimeString += "0";
                 }
-                shareEndTimeString += shareDay + ((TimeItem) ta.getItem(ta.getCount()-1)).getEndTime();
-                Log.d(TAG, "예약 마지막 시간 : " + shareEndTimeString);
+                shareStartTimeString += shareDay + ((TimeItem) ta.getItem(0)).getStartTime();
+                shareEndTimeString += shareDay + ((TimeItem) ta.getItem(0)).getEndTime();
 
-                if (Long.parseLong(nowString) > Long.parseLong(shareEndTimeString)) {
-                    isNotAfterNow = false;
+                if (Long.parseLong(nowString) > Long.parseLong(shareStartTimeString) || Long.parseLong(nowString) > Long.parseLong(shareEndTimeString)) {
+                    isAfterNow = false;
                 }
 
                 HashMap<String, ArrayList<String>> targetTimes = ta.getAllTime();
@@ -413,7 +417,7 @@ public class ReservationParkActivity extends AppCompatActivity {
                         break;
                     }
                 }
-
+                
                 Loop1 :
                 for (String key : keys) {
                     ArrayList<String> tTimes = targetTimes.get(key);
@@ -430,7 +434,30 @@ public class ReservationParkActivity extends AppCompatActivity {
                     }
                 }
 
-                if (!isNotAfterNow) {
+                // 로그
+                Log.d(TAG, "현재 시각 : " + nowString);
+                Log.d(TAG, "예약 첫 날짜의 시작 시간 : " + shareStartTimeString);
+                Log.d(TAG, "예약 첫 날짜의 끝 시간 : " + shareEndTimeString);
+                if (isAfterNow) {
+                    Log.d(TAG, "예약 첫 날짜의 시작시간과 끝 시간이 현재 이후임");
+                }
+                else {
+                    Log.d(TAG, "예약 첫 날짜의 시작시간과 끝 시간이 현재 이후가 아님");
+                }
+                if (isInReservationTime) {
+                    Log.d(TAG, "예약목표시간이 공유 시간 내에 있음");
+                }
+                else {
+                    Log.d(TAG, "예약목표시간이 공유 시간 내에 있지 않음");
+                }
+                if (isNotInAnotherReservationTime) {
+                    Log.d(TAG, "예약목표시간이 타 예약 시간과 겹치지 않음");
+                }
+                else {
+                    Log.d(TAG, "예약목표시간이 타 예약 시간과 겹침");
+                }
+
+                if (!isAfterNow) {
                     Toast.makeText(getApplicationContext(), "현재 시각 이후로 예약하세요", Toast.LENGTH_SHORT).show();
                 }
                 else if (!isInReservationTime) {
@@ -442,6 +469,7 @@ public class ReservationParkActivity extends AppCompatActivity {
                 else {
                     Intent toPaymentIntent = new Intent(getApplicationContext(), PaymentActivity.class);
                     toPaymentIntent.putExtra("shareParkDocumentName", reservationFirestoreDocumentId);
+                    toPaymentIntent.putExtra("payType", "공유주차장 예약");
                     toPaymentIntent.putExtra("id", loginId);
                     toPaymentIntent.putExtra("time", ta.getAllTime());
                     toPaymentIntent.putExtra("price", totalPrice);

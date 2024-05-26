@@ -262,6 +262,7 @@ public class ShareParkActivity extends AppCompatActivity {
                 hm.put("upTime", FieldValue.serverTimestamp());
                 hm.put("isApproval", false);
                 hm.put("isCancelled", false);
+                hm.put("isCalculated", false);
 
                 FirestoreDatabase fd = new FirestoreDatabase();
                 fd.insertData("sharePark", hm);

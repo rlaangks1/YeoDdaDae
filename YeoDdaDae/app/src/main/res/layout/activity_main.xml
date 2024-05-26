@@ -218,6 +218,14 @@
         app:layout_constraintRight_toLeftOf="@+id/toShareParkBtn"
         app:layout_constraintTop_toTopOf="@+id/toShareParkBtn" />
 
+    <Button
+        android:id="@+id/toYdPointHistoryBtn"
+        android:text="여따대포인트 기록"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toLeftOf="@+id/toYdPointChargeBtn"
+        app:layout_constraintTop_toTopOf="@+id/toYdPointChargeBtn" />
+
     <ImageButton
         android:id="@+id/logoutBtn"
         android:layout_width="130dp"

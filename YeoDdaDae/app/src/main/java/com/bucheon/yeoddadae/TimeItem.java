@@ -12,7 +12,7 @@ public class TimeItem {
     public TimeItem(CalendarDay date) {
         this.date = date;
         this.startTime = "0000";
-        this.endTime = "0000";
+        this.endTime = "2400";
     }
 
     public CalendarDay getDate() {
@@ -32,6 +32,11 @@ public class TimeItem {
     }
 
     public void setEndTime(String endTime) {
-        this.endTime = endTime;
+        if (endTime.equals("0000")) {
+            this.endTime = "2400";
+        }
+        else {
+            this.endTime = endTime;
+        }
     }
 }
