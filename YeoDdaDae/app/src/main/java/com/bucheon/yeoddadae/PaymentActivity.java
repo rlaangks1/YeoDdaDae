@@ -39,14 +39,17 @@ import java.util.Map;
 import java.util.Set;
 
 public class PaymentActivity extends AppCompatActivity {
+    String payType;
     String shareParkDocumentName;
     String loginId;
     HashMap<String, ArrayList<String>> reservationTime;
     int price;
+    long ydPoint;
+    FirestoreDatabase fd;
 
     Button paymentBackBtn;
     TextView paymentTotalPriceContentTxt;
-    HorizontalScrollView paymentMethodContentScrollView;
+    TextView paymentYdPointContentTxt;
     Button paymentPayBtn;
 
 
@@ -57,11 +60,12 @@ public class PaymentActivity extends AppCompatActivity {
 
         paymentBackBtn = findViewById(R.id.paymentBackBtn);
         paymentTotalPriceContentTxt = findViewById(R.id.paymentTotalPriceContentTxt);
-        paymentMethodContentScrollView = findViewById(R.id.paymentMethodContentScrollView);
+        paymentYdPointContentTxt = findViewById(R.id.paymentYdPointContentTxt);
         paymentPayBtn = findViewById(R.id.paymentPayBtn);
 
         Intent inIntent = getIntent();
         shareParkDocumentName = inIntent.getStringExtra("shareParkDocumentName");
+        payType = inIntent.getStringExtra("payType");
         loginId = inIntent.getStringExtra("id");
         reservationTime = (HashMap<String, ArrayList<String>>) inIntent.getSerializableExtra("time");
         price = inIntent.getIntExtra("price", -1);
@@ -71,10 +75,23 @@ public class PaymentActivity extends AppCompatActivity {
             finish();
         }
 
-        runOnUiThread(new Runnable() {
+        fd = new FirestoreDatabase();
+        fd.loadYdPoint(loginId, new OnFirestoreDataLoadedListener() {
             @Override
-            public void run() {
-                paymentTotalPriceContentTxt.setText(Integer.toString(price));
+            public void onDataLoaded(Object data) {
+                ydPoint = (long) data;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        paymentYdPointContentTxt.setText(Long.toString(ydPoint));
+                        paymentTotalPriceContentTxt.setText(Integer.toString(price));
+                    }
+                });
+            }
+
+            @Override
+            public void onDataLoadError(String errorMessage) {
+                finish();
             }
         });
 
@@ -90,37 +107,50 @@ public class PaymentActivity extends AppCompatActivity {
         paymentPayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirestoreDatabase fd = new FirestoreDatabase();
+                fd = new FirestoreDatabase();
                 fd.payByYdPoint(loginId, price, new OnFirestoreDataLoadedListener() {
                     @Override
                     public void onDataLoaded(Object data) {
                         HashMap<String, Object> hm = new HashMap<>();
-                        hm.put("id", loginId);
-                        hm.put("price", price);
-                        hm.put("upTime", FieldValue.serverTimestamp());
-                        fd.insertData("spendYdPointHistory", hm);
-
-                        hm = new HashMap<>();
                         hm.put("shareParkDocumentName", shareParkDocumentName);
                         hm.put("id", loginId);
                         hm.put("time", reservationTime);
                         hm.put("isCancelled", false);
                         hm.put("upTime", FieldValue.serverTimestamp());
                         hm.put("price", price);
-
                         fd.insertData("reservation", hm);
-                        Toast.makeText(getApplicationContext(), "예약되었습니다", Toast.LENGTH_SHORT);
 
-                        Intent returnIntent = new Intent();
-                        setResult(RESULT_OK, returnIntent);
+                        fd.searchDocumentId("reservation", "id", loginId, "time", reservationTime, new OnFirestoreDataLoadedListener() {
+                            @Override
+                            public void onDataLoaded(Object data) {
+                                String reservationDocumentId = (String) data;
 
-                        finish();
+                                HashMap<String, Object> hm = new HashMap<>();
+                                hm.put("id", loginId);
+                                hm.put("type", payType);
+                                hm.put("reservationId", reservationDocumentId);
+                                hm.put("price", price);
+                                hm.put("upTime", FieldValue.serverTimestamp());
+                                fd.insertData("spendYdPointHistory", hm);
 
+                                Toast.makeText(getApplicationContext(), "예약되었습니다", Toast.LENGTH_SHORT);
+
+                                Intent returnIntent = new Intent();
+                                setResult(RESULT_OK, returnIntent);
+
+                                finish();
+                            }
+
+                            @Override
+                            public void onDataLoadError(String errorMessage) {
+
+                            }
+                        });
                     }
 
                     @Override
                     public void onDataLoadError(String errorMessage) {
-
+                        Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
                     }
                 });
             }

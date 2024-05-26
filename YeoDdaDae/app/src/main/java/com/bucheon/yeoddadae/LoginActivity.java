@@ -72,7 +72,12 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onDataLoadError(String errorMessage) {
                             // Handle login failure
-                            Toast.makeText(getApplicationContext(), "로그인 실패", Toast.LENGTH_SHORT).show();
+                            if (errorMessage.equals("아이디 또는 비밀번호가 일치하지 않습니다")) {
+                                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                Toast.makeText(getApplicationContext(), "로그인 실패", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
                 }
