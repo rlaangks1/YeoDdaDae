@@ -41,6 +41,11 @@
         <activity android:name=".AnotherReportDiscountParkActivity"/>
         <activity android:name=".RateAnotherReportDiscountParkActivity"/>
         <activity android:name=".AdminMainActivity"/>
+        <activity android:name=".FindParkFragment"/>
+        <activity android:name=".FindGasStationFragment"/>
+        <activity android:name=".SharedParkFragment"/>
+        <activity android:name=".DiscountParkReportFragment"/>
+        <activity android:name=".InfoFragment"/>
         <service
             android:name=".SttService"
             android:enabled="true"

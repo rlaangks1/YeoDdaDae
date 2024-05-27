@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/bt_mybooking"
+        android:id="@+id/bt_find_park"
         android:enabled="true"
-        android:icon="@drawable/ic_mybook"
-        android:title="나의예약" />
+        android:icon="@drawable/find_parking"
+        android:title="주차장안내" />
     <item
-        android:id="@+id/bt_ticket"
+        android:id="@+id/bt_find_gas_station"
         android:enabled="true"
-        android:icon="@drawable/ic_ticket"
-        android:title="정기권구매" />
+        android:icon="@drawable/find_gasstation"
+        android:title="주유소안내" />
     <item
-        android:id="@+id/bt_register"
+        android:id="@+id/bt_shared_park"
         android:enabled="true"
-        android:icon="@drawable/ic_register"
-        android:title="주차장등록" />
+        android:icon="@drawable/shared_park"
+        android:title="공유주차장" />
+    <item
+        android:id="@+id/bt_discount_park_report"
+        android:enabled="true"
+        android:icon="@drawable/discount_park"
+        android:title="주차장제보" />
     <item
         android:id="@+id/bt_info"
         android:enabled="true"
         android:icon="@drawable/ic_info"
         android:title="서비스안내" />
-    <item
-        android:id="@+id/bt_customer_service"
-        android:enabled="true"
-        android:icon="@drawable/ic_servicecenter"
-        android:title="고객센터" />
 </menu>
