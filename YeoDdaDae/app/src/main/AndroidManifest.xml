@@ -44,6 +44,8 @@
         <activity android:name=".AnotherReportDiscountParkActivity"/>
         <activity android:name=".RateAnotherReportDiscountParkActivity"/>
         <activity android:name=".AdminMainActivity"/>
+        <activity android:name=".ApproveShareParkActivity"/>
+        <activity android:name=".ApproveShareParkInformationActivity"/>
         <service
             android:name=".SttService"
             android:enabled="true"
@@ -61,6 +63,9 @@
         <intent>
             <action android:name="android.speech.RecognitionService" />
         </intent>
+
+        <package android:name="com.skt.skaf.l001mtm091"/>
+        <package android:name="com.skt.tmap.ku"/>
     </queries>
 
 </manifest>

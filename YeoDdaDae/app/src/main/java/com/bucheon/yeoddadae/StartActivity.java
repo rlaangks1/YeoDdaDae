@@ -32,6 +32,8 @@ public class StartActivity extends AppCompatActivity {
     final int loginIntentRequestCode = 2;
     String loginId;
     boolean isAdmin;
+    boolean isSkip;
+
     ImageButton toLoginBtn;
     Button loginSkipBtn;
 
@@ -47,6 +49,7 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (isNetworkConnected()) {
+                    isSkip = false;
                     Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivityForResult(loginIntent, loginIntentRequestCode);
                 }
@@ -60,9 +63,8 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (isNetworkConnected()) {
-                    checkPermission(); // 권한 확인. 권한이 이미 있으면 onRequestPermissionsResult는 호출되지 않음
-                    // 권한이 이미 있을 경우 바로 proceedAfterPermissionGranted를 호출할 수 있지만,
-                    // 이 경우는 onRequestPermissionsResult에서 권한이 있을 때 호출되므로 거기서 처리
+                    isSkip = true;
+                    checkPermission();
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "인터넷 연결을 확인하세요", Toast.LENGTH_SHORT).show();
@@ -86,24 +88,6 @@ public class StartActivity extends AppCompatActivity {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-    }
-
-    private void proceedAfterPermissionGranted() {
-        // 권한이 모두 승인된 후에 실행할 로직
-        Intent intent;
-        if (loginId != null && !loginId.isEmpty()) {
-            // 로그인이 완료된 경우
-            intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.putExtra("loginId", loginId);
-            intent.putExtra("isAdmin", isAdmin);
-        } else {
-            // 로그인을 건너뛴 경우
-            intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.putExtra("loginId", "user111");
-            intent.putExtra("isAdmin", false);
-        }
-        startActivity(intent);
-        finish();
     }
 
     private void checkPermission() {
@@ -141,5 +125,29 @@ public class StartActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "필수 권한이 거부되었습니다", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void proceedAfterPermissionGranted() {
+        // 권한이 모두 승인된 후에 실행할 로직
+        Intent intent;
+
+        if (!isSkip) {
+            if (isAdmin) {
+                intent = new Intent(getApplicationContext(), AdminMainActivity.class);
+            }
+            else {
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+            }
+            intent.putExtra("loginId", loginId);
+            intent.putExtra("isAdmin", isAdmin);
+        }
+        else {
+            intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra("loginId", "user111");
+            intent.putExtra("isAdmin", false);
+        }
+
+        startActivity(intent);
+        finish();
     }
 }

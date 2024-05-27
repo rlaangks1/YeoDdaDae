@@ -38,6 +38,8 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
     TextView myShareParkInfoStatusContentTxt;
     TextView myShareParkInfoUpTimeContentTxt;
     TextView myShareParkInfoPriceContentTxt;
+    TextView myShareParkInfoHourPerTxt;
+    TextView myShareParkInfoWonTxt;
     TextView myShareParkInfoShareParkNewAddressContentTxt;
     TextView myShareParkInfoShareParkOldAddressContentTxt;
     TextView myShareParkInfoShareParkDetailaddressContentTxt;
@@ -78,7 +80,9 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
 
             @Override
             public void onDataLoadError(String errorMessage) {
-
+                Log.d(TAG, errorMessage);
+                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
 
@@ -102,7 +106,14 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                 String dateString = sdf.format(date);
                 myShareParkInfoUpTimeContentTxt.setText(dateString);
 
-                myShareParkInfoPriceContentTxt.setText(Long.toString((long) shareParkInfo.get("price")));
+                if ((long) shareParkInfo.get("price") == 0) {
+                    myShareParkInfoHourPerTxt.setVisibility(View.GONE);
+                    myShareParkInfoWonTxt.setVisibility(View.GONE);
+                    myShareParkInfoPriceContentTxt.setText("무료");
+                }
+                else {
+                    myShareParkInfoPriceContentTxt.setText(Long.toString((long) shareParkInfo.get("price")));
+                }
 
                 TMapData tMapData = new TMapData();
                 tMapData.reverseGeocoding((double) shareParkInfo.get("lat"), (double) shareParkInfo.get("lon"), "A10", new TMapData.reverseGeocodingListenerCallback() {
@@ -139,8 +150,8 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
 
                     textBuilder.append(year + "년 " + month + "월 " + day + "일 " + startTimeString + "부터 " + endTimeString + "까지\n");
                 }
-                String ShareTimeString = textBuilder.toString().substring(0, textBuilder.length() - 1);
-                myShareParkInfoShareTimeContentTxt.setText(ShareTimeString);
+                String shareTimeString = textBuilder.toString().substring(0, textBuilder.length() - 1);
+                myShareParkInfoShareTimeContentTxt.setText(shareTimeString);
 
                 FirestoreDatabase fd2 = new FirestoreDatabase();
                 fd2.loadAnotherReservations(documentId, new OnFirestoreDataLoadedListener() {
@@ -176,7 +187,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                             tempString += s;
 
                         }
-                        final String reservationsText = tempString;
+                        final String reservationsText = tempString.substring(0, tempString.length() - 1);
 
                         boolean isApproval = (boolean) shareParkInfo.get("isApproval");
                         boolean isCancelled = (boolean) shareParkInfo.get("isCancelled");
@@ -310,7 +321,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                                 if(isCalculated) {
                                     myShareParkInfoStatusContentTxt.setText("공유 종료. 정산 완료");
                                     myShareParkInfoCancelBtn.setVisibility(View.GONE);
-                                    myShareParkInfoCalculateBtn.setVisibility(View.VISIBLE);
+                                    myShareParkInfoCalculateBtn.setVisibility(View.GONE);
                                 }
                                 else {
                                     myShareParkInfoStatusContentTxt.setText("공유 종료. 정산 대기 중");
@@ -323,7 +334,9 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
 
                     @Override
                     public void onDataLoadError(String errorMessage) {
-
+                        Log.d(TAG, errorMessage);
+                        Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                 });
 
@@ -339,7 +352,8 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
 
                             @Override
                             public void onDataLoadError(String errorMessage) {
-
+                                Log.d(TAG, errorMessage);
+                                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -357,7 +371,8 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
 
                             @Override
                             public void onDataLoadError(String errorMessage) {
-
+                                Log.d(TAG, errorMessage);
+                                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }

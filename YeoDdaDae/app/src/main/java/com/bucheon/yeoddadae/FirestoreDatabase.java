@@ -15,8 +15,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.Transaction;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import org.json.JSONArray;
@@ -1139,9 +1141,45 @@ public class FirestoreDatabase {
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     ArrayList<HashMap<String, Object>> resultArrayList = new ArrayList<>();
-                    
                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        Calendar ca = Calendar.getInstance();
+                        int year = ca.get(Calendar.YEAR);
+                        int month = ca.get(Calendar.MONTH) + 1;
+                        int day = ca.get(Calendar.DAY_OF_MONTH);
+                        int hour = ca.get(Calendar.HOUR_OF_DAY);
+                        int minute = ca.get(Calendar.MINUTE);
+                        String nowString = "";
+                        nowString += year;
+                        if (month < 10) {
+                            nowString += "0";
+                        }
+                        nowString += month;
+                        if (day < 10) {
+                            nowString += "0";
+                        }
+                        nowString += day;
+                        if (hour < 10) {
+                            nowString += "0";
+                        }
+                        nowString += hour;
+                        if (minute < 10) {
+                            nowString += "0";
+                        }
+                        nowString += minute;
+
+                        HashMap<String, ArrayList<String>> shareTime = (HashMap<String, ArrayList<String>>) documentSnapshot.get("time");
+                        List<String> sortedKeys = new ArrayList<>(shareTime.keySet());
+                        Collections.sort(sortedKeys);
+                        String firstTime = sortedKeys.get(0) + shareTime.get(sortedKeys.get(0)).get(0);
+
+                        Log.d(TAG, "현재 시각 : " + nowString);
+                        Log.d(TAG, "예약 첫 날의 시작 시각 : " + firstTime);
+                        if (nowString.compareTo(firstTime) > 0) {
+                            continue;
+                        }
+
                         HashMap<String, Object> data = new HashMap<>(documentSnapshot.getData());
+                        data.put("documentId", documentSnapshot.getId());
                         resultArrayList.add(data);
                     }
                     
@@ -1185,6 +1223,64 @@ public class FirestoreDatabase {
                     Log.d(TAG, "데이터 검색 오류", e);
                     listener.onDataLoadError(e.getMessage());
                 });
+    }
+
+    public void approveSharePark(String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+        db.runTransaction((Transaction.Function<Void>) transaction -> {
+            DocumentSnapshot documentSnapshot = transaction.get(db.collection("sharePark").document(firestoreDocumentId));
+
+            if (!(boolean) documentSnapshot.get("isApproval")) {
+                if (!(boolean) documentSnapshot.get("isCancelled")) {
+                    Calendar ca = Calendar.getInstance();
+                    int year = ca.get(Calendar.YEAR);
+                    int month = ca.get(Calendar.MONTH) + 1;
+                    int day = ca.get(Calendar.DAY_OF_MONTH);
+                    int hour = ca.get(Calendar.HOUR_OF_DAY);
+                    int minute = ca.get(Calendar.MINUTE);
+                    String nowString = "";
+                    nowString += year;
+                    if (month < 10) {
+                        nowString += "0";
+                    }
+                    nowString += month;
+                    if (day < 10) {
+                        nowString += "0";
+                    }
+                    nowString += day;
+                    if (hour < 10) {
+                        nowString += "0";
+                    }
+                    nowString += hour;
+                    if (minute < 10) {
+                        nowString += "0";
+                    }
+                    nowString += minute;
+
+                    HashMap<String, ArrayList<String>> reservationTime = (HashMap<String, ArrayList<String>>) documentSnapshot.get("time");
+                    List<String> sortedKeys = new ArrayList<>(reservationTime.keySet());
+                    Collections.sort(sortedKeys);
+                    String firstTime = sortedKeys.get(0) + reservationTime.get(sortedKeys.get(0)).get(0);
+
+                    Log.d(TAG, "현재 시각 : " + nowString);
+                    Log.d(TAG, "예약 첫 날의 시작 시각 : " + firstTime);
+                    if (nowString.compareTo(firstTime) < 0) {
+                        transaction.update(db.collection("sharePark").document(firestoreDocumentId), "isApproval", true);
+                    } else {
+                        throw new FirebaseFirestoreException("공유시간이 지남", FirebaseFirestoreException.Code.ABORTED);
+                    }
+                } else {
+                    throw new FirebaseFirestoreException("취소된 공유주차장임", FirebaseFirestoreException.Code.ABORTED);
+                }
+            } else {
+                throw new FirebaseFirestoreException("이미 승인된 공유주차장임", FirebaseFirestoreException.Code.ABORTED);
+            }
+
+            return null;
+        }).addOnSuccessListener(aVoid -> {
+            listener.onDataLoaded(true);
+        }).addOnFailureListener(e -> {
+            listener.onDataLoadError(e.getMessage());
+        });
     }
 
     public void my (OnFirestoreDataLoadedListener listener) {

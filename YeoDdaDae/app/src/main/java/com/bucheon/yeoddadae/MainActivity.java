@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
 
     String loginId = null;
     boolean isAdmin = false;
+    SttDialog sd;
 
     TextView nowIdTxt;
     TextView isAdminTxt;
@@ -106,6 +107,20 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         loginId = inIntent.getStringExtra("loginId");
         isAdmin = inIntent.getBooleanExtra("isAdmin", false);
 
+        sd = new SttDialog(MainActivity.this, new SttDialogListener() {
+            @Override
+            public void onMessageSend(String message) {
+                if (message.equals("버튼클릭")) {
+                    sd.setSttStatusTxt("메인 명령어 듣는 중");
+                    sttService.startListeningForMainCommand();
+                }
+                else if (message.equals("닫기")) {
+                    sttService.stopContinuousListening();
+                    sttService.startListeningForWakeUpWord();
+                }
+            }
+        });
+
         if (savedInstanceState == null) { // 액티비티 최초 실행인지 확인
             // TMapAPI 인증 (앱 종료까지 유효)
             TMapTapi tmaptapi = new TMapTapi(this);
@@ -126,13 +141,6 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             tmaptapi.setSKTMapAuthentication(API_KEY);
         }
 
-        if (isAdmin) {
-            Intent toAdminIntent =new Intent(getApplicationContext(), AdminMainActivity.class);
-            toAdminIntent.putExtra("loginId", loginId);
-            startActivity(toAdminIntent);
-            finish();
-        }
-
         serviceIntent = new Intent(this, SttService.class);
         checkPermission();
 
@@ -151,9 +159,9 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             public void onClick(View v) {
                 checkPermission();
                 if (recordAudioPermissionGranted) {
-                    if (sttService != null) {
-                        sttService.startListeningForMainCommand();
-                    }
+                    sttService.startListeningForMainCommand();
+                    sd.show();
+                    sd.setSttStatusTxt("메인 명령어 듣는 중");
                 } else {
                     Toast.makeText(getApplicationContext(), "설정에서 마이크 권한을 부여하세요", Toast.LENGTH_SHORT).show();
                 }
@@ -326,8 +334,8 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                     startActivity(findGasStationIntent);
                 }
             }
-        } else { // 모두 아님 (서비스 다시시작)
-            startService(serviceIntent);
+        } else {
+            sd.setSttStatusTxt(mainCommand + "\n알 수 없는 명령어입니다\n'가까운 주유소 찾아줘'와 같이 말씀해보세요");
         }
     }
 
@@ -337,6 +345,10 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             @Override
             public void run() {
                 sttStatus.setText(message);
+                if (message.equals("메인명령어듣는중")) {
+                    sd.show();
+                    sd.setSttStatusTxt("메인 명령어 듣는 중");
+                }
             }
         });
     }
