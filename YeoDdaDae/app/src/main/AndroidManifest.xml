@@ -26,6 +26,7 @@
         <activity android:name=".LoginActivity"/>
         <activity android:name=".RegisterActivity"/>
         <activity android:name=".MainActivity"/>
+        <activity android:name=".YdPointChargeActivity"/>
         <activity android:name=".FindParkActivity"/>
         <activity android:name=".MyReservationActivity"/>
         <activity android:name=".ReservationInformationActivity"/>
@@ -33,6 +34,8 @@
         <activity android:name=".PaymentActivity"/>
         <activity android:name=".FindGasStationActivity"/>
         <activity android:name=".NavigationActivity"/>
+        <activity android:name=".MyShareParkActivity"/>
+        <activity android:name=".MyShareParkInformationActivity"/>
         <activity android:name=".ShareParkActivity"/>
         <activity android:name=".GpsCertificationActivity"/>
         <activity android:name=".MyReportDiscountParkActivity"/>
@@ -41,6 +44,8 @@
         <activity android:name=".AnotherReportDiscountParkActivity"/>
         <activity android:name=".RateAnotherReportDiscountParkActivity"/>
         <activity android:name=".AdminMainActivity"/>
+        <activity android:name=".ApproveShareParkActivity"/>
+        <activity android:name=".ApproveShareParkInformationActivity"/>
         <activity android:name=".FindParkFragment"/>
         <activity android:name=".FindGasStationFragment"/>
         <activity android:name=".SharedParkFragment"/>
@@ -63,6 +68,9 @@
         <intent>
             <action android:name="android.speech.RecognitionService" />
         </intent>
+
+        <package android:name="com.skt.skaf.l001mtm091"/>
+        <package android:name="com.skt.tmap.ku"/>
     </queries>
 
 </manifest>

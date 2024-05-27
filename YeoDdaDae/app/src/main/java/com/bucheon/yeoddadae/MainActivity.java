@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
 
     String loginId = null;
     boolean isAdmin = false;
+    SttDialog sd;
 
     TextView nowIdTxt;
     TextView isAdminTxt;
@@ -50,8 +51,11 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     ImageButton toFindParkImgBtn;
     ImageButton toFindGasStationImgBtn;
     ImageButton toSharedParkImgBtn;
-
     ImageButton toMyReportDiscountParkImgBtn;
+    ImageButton toMyReservationImgBtn;
+    Button toYdPointChargeBtn;
+    Button toYdPointHistoryBtn;
+    ImageButton logoutBtn;
 
     private Intent serviceIntent;
 
@@ -102,6 +106,10 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         toFindGasStationImgBtn = findViewById(R.id.toFindGasStationImgBtn);
         toSharedParkImgBtn = findViewById(R.id.toSharedParkImgBtn);
         toMyReportDiscountParkImgBtn = findViewById(R.id.toMyReportDiscountParkImgBtn);
+        toMyReservationImgBtn = findViewById(R.id.toMyReservationImgBtn);
+        toYdPointChargeBtn = findViewById(R.id.toYdPointChargeBtn);
+        toYdPointHistoryBtn = findViewById(R.id.toYdPointHistoryBtn);
+        logoutBtn = findViewById(R.id.logoutBtn);
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
@@ -138,6 +146,21 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         }
 
         if (savedInstanceState == null) { // 최초 실행인지 확인
+        sd = new SttDialog(MainActivity.this, new SttDialogListener() {
+            @Override
+            public void onMessageSend(String message) {
+                if (message.equals("버튼클릭")) {
+                    sd.setSttStatusTxt("메인 명령어 듣는 중");
+                    sttService.startListeningForMainCommand();
+                }
+                else if (message.equals("닫기")) {
+                    sttService.stopContinuousListening();
+                    sttService.startListeningForWakeUpWord();
+                }
+            }
+        });
+
+        if (savedInstanceState == null) { // 액티비티 최초 실행인지 확인
             // TMapAPI 인증 (앱 종료까지 유효)
             TMapTapi tmaptapi = new TMapTapi(this);
             tmaptapi.setOnAuthenticationListener(new TMapTapi.OnAuthenticationListenerCallback() {
@@ -155,13 +178,6 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 }
             });
             tmaptapi.setSKTMapAuthentication(API_KEY);
-        }
-
-        if (isAdmin) {
-            Intent toAdminIntent =new Intent(getApplicationContext(), AdminMainActivity.class);
-            toAdminIntent.putExtra("loginId", loginId);
-            startActivity(toAdminIntent);
-            finish();
         }
 
         serviceIntent = new Intent(this, SttService.class);
@@ -182,9 +198,9 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             public void onClick(View v) {
                 checkPermission();
                 if (recordAudioPermissionGranted) {
-                    if (sttService != null) {
-                        sttService.startListeningForMainCommand();
-                    }
+                    sttService.startListeningForMainCommand();
+                    sd.show();
+                    sd.setSttStatusTxt("메인 명령어 듣는 중");
                 } else {
                     Toast.makeText(getApplicationContext(), "설정에서 마이크 권한을 부여하세요", Toast.LENGTH_SHORT).show();
                 }
@@ -201,7 +217,6 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                     startActivity(findParkIntent);
                 } else {
                     Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                    //tMapView.setSKTMapApiKey(API_KEY);
                 }
             }
         });
@@ -215,7 +230,6 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                     startActivity(findGasStationIntent);
                 } else {
                     Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                    //tMapView.setSKTMapApiKey(API_KEY);
                 }
             }
         });
@@ -230,11 +244,23 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                    //tMapView.setSKTMapApiKey(API_KEY);
                 }
             }
         });
 
+        toShareParkBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (apiKeyCertified) {
+                    Intent shareParkIntent = new Intent(getApplicationContext(), MyShareParkActivity.class);
+                    shareParkIntent.putExtra("loginId", loginId);
+                    startActivity(shareParkIntent);
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         toMyReportDiscountParkImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,11 +272,35 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                    //tMapView.setSKTMapApiKey(API_KEY);
                 }
             }
         });
 
+        toYdPointChargeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent ydPointChargeIntent = new Intent(getApplicationContext(), YdPointChargeActivity.class);
+                ydPointChargeIntent.putExtra("loginId", loginId);
+                startActivity(ydPointChargeIntent);
+            }
+        });
+
+        toYdPointHistoryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
+                loginId = null;
+                startActivity(logoutIntent);
+                finish();
+            }
+        });
     }
 
     @Override
@@ -278,7 +328,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
          * if (resultCode == RESULT_OK) {
          * loginId = data.getStringExtra("loginId");
          * isAdmin = data.getBooleanExtra("isAdmin", false);
-         * 
+         *
          * if (loginId == null) {
          * nowIdTxt.setText("미 로그인 상태");
          * }
@@ -286,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
          * nowIdTxt.setText(loginId);
          * }
          * isAdminTxt.setText("관리자여부 : " + isAdmin);
-         * 
+         *
          * toLoginBtn.setText("로그아웃");
          * }
          * }
@@ -323,8 +373,8 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                     startActivity(findGasStationIntent);
                 }
             }
-        } else { // 모두 아님 (서비스 다시시작)
-            startService(serviceIntent);
+        } else {
+            sd.setSttStatusTxt(mainCommand + "\n알 수 없는 명령어입니다\n'가까운 주유소 찾아줘'와 같이 말씀해보세요");
         }
     }
 
@@ -334,6 +384,10 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             @Override
             public void run() {
                 sttStatus.setText(message);
+                if (message.equals("메인명령어듣는중")) {
+                    sd.show();
+                    sd.setSttStatusTxt("메인 명령어 듣는 중");
+                }
             }
         });
     }
@@ -360,7 +414,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-            @NonNull int[] grantResults) {
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == PERMISSION_REQUEST_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

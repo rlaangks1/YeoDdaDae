@@ -3,6 +3,7 @@ package com.bucheon.yeoddadae;
 import static android.content.ContentValues.TAG;
 
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
@@ -12,9 +13,12 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.Transaction;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import org.json.JSONArray;
@@ -30,6 +34,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -218,6 +223,27 @@ public class FirestoreDatabase {
                     }
      */
 
+    public void searchDocumentId (String collection, String targetField1, Object targetValue1, String targetField2, Object targetValue2, OnFirestoreDataLoadedListener listener) {
+        db.collection(collection)
+                .whereEqualTo(targetField1, targetValue1)
+                .whereEqualTo(targetField2, targetValue2)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.size() == 1) {
+                        String documentId = queryDocumentSnapshots.getDocuments().get(0).getId();
+                        listener.onDataLoaded(documentId);
+                    }
+                    else {
+                        Log.d(TAG, "데이터가 없거나 여러개임");
+                        listener.onDataLoadError("데이터가 없거나 여러개임");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
     public void login(String id, String pw, OnFirestoreDataLoadedListener listener) {
         db.collection("account")
                 .whereEqualTo("id", id)
@@ -235,11 +261,120 @@ public class FirestoreDatabase {
                     }
                     else {
                         Log.d(TAG, "아이디 또는 비밀번호가 일치하지 않음");
-                        listener.onDataLoadError("아이디 또는 비밀번호가 일치하지 않습니다.");
+                        listener.onDataLoadError("아이디 또는 비밀번호가 일치하지 않습니다");
                     }
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "로그인 중 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void loadYdPoint(String id, OnFirestoreDataLoadedListener listener) {
+        db.collection("account")
+                .whereEqualTo("id", id)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.size() > 0) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+
+                        long ydPoint = (long) document.get("ydPoint");
+
+                        Log.d(TAG, "보유 여따대포인트 불러오기 성공");
+                        listener.onDataLoaded(ydPoint);
+                    }
+                    else {
+                        listener.onDataLoadError("해당 문서가 없음");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "로그인 중 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void chargeYdPoint(String id, int price, OnFirestoreDataLoadedListener listener) {
+        db.collection("account")
+                .whereEqualTo("id", id)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.size() > 0) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+                        Long ydPoint = document.getLong("ydPoint");
+
+                        if (ydPoint != null) {
+                            db.collection("account")
+                                    .document(document.getId())
+                                    .update("ydPoint", ydPoint + price)
+                                    .addOnSuccessListener(aVoid -> {
+                                        HashMap<String, Object> hm = new HashMap<>();
+                                        hm.put("id", id);
+                                        hm.put("chargedYdPoint", price);
+                                        hm.put("upTime", FieldValue.serverTimestamp());
+                                        insertData("chargeYdPoint", hm);
+
+                                        Log.d(TAG, "포인트 충전 성공");
+                                        listener.onDataLoaded(true);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.d(TAG, "포인트 충전 실패", e);
+                                        listener.onDataLoadError("포인트 충전에 실패했습니다.");
+                                    });
+                        } else {
+                            Log.d(TAG, "ydPoint 값이 null입니다");
+                            listener.onDataLoadError("ydPoint 값이 null입니다.");
+                        }
+                    } else {
+                        Log.d(TAG, "해당 ID의 계정 없음");
+                        listener.onDataLoadError("해당 ID의 계정을 찾을 수 없습니다.");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void receiveYdPoint(String id, int price, String type, OnFirestoreDataLoadedListener listener) {
+        // type : "환불"
+        db.collection("account")
+                .whereEqualTo("id", id)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.size() > 0) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+                        Long ydPoint = document.getLong("ydPoint");
+
+                        if (ydPoint != null) {
+                            db.collection("account")
+                                    .document(document.getId())
+                                    .update("ydPoint", ydPoint + price)
+                                    .addOnSuccessListener(aVoid -> {
+                                        HashMap<String, Object> hm = new HashMap<>();
+                                        hm.put("id", id);
+                                        hm.put("type", type);
+                                        hm.put("receivedYdPoint", price);
+                                        hm.put("upTime", FieldValue.serverTimestamp());
+                                        insertData("receiveYdPoint", hm);
+
+                                        Log.d(TAG, "포인트 받기 성공");
+                                        listener.onDataLoaded(true);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.d(TAG, "포인트 받기 실패", e);
+                                        listener.onDataLoadError("포인트 받기에 실패했습니다.");
+                                    });
+                        } else {
+                            Log.d(TAG, "ydPoint 값이 null입니다");
+                            listener.onDataLoadError("ydPoint 값이 null입니다.");
+                        }
+                    } else {
+                        Log.d(TAG, "해당 ID의 계정 없음");
+                        listener.onDataLoadError("해당 ID의 계정을 찾을 수 없습니다.");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
                     listener.onDataLoadError(e.getMessage());
                 });
     }
@@ -266,8 +401,8 @@ public class FirestoreDatabase {
                                         listener.onDataLoadError("포인트 차감에 실패했습니다.");
                                     });
                         } else {
-                            Log.d(TAG, "포인트 부족");
-                            listener.onDataLoadError("포인트가 부족합니다.");
+                            Log.d(TAG, "포인트가 부족합니다");
+                            listener.onDataLoadError("포인트가 부족합니다");
                         }
                     } else {
                         Log.d(TAG, "해당 ID의 계정 없음");
@@ -280,6 +415,7 @@ public class FirestoreDatabase {
                 });
     }
 
+
     public void findSharePark(String id, double nowLat, double nowLon, double radiusKiloMeter, OnFirestoreDataLoadedListener listener) {
         List<ParkItem> resultList = new ArrayList<>();
 
@@ -289,15 +425,48 @@ public class FirestoreDatabase {
         }
 
         int[] i = {1};
-        Timestamp now = Timestamp.now();
 
         db.collection("sharePark")
                 .whereEqualTo("isApproval", true)
+                .whereEqualTo("isCancelled", false)
                 .whereNotEqualTo("ownerId", id)
-                .whereLessThan("upTime", now)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        Calendar ca = Calendar.getInstance();
+                        int year = ca.get(Calendar.YEAR);
+                        int month = ca.get(Calendar.MONTH) + 1;
+                        int day = ca.get(Calendar.DAY_OF_MONTH);
+                        int hour = ca.get(Calendar.HOUR_OF_DAY);
+                        int minute = ca.get(Calendar.MINUTE);
+                        String nowString = "";
+                        nowString += year;
+                        if (month < 10) {
+                            nowString += "0";
+                        }
+                        nowString += month;
+                        if (day < 10) {
+                            nowString += "0";
+                        }
+                        nowString += day;
+                        if (hour < 10) {
+                            nowString += "0";
+                        }
+                        nowString += hour;
+                        if (minute < 10) {
+                            nowString += "0";
+                        }
+                        nowString += minute;
+
+                        HashMap<String, ArrayList<String>> shareTime = (HashMap<String, ArrayList<String>>) document.get("time");
+                        List<String> sortedKeys = new ArrayList<>(shareTime.keySet());
+                        Collections.sort(sortedKeys);
+                        String endTime = sortedKeys.get(sortedKeys.size() - 1) + shareTime.get(sortedKeys.get(sortedKeys.size() - 1)).get(1);
+
+                        if (nowString.compareTo(endTime) > 0) {
+                            continue;
+                        }
+
                         Double resultLat = (Double) document.get("lat");
                         Double resultLon = (Double) document.get("lon");
 
@@ -354,6 +523,188 @@ public class FirestoreDatabase {
                     }
                 })
                 .addOnFailureListener(e -> {
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void cancelSharePark (String id, String firestoreDocumentId ,OnFirestoreDataLoadedListener listener) {
+        db.collection("sharePark")
+                .document(firestoreDocumentId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        if(documentSnapshot.get("ownerId").equals(id)) {
+                            Calendar ca = Calendar.getInstance();
+                            int year = ca.get(Calendar.YEAR);
+                            int month = ca.get(Calendar.MONTH) + 1;
+                            int day = ca.get(Calendar.DAY_OF_MONTH);
+                            int hour = ca.get(Calendar.HOUR_OF_DAY);
+                            int minute = ca.get(Calendar.MINUTE);
+                            String nowString = "";
+                            nowString += year;
+                            if (month < 10) {
+                                nowString += "0";
+                            }
+                            nowString += month;
+                            if (day < 10) {
+                                nowString += "0";
+                            }
+                            nowString += day;
+                            if (hour < 10) {
+                                nowString += "0";
+                            }
+                            nowString += hour;
+                            if (minute < 10) {
+                                nowString += "0";
+                            }
+                            nowString += minute;
+
+                            HashMap<String, ArrayList<String>> shareTime = (HashMap<String, ArrayList<String>>) documentSnapshot.get("time");
+                            List<String> sortedKeys = new ArrayList<>(shareTime.keySet());
+                            Collections.sort(sortedKeys);
+                            String endTime = sortedKeys.get(sortedKeys.size() - 1) + shareTime.get(sortedKeys.get(sortedKeys.size() - 1)).get(1);
+
+                            Log.d(TAG, "현재 시각 : " + nowString);
+                            Log.d(TAG, "공유 마지막 날의 끝 시각 : " + endTime);
+                            if (nowString.compareTo(endTime) > 0) {
+                                Log.d(TAG, "공유 시간이 지나서 취소 불가");
+                                listener.onDataLoadError("공유 시간이 지나서 취소 불가");
+                            }
+                            else {
+                                db.collection("reservation")
+                                        .whereNotEqualTo("isCancelled", false)
+                                        .get()
+                                        .addOnSuccessListener(documentSnapshots2 -> {
+                                            if (documentSnapshots2.size() > 0) {
+                                                listener.onDataLoadError("예약이 있어서 취소 불가");
+                                            }
+                                            else {
+                                                db.collection("sharePark")
+                                                        .document(firestoreDocumentId)
+                                                        .update("isCancelled", true)
+                                                        .addOnSuccessListener(aVoid -> {
+                                                            listener.onDataLoaded(true);
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            Log.d(TAG, "공유 취소 실패");
+                                                            listener.onDataLoadError(e.getMessage());
+                                                        });
+                                            }
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.d(TAG, "해당 공유주차장의 예약 찾기 실패");
+                                            listener.onDataLoadError(e.getMessage());
+                                        });
+                            }
+                        }
+                        else {
+                            listener.onDataLoadError("ID가 일치하지 않음");
+                        }
+                    }
+                    else {
+                        listener.onDataLoadError("문서가 존재하지 않음");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    void calculateShareParkPrice(String id, String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+        db.collection("sharePark")
+                .document(firestoreDocumentId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (id.equals((String) documentSnapshot.get("ownerId"))) {
+                        if (!(boolean) documentSnapshot.get("isCalculated")) {
+                            Calendar ca = Calendar.getInstance();
+                            int year = ca.get(Calendar.YEAR);
+                            int month = ca.get(Calendar.MONTH) + 1;
+                            int day = ca.get(Calendar.DAY_OF_MONTH);
+                            int hour = ca.get(Calendar.HOUR_OF_DAY);
+                            int minute = ca.get(Calendar.MINUTE);
+                            String nowString = "";
+                            nowString += year;
+                            if (month < 10) {
+                                nowString += "0";
+                            }
+                            nowString += month;
+                            if (day < 10) {
+                                nowString += "0";
+                            }
+                            nowString += day;
+                            if (hour < 10) {
+                                nowString += "0";
+                            }
+                            nowString += hour;
+                            if (minute < 10) {
+                                nowString += "0";
+                            }
+                            nowString += minute;
+
+                            HashMap<String, ArrayList<String>> shareTime = (HashMap<String, ArrayList<String>>) documentSnapshot.get("time");
+                            List<String> sortedKeys = new ArrayList<>(shareTime.keySet());
+                            Collections.sort(sortedKeys);
+                            String endTime = sortedKeys.get(sortedKeys.size() - 1) + shareTime.get(sortedKeys.get(sortedKeys.size() - 1)).get(1);
+
+                            Log.d(TAG, "현재 시각 : " + nowString);
+                            Log.d(TAG, "공유 마지막 날의 끝 시각 : " + endTime);
+                            if (nowString.compareTo(endTime) > 0) {
+                                db.collection("reservation")
+                                        .whereEqualTo("shareParkDocumentName", firestoreDocumentId)
+                                        .whereEqualTo("isCancelled", false)
+                                        .get()
+                                        .addOnSuccessListener(queryDocumentSnapshots -> {
+                                            long totalPrice = 0;
+                                            for (QueryDocumentSnapshot documentSnapshot2 : queryDocumentSnapshots) {
+                                                totalPrice += (long) documentSnapshot2.get("price");
+                                            }
+                                            if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() > 0) {
+                                                Log.d(TAG, "정산할 예약 수 : " + queryDocumentSnapshots.size() );
+                                            }
+                                            else {
+                                                Log.d(TAG, "정산할 예약이 없음");
+                                            }
+                                            receiveYdPoint(id, (int) totalPrice, "공유주차장 정산", new OnFirestoreDataLoadedListener() {
+                                                @Override
+                                                public void onDataLoaded(Object data) {
+                                                    db.collection("sharePark")
+                                                            .document(firestoreDocumentId)
+                                                            .update("isCalculated", true)
+                                                            .addOnSuccessListener(aVoid -> {
+                                                                listener.onDataLoaded(true);
+                                                            })
+                                                            .addOnFailureListener(e -> {
+                                                                Log.d(TAG, "isCalculated true로 변경 실패");
+                                                                listener.onDataLoadError(e.getMessage());
+                                                            });
+                                                }
+
+                                                @Override
+                                                public void onDataLoadError(String errorMessage) {
+
+                                                }
+                                            });
+                                        })
+                                        .addOnFailureListener(e -> {
+
+                                        });
+                            }
+                            else {
+                                listener.onDataLoadError("사용완료된 공유주차장이 아님");
+                            }
+                        }
+                        else {
+                            listener.onDataLoadError("이미 정산됨");
+                        }
+                    }
+                    else {
+                        listener.onDataLoadError("ID가 일치하지 않음");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, e.getMessage());
                     listener.onDataLoadError(e.getMessage());
                 });
     }
@@ -442,12 +793,63 @@ public class FirestoreDatabase {
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         if(documentSnapshot.get("id").equals(loginId)) {
+                            Calendar ca = Calendar.getInstance();
+                            int year = ca.get(Calendar.YEAR);
+                            int month = ca.get(Calendar.MONTH) + 1;
+                            int day = ca.get(Calendar.DAY_OF_MONTH);
+                            int hour = ca.get(Calendar.HOUR_OF_DAY);
+                            int minute = ca.get(Calendar.MINUTE);
+                            String nowString = "";
+                            nowString += year;
+                            if (month < 10) {
+                                nowString += "0";
+                            }
+                            nowString += month;
+                            if (day < 10) {
+                                nowString += "0";
+                            }
+                            nowString += day;
+                            if (hour < 10) {
+                                nowString += "0";
+                            }
+                            nowString += hour;
+                            if (minute < 10) {
+                                nowString += "0";
+                            }
+                            nowString += minute;
+
+                            HashMap<String, ArrayList<String>> reservationTime = (HashMap<String, ArrayList<String>>) documentSnapshot.get("time");
+                            List<String> sortedKeys = new ArrayList<>(reservationTime.keySet());
+                            Collections.sort(sortedKeys);
+                            String firstTime = sortedKeys.get(0) + reservationTime.get(sortedKeys.get(0)).get(0);
+
+                            Log.d(TAG, "현재 시각 : " + nowString);
+                            Log.d(TAG, "예약 첫 날의 시작 시각 : " + firstTime);
+                            if (nowString.compareTo(firstTime) > 0) {
+                                Log.d(TAG, "예약 시간이 지나서 취소 불가");
+                                listener.onDataLoadError("예약 시간이 지나서 취소 불가");
+                                return;
+                            }
+                            int price = (int)((long) documentSnapshot.get("price"));
+
                             db.collection("reservation")
                                     .document(firestoreDocumentId)
                                     .update("isCancelled", true)
                                     .addOnSuccessListener(aVoid -> {
-                                        Log.d(TAG, "예약 취소 성공");
-                                        listener.onDataLoaded(1);
+                                        receiveYdPoint(loginId, price, "환불", new OnFirestoreDataLoadedListener() {
+                                            @Override
+                                            public void onDataLoaded(Object data) {
+                                                Log.d(TAG, "예약 취소 성공");
+                                                listener.onDataLoaded(1);
+                                            }
+
+                                            @Override
+                                            public void onDataLoadError(String errorMessage) {
+
+                                            }
+                                        });
+
+
                                     })
                                     .addOnFailureListener(e -> {
                                         Log.d(TAG, "예약 취소 실패");
@@ -490,6 +892,26 @@ public class FirestoreDatabase {
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void loadOneReport (String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+        HashMap<String, Object> hm = new HashMap<>();
+
+        db.collection("reportDiscountPark")
+                .document(firestoreDocumentId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        hm.putAll(documentSnapshot.getData());
+                        listener.onDataLoaded(hm);
+                    }
+                    else {
+                        listener.onDataLoadError("해당 문서가 존재하지 않음");
+                    }
+                })
+                .addOnFailureListener(e -> {
                     listener.onDataLoadError(e.getMessage());
                 });
     }
@@ -615,7 +1037,7 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void loadRateCount (String loginId, String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+    public void loadRateCount (String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
         int[] perfectCount = {0};
         int[] mistakeCount = {0};
         int[] wrongCount = {0};
@@ -630,10 +1052,10 @@ public class FirestoreDatabase {
                             perfectCount[0]++;
                         }
                         else if (rate.equals("mistake")) {
-                            perfectCount[0]++;
+                            mistakeCount[0]++;
                         }
                         else if (rate.equals("wrong")) {
-                            perfectCount[0]++;
+                            wrongCount[0]++;
                         }
                     }
 
@@ -644,6 +1066,221 @@ public class FirestoreDatabase {
                     Log.d(TAG, "데이터 검색 오류", e);
                     listener.onDataLoadError(e.getMessage());
                 });
+    }
+
+    public void updateRate (int clickedBtn, String loginId, String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+        // clickedBtn은 0 : 완벽, 1 : 실수있음, 2 : 완전히 틀림
+
+        String[] rate = {""};
+        switch (clickedBtn) {
+            case 0:
+                rate[0] = "perfect";
+                break;
+            case 1:
+                rate[0] = "mistake";
+                break;
+            case 2:
+                rate[0] = "wrong";
+                break;
+        }
+
+        // 먼저 해당 조건에 맞는 문서가 있는지 확인
+        db.collection("rateReport")
+                .whereEqualTo("id", loginId)
+                .whereEqualTo("reportDocumentID", firestoreDocumentId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            // 문서 삭제
+                            if (documentSnapshot.get("rate").equals(rate[0])) {
+                                documentSnapshot.getReference().delete()
+                                        .addOnSuccessListener(aVoid -> {
+                                            listener.onDataLoaded("평가 삭제됨 : " + rate[0]);
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.d(TAG, "문서 삭제 오류", e);
+                                            listener.onDataLoadError(e.getMessage());
+                                        });
+                            }
+                            // 문서 rate 수정
+                            else {
+                                documentSnapshot.getReference().update("rate", rate[0])
+                                        .addOnSuccessListener(aVoid -> {
+                                            listener.onDataLoaded("평가 수정됨 : " + rate[0]);
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.d(TAG, "문서 업데이트 오류", e);
+                                            listener.onDataLoadError(e.getMessage());
+                                        });
+                            }
+                        }
+                    }
+                    else {
+                        // 문서가 존재하지 않으면 새로 추가
+                        HashMap<String, Object> data = new HashMap<>();
+                        data.put("id", loginId);
+                        data.put("reportDocumentID", firestoreDocumentId);
+                        data.put("rate", rate[0]);
+                        
+                        insertData("rateReport", data);
+                        listener.onDataLoaded("새로 평가함 : " + rate[0]);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void loadUnapprovedShareParks(OnFirestoreDataLoadedListener listener) {
+        db.collection("sharePark")
+                .whereEqualTo("isApproval", false)
+                .whereEqualTo("isCancelled", false)
+                .orderBy("upTime", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    ArrayList<HashMap<String, Object>> resultArrayList = new ArrayList<>();
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        Calendar ca = Calendar.getInstance();
+                        int year = ca.get(Calendar.YEAR);
+                        int month = ca.get(Calendar.MONTH) + 1;
+                        int day = ca.get(Calendar.DAY_OF_MONTH);
+                        int hour = ca.get(Calendar.HOUR_OF_DAY);
+                        int minute = ca.get(Calendar.MINUTE);
+                        String nowString = "";
+                        nowString += year;
+                        if (month < 10) {
+                            nowString += "0";
+                        }
+                        nowString += month;
+                        if (day < 10) {
+                            nowString += "0";
+                        }
+                        nowString += day;
+                        if (hour < 10) {
+                            nowString += "0";
+                        }
+                        nowString += hour;
+                        if (minute < 10) {
+                            nowString += "0";
+                        }
+                        nowString += minute;
+
+                        HashMap<String, ArrayList<String>> shareTime = (HashMap<String, ArrayList<String>>) documentSnapshot.get("time");
+                        List<String> sortedKeys = new ArrayList<>(shareTime.keySet());
+                        Collections.sort(sortedKeys);
+                        String firstTime = sortedKeys.get(0) + shareTime.get(sortedKeys.get(0)).get(0);
+
+                        Log.d(TAG, "현재 시각 : " + nowString);
+                        Log.d(TAG, "예약 첫 날의 시작 시각 : " + firstTime);
+                        if (nowString.compareTo(firstTime) > 0) {
+                            continue;
+                        }
+
+                        HashMap<String, Object> data = new HashMap<>(documentSnapshot.getData());
+                        data.put("documentId", documentSnapshot.getId());
+                        resultArrayList.add(data);
+                    }
+                    
+                    if (resultArrayList.size() > 0 && resultArrayList != null) {
+                        Log.d (TAG, "승인 안된 공유 주차장 찾기 성공 갯수 : " + resultArrayList.size());
+                    }
+                    else {
+                        Log.d(TAG, "승인 안된 공유 주차장이 없음");
+                    }
+                    listener.onDataLoaded(resultArrayList);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void loadMyShareParks(String id, OnFirestoreDataLoadedListener listener) {
+        db.collection("sharePark")
+                .whereEqualTo("ownerId", id)
+                .orderBy("upTime", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    ArrayList<HashMap<String, Object>> resultArrayList = new ArrayList<>();
+
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        HashMap<String, Object> data = new HashMap<>(documentSnapshot.getData());
+                        data.put("documentId", documentSnapshot.getId());
+                        resultArrayList.add(data);
+                    }
+
+                    if (resultArrayList.size() > 0 && resultArrayList != null) {
+                        Log.d (TAG, "내 공유 주차장 찾기 성공 갯수 : " + resultArrayList.size());
+                    }
+                    else {
+                        Log.d(TAG, "내 공유 주차장이 없음");
+                    }
+                    listener.onDataLoaded(resultArrayList);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void approveSharePark(String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+        db.runTransaction((Transaction.Function<Void>) transaction -> {
+            DocumentSnapshot documentSnapshot = transaction.get(db.collection("sharePark").document(firestoreDocumentId));
+
+            if (!(boolean) documentSnapshot.get("isApproval")) {
+                if (!(boolean) documentSnapshot.get("isCancelled")) {
+                    Calendar ca = Calendar.getInstance();
+                    int year = ca.get(Calendar.YEAR);
+                    int month = ca.get(Calendar.MONTH) + 1;
+                    int day = ca.get(Calendar.DAY_OF_MONTH);
+                    int hour = ca.get(Calendar.HOUR_OF_DAY);
+                    int minute = ca.get(Calendar.MINUTE);
+                    String nowString = "";
+                    nowString += year;
+                    if (month < 10) {
+                        nowString += "0";
+                    }
+                    nowString += month;
+                    if (day < 10) {
+                        nowString += "0";
+                    }
+                    nowString += day;
+                    if (hour < 10) {
+                        nowString += "0";
+                    }
+                    nowString += hour;
+                    if (minute < 10) {
+                        nowString += "0";
+                    }
+                    nowString += minute;
+
+                    HashMap<String, ArrayList<String>> reservationTime = (HashMap<String, ArrayList<String>>) documentSnapshot.get("time");
+                    List<String> sortedKeys = new ArrayList<>(reservationTime.keySet());
+                    Collections.sort(sortedKeys);
+                    String firstTime = sortedKeys.get(0) + reservationTime.get(sortedKeys.get(0)).get(0);
+
+                    Log.d(TAG, "현재 시각 : " + nowString);
+                    Log.d(TAG, "예약 첫 날의 시작 시각 : " + firstTime);
+                    if (nowString.compareTo(firstTime) < 0) {
+                        transaction.update(db.collection("sharePark").document(firestoreDocumentId), "isApproval", true);
+                    } else {
+                        throw new FirebaseFirestoreException("공유시간이 지남", FirebaseFirestoreException.Code.ABORTED);
+                    }
+                } else {
+                    throw new FirebaseFirestoreException("취소된 공유주차장임", FirebaseFirestoreException.Code.ABORTED);
+                }
+            } else {
+                throw new FirebaseFirestoreException("이미 승인된 공유주차장임", FirebaseFirestoreException.Code.ABORTED);
+            }
+
+            return null;
+        }).addOnSuccessListener(aVoid -> {
+            listener.onDataLoaded(true);
+        }).addOnFailureListener(e -> {
+            listener.onDataLoadError(e.getMessage());
+        });
     }
 
     public void my (OnFirestoreDataLoadedListener listener) {

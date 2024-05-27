@@ -147,7 +147,7 @@ public class TimeAdapter extends BaseAdapter {
 
             String itemStartTime = item.getStartTime();
             String itemEndTime = item.getEndTime();
-            if (itemEndTime == "0000") {
+            if (itemEndTime.equals("0000")) {
                 itemEndTime = "2400";
             }
 

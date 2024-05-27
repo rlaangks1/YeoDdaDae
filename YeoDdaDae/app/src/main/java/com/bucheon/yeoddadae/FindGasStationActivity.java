@@ -40,6 +40,7 @@ import com.skt.Tmap.TMapMarkerItem;
 import com.skt.Tmap.TMapMarkerItem2;
 import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapPolyLine;
+import com.skt.Tmap.TMapTapi;
 import com.skt.Tmap.TMapView;
 import com.skt.Tmap.poi_item.TMapPOIItem;
 import com.skt.tmap.engine.navigation.SDKManager;
@@ -49,13 +50,24 @@ import java.util.HashMap;
 
 public class FindGasStationActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback, TMapView.OnClickListenerCallback {
     private static final int PERMISSION_REQUEST_CODE = 1;
-
     boolean firstOnLocationChangeCalled = false; // onLocationChange가 처음 불림 여부
-
+    boolean isItemSelected;
+    boolean isLoadingFirstCalled = false;
     int recievedSort;
     int nowSort;
-
-    boolean isItemSelected;
+    AlertDialog loadingAlert;
+    // 경복궁
+    double lat = 37.578611; // 위도
+    double lon = 126.977222; // 경도
+    TMapPoint nowPoint = new TMapPoint(lat, lon);
+    TMapPoint naviEndPoint;
+    String naviEndPointName;
+    TMapGpsManager gpsManager;
+    TMapView tMapView;
+    TMapCircle tMapCircle;
+    TMapData tMapData;
+    TMapMarkerItem selectedMarker;
+    GasStationAdapter gasStationAdapter;
 
     ListView gasStationListView;
     ImageButton findGasStationBackBtn;
@@ -72,49 +84,15 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     Button cancelNaviBtn;
     Button toStartNaviBtn;
 
-    AlertDialog loadingAlert;
-
     Bitmap tmapMyLocationIcon;
     Bitmap tmapMarkerIcon;
     Bitmap tmapStartMarkerIcon;
     Bitmap tmapSelectedMarkerIcon;
 
-    // 경복궁
-    double lat = 37.578611; // 위도
-    double lon = 126.977222; // 경도
-
-    private static String CLIENT_ID = "";
-    private static String API_KEY = "iqTSQ2hMuj8E7t2sy3WYA5m73LuX4iUD5iHgwRGf";
-    private static String USER_KEY = ""; // USER KEY 입력 필수 아님 : Copy License 기준 서비스 운영시 필요
-    private static String DEVICE_KEY = "";
-
-    TMapPoint nowPoint = new TMapPoint(lat, lon);
-    TMapPoint naviEndPoint;
-    String naviEndPointName;
-    TMapGpsManager gpsManager;
-    TMapView tMapView;
-    TMapCircle tMapCircle;
-    TMapData tMapData;
-    TMapMarkerItem selectedMarker;
-    GasStationAdapter gasStationAdapter;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_gas_station);
-
-        // 로딩 AlertDialog 지정
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("로딩 중").setCancelable(false).setNegativeButton("액티비티 종료", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                finish();
-            }
-        });
-        loadingAlert = builder.create();
-
-        // 로딩 시작
-        loadingStart();
 
         // 메인액티비티에서 정렬기준 받기
         Intent inIntent = getIntent();
@@ -145,6 +123,8 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         tmapMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_marker);
         tmapStartMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_start_marker);
         tmapSelectedMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_selected_marker);
+
+        loadingStart(); // 로딩 시작
 
         // 로딩 완료까지 뷰 없애기
         runOnUiThread(new Runnable() {
@@ -205,7 +185,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         /* 가상머신 말고 실제 기기로 실내에서 사용 시 필요
         gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
         gpsManager.OpenGps();
-        */
+         */
 
         // TMapView 생성 및 보이기
         tMapView = new TMapView(this);
@@ -397,11 +377,14 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         toStartNaviBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent naviIntent = new Intent(getApplicationContext(), NavigationActivity.class);
-                naviIntent.putExtra("endPointLat", naviEndPoint.getLatitude());
-                naviIntent.putExtra("endPointLon", naviEndPoint.getLongitude());
-                naviIntent.putExtra("endPointName", naviEndPointName);
-                startActivity(naviIntent);
+                TMapTapi tt = new TMapTapi(FindGasStationActivity.this);
+                boolean isTmapApp = tt.isTmapApplicationInstalled();
+                if (isTmapApp) {
+                    tt.invokeRoute(naviEndPointName, (float) naviEndPoint.getLongitude(), (float) naviEndPoint.getLatitude());
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "TMAP이 설치되어 있지 않습니다", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -429,6 +412,95 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
 
                 for (int i = 0; i < arrayList.size(); i++) {
                     TMapPOIItem item = arrayList.get(i);
+
+                    Log.d(TAG,
+                            "=========="+ "\n"
+                                    +item.id+ "\n"
+                                    +item.name+ "\n"
+                                    +item.telNo+ "\n"
+                                    +item.frontLat+ "\n"
+                                    +item.frontLon+ "\n"
+                                    +item.noorLat+ "\n"
+                                    +item.noorLon+ "\n"
+                                    +item.upperAddrName+ "\n"
+                                    +item.middleAddrName+ "\n"
+                                    +item.lowerAddrName+ "\n"
+                                    +item.detailAddrName+ "\n"
+                                    +item.firstNo+ "\n"
+                                    +item.secondNo+ "\n"
+                                    +item.upperBizName+ "\n"
+                                    +item.middleBizName+ "\n"
+                                    +item.lowerBizName+ "\n"
+                                    +item.detailBizName+ "\n"
+                                    +item.rpFlag+ "\n"
+                                    +item.parkFlag+ "\n"
+                                    +item.detailInfoFlag+ "\n"
+                                    +item.desc+ "\n"
+                                    +item.distance+ "\n"
+                                    +item.roadName+ "\n"
+                                    +item.buildingNo1+ "\n"
+                                    +item.buildingNo2+ "\n"
+                                    +item.merchanFlag+ "\n"
+                                    +item.radius+ "\n"
+                                    +item.pkey+ "\n"
+                                    +item.navSeq+ "\n"
+                                    +item.collectionType+ "\n"
+                                    +item.firstBuildNo+ "\n"
+                                    +item.secondBuildNo+ "\n"
+                                    +item.bizName+ "\n"
+                                    +item.dataKind+ "\n"
+                                    +item.stId+ "\n"
+                                    +item.highHhSale+ "\n"
+                                    +item.minOilYn+ "\n"
+                                    +item.oilBaseSdt+ "\n"
+                                    +item.hhPrice+ "\n"
+                                    +item.ggPrice+ "\n"
+                                    +item.llPrice+ "\n"
+                                    +item.highHhPrice+ "\n"
+                                    +item.highGgPrice+ "\n"
+                                    +item.viewId+ "\n"
+                                    +item.dbKind+ "\n"
+                                    +item.lcdName+ "\n"
+                                    +item.mcdName+ "\n"
+                                    +item.scdName+ "\n"
+                                    +item.dcdName+ "\n"
+                                    +item.bldAddr+ "\n"
+                                    +item.roadScdName+ "\n"
+                                    +item.bldNo1+ "\n"
+                                    +item.bldNo2+ "\n"
+                                    +item.menu1+ "\n"
+                                    +item.menu2+ "\n"
+                                    +item.menu3+ "\n"
+                                    +item.menu4+ "\n"
+                                    +item.menu5+ "\n"
+                                    +item.twFlag+ "\n"
+                                    +item.yaFlag+ "\n"
+                                    +item.facility+ "\n"
+                                    +item.upperLegalCode+ "\n"
+                                    +item.middleLegalCode+ "\n"
+                                    +item.lowerLegalCode+ "\n"
+                                    +item.detailLegalCode+ "\n"
+                                    +item.upperAdminCode+ "\n"
+                                    +item.middleAdminCode+ "\n"
+                                    +item.lowerAdminCode+ "\n"
+                                    +item.upperCode+ "\n"
+                                    +item.middleCode+ "\n"
+                                    +item.lowerCode+ "\n"
+                                    +item.participant+ "\n"
+                                    +item.point+ "\n"
+                                    +item.merchantFlag+ "\n"
+                                    +item.merchantDispType+ "\n"
+                                    +item.mngName+ "\n"
+                                    +item.mngId+ "\n"
+                                    +item.freeYn+ "\n"
+                                    +item.reservYn+ "\n"
+                                    +item.useTime+ "\n"
+                                    +item.payYn+ "\n"
+                                    +item.fee+ "\n"
+                                    +item.updateDt+ "\n"
+                                    +item.totalCnt+ "\n"
+                                    + "==========");
+
 
                     gasStationAdapter.addItem(new GasStationItem(item.name, item.radius, item.hhPrice, item.ggPrice, item.highHhPrice, item.highGgPrice, item.telNo, item.stId, item.menu1, 0, item.frontLat, item.frontLon));
                     TMapPoint tpoint = new TMapPoint(Double.parseDouble(item.frontLat), Double.parseDouble(item.frontLon));
@@ -628,6 +700,17 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
 
     public void loadingStart() {
         Log.d(TAG, "로딩 시작");
+
+        if (!isLoadingFirstCalled) { // 로딩 AlertDialog 지정
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("로딩 중").setCancelable(false).setNegativeButton("액티비티 종료", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    finish();
+                }
+            });
+            loadingAlert = builder.create();
+            isLoadingFirstCalled = true;
+        }
 
         if (loadingAlert != null && loadingAlert.isShowing()) {
             return; // 이미 보여지고 있다면 함수 종료

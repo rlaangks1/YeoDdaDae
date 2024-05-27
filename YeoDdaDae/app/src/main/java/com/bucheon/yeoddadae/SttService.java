@@ -17,6 +17,8 @@ import java.util.List;
 
 public class SttService extends Service {
     int originalStreamVolume;
+    int originalStreamVolume2;
+    int originalStreamVolume3;
     AudioManager amanager;
 
     private final String TAG = "SttService";
@@ -39,8 +41,10 @@ public class SttService extends Service {
     public void onCreate() {
         super.onCreate();
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
-        amanager=(AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        amanager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         originalStreamVolume = amanager.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
+        originalStreamVolume2 = amanager.getStreamVolume(AudioManager.STREAM_SYSTEM);
+        originalStreamVolume3 = amanager.getStreamVolume(AudioManager.STREAM_MUSIC);
     }
 
     @Override
@@ -49,17 +53,22 @@ public class SttService extends Service {
         return START_STICKY;
     }
 
-    public void startListeningForMainCommand() {
-        if (isListeningForWakeUpWord) {
-            stopContinuousListening();
-            listenForMainCommand();
-        }
-    }
-
     public void stopContinuousListening() {
         if (speechRecognizer != null) {
             speechRecognizer.destroy();
         }
+    }
+
+    public void startListeningForWakeUpWord() {
+        stopContinuousListening();
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        listenForWakeUpWord();
+    }
+
+    public void startListeningForMainCommand() {
+        stopContinuousListening();
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        listenForMainCommand();
     }
 
     private void listenForWakeUpWord() {
@@ -71,6 +80,8 @@ public class SttService extends Service {
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR"); // 언어를 한국어로 설정
 
         amanager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 0, AudioManager.FLAG_PLAY_SOUND);
+        amanager.setStreamVolume(AudioManager.STREAM_SYSTEM, 0, AudioManager.FLAG_PLAY_SOUND);
+        amanager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, AudioManager.FLAG_PLAY_SOUND);
 
         // 듣기 시작
         speechRecognizer.startListening(intent);
@@ -101,6 +112,8 @@ public class SttService extends Service {
                     if (wakeUpWord.contains("음성 명령")) {
                         Log.d(TAG, "호출어듣기 : 호출어확인성공");
                         amanager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, originalStreamVolume, AudioManager.FLAG_PLAY_SOUND);
+                        amanager.setStreamVolume(AudioManager.STREAM_SYSTEM, originalStreamVolume2, AudioManager.FLAG_PLAY_SOUND);
+                        amanager.setStreamVolume(AudioManager.STREAM_MUSIC, originalStreamVolume3, AudioManager.FLAG_PLAY_SOUND);
                         startListeningForMainCommand();
                     }
                     else {
