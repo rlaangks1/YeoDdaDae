@@ -44,18 +44,14 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     boolean isAdmin = false;
     SttDialog sd;
 
-    TextView nowIdTxt;
-    TextView isAdminTxt;
-    TextView sttStatus;
     ImageButton toSttImgBtn;
     ImageButton toFindParkImgBtn;
     ImageButton toFindGasStationImgBtn;
     ImageButton toSharedParkImgBtn;
     ImageButton toMyReportDiscountParkImgBtn;
-    ImageButton toMyReservationImgBtn;
+    Button toMyReservationBtn;
     Button toYdPointChargeBtn;
     Button toYdPointHistoryBtn;
-    ImageButton logoutBtn;
 
     private Intent serviceIntent;
 
@@ -98,18 +94,14 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        nowIdTxt = findViewById(R.id.nowIdTxt);
-        isAdminTxt = findViewById(R.id.isAdminTxt);
-        sttStatus = findViewById(R.id.sttStatusTxt);
         toSttImgBtn = findViewById(R.id.toSttImgBtn);
         toFindParkImgBtn = findViewById(R.id.toFindParkImgBtn);
         toFindGasStationImgBtn = findViewById(R.id.toFindGasStationImgBtn);
         toSharedParkImgBtn = findViewById(R.id.toSharedParkImgBtn);
         toMyReportDiscountParkImgBtn = findViewById(R.id.toMyReportDiscountParkImgBtn);
-        toMyReservationImgBtn = findViewById(R.id.toMyReservationImgBtn);
+        toMyReservationBtn = findViewById(R.id.toMyReservationBtn);
         toYdPointChargeBtn = findViewById(R.id.toYdPointChargeBtn);
         toYdPointHistoryBtn = findViewById(R.id.toYdPointHistoryBtn);
-        logoutBtn = findViewById(R.id.logoutBtn);
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
@@ -129,15 +121,15 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.nav_logout) {
-                        Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
-                        loginId = null;
-                        startActivity(logoutIntent);
-                        finish();
+                    loginId = null;
+                    Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
+                    startActivity(logoutIntent);
+                    finish();
                 }
                 return false;
             }
         });
-        
+
         // 네비게이션뷰 아이디 표시
         View headerView = navigationView.getHeaderView(0);
         TextView navHeaderUsername = headerView.findViewById(R.id.nowIdTxt);
@@ -146,283 +138,279 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         }
 
         if (savedInstanceState == null) { // 최초 실행인지 확인
-        sd = new SttDialog(MainActivity.this, new SttDialogListener() {
-            @Override
-            public void onMessageSend(String message) {
-                if (message.equals("버튼클릭")) {
-                    sd.setSttStatusTxt("메인 명령어 듣는 중");
-                    sttService.startListeningForMainCommand();
-                }
-                else if (message.equals("닫기")) {
-                    sttService.stopContinuousListening();
-                    sttService.startListeningForWakeUpWord();
-                }
-            }
-        });
-
-        if (savedInstanceState == null) { // 액티비티 최초 실행인지 확인
-            // TMapAPI 인증 (앱 종료까지 유효)
-            TMapTapi tmaptapi = new TMapTapi(this);
-            tmaptapi.setOnAuthenticationListener(new TMapTapi.OnAuthenticationListenerCallback() {
+            sd = new SttDialog(MainActivity.this, new SttDialogListener() {
                 @Override
-                public void SKTMapApikeySucceed() {
-                    Log.d(TAG, "키 인증 성공");
-                    apiKeyCertified = true;
-                }
-
-                @Override
-                public void SKTMapApikeyFailed(String s) {
-                    Log.d(TAG, "키 인증 실패");
-                    finish();
-                    apiKeyCertified = false;
+                public void onMessageSend(String message) {
+                    if (message.equals("버튼클릭")) {
+                        sd.setSttStatusTxt("메인 명령어 듣는 중");
+                        sttService.startListeningForMainCommand();
+                    } else if (message.equals("닫기")) {
+                        sttService.stopContinuousListening();
+                        sttService.startListeningForWakeUpWord();
+                    }
                 }
             });
-            tmaptapi.setSKTMapAuthentication(API_KEY);
-        }
 
-        serviceIntent = new Intent(this, SttService.class);
-        checkPermission();
+            if (savedInstanceState == null) { // 액티비티 최초 실행인지 확인
+                // TMapAPI 인증 (앱 종료까지 유효)
+                TMapTapi tmaptapi = new TMapTapi(this);
+                tmaptapi.setOnAuthenticationListener(new TMapTapi.OnAuthenticationListenerCallback() {
+                    @Override
+                    public void SKTMapApikeySucceed() {
+                        Log.d(TAG, "키 인증 성공");
+                        apiKeyCertified = true;
+                    }
 
-        if (recordAudioPermissionGranted) {
-            startService(serviceIntent);
-            bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-        }
-
-        if (loginId != null) {
-            nowIdTxt.setText(loginId);
-            isAdminTxt.setText("관리자여부 : " + isAdmin);
-        }
-
-        toSttImgBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkPermission();
-                if (recordAudioPermissionGranted) {
-                    sttService.startListeningForMainCommand();
-                    sd.show();
-                    sd.setSttStatusTxt("메인 명령어 듣는 중");
-                } else {
-                    Toast.makeText(getApplicationContext(), "설정에서 마이크 권한을 부여하세요", Toast.LENGTH_SHORT).show();
-                }
+                    @Override
+                    public void SKTMapApikeyFailed(String s) {
+                        Log.d(TAG, "키 인증 실패");
+                        finish();
+                        apiKeyCertified = false;
+                    }
+                });
+                tmaptapi.setSKTMapAuthentication(API_KEY);
             }
-        });
 
-        toFindParkImgBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            serviceIntent = new Intent(this, SttService.class);
+            checkPermission();
+
+            if (recordAudioPermissionGranted) {
+                startService(serviceIntent);
+                bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+            }
+
+            toSttImgBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    checkPermission();
+                    if (recordAudioPermissionGranted) {
+                        sttService.startListeningForMainCommand();
+                        sd.show();
+                        sd.setSttStatusTxt("메인 명령어 듣는 중");
+                    } else {
+                        Toast.makeText(getApplicationContext(), "설정에서 마이크 권한을 부여하세요", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            toFindParkImgBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (apiKeyCertified) {
+                        Intent findParkIntent = new Intent(getApplicationContext(), FindParkActivity.class);
+                        findParkIntent.putExtra("loginId", loginId);
+                        findParkIntent.putExtra("SortBy", 1);
+                        startActivity(findParkIntent);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            toFindGasStationImgBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (apiKeyCertified) {
+                        Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                        findGasStationIntent.putExtra("SortBy", 1);
+                        startActivity(findGasStationIntent);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            toSharedParkImgBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (apiKeyCertified) {
+                        Intent myReservationIntent = new Intent(getApplicationContext(), ShareParkActivity.class);
+                        myReservationIntent.putExtra("loginId", loginId);
+                        startActivity(myReservationIntent);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            toSharedParkImgBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (apiKeyCertified) {
+                        Intent shareParkIntent = new Intent(getApplicationContext(), MyShareParkActivity.class);
+                        shareParkIntent.putExtra("loginId", loginId);
+                        startActivity(shareParkIntent);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            toMyReportDiscountParkImgBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (apiKeyCertified) {
+                        Intent AnotherReportDiscountParkIntent = new Intent(getApplicationContext(), AnotherReportDiscountParkActivity.class);
+                        AnotherReportDiscountParkIntent.putExtra("loginId", loginId);
+                        startActivity(AnotherReportDiscountParkIntent);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            toYdPointChargeBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent ydPointChargeIntent = new Intent(getApplicationContext(), YdPointChargeActivity.class);
+                    ydPointChargeIntent.putExtra("loginId", loginId);
+                    startActivity(ydPointChargeIntent);
+                }
+            });
+
+            toYdPointHistoryBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            toMyReservationBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (apiKeyCertified) {
+                        Intent myReservationIntent = new Intent(getApplicationContext(), MyReservationActivity.class);
+                        myReservationIntent.putExtra("loginId", loginId);
+                        startActivity(myReservationIntent);
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+    }
+
+        @Override
+        protected void onPause() {
+            super.onPause();
+            if (recordAudioPermissionGranted) {
+                sttService.stopContinuousListening();
+            }
+        }
+
+        @Override
+        protected void onResume() {
+            super.onResume();
+            if (recordAudioPermissionGranted) {
+                startService(serviceIntent);
+            }
+        }
+
+        @Override
+        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+
+            /*
+             * if (requestCode == loginIntentRequestCode) {
+             * if (resultCode == RESULT_OK) {
+             * loginId = data.getStringExtra("loginId");
+             * isAdmin = data.getBooleanExtra("isAdmin", false);
+             *
+             * if (loginId == null) {
+             * nowIdTxt.setText("미 로그인 상태");
+             * }
+             * else {
+             * nowIdTxt.setText(loginId);
+             * }
+             * isAdminTxt.setText("관리자여부 : " + isAdmin);
+             *
+             * toLoginBtn.setText("로그아웃");
+             * }
+             * }
+             */
+        }
+
+        @Override
+        public void onMainCommandReceived(String mainCommand) {
+            Log.d("TAG", "MainActivity에서 받은 명령: " + mainCommand);
+
+            if (mainCommand.contains("로그아웃")) { // 로그아웃
+                if (loginId != null) {
+                    Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
+                    startActivity(logoutIntent);
+                    finish();
+                }
+            } else if (mainCommand.contains("주유")) { // 주유소찾기 (사투리도 처리????)
                 if (apiKeyCertified) {
-                    Intent findParkIntent = new Intent(getApplicationContext(), FindParkActivity.class);
-                    findParkIntent.putExtra("loginId", loginId);
-                    findParkIntent.putExtra("SortBy", 1);
-                    startActivity(findParkIntent);
-                } else {
-                    Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
+                    if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
+                        Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                        findGasStationIntent.putExtra("SortBy", 2);
+                        startActivity(findGasStationIntent);
+                    } else if (mainCommand.contains("휘발") || mainCommand.contains("가솔린")) {
+                        Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                        findGasStationIntent.putExtra("SortBy", 3);
+                        startActivity(findGasStationIntent);
+                    } else if (mainCommand.contains("경유") || mainCommand.contains("디젤")) {
+                        Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                        findGasStationIntent.putExtra("SortBy", 4);
+                        startActivity(findGasStationIntent);
+                    } else {
+                        Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                        findGasStationIntent.putExtra("SortBy", 1);
+                        startActivity(findGasStationIntent);
+                    }
                 }
+            } else {
+                sd.setSttStatusTxt(mainCommand + "\n알 수 없는 명령어입니다\n'가까운 주유소 찾아줘'와 같이 말씀해보세요");
             }
-        });
-
-        toFindGasStationImgBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (apiKeyCertified) {
-                    Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                    findGasStationIntent.putExtra("SortBy", 1);
-                    startActivity(findGasStationIntent);
-                } else {
-                    Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        toSharedParkImgBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (apiKeyCertified) {
-                    Intent myReservationIntent = new Intent(getApplicationContext(), ShareParkActivity.class);
-                    myReservationIntent.putExtra("loginId", loginId);
-                    startActivity(myReservationIntent);
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        toShareParkBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (apiKeyCertified) {
-                    Intent shareParkIntent = new Intent(getApplicationContext(), MyShareParkActivity.class);
-                    shareParkIntent.putExtra("loginId", loginId);
-                    startActivity(shareParkIntent);
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        toMyReportDiscountParkImgBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (apiKeyCertified) {
-                    Intent AnotherReportDiscountParkIntent = new Intent(getApplicationContext(), AnotherReportDiscountParkActivity.class);
-                    AnotherReportDiscountParkIntent.putExtra("loginId", loginId);
-                    startActivity(AnotherReportDiscountParkIntent);
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        toYdPointChargeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent ydPointChargeIntent = new Intent(getApplicationContext(), YdPointChargeActivity.class);
-                ydPointChargeIntent.putExtra("loginId", loginId);
-                startActivity(ydPointChargeIntent);
-            }
-        });
-
-        toYdPointHistoryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
-                loginId = null;
-                startActivity(logoutIntent);
-                finish();
-            }
-        });
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (recordAudioPermissionGranted) {
-            sttService.stopContinuousListening();
         }
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (recordAudioPermissionGranted) {
-            startService(serviceIntent);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        /*
-         * if (requestCode == loginIntentRequestCode) {
-         * if (resultCode == RESULT_OK) {
-         * loginId = data.getStringExtra("loginId");
-         * isAdmin = data.getBooleanExtra("isAdmin", false);
-         *
-         * if (loginId == null) {
-         * nowIdTxt.setText("미 로그인 상태");
-         * }
-         * else {
-         * nowIdTxt.setText(loginId);
-         * }
-         * isAdminTxt.setText("관리자여부 : " + isAdmin);
-         *
-         * toLoginBtn.setText("로그아웃");
-         * }
-         * }
-         */
-    }
-
-    @Override
-    public void onMainCommandReceived(String mainCommand) {
-        Log.d("TAG", "MainActivity에서 받은 명령: " + mainCommand);
-
-        if (mainCommand.contains("로그아웃")) { // 로그아웃
-            if (loginId != null) {
-                Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
-                startActivity(logoutIntent);
-                finish();
-            }
-        } else if (mainCommand.contains("주유")) { // 주유소찾기 (사투리도 처리????)
-            if (apiKeyCertified) {
-                if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
-                    Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                    findGasStationIntent.putExtra("SortBy", 2);
-                    startActivity(findGasStationIntent);
-                } else if (mainCommand.contains("휘발") || mainCommand.contains("가솔린")) {
-                    Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                    findGasStationIntent.putExtra("SortBy", 3);
-                    startActivity(findGasStationIntent);
-                } else if (mainCommand.contains("경유") || mainCommand.contains("디젤")) {
-                    Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                    findGasStationIntent.putExtra("SortBy", 4);
-                    startActivity(findGasStationIntent);
-                } else {
-                    Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                    findGasStationIntent.putExtra("SortBy", 1);
-                    startActivity(findGasStationIntent);
+        @Override
+        public void onUpdateUI(String message) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (message.equals("메인명령어듣는중")) {
+                        sd.show();
+                        sd.setSttStatusTxt("메인 명령어 듣는 중");
+                    }
                 }
+            });
+        }
+
+        @Override
+        protected void onDestroy() {
+            super.onDestroy();
+            if (serviceConnected) { // 서비스에 연결되어 있다면
+                unbindService(serviceConnection); // 서비스 언바인딩
+                serviceConnected = false; // 플래그 재설정
             }
-        } else {
-            sd.setSttStatusTxt(mainCommand + "\n알 수 없는 명령어입니다\n'가까운 주유소 찾아줘'와 같이 말씀해보세요");
         }
-    }
 
-    @Override
-    public void onUpdateUI(String message) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                sttStatus.setText(message);
-                if (message.equals("메인명령어듣는중")) {
-                    sd.show();
-                    sd.setSttStatusTxt("메인 명령어 듣는 중");
-                }
+        private void checkPermission() {
+            if (checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "권한 있음");
+                recordAudioPermissionGranted = true;
+            } else {
+                Log.d(TAG, "권한 없음. 요청");
+                String[] permissionArr = { android.Manifest.permission.RECORD_AUDIO };
+                requestPermissions(permissionArr, PERMISSION_REQUEST_CODE);
             }
-        });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (serviceConnected) { // 서비스에 연결되어 있다면
-            unbindService(serviceConnection); // 서비스 언바인딩
-            serviceConnected = false; // 플래그 재설정
         }
-    }
 
-    private void checkPermission() {
-        if (checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "권한 있음");
-            recordAudioPermissionGranted = true;
-        } else {
-            Log.d(TAG, "권한 없음. 요청");
-            String[] permissionArr = { android.Manifest.permission.RECORD_AUDIO };
-            requestPermissions(permissionArr, PERMISSION_REQUEST_CODE);
+        @Override
+        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+        @NonNull int[] grantResults) {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+            if (requestCode == PERMISSION_REQUEST_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "권한요청에서 허가");
+                recordAudioPermissionGranted = true;
+            } else {
+                Toast.makeText(getApplicationContext(), "마이크 권한 거부되었습니다", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "권한요청에서 거부or문제");
+            }
         }
-    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == PERMISSION_REQUEST_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "권한요청에서 허가");
-            recordAudioPermissionGranted = true;
-        } else {
-            Toast.makeText(getApplicationContext(), "마이크 권한 거부되었습니다", Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "권한요청에서 거부or문제");
-        }
-    }
 }

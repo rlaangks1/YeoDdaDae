@@ -33,7 +33,7 @@
         <ImageButton
             android:id="@+id/toFindParkImgBtn"
             android:layout_width="380dp"
-            android:layout_height="120dp"
+            android:layout_height="100dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="70dp"
             android:layout_marginRight="15dp"
@@ -70,7 +70,7 @@
         <ImageButton
             android:id="@+id/toFindGasStationImgBtn"
             android:layout_width="380dp"
-            android:layout_height="120dp"
+            android:layout_height="100dp"
             android:layout_below="@+id/toFindParkImgBtn"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="12dp"
@@ -107,7 +107,7 @@
         <ImageButton
             android:id="@+id/toSharedParkImgBtn"
             android:layout_width="380dp"
-            android:layout_height="120dp"
+            android:layout_height="100dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="12dp"
             android:layout_marginRight="15dp"
@@ -142,7 +142,7 @@
         <ImageButton
             android:id="@+id/toMyReportDiscountParkImgBtn"
             android:layout_width="380dp"
-            android:layout_height="120dp"
+            android:layout_height="100dp"
             android:layout_marginTop="12dp"
             android:background="@color/main"
             app:layout_constraintEnd_toEndOf="parent"
@@ -207,57 +207,6 @@
             app:layout_constraintStart_toStartOf="@+id/toSttImgBtn"
             app:layout_constraintTop_toTopOf="@+id/toSttImgBtn" />
 
-        <Button
-            android:id="@+id/toYdPointChargeBtn"
-            android:text="여따대포인트 충전"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintRight_toLeftOf="@+id/toShareParkBtn"
-            app:layout_constraintTop_toTopOf="@+id/toShareParkBtn" />
-
-        <Button
-            android:id="@+id/toYdPointHistoryBtn"
-            android:text="여따대포인트 기록"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintRight_toLeftOf="@+id/toYdPointChargeBtn"
-            app:layout_constraintTop_toTopOf="@+id/toYdPointChargeBtn" />
-
-        <ImageButton
-            android:id="@+id/logoutBtn"
-            android:layout_width="130dp"
-            android:layout_height="40dp"
-            android:background="@drawable/round_button"
-            app:layout_constraintRight_toLeftOf="@+id/toMyReportDiscountParkBtn"
-            app:layout_constraintBottom_toBottomOf="@+id/toMyReportDiscountParkBtn" />
-
-        <TextView
-            android:id="@+id/nowIdTxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:text="로그인아이디"
-            app:layout_constraintEnd_toStartOf="@+id/menubarBtn"
-            app:layout_constraintTop_toBottomOf="@+id/sttStatusTxt" />
-
-        <TextView
-            android:id="@+id/isAdminTxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:text="관리자여부"
-            app:layout_constraintEnd_toStartOf="@+id/menubarBtn"
-            app:layout_constraintTop_toBottomOf="@+id/nowIdTxt" />
-
-        <TextView
-            android:id="@+id/sttStatusTxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:text="음성인식상태"
-            app:layout_constraintEnd_toStartOf="@+id/menubarBtn"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="240dp"
@@ -277,10 +226,32 @@
             android:textColor="@color/sub"
             android:textSize="15dp"
             android:textStyle="bold"
-
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toMyReportDiscountParkImgBtn" />
 
+        <Button
+            android:id="@+id/toYdPointChargeBtn"
+            android:text="여따대포인트 충전"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <Button
+            android:id="@+id/toYdPointHistoryBtn"
+            android:text="여따대포인트 기록"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@+id/toYdPointChargeBtn"
+            app:layout_constraintTop_toTopOf="@+id/toYdPointChargeBtn" />
+
+        <Button
+            android:id="@+id/toMyReservationBtn"
+            android:text="내 예약"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@+id/toYdPointHistoryBtn"
+            app:layout_constraintTop_toTopOf="@+id/toYdPointChargeBtn" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
