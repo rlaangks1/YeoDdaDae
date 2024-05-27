@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -69,10 +70,10 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     GasStationAdapter gasStationAdapter;
 
     ListView gasStationListView;
-    Button findGasStationBackBtn;
-    Button zoomOutBtn;
-    Button zoomInBtn;
-    Button gpsBtn;
+    ImageButton findGasStationBackBtn;
+    ImageButton zoomOutBtn;
+    ImageButton zoomInBtn;
+    ImageButton gpsBtn;
     HorizontalScrollView gasStationSortHorizontalScrollView;
     Button sortByDistanceBtn;
     Button sortByRateBtn;

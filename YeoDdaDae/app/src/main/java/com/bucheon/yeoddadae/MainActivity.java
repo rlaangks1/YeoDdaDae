@@ -13,6 +13,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -20,8 +21,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.material.navigation.NavigationView;
 import com.skt.Tmap.TMapTapi;
 import com.skt.Tmap.TMapView;
 
@@ -44,16 +50,18 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     ImageButton toSttImgBtn;
     ImageButton toFindParkImgBtn;
     ImageButton toFindGasStationImgBtn;
+    ImageButton toSharedParkImgBtn;
+    ImageButton toMyReportDiscountParkImgBtn;
     ImageButton toMyReservationImgBtn;
-    ImageButton toShareParkBtn;
     Button toYdPointChargeBtn;
     Button toYdPointHistoryBtn;
     ImageButton logoutBtn;
-    ImageButton toMyReportDiscountParkBtn;
 
     private Intent serviceIntent;
 
     private SttService sttService;
+
+    private DrawerLayout drawerLayout;
 
     private SttService.SttCallback sttCallback = new SttService.SttCallback() {
         @Override
@@ -96,9 +104,9 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         toSttImgBtn = findViewById(R.id.toSttImgBtn);
         toFindParkImgBtn = findViewById(R.id.toFindParkImgBtn);
         toFindGasStationImgBtn = findViewById(R.id.toFindGasStationImgBtn);
+        toSharedParkImgBtn = findViewById(R.id.toSharedParkImgBtn);
+        toMyReportDiscountParkImgBtn = findViewById(R.id.toMyReportDiscountParkImgBtn);
         toMyReservationImgBtn = findViewById(R.id.toMyReservationImgBtn);
-        toShareParkBtn = findViewById(R.id.toShareParkBtn);
-        toMyReportDiscountParkBtn = findViewById(R.id.toMyReportDiscountParkBtn);
         toYdPointChargeBtn = findViewById(R.id.toYdPointChargeBtn);
         toYdPointHistoryBtn = findViewById(R.id.toYdPointHistoryBtn);
         logoutBtn = findViewById(R.id.logoutBtn);
@@ -107,6 +115,37 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         loginId = inIntent.getStringExtra("loginId");
         isAdmin = inIntent.getBooleanExtra("isAdmin", false);
 
+        drawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+        findViewById(R.id.menubarBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawerLayout.openDrawer(GravityCompat.END);
+            }
+        });
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.nav_logout) {
+                        Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
+                        loginId = null;
+                        startActivity(logoutIntent);
+                        finish();
+                }
+                return false;
+            }
+        });
+        
+        // 네비게이션뷰 아이디 표시
+        View headerView = navigationView.getHeaderView(0);
+        TextView navHeaderUsername = headerView.findViewById(R.id.nowIdTxt);
+        if (loginId != null) {
+            navHeaderUsername.setText(loginId);
+        }
+
+        if (savedInstanceState == null) { // 최초 실행인지 확인
         sd = new SttDialog(MainActivity.this, new SttDialogListener() {
             @Override
             public void onMessageSend(String message) {
@@ -195,11 +234,11 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             }
         });
 
-        toMyReservationImgBtn.setOnClickListener(new View.OnClickListener() {
+        toSharedParkImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (apiKeyCertified) {
-                    Intent myReservationIntent = new Intent(getApplicationContext(), MyReservationActivity.class);
+                    Intent myReservationIntent = new Intent(getApplicationContext(), ShareParkActivity.class);
                     myReservationIntent.putExtra("loginId", loginId);
                     startActivity(myReservationIntent);
                 }
@@ -223,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             }
         });
 
-        toMyReportDiscountParkBtn.setOnClickListener(new View.OnClickListener() {
+        toMyReportDiscountParkImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (apiKeyCertified) {

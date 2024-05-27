@@ -80,6 +80,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:text="검색"
+                android:textSize="20dp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/searchStartBtn"
                 app:layout_constraintEnd_toEndOf="@+id/searchStartBtn"
                 app:layout_constraintStart_toStartOf="@+id/searchStartBtn"
@@ -118,12 +120,11 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="90dp"
             android:layout_gravity="bottom|left" >
 
             <ImageButton
                 android:id="@+id/zoomOutBtn"
-                android:text="-"
-                android:textSize="25dp"
                 android:layout_width="70dp"
                 android:layout_height="40dp"
                 android:background="@drawable/round_button"
@@ -135,8 +136,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-"
+                android:textSize="50dp"
                 android:textColor="@color/white"
-                android:textSize="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/zoomOutBtn"
                 app:layout_constraintStart_toStartOf="@+id/zoomOutBtn"
@@ -144,8 +145,6 @@
 
             <ImageButton
                 android:id="@+id/zoomInBtn"
-                android:text="+"
-                android:textSize="25dp"
                 android:layout_width="70dp"
                 android:layout_height="40dp"
                 android:layout_marginBottom="5dp"
@@ -158,7 +157,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="+"
-                android:textSize="20dp"
+                android:textSize="30dp"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toTopOf="@+id/zoomOutBtn"
                 app:layout_constraintEnd_toEndOf="@+id/zoomInBtn"
@@ -167,7 +166,6 @@
 
             <ImageButton
                 android:id="@+id/gpsBtn"
-                android:text="GPS"
                 android:layout_width="85dp"
                 android:layout_height="40dp"
                 android:background="@drawable/round_button"
@@ -181,6 +179,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:text="GPS"
+                android:textSize="20dp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/gpsBtn"
                 app:layout_constraintEnd_toEndOf="@+id/gpsBtn"
                 app:layout_constraintStart_toStartOf="@+id/gpsBtn"
@@ -190,31 +190,50 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="90dp"
             android:layout_gravity="bottom|right" >
 
             <ImageButton
                 android:id="@+id/findParkBackBtn"
-                android:text="←"
-                android:layout_width="85dp"
+                android:layout_width="50dp"
                 android:layout_height="40dp"
-                android:background="@drawable/round_button"
+                android:src="@drawable/backbtn"
+                android:background="@android:color/transparent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
 
-            <TextView
-                android:id="@+id/findParkBackTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="←"
-                android:textColor="@color/white"
-                android:textSize="20dp"
-                app:layout_constraintBottom_toBottomOf="@+id/findParkBackBtn"
-                app:layout_constraintEnd_toEndOf="@+id/findParkBackBtn"
-                app:layout_constraintStart_toStartOf="@+id/findParkBackBtn"
-                app:layout_constraintTop_toTopOf="@+id/findParkBackBtn" />
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".MainActivity">
+
+            <FrameLayout
+                android:id="@+id/main_frame"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottom_nav"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/main"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:menu="@menu/bottom_nav" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/searchConstraintLayout"

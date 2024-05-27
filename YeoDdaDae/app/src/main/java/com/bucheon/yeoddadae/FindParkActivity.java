@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -32,7 +33,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
 import com.skt.Tmap.TMapCircle;
 import com.skt.Tmap.TMapData;
@@ -97,12 +100,72 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     Bitmap tmapShareParkMarkerIcon;
     Bitmap tmapSelectedShareParkMarkerIcon;
     Bitmap tmapSearchPlaceMarker;
+    BottomNavigationView bottomNavigationView;
+
+    /*
+    FindParkFragment findParkFragment;
+    FindGasStationFragment findGasStationFragment;
+    SharedParkFragment sharedParkFragment;
+    DiscountParkReportFragment discountParkReportFragment;
+    InfoFragment infoFragment;
+    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_park);
 
+        /*
+        findParkFragment = new FindParkFragment();
+        findGasStationFragment = new FindGasStationFragment();
+        sharedParkFragment = new SharedParkFragment();
+        discountParkReportFragment = new DiscountParkReportFragment();
+        infoFragment = new InfoFragment();
+
+
+
+        // 작동 잘 안됌 (바텀네비게이션 화면이동)
+        bottomNavigationView = findViewById(R.id.bottom_nav);
+        bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                Fragment selectedFragment = null;
+                int itemId = menuItem.getItemId();
+                if (itemId == R.id.fragment_find_park) {
+                    if (findParkFragment == null) {
+                        findParkFragment = new FindParkFragment();
+                    }
+                    selectedFragment = findParkFragment;
+                } else if (itemId == R.id.fragment_find_gas_station) {
+                    if (findGasStationFragment == null) {
+                        findGasStationFragment = new FindGasStationFragment();
+                    }
+                    selectedFragment = findGasStationFragment;
+                } else if (itemId == R.id.fragment_shared_park) {
+                    if (sharedParkFragment == null) {
+                        sharedParkFragment = new SharedParkFragment();
+                    }
+                    selectedFragment = sharedParkFragment;
+                } else if (itemId == R.id.fragment_discount_park_report) {
+                    if (discountParkReportFragment == null) {
+                        discountParkReportFragment = new DiscountParkReportFragment();
+                    }
+                    selectedFragment = discountParkReportFragment;
+                } else if (itemId == R.id.fragment_info) {
+                    if (infoFragment == null) {
+                        infoFragment = new InfoFragment();
+                    }
+                    selectedFragment = infoFragment;
+                }
+                // 선택된 Fragment를 화면에 표시
+                if (selectedFragment != null) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, selectedFragment).commit();
+                }
+                return true;
+            }
+        });
+        */
+  
         // 뷰 정의
         parkListView = findViewById(R.id.parkListView);
         findParkBackBtn = findViewById(R.id.findParkBackBtn);

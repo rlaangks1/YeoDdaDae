@@ -88,4 +88,9 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.13.2")
     implementation("com.google.android.gms:play-services-location:17.0.0")
     implementation("com.airbnb.android:lottie:3.0.7")
+    
+    // 하단 네비게이션바 종속성
+    implementation ("com.google.android.material:material:1.4.0")
+    implementation ("androidx.navigation:navigation-fragment:2.3.5")
+    implementation ("androidx.navigation:navigation-ui:2.3.5")
 }

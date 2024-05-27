@@ -35,7 +35,7 @@ public class StartActivity extends AppCompatActivity {
     boolean isSkip;
 
     ImageButton toLoginBtn;
-    Button loginSkipBtn;
+    ImageButton loginSkipBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
