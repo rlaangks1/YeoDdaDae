@@ -25,7 +25,7 @@ public class StartActivity extends AppCompatActivity {
     String loginId;
     boolean isAdmin;
     ImageButton toLoginBtn;
-    Button loginSkipBtn;
+    ImageButton loginSkipBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
