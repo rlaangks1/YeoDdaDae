@@ -83,12 +83,16 @@
         <item name="android:textSize">30sp</item>
         <item name="android:textColor">#0000FF</item>
     </style>
-    <style name="car_booking">
+    <style name="shared_park">
         <item name="android:textSize">30sp</item>
         <item name="android:textColor">#0000FF</item>
     </style>
+    <style name="discount_park_report">
+        <item name="android:textSize">27sp</item>
+        <item name="android:textColor">#0000FF</item>
+    </style>
     <style name="microphone">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textColor">#FFFFFF</item>
     </style>
     <style name="mybooking">
