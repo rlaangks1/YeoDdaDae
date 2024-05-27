@@ -32,7 +32,8 @@ public class AdminMainActivity extends AppCompatActivity {
         toApproveShareParkBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent approveShareParIntent = new Intent(getApplicationContext(), ApproveShareParkActivity.class);
+                startActivity(approveShareParIntent);
             }
         });
 

@@ -1,6 +1,9 @@
 package com.bucheon.yeoddadae;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -80,8 +83,8 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                         @Override
                         public void onDataLoadError(String errorMessage) {
-                            // Handle login failure
-                            Toast.makeText(getApplicationContext(), "회원가입 실패", Toast.LENGTH_SHORT);
+                            Log.d(TAG, errorMessage);
+                            Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

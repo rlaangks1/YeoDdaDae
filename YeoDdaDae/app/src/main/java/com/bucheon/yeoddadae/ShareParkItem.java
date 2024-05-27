@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ShareParkItem {
+    private String ownerId;
     private double lat;
     private double lon;
     private String parkDetailAddress;
@@ -17,7 +18,8 @@ public class ShareParkItem {
     private Timestamp upTime;
     private String documentId;
 
-    public ShareParkItem(double lat, double lon, String parkDetailAddress, boolean isApproval, boolean isCancelled, boolean isCalculated, long price, HashMap<String, ArrayList<String>> time, Timestamp upTime, String documentId) {
+    public ShareParkItem(String ownerId, double lat, double lon, String parkDetailAddress, boolean isApproval, boolean isCancelled, boolean isCalculated, long price, HashMap<String, ArrayList<String>> time, Timestamp upTime, String documentId) {
+        this.ownerId = ownerId;
         this.lat = lat;
         this.lon = lon;
         this.parkDetailAddress = parkDetailAddress;
@@ -28,6 +30,10 @@ public class ShareParkItem {
         this.time = time;
         this.upTime = upTime;
         this.documentId = documentId;
+    }
+
+    public String getOwnerId() {
+        return ownerId;
     }
 
     public double getLat() {

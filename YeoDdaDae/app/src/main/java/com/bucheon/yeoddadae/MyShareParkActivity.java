@@ -2,6 +2,7 @@ package com.bucheon.yeoddadae;
 
 import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -37,13 +39,16 @@ public class MyShareParkActivity extends AppCompatActivity {
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
+
+        spa = new ShareParkAdapter(MyShareParkActivity.this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        spa = new ShareParkAdapter(MyShareParkActivity.this);
+        spa.clearItem();
+
         fd = new FirestoreDatabase();
 
         fd.loadMyShareParks(loginId, new OnFirestoreDataLoadedListener() {
@@ -63,7 +68,7 @@ public class MyShareParkActivity extends AppCompatActivity {
                     Timestamp upTime = (Timestamp) oneSharePark.get("upTime");
                     String documentId = (String) oneSharePark.get("documentId");
 
-                    spa.addItem(new ShareParkItem(lat, lon, parkDetailAddress, isApproval, isCancelled, isCalculated, price, time, upTime, documentId));
+                    spa.addItem(new ShareParkItem(null, lat, lon, parkDetailAddress, isApproval, isCancelled, isCalculated, price, time, upTime, documentId));
                 }
 
                 myShareParkListView.setAdapter(spa);
@@ -71,7 +76,9 @@ public class MyShareParkActivity extends AppCompatActivity {
 
             @Override
             public void onDataLoadError(String errorMessage) {
-
+                Log.d(TAG, errorMessage);
+                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
 

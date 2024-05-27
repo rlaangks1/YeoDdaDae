@@ -55,6 +55,8 @@ public class YdPointChargeActivity extends AppCompatActivity {
 
             @Override
             public void onDataLoadError(String errorMessage) {
+                Log.d(TAG, errorMessage);
+                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -86,7 +88,8 @@ public class YdPointChargeActivity extends AppCompatActivity {
 
                     @Override
                     public void onDataLoadError(String errorMessage) {
-
+                        Log.d(TAG, errorMessage);
+                        Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

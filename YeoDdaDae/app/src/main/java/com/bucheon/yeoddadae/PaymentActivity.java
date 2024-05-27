@@ -3,6 +3,7 @@ package com.bucheon.yeoddadae;
 import static android.content.ContentValues.TAG;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
 import com.google.firebase.firestore.FieldValue;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -91,6 +93,8 @@ public class PaymentActivity extends AppCompatActivity {
 
             @Override
             public void onDataLoadError(String errorMessage) {
+                Log.d(TAG, errorMessage);
+                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -143,14 +147,30 @@ public class PaymentActivity extends AppCompatActivity {
 
                             @Override
                             public void onDataLoadError(String errorMessage) {
-
+                                Log.d(TAG, errorMessage);
+                                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
 
                     @Override
                     public void onDataLoadError(String errorMessage) {
-                        Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                        if (errorMessage.equals("포인트가 부족합니다")) {
+                            new AlertDialog.Builder(PaymentActivity.this)
+                                    .setTitle("포인트가 부족합니다")
+                                    .setMessage("충전하시겠습니까?")
+                                    .setPositiveButton("예", (dialog, which) -> {
+                                        Intent ydPointChargeIntent = new Intent(getApplicationContext(), YdPointChargeActivity.class);
+                                        ydPointChargeIntent.putExtra("loginId", loginId);
+                                        startActivity(ydPointChargeIntent);
+                                    })
+                                    .setNegativeButton("아니오", (dialog, which) -> dialog.dismiss())
+                                    .show();
+                        }
+                        else {
+                            Log.d(TAG, errorMessage);
+                            Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             }

@@ -236,6 +236,7 @@ public class ReservationParkActivity extends AppCompatActivity {
             @Override
             public void onDataLoadError(String errorMessage) {
                 Log.d(TAG, errorMessage);
+                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -273,7 +274,7 @@ public class ReservationParkActivity extends AppCompatActivity {
                     tempString += s;
 
                 }
-                final String reservationsText = tempString;
+                final String reservationsText = tempString.substring(0, tempString.length() - 1);
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -290,7 +291,9 @@ public class ReservationParkActivity extends AppCompatActivity {
 
             @Override
             public void onDataLoadError(String errorMessage) {
-
+                Log.d(TAG, errorMessage);
+                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
 

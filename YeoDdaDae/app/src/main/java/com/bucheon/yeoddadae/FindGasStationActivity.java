@@ -39,6 +39,7 @@ import com.skt.Tmap.TMapMarkerItem;
 import com.skt.Tmap.TMapMarkerItem2;
 import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapPolyLine;
+import com.skt.Tmap.TMapTapi;
 import com.skt.Tmap.TMapView;
 import com.skt.Tmap.poi_item.TMapPOIItem;
 import com.skt.tmap.engine.navigation.SDKManager;
@@ -183,7 +184,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         /* 가상머신 말고 실제 기기로 실내에서 사용 시 필요
         gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
         gpsManager.OpenGps();
-        */
+         */
 
         // TMapView 생성 및 보이기
         tMapView = new TMapView(this);
@@ -375,11 +376,14 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         toStartNaviBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent naviIntent = new Intent(getApplicationContext(), NavigationActivity.class);
-                naviIntent.putExtra("endPointLat", naviEndPoint.getLatitude());
-                naviIntent.putExtra("endPointLon", naviEndPoint.getLongitude());
-                naviIntent.putExtra("endPointName", naviEndPointName);
-                startActivity(naviIntent);
+                TMapTapi tt = new TMapTapi(FindGasStationActivity.this);
+                boolean isTmapApp = tt.isTmapApplicationInstalled();
+                if (isTmapApp) {
+                    tt.invokeRoute(naviEndPointName, (float) naviEndPoint.getLongitude(), (float) naviEndPoint.getLatitude());
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "TMAP이 설치되어 있지 않습니다", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

@@ -33,12 +33,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
 import com.skt.Tmap.TMapCircle;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapGpsManager;
 import com.skt.Tmap.TMapMarkerItem;
 import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapPolyLine;
+import com.skt.Tmap.TMapTapi;
 import com.skt.Tmap.TMapView;
 import com.skt.Tmap.poi_item.TMapPOIItem;
 import com.skt.tmap.engine.navigation.SDKManager;
@@ -309,11 +311,14 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         toStartNaviBtn.setOnClickListener(new View.OnClickListener() { // 네비게이션 시작
             @Override
             public void onClick(View v) {
-                Intent naviIntent = new Intent(getApplicationContext(), NavigationActivity.class);
-                naviIntent.putExtra("endPointLat", naviEndPoint.getLatitude());
-                naviIntent.putExtra("endPointLon", naviEndPoint.getLongitude());
-                naviIntent.putExtra("endPointName", naviEndPointName);
-                startActivity(naviIntent);
+                TMapTapi tt = new TMapTapi(FindParkActivity.this);
+                boolean isTmapApp = tt.isTmapApplicationInstalled();
+                if (isTmapApp) {
+                    tt.invokeRoute(naviEndPointName, (float) naviEndPoint.getLongitude(), (float) naviEndPoint.getLatitude());
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "TMAP이 설치되어 있지 않습니다", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -726,8 +731,8 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
 
                     @Override
                     public void onDataLoadError(String errorMessage) {
-                        Log.e("FirestoreDataError", errorMessage);
-                        loadingStop();
+                        Log.d(TAG, errorMessage);
+                        Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
