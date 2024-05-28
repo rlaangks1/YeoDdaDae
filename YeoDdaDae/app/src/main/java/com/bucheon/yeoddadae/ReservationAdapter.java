@@ -157,7 +157,9 @@ public class ReservationAdapter extends BaseAdapter {
 
             reservationTimeString += year + "년 " + month + "월 " + day + "일 " + startTimeHour + ":" + startTimeMinute + "부터 " + endTimeHour + ":" + endTimeMinute + "까지\n";
         }
-        reservationTimeString = reservationTimeString.substring(0, reservationTimeString.length() - 1); // 마지막 줄바꿈 제거
+        if (!reservationTimeString.equals("")) {
+            reservationTimeString = reservationTimeString.substring(0, reservationTimeString.length() - 1); // 마지막 줄바꿈 제거
+        }
         reservationTimeTxt.setText(reservationTimeString);
 
         Timestamp timestamp = reservation.getUpTime();

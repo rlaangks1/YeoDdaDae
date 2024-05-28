@@ -274,7 +274,13 @@ public class ReservationParkActivity extends AppCompatActivity {
                     tempString += s;
 
                 }
-                final String reservationsText = tempString.substring(0, tempString.length() - 1);
+                final String reservationsText;
+                if (!tempString.equals("")) {
+                    reservationsText = tempString.substring(0, tempString.length() - 1);
+                }
+                else {
+                    reservationsText = tempString;
+                }
 
                 runOnUiThread(new Runnable() {
                     @Override

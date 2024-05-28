@@ -135,7 +135,9 @@ public class ShareParkAdapter extends BaseAdapter {
 
                 reservationTimeString += year + "년 " + month + "월 " + day + "일 " + startTimeHour + ":" + startTimeMinute + "부터 " + endTimeHour + ":" + endTimeMinute + "까지\n";
             }
-            reservationTimeString = reservationTimeString.substring(0, reservationTimeString.length() - 1); // 마지막 줄바꿈 제거
+            if (!reservationTimeString.equals("")) {
+                reservationTimeString = reservationTimeString.substring(0, reservationTimeString.length() - 1); // 마지막 줄바꿈 제거
+            }
             shareParkShareTimeTxt.setText(reservationTimeString);
 
             int statusColor = shareParkIsCancelledTxt.getCurrentTextColor();
@@ -303,7 +305,9 @@ public class ShareParkAdapter extends BaseAdapter {
 
                 reservationTimeString += year + "년 " + month + "월 " + day + "일 " + startTimeHour + ":" + startTimeMinute + "부터 " + endTimeHour + ":" + endTimeMinute + "까지\n";
             }
-            reservationTimeString = reservationTimeString.substring(0, reservationTimeString.length() - 1); // 마지막 줄바꿈 제거
+            if(!reservationTimeString.equals("")) {
+                reservationTimeString = reservationTimeString.substring(0, reservationTimeString.length() - 1); // 마지막 줄바꿈 제거
+            }
             approveShareParkShareTimeTxt.setText(reservationTimeString);
 
             approveShareParkOwnerIdTxt.setText(sharePark.getOwnerId());

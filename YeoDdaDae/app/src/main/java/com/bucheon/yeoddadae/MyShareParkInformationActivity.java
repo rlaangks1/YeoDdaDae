@@ -150,7 +150,11 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
 
                     textBuilder.append(year + "년 " + month + "월 " + day + "일 " + startTimeString + "부터 " + endTimeString + "까지\n");
                 }
-                String shareTimeString = textBuilder.toString().substring(0, textBuilder.length() - 1);
+                String shareTimeString = "";
+                if (!textBuilder.toString().equals("")) {
+                    shareTimeString = textBuilder.toString().substring(0, textBuilder.length() - 1);
+                }
+
                 myShareParkInfoShareTimeContentTxt.setText(shareTimeString);
 
                 FirestoreDatabase fd2 = new FirestoreDatabase();
@@ -187,7 +191,14 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                             tempString += s;
 
                         }
-                        final String reservationsText = tempString.substring(0, tempString.length() - 1);
+
+                        final String reservationsText;
+                        if (!tempString.equals("")) {
+                            reservationsText = tempString.substring(0, tempString.length() - 1);
+                        }
+                        else {
+                            reservationsText = tempString;
+                        }
 
                         boolean isApproval = (boolean) shareParkInfo.get("isApproval");
                         boolean isCancelled = (boolean) shareParkInfo.get("isCancelled");
