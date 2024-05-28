@@ -4,6 +4,7 @@
     tools:ignore="CoarseFineLocation">
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -46,11 +47,6 @@
         <activity android:name=".AdminMainActivity"/>
         <activity android:name=".ApproveShareParkActivity"/>
         <activity android:name=".ApproveShareParkInformationActivity"/>
-        <activity android:name=".FindParkFragment"/>
-        <activity android:name=".FindGasStationFragment"/>
-        <activity android:name=".SharedParkFragment"/>
-        <activity android:name=".DiscountParkReportFragment"/>
-        <activity android:name=".InfoFragment"/>
         <service
             android:name=".SttService"
             android:enabled="true"
