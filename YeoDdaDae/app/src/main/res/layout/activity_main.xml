@@ -227,7 +227,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_nav"
+            android:id="@+id/bottomNavView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/main"

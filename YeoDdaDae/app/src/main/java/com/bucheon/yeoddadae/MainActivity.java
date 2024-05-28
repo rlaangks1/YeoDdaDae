@@ -27,6 +27,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.skt.Tmap.TMapTapi;
 import com.skt.Tmap.TMapView;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ImageButton menubarBtn;
+    BottomNavigationView bottomNavView;
 
     private Intent serviceIntent;
     private SttService sttService;
@@ -99,10 +101,18 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
         menubarBtn = findViewById(R.id.menubarBtn);
+        bottomNavView = findViewById(R.id.bottomNavView);
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
         isAdmin = inIntent.getBooleanExtra("isAdmin", false);
+
+        // 네비게이션뷰 아이디 표시
+        View headerView = navigationView.getHeaderView(0);
+        TextView navHeaderUsername = headerView.findViewById(R.id.nowIdTxt);
+        if (loginId != null) {
+            navHeaderUsername.setText(loginId);
+        }
 
         if (savedInstanceState == null) { // 최초 실행인지 확인
             sd = new SttDialog(MainActivity.this, new SttDialogListener() {
@@ -167,12 +177,31 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 }
             });
 
-            // 네비게이션뷰 아이디 표시
-            View headerView = navigationView.getHeaderView(0);
-            TextView navHeaderUsername = headerView.findViewById(R.id.nowIdTxt);
-            if (loginId != null) {
-                navHeaderUsername.setText(loginId);
-            }
+            bottomNavView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    int itemId = item.getItemId();
+                    if (itemId == R.id.bt_main) {
+                        // 메인 화면 선택 시 처리
+                        return true;
+                    } else if (itemId == R.id.bt_mybook) {
+                        // 내 예약 선택 시 처리
+                        return true;
+                    } else if (itemId == R.id.bt_my_shared_park) {
+                        // 내 공유주차장 선택 시 처리
+                        return true;
+                    } else if (itemId == R.id.bt_my_discount_park_report) {
+                        // 내 제보 선택 시 처리
+                        return true;
+                    } else if (itemId == R.id.bt_point) {
+                        // 포인트기록 선택 시 처리
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
+
 
             toSttImgBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
