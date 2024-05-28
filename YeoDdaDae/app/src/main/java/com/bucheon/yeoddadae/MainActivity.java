@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     boolean recordAudioPermissionGranted = false;
     private int PERMISSION_REQUEST_CODE = 1;
 
-    boolean apiKeyCertified = true;
+    boolean apiKeyCertified = false;
     private String API_KEY = "iqTSQ2hMuj8E7t2sy3WYA5m73LuX4iUD5iHgwRGf";
 
     String loginId = null;
@@ -49,15 +49,12 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     ImageButton toFindGasStationImgBtn;
     ImageButton toSharedParkImgBtn;
     ImageButton toMyReportDiscountParkImgBtn;
-    Button toMyReservationBtn;
-    Button toYdPointChargeBtn;
-    Button toYdPointHistoryBtn;
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+    ImageButton menubarBtn;
 
     private Intent serviceIntent;
-
     private SttService sttService;
-
-    private DrawerLayout drawerLayout;
 
     private SttService.SttCallback sttCallback = new SttService.SttCallback() {
         @Override
@@ -99,43 +96,13 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         toFindGasStationImgBtn = findViewById(R.id.toFindGasStationImgBtn);
         toSharedParkImgBtn = findViewById(R.id.toSharedParkImgBtn);
         toMyReportDiscountParkImgBtn = findViewById(R.id.toMyReportDiscountParkImgBtn);
-        toMyReservationBtn = findViewById(R.id.toMyReservationBtn);
-        toYdPointChargeBtn = findViewById(R.id.toYdPointChargeBtn);
-        toYdPointHistoryBtn = findViewById(R.id.toYdPointHistoryBtn);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.navigation_view);
+        menubarBtn = findViewById(R.id.menubarBtn);
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
         isAdmin = inIntent.getBooleanExtra("isAdmin", false);
-
-        drawerLayout = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.navigation_view);
-        findViewById(R.id.menubarBtn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                drawerLayout.openDrawer(GravityCompat.END);
-            }
-        });
-
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-                if (id == R.id.nav_logout) {
-                    loginId = null;
-                    Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
-                    startActivity(logoutIntent);
-                    finish();
-                }
-                return false;
-            }
-        });
-
-        // 네비게이션뷰 아이디 표시
-        View headerView = navigationView.getHeaderView(0);
-        TextView navHeaderUsername = headerView.findViewById(R.id.nowIdTxt);
-        if (loginId != null) {
-            navHeaderUsername.setText(loginId);
-        }
 
         if (savedInstanceState == null) { // 최초 실행인지 확인
             sd = new SttDialog(MainActivity.this, new SttDialogListener() {
@@ -177,6 +144,34 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
             if (recordAudioPermissionGranted) {
                 startService(serviceIntent);
                 bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+            }
+
+            menubarBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    drawerLayout.openDrawer(GravityCompat.END);
+                }
+            });
+
+            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    int id = item.getItemId();
+                    if (id == R.id.nav_logout) {
+                        loginId = null;
+                        Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
+                        startActivity(logoutIntent);
+                        finish();
+                    }
+                    return false;
+                }
+            });
+
+            // 네비게이션뷰 아이디 표시
+            View headerView = navigationView.getHeaderView(0);
+            TextView navHeaderUsername = headerView.findViewById(R.id.nowIdTxt);
+            if (loginId != null) {
+                navHeaderUsername.setText(loginId);
             }
 
             toSttImgBtn.setOnClickListener(new View.OnClickListener() {
@@ -259,6 +254,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 }
             });
 
+            /*
             toYdPointChargeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -288,6 +284,7 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                     }
                 }
             });
+             */
         }
     }
 
