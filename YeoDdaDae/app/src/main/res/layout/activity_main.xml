@@ -177,12 +177,12 @@
             android:layout_width="170dp"
             android:layout_height="60dp"
             android:layout_below="@+id/toFindParkImgBtn"
-            android:layout_marginTop="150dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/round_button"
             android:text="음성을\n인식해주세요"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toSharedParkImgBtn" />
+            app:layout_constraintTop_toBottomOf="@+id/toMyReportDiscountParkImgBtn" />
 
         <ImageView
             android:id="@+id/toSttMicrophone"
@@ -207,53 +207,63 @@
             app:layout_constraintStart_toStartOf="@+id/toSttImgBtn"
             app:layout_constraintTop_toTopOf="@+id/toSttImgBtn" />
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="240dp"
-            android:layout_height="170dp"
-            android:layout_marginLeft="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toMyReportDiscountParkImgBtn"
-            app:srcCompat="@drawable/parking_image" />
-
         <TextView
             android:id="@+id/newparking"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:text="@string/new_start"
             android:textColor="@color/sub"
             android:textSize="15dp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toMyReportDiscountParkImgBtn" />
+            app:layout_constraintTop_toBottomOf="@+id/mainicon" />
 
         <Button
             android:id="@+id/toYdPointChargeBtn"
-            android:text="여따대포인트 충전"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="여따대포인트 충전"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toMyReportDiscountParkImgBtn" />
 
         <Button
             android:id="@+id/toYdPointHistoryBtn"
-            android:text="여따대포인트 기록"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toRightOf="@+id/toYdPointChargeBtn"
-            app:layout_constraintTop_toTopOf="@+id/toYdPointChargeBtn" />
+            android:layout_marginLeft="10dp"
+            android:text="여따대포인트 기록"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toYdPointChargeBtn" />
 
         <Button
             android:id="@+id/toMyReservationBtn"
-            android:text="내 예약"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toRightOf="@+id/toYdPointHistoryBtn"
-            app:layout_constraintTop_toTopOf="@+id/toYdPointChargeBtn" />
+            android:layout_marginRight="10dp"
+            android:text="내 예약"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toSttImgBtn" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <FrameLayout
+                android:id="@+id/main_frame"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottom_nav"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/main"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:menu="@menu/bottom_nav" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"
