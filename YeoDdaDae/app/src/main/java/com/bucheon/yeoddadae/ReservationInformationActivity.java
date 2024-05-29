@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.Timestamp;
 import com.skt.Tmap.TMapData;
+import com.skt.Tmap.TMapTapi;
 import com.skt.Tmap.address_info.TMapAddressInfo;
 
 import java.text.SimpleDateFormat;
@@ -36,6 +37,7 @@ public class ReservationInformationActivity extends AppCompatActivity {
     String documentId;
     HashMap<String, Object> reservationInfo;
     HashMap<String, Object> shareParkInfo;
+    String naviEndPointName;
 
     Button reservationInfoBackBtn;
     TextView reservationInfoIdContentTxt;
@@ -46,6 +48,7 @@ public class ReservationInformationActivity extends AppCompatActivity {
     TextView reservationInfoShareParkNewAddressContentTxt;
     TextView reservationInfoShareParkOldAddressContentTxt;
     TextView reservationInfoShareParkDetailaddressContentTxt;
+    Button reservationInfoNaviBtn;
     Button reservationInfoCancelBtn;
 
     @Override
@@ -62,6 +65,7 @@ public class ReservationInformationActivity extends AppCompatActivity {
         reservationInfoShareParkNewAddressContentTxt = findViewById(R.id.reservationInfoShareParkNewAddressContentTxt);
         reservationInfoShareParkOldAddressContentTxt = findViewById(R.id.reservationInfoShareParkOldAddressContentTxt);
         reservationInfoShareParkDetailaddressContentTxt = findViewById(R.id.reservationInfoShareParkDetailaddressContentTxt);
+        reservationInfoNaviBtn = findViewById(R.id.reservationInfoNaviBtn);
         reservationInfoCancelBtn = findViewById(R.id.reservationInfoCancelBtn);
 
         Intent inIntent = getIntent();
@@ -79,6 +83,18 @@ public class ReservationInformationActivity extends AppCompatActivity {
                     @Override
                     public void onDataLoaded(Object data) {
                         shareParkInfo = (HashMap<String, Object>) data;
+
+                        TMapData tMapdata = new TMapData();
+                        tMapdata.reverseGeocoding((double) shareParkInfo.get("lat"), (double) shareParkInfo.get("lon"), "A10", new TMapData.reverseGeocodingListenerCallback() {
+                            @Override
+                            public void onReverseGeocoding(TMapAddressInfo tMapAddressInfo) {
+                                if (tMapAddressInfo != null) {
+                                    String [] adrresses = tMapAddressInfo.strFullAddress.split(",");
+                                    naviEndPointName = adrresses[2] + " : " + shareParkInfo.get("parkDetailAddress");
+                                }
+                            }
+                        });
+
                         init();
                     }
 
@@ -103,6 +119,22 @@ public class ReservationInformationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        reservationInfoNaviBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TMapTapi tt = new TMapTapi(ReservationInformationActivity.this);
+                boolean isTmapApp = tt.isTmapApplicationInstalled();
+                if (isTmapApp) {
+                    if (naviEndPointName != null) {
+                        tt.invokeRoute(naviEndPointName, (float) ((double) shareParkInfo.get("lon")), (float) ((double) shareParkInfo.get("lat")));
+                    }
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "TMAP이 설치되어 있지 않습니다", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -207,10 +239,12 @@ public class ReservationInformationActivity extends AppCompatActivity {
                 }
 
                 Timestamp timestamp = (Timestamp) reservationInfo.get("upTime");
-                Date date = timestamp.toDate();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
-                String dateString = sdf.format(date);
-                reservationInfoUpTimeContentTxt.setText(dateString);
+                if (timestamp != null) {
+                    Date date = timestamp.toDate();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
+                    String dateString = sdf.format(date);
+                    reservationInfoUpTimeContentTxt.setText(dateString);
+                }
 
                 HashMap<String, ArrayList<String>> reservationTime = (HashMap<String, ArrayList<String>>) reservationInfo.get("time");
                 ArrayList<String> keys = new ArrayList<>(reservationTime.keySet());

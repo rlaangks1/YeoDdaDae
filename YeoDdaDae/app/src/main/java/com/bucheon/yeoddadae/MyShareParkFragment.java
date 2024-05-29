@@ -48,7 +48,7 @@ public class MyShareParkFragment extends Fragment {
         myShareParkAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent shareParkIntent = new Intent(getContext(), ShareParkActivity.class);
+                Intent shareParkIntent = new Intent(getActivity(), ShareParkActivity.class);
                 shareParkIntent.putExtra("loginId", loginId);
                 startActivity(shareParkIntent);
             }
@@ -57,7 +57,7 @@ public class MyShareParkFragment extends Fragment {
         myShareParkListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent toMyShareParkInformationIntent = new Intent(getContext(), MyShareParkInformationActivity.class);
+                Intent toMyShareParkInformationIntent = new Intent(getActivity(), MyShareParkInformationActivity.class);
                 toMyShareParkInformationIntent.putExtra("id", loginId);
                 toMyShareParkInformationIntent.putExtra("documentId", ((ShareParkItem) spa.getItem(position)).getDocumentId());
                 startActivity(toMyShareParkInformationIntent);
@@ -78,7 +78,6 @@ public class MyShareParkFragment extends Fragment {
         spa = new ShareParkAdapter(getActivity());
 
         FirestoreDatabase fd = new FirestoreDatabase();
-
         fd.loadMyShareParks(loginId, new OnFirestoreDataLoadedListener() {
             @Override
             public void onDataLoaded(Object data) {

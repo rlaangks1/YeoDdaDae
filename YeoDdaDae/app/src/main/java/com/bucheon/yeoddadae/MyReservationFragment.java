@@ -47,7 +47,7 @@ public class MyReservationFragment extends Fragment {
         myReservationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent toReservationInformationActivityIntent = new Intent(requireContext(), ReservationInformationActivity.class);
+                Intent toReservationInformationActivityIntent = new Intent(getActivity(), ReservationInformationActivity.class);
                 toReservationInformationActivityIntent.putExtra("id", loginId);
                 toReservationInformationActivityIntent.putExtra("documentId", ((ReservationItem) ra.getItem(position)).getDocumentId());
                 startActivity(toReservationInformationActivityIntent);

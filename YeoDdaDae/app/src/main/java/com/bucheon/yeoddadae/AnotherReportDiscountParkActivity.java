@@ -41,7 +41,6 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
     Spinner anotherReportDistanceSpinner;
     ListView anotherReportListView;
     ImageButton toAddReportBtn;
-    ImageButton toMyreportBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +51,6 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
         anotherReportDistanceSpinner = findViewById(R.id.anotherReportDistanceSpinner);
         anotherReportListView = findViewById(R.id.anotherReportListView);
         toAddReportBtn = findViewById(R.id.toAddReportBtn);
-        toMyreportBtn = findViewById(R.id.toMyreportBtn);
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
@@ -174,15 +172,6 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
                 Intent addReportIntent = new Intent(getApplicationContext(), AddReportDiscountParkActivity.class);
                 addReportIntent.putExtra("loginId", loginId);
                 startActivity(addReportIntent);
-            }
-        });
-
-        toMyreportBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent toMyReportsIntent = new Intent(getApplicationContext(), MyReportDiscountParkActivity.class);
-                toMyReportsIntent.putExtra("loginId", loginId);
-                startActivity(toMyReportsIntent);
             }
         });
 

@@ -189,10 +189,12 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
                 }
 
                 Timestamp timestamp = (Timestamp) reportInfo.get("upTime");
-                Date date = timestamp.toDate();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
-                String dateString = sdf.format(date);
-                rateReportUpTimeContentTxt.setText(dateString);
+                if (timestamp != null) {
+                    Date date = timestamp.toDate();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
+                    String dateString = sdf.format(date);
+                    rateReportUpTimeContentTxt.setText(dateString);
+                }
 
                 TMapData tMapdata = new TMapData();
                 tMapdata.reverseGeocoding((double) reportInfo.get("poiLat"), (double) reportInfo.get("poiLon"), "A10", new TMapData.reverseGeocodingListenerCallback() {

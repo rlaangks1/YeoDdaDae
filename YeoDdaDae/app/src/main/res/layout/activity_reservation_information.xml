@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/reservationInfoBackBtn"
-        app:layout_constraintBottom_toTopOf="@+id/reservationInfoCancelBtn" >
+        app:layout_constraintBottom_toTopOf="@+id/reservationInfoNaviBtn" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -164,6 +164,16 @@
     </ScrollView>
 
     <Button
+        android:id="@+id/reservationInfoNaviBtn"
+        android:text="길안내"
+        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/reservationInfoCancelBtn"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
+
+    <Button
         android:id="@+id/reservationInfoCancelBtn"
         android:text="예약취소"
         android:textSize="20sp"
@@ -172,4 +182,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

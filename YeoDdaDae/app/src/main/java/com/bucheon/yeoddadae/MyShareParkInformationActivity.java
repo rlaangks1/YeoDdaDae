@@ -101,10 +101,12 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                 myShareParkInfoIdContentTxt.setText(documentId);
 
                 Timestamp timestamp = (Timestamp) shareParkInfo.get("upTime");
-                Date date = timestamp.toDate();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
-                String dateString = sdf.format(date);
-                myShareParkInfoUpTimeContentTxt.setText(dateString);
+                if (timestamp != null) {
+                    Date date = timestamp.toDate();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
+                    String dateString = sdf.format(date);
+                    myShareParkInfoUpTimeContentTxt.setText(dateString);
+                }
 
                 if ((long) shareParkInfo.get("price") == 0) {
                     myShareParkInfoHourPerTxt.setVisibility(View.GONE);

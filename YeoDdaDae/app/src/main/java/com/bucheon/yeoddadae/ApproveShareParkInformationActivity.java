@@ -183,11 +183,12 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
                 approveShareParkInfoShareTimeContentTxt.setText(shareTimeString);
 
                 Timestamp timestamp = (Timestamp) shareParkInfo.get("upTime");
-                Date date = timestamp.toDate();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
-                String dateString = sdf.format(date);
-                approveShareParkInfoUpTimeContentTxt.setText(dateString);
-
+                if (timestamp != null) {
+                    Date date = timestamp.toDate();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
+                    String dateString = sdf.format(date);
+                    approveShareParkInfoUpTimeContentTxt.setText(dateString);
+                }
             }
         });
     }
