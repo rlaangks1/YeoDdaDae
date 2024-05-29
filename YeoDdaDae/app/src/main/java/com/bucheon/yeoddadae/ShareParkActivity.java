@@ -265,10 +265,19 @@ public class ShareParkActivity extends AppCompatActivity {
                 hm.put("isCalculated", false);
 
                 FirestoreDatabase fd = new FirestoreDatabase();
-                fd.insertData("sharePark", hm);
+                fd.insertData("sharePark", hm, new OnFirestoreDataLoadedListener() {
+                    @Override
+                    public void onDataLoaded(Object data) {
+                        Toast.makeText(getApplicationContext(), "공유주차장 등록 신청되었습니다", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
 
-                Toast.makeText(getApplicationContext(), "공유주차장 등록 신청되었습니다", Toast.LENGTH_SHORT).show();
-                finish();
+                    @Override
+                    public void onDataLoadError(String errorMessage) {
+                        Log.d(TAG, errorMessage);
+                        Toast.makeText(getApplicationContext(), "공유주차장 등록 신청 중 오류 발생", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }

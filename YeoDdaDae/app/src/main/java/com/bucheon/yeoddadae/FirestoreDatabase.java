@@ -46,20 +46,16 @@ public class FirestoreDatabase {
 
     // 데이터 추가
     // String collection : 콜렉션명, HashMap<String, Object> hm : 데이터의 속성과 값을 가진 HashMap
-    public void insertData (String collection, HashMap<String, Object> hm) {
+    public void insertData (String collection, HashMap<String, Object> hm, OnFirestoreDataLoadedListener listener) {
         db.collection(collection)
                 .add(hm)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "데이터 추가 성공 with ID: " + documentReference.getId());
-                    }
+                .addOnSuccessListener(queryDocumentSnapshot -> {
+                    Log.d(TAG, "데이터 추가 성공 with ID: " + queryDocumentSnapshot.getId());
+                    listener.onDataLoaded(queryDocumentSnapshot.getId());
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "데이터 추가 오류", e);
-                    }
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 추가 중 오류", e);
+                    listener.onDataLoadError(e.getMessage());
                 });
     }
 
@@ -311,10 +307,20 @@ public class FirestoreDatabase {
                                         hm.put("id", id);
                                         hm.put("chargedYdPoint", price);
                                         hm.put("upTime", FieldValue.serverTimestamp());
-                                        insertData("chargeYdPoint", hm);
+                                        insertData("chargeYdPoint", hm, new OnFirestoreDataLoadedListener() {
+                                            @Override
+                                            public void onDataLoaded(Object data) {
+                                                Log.d(TAG, "포인트 충전 성공");
+                                                listener.onDataLoaded(true);
+                                            }
 
-                                        Log.d(TAG, "포인트 충전 성공");
-                                        listener.onDataLoaded(true);
+                                            @Override
+                                            public void onDataLoadError(String errorMessage) {
+                                                Log.d(TAG, errorMessage);
+                                                listener.onDataLoadError("포인트 충전 문서 기록 중 오류 발생");
+                                            }
+                                        });
+
                                     })
                                     .addOnFailureListener(e -> {
                                         Log.d(TAG, "포인트 충전 실패", e);
@@ -355,10 +361,19 @@ public class FirestoreDatabase {
                                         hm.put("type", type);
                                         hm.put("receivedYdPoint", price);
                                         hm.put("upTime", FieldValue.serverTimestamp());
-                                        insertData("receiveYdPoint", hm);
+                                        insertData("receiveYdPoint", hm, new OnFirestoreDataLoadedListener() {
+                                            @Override
+                                            public void onDataLoaded(Object data) {
+                                                Log.d(TAG, "포인트 받기 성공");
+                                                listener.onDataLoaded(true);
+                                            }
 
-                                        Log.d(TAG, "포인트 받기 성공");
-                                        listener.onDataLoaded(true);
+                                            @Override
+                                            public void onDataLoadError(String errorMessage) {
+                                                Log.d(TAG, errorMessage);
+                                                listener.onDataLoadError("포인트 받기 문서 기록 중 오류 발생");
+                                            }
+                                        });
                                     })
                                     .addOnFailureListener(e -> {
                                         Log.d(TAG, "포인트 받기 실패", e);
@@ -1123,8 +1138,18 @@ public class FirestoreDatabase {
                         data.put("reportDocumentID", firestoreDocumentId);
                         data.put("rate", rate[0]);
                         
-                        insertData("rateReport", data);
-                        listener.onDataLoaded("새로 평가함 : " + rate[0]);
+                        insertData("rateReport", data, new OnFirestoreDataLoadedListener() {
+                            @Override
+                            public void onDataLoaded(Object data) {
+                                listener.onDataLoaded("새로 평가함 : " + rate[0]);
+                            }
+
+                            @Override
+                            public void onDataLoadError(String errorMessage) {
+                                Log.d(TAG, errorMessage);
+                                listener.onDataLoadError("주차장 제보 평가 중 오류 발생");
+                            }
+                        });
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -1283,6 +1308,7 @@ public class FirestoreDatabase {
         });
     }
 
+    /*
     public void my (OnFirestoreDataLoadedListener listener) {
         Log.d (TAG, "my 호출됨");
         new Thread(new Runnable() {
@@ -1290,11 +1316,11 @@ public class FirestoreDatabase {
             public void run() {
                 try {
                     Log.d (TAG, "my 호출됨2");
-                    StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B553881/Parking/PrkSttusInfo"); /*URL*/
-                    urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=SW%2Bzk19oOq3MYSQHFSd08425DV%2BqaKp%2F5%2B1ECPndYBDZeTwVuvDqm6iKLl5haFOJmpXQ3%2BhjVRHF3PL4eg7rug%3D%3D"); /*Service Key*/
-                    urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
-                    urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*한 페이지 결과 수*/
-                    urlBuilder.append("&" + URLEncoder.encode("format","UTF-8") + "=" + URLEncoder.encode("2", "UTF-8")); /*XML : 1, JSON : 2*/
+                    StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B553881/Parking/PrkSttusInfo");
+                    urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=SW%2Bzk19oOq3MYSQHFSd08425DV%2BqaKp%2F5%2B1ECPndYBDZeTwVuvDqm6iKLl5haFOJmpXQ3%2BhjVRHF3PL4eg7rug%3D%3D");
+                    urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8"));
+                    urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8"));
+                    urlBuilder.append("&" + URLEncoder.encode("format","UTF-8") + "=" + URLEncoder.encode("2", "UTF-8"));
                     URL url = new URL(urlBuilder.toString());
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
@@ -1328,10 +1354,10 @@ public class FirestoreDatabase {
                         
                         // 각 페이지에 대한 URL 생성
                         StringBuilder pageUrlBuilder = new StringBuilder("http://apis.data.go.kr/B553881/Parking/PrkSttusInfo");
-                        pageUrlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=SW%2Bzk19oOq3MYSQHFSd08425DV%2BqaKp%2F5%2B1ECPndYBDZeTwVuvDqm6iKLl5haFOJmpXQ3%2BhjVRHF3PL4eg7rug%3D%3D"); /*Service Key*/
-                        pageUrlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(page), "UTF-8")); /*페이지번호*/
-                        pageUrlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(numOfRows), "UTF-8")); /*한 페이지 결과 수*/
-                        pageUrlBuilder.append("&" + URLEncoder.encode("format", "UTF-8") + "=" + URLEncoder.encode("2", "UTF-8")); /*XML : 1, JSON : 2*/
+                        pageUrlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=SW%2Bzk19oOq3MYSQHFSd08425DV%2BqaKp%2F5%2B1ECPndYBDZeTwVuvDqm6iKLl5haFOJmpXQ3%2BhjVRHF3PL4eg7rug%3D%3D");
+                        pageUrlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(page), "UTF-8"));
+                        pageUrlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(numOfRows), "UTF-8"));
+                        pageUrlBuilder.append("&" + URLEncoder.encode("format", "UTF-8") + "=" + URLEncoder.encode("2", "UTF-8"));
 
                         URL pageUrl = new URL(pageUrlBuilder.toString());
                         HttpURLConnection pageConn = (HttpURLConnection) pageUrl.openConnection();
@@ -1382,7 +1408,17 @@ public class FirestoreDatabase {
                             hm.put("prk_plce_entrc_la", prkPlceEntrcLa);
 
                             // insertData 메서드를 호출하여 Firestore에 데이터 삽입
-                            insertData("parkApi", hm);
+                            insertData("parkApi", hm, new OnFirestoreDataLoadedListener() {
+                                @Override
+                                public void onDataLoaded(Object data) {
+
+                                }
+
+                                @Override
+                                public void onDataLoadError(String errorMessage) {
+
+                                }
+                            });
                         }
                     }
                 }
@@ -1392,4 +1428,6 @@ public class FirestoreDatabase {
             }
         }).start();
     }
+
+     */
 }

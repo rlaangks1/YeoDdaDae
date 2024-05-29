@@ -74,8 +74,20 @@ public class RegisterActivity extends AppCompatActivity {
                                 newAccount.put("ydPoint", 0);
                                 newAccount.put("registerTime", FieldValue.serverTimestamp()); // Use Firestore server timestamp
 
-                                fd.insertData("account", newAccount);
-                                finish();
+                                fd.insertData("account", newAccount, new OnFirestoreDataLoadedListener() {
+                                    @Override
+                                    public void onDataLoaded(Object data) {
+                                        Toast.makeText(getApplicationContext(), "회원가입 성공", Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onDataLoadError(String errorMessage) {
+                                        Log.d(TAG, errorMessage);
+                                        Toast.makeText(getApplicationContext(), "회원 문서 추가 중 오류 발생", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
                             }
                             else {
                                 Toast.makeText(getApplicationContext(), "중복된 ID가 있습니다", Toast.LENGTH_SHORT).show();
@@ -84,7 +96,7 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onDataLoadError(String errorMessage) {
                             Log.d(TAG, errorMessage);
-                            Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "아이디 중복 검사 중 오류 발생", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

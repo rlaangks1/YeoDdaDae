@@ -5,6 +5,7 @@ import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -211,10 +212,19 @@ public class AddReportDiscountParkActivity extends AppCompatActivity {
                 hm.put("upTime", FieldValue.serverTimestamp());
 
                 FirestoreDatabase fd = new FirestoreDatabase();
-                fd.insertData("reportDiscountPark", hm);
+                fd.insertData("reportDiscountPark", hm, new OnFirestoreDataLoadedListener() {
+                    @Override
+                    public void onDataLoaded(Object data) {
+                        Toast.makeText(getApplicationContext(), "무료/할인 주차장 제보 완료되었습니다", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
 
-                Toast.makeText(getApplicationContext(), "무료/할인 주차장 제보 완료되었습니다", Toast.LENGTH_SHORT).show();
-                finish();
+                    @Override
+                    public void onDataLoadError(String errorMessage) {
+                        Log.d(TAG, errorMessage);
+                        Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }
