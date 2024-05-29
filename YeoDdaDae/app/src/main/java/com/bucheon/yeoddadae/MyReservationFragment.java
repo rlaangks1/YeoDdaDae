@@ -1,5 +1,7 @@
 package com.bucheon.yeoddadae;
 
+import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,18 +27,32 @@ import java.util.HashMap;
 public class MyReservationFragment extends Fragment {
 
     String loginId;
+    ReservationAdapter ra;
 
-    Button myReservationBackBtn;
     ListView myReservationListView;
+    TextView myReservationNoTxt;
+
+    public MyReservationFragment (String id) {
+        this.loginId = id;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_reservation, container, false);
 
-        // UI 컴포넌트 초기화
-        myReservationBackBtn = view.findViewById(R.id.myReservationBackBtn);
         myReservationListView = view.findViewById(R.id.myReservationListView);
+        myReservationNoTxt = view.findViewById(R.id.myReservationNoTxt);
+
+        myReservationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent toReservationInformationActivityIntent = new Intent(requireContext(), ReservationInformationActivity.class);
+                toReservationInformationActivityIntent.putExtra("id", loginId);
+                toReservationInformationActivityIntent.putExtra("documentId", ((ReservationItem) ra.getItem(position)).getDocumentId());
+                startActivity(toReservationInformationActivityIntent);
+            }
+        });
 
         return view;
     }
@@ -44,15 +61,12 @@ public class MyReservationFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        // 액티비티에서 인텐트로 전달받은 로그인 아이디 가져오기
-        Intent inIntent = requireActivity().getIntent();
-        loginId = inIntent.getStringExtra("loginId");
+        if (ra != null) {
+            ra.clearItem();
+        }
+        ra = new ReservationAdapter(getActivity());
 
-        // 예약 목록 불러오기
         FirestoreDatabase fd = new FirestoreDatabase();
-        ReservationAdapter ra = new ReservationAdapter(requireActivity());
-        myReservationListView.setAdapter(ra);
-
         fd.loadMyReservations(loginId, new OnFirestoreDataLoadedListener() {
             @Override
             public void onDataLoaded(Object data) {
@@ -68,32 +82,22 @@ public class MyReservationFragment extends Fragment {
 
                     ra.addItem(new ReservationItem(id, isCancelled, shareParkDocumentName, reservationTime, upTime, documentId));
                 }
+
+                if (myReservations.size() == 0) {
+                    myReservationListView.setVisibility(View.GONE);
+                    myReservationNoTxt.setVisibility(View.VISIBLE);
+                }
+                else {
+                    myReservationListView.setVisibility(View.VISIBLE);
+                    myReservationNoTxt.setVisibility(View.GONE);
+                    myReservationListView.setAdapter(ra);
+                }
             }
 
             @Override
             public void onDataLoadError(String errorMessage) {
-                Log.d(ExoPlayerLibraryInfo.TAG, errorMessage);
+                Log.d(TAG, errorMessage);
                 Toast.makeText(requireContext(), "오류 발생", Toast.LENGTH_SHORT).show();
-                requireActivity().finish();
-            }
-        });
-
-        // 리스트뷰 아이템 클릭 이벤트 처리
-        myReservationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent toReservationInformationActivityIntent = new Intent(requireContext(), ReservationInformationActivity.class);
-                toReservationInformationActivityIntent.putExtra("id", loginId);
-                toReservationInformationActivityIntent.putExtra("documentId", ((ReservationItem) ra.getItem(position)).getDocumentId());
-                startActivity(toReservationInformationActivityIntent);
-            }
-        });
-
-        // 뒤로 가기 버튼 클릭 이벤트 처리
-        myReservationBackBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requireActivity().finish();
             }
         });
     }

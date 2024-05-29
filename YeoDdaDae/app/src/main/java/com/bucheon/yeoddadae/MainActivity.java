@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,8 +39,9 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements FragmentToActivityListener {
     boolean apiKeyCertified = false;
-    String loginId = null;
+    String loginId;
 
+    int containerViewId;
     BottomNavigationView bottomNavView;
 
     @Override
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        containerViewId = R.id.fragmentContainer;
         bottomNavView = findViewById(R.id.bottomNavView);
 
         Intent inIntent = getIntent();
@@ -54,10 +57,9 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
 
         App app = (App) getApplication();
         apiKeyCertified = app.isApiKeyCertified();
-        Log.d(TAG, Boolean.toString(apiKeyCertified));
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new MainFragment(apiKeyCertified, loginId))
+                .replace(containerViewId, new MainFragment(apiKeyCertified, loginId))
                 .commit();
 
         bottomNavView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -69,13 +71,13 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
                     selectedFragment = new MainFragment(apiKeyCertified, loginId);
                 }
                 else if (itemId == R.id.bt_mybook) {
-                    selectedFragment = new MyReservationFragment();
+                    selectedFragment = new MyReservationFragment(loginId);
                 }
                 else if (itemId == R.id.bt_my_shared_park) {
-
+                    selectedFragment = new MyShareParkFragment(loginId);
                 }
                 else if (itemId == R.id.bt_my_discount_park_report) {
-                    // 내 제보 선택 시 처리
+                    selectedFragment = new MyReportDiscountParkFragment(loginId);
                 }
                 else if (itemId == R.id.bt_point) {
                     // 포인트기록 선택 시 처리
@@ -83,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
 
                 if (selectedFragment != null) {
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, selectedFragment)
+                            .replace(containerViewId, selectedFragment)
                             .commit();
                     return true;
                 }

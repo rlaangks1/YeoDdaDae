@@ -201,6 +201,7 @@ public class MainFragment extends Fragment implements SttService.SttCallback {
         toSharedParkImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
                 if (apiKeyCertified) {
                     Intent shareParkIntent = new Intent(getActivity().getApplicationContext(), MyShareParkActivity.class);
                     shareParkIntent.putExtra("loginId", loginId);
@@ -208,6 +209,8 @@ public class MainFragment extends Fragment implements SttService.SttCallback {
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
                 }
+
+                 */
             }
         });
 

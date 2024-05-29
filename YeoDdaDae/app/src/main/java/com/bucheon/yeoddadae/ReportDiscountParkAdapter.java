@@ -71,7 +71,7 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
         Context context = parent.getContext();
         ReportDiscountParkItem report = items.get(position);
 
-        if (activity instanceof MyReportDiscountParkActivity) {
+        if (activity instanceof MainActivity) {
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.my_report_discount_park_item, parent, false);

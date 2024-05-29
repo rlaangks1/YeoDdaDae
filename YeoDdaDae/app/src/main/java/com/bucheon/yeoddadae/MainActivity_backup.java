@@ -260,6 +260,7 @@ public class MainActivity_backup extends AppCompatActivity implements SttService
             toSharedParkImgBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    /*
                     if (apiKeyCertified) {
                         Intent shareParkIntent = new Intent(getApplicationContext(), MyShareParkActivity.class);
                         shareParkIntent.putExtra("loginId", loginId);
@@ -267,6 +268,8 @@ public class MainActivity_backup extends AppCompatActivity implements SttService
                     } else {
                         Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
                     }
+                    
+                     */
                 }
             });
 

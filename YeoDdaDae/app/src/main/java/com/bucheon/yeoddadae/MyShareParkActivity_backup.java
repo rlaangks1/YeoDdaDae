@@ -2,7 +2,6 @@ package com.bucheon.yeoddadae;
 
 import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,7 +18,7 @@ import com.google.firebase.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MyShareParkActivity extends AppCompatActivity {
+public class MyShareParkActivity_backup extends AppCompatActivity {
     String loginId;
     ShareParkAdapter spa;
     FirestoreDatabase fd;
@@ -40,7 +39,7 @@ public class MyShareParkActivity extends AppCompatActivity {
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
 
-        spa = new ShareParkAdapter(MyShareParkActivity.this);
+        spa = new ShareParkAdapter(MyShareParkActivity_backup.this);
     }
 
     @Override
