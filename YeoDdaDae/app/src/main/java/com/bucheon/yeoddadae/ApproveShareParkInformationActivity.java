@@ -52,9 +52,6 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_approve_share_park_information);
 
-        Intent inIntent = getIntent();
-        documentId = inIntent.getStringExtra("documentId");
-
         approveShareParkInfoBackBtn = findViewById(R.id.approveShareParkInfoBackBtn);
         approveShareParkInfoIdContentTxt = findViewById(R.id.approveShareParkInfoIdContentTxt);
         approveShareParkInfoShareParkNewAddressContentTxt = findViewById(R.id.approveShareParkInfoShareParkNewAddressContentTxt);
@@ -71,6 +68,9 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
         approveShareParkInfoShareTimeContentTxt = findViewById(R.id.approveShareParkInfoShareTimeContentTxt);
         approveShareParkInfoUpTimeContentTxt = findViewById(R.id.approveShareParkInfoUpTimeContentTxt);
         approveBtn = findViewById(R.id.approveBtn);
+
+        Intent inIntent = getIntent();
+        documentId = inIntent.getStringExtra("documentId");
 
         FirestoreDatabase fd = new FirestoreDatabase();
         fd.loadShareParkInfo(documentId, new OnFirestoreDataLoadedListener() {

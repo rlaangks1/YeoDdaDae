@@ -24,12 +24,10 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        FirestoreDatabase fd = new FirestoreDatabase();
-
-        ImageButton backBtn = (ImageButton) findViewById(R.id.registerBackBtn);
-        EditText idTxt = (EditText) findViewById(R.id.registerIdTxt);
-        EditText pwTxt = (EditText) findViewById(R.id.registerPwTxt);
-        ImageButton registerBtn = (ImageButton) findViewById(R.id.registerBtn);
+        ImageButton backBtn = findViewById(R.id.registerBackBtn);
+        EditText idTxt = findViewById(R.id.registerIdTxt);
+        EditText pwTxt = findViewById(R.id.registerPwTxt);
+        ImageButton registerBtn = findViewById(R.id.registerBtn);
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
                 else {
+                    FirestoreDatabase fd = new FirestoreDatabase();
                     fd.duplicationCheck("account", "id", id,  new OnFirestoreDataLoadedListener() {
                         @Override
                         public void onDataLoaded(Object isNotDuplication) {

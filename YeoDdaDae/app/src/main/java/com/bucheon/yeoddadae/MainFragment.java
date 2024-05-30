@@ -37,18 +37,9 @@ public class MainFragment extends Fragment implements SttService.SttCallback {
     String loginId;
     SttDialog sd;
     FragmentToActivityListener dataPasser;
-
-    ImageButton toSttImgBtn;
-    ImageButton toFindParkImgBtn;
-    ImageButton toFindGasStationImgBtn;
-    ImageButton toSharedParkImgBtn;
-    ImageButton toMyReportDiscountParkImgBtn;
-    DrawerLayout drawerLayout;
-    NavigationView navigationView;
-    ImageButton menubarBtn;
-
     private Intent serviceIntent;
     private SttService sttService;
+    private boolean serviceConnected = false;
 
     private SttService.SttCallback sttCallback = new SttService.SttCallback() {
         @Override
@@ -61,8 +52,6 @@ public class MainFragment extends Fragment implements SttService.SttCallback {
             MainFragment.this.onUpdateUI(message);
         }
     };
-
-    private boolean serviceConnected = false;
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -79,6 +68,15 @@ public class MainFragment extends Fragment implements SttService.SttCallback {
             // 필요한 경우 연결이 끊겼을 때 처리
         }
     };
+
+    ImageButton toSttImgBtn;
+    ImageButton toFindParkImgBtn;
+    ImageButton toFindGasStationImgBtn;
+    ImageButton toSharedParkImgBtn;
+    ImageButton toMyReportDiscountParkImgBtn;
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+    ImageButton menubarBtn;
 
     public MainFragment(boolean apiKeyCertified, String loginId) {
         this.apiKeyCertified = apiKeyCertified;
@@ -136,8 +134,7 @@ public class MainFragment extends Fragment implements SttService.SttCallback {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-                if (id == R.id.nav_logout) {
+                if (item.getItemId() == R.id.nav_logout) {
                     dataPasser.onDataPassed("로그아웃");
                 }
                 return false;
@@ -188,6 +185,7 @@ public class MainFragment extends Fragment implements SttService.SttCallback {
         toSharedParkImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "1");
                 if (apiKeyCertified) {
                     Intent myReservationIntent = new Intent(getActivity().getApplicationContext(), ShareParkActivity.class);
                     myReservationIntent.putExtra("loginId", loginId);
@@ -195,22 +193,6 @@ public class MainFragment extends Fragment implements SttService.SttCallback {
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-
-        toSharedParkImgBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /*
-                if (apiKeyCertified) {
-                    Intent shareParkIntent = new Intent(getActivity().getApplicationContext(), MyShareParkActivity.class);
-                    shareParkIntent.putExtra("loginId", loginId);
-                    startActivity(shareParkIntent);
-                } else {
-                    Toast.makeText(getActivity().getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                }
-
-                 */
             }
         });
 
@@ -267,9 +249,7 @@ public class MainFragment extends Fragment implements SttService.SttCallback {
 
         if (mainCommand.contains("로그아웃")) { // 로그아웃
             if (loginId != null) {
-                Intent logoutIntent = new Intent(getActivity().getApplicationContext(), StartActivity.class);
-                startActivity(logoutIntent);
-                getActivity().finish();
+                dataPasser.onDataPassed("로그아웃");
             }
         } else if (mainCommand.contains("주유")) { // 주유소찾기 (사투리도 처리????)
             if (apiKeyCertified) {

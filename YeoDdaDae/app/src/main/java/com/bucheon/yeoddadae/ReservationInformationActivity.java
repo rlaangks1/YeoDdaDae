@@ -45,6 +45,7 @@ public class ReservationInformationActivity extends AppCompatActivity {
     TextView reservationInfoUpTimeContentTxt;
     TextView reservationInfoTimeContentTxt;
     TextView reservationInfoPriceContentTxt;
+    TextView reservationInfoWonTxt;
     TextView reservationInfoShareParkNewAddressContentTxt;
     TextView reservationInfoShareParkOldAddressContentTxt;
     TextView reservationInfoShareParkDetailaddressContentTxt;
@@ -73,7 +74,6 @@ public class ReservationInformationActivity extends AppCompatActivity {
         documentId = inIntent.getStringExtra("documentId");
 
         FirestoreDatabase fd = new FirestoreDatabase();
-
         fd.loadReservation(loginId, documentId, new OnFirestoreDataLoadedListener() {
             @Override
             public void onDataLoaded(Object data) {
@@ -267,7 +267,14 @@ public class ReservationInformationActivity extends AppCompatActivity {
                 }
                 reservationInfoTimeContentTxt.setText(reservationTimeString);
 
-                reservationInfoPriceContentTxt.setText(((Long) reservationInfo.get("price")).toString());
+                if ((long) reservationInfo.get("price") == 0) {
+                    reservationInfoPriceContentTxt.setText("무료");
+                    reservationInfoWonTxt.setVisibility(View.GONE);
+
+                }
+                else {
+                    reservationInfoPriceContentTxt.setText(((Long) reservationInfo.get("price")).toString());
+                }
 
                 reservationInfoShareParkDetailaddressContentTxt.setText((String) shareParkInfo.get("parkDetailAddress"));
             }

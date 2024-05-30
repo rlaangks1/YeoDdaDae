@@ -54,8 +54,8 @@ public class AdminMainActivity extends AppCompatActivity {
         adminLogoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
                 loginId = null;
+                Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
                 startActivity(logoutIntent);
                 finish();
             }

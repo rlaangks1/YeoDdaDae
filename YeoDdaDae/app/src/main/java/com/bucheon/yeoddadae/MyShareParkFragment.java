@@ -41,8 +41,8 @@ public class MyShareParkFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_share_park, container, false);
 
-        myShareParkListView = view.findViewById(R.id.myShareParkListView);
         myShareParkAddBtn = view.findViewById(R.id.myShareParkAddBtn);
+        myShareParkListView = view.findViewById(R.id.myShareParkListView);
         myShareParkNoTxt = view.findViewById(R.id.myShareParkNoTxt);
 
         myShareParkAddBtn.setOnClickListener(new View.OnClickListener() {

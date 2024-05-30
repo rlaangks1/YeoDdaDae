@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.Timestamp;
 import com.skt.Tmap.TMapData;
+import com.skt.Tmap.TMapTapi;
 import com.skt.Tmap.address_info.TMapAddressInfo;
 
 import java.text.SimpleDateFormat;
@@ -32,6 +33,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
     String loginId;
     String documentId;
     HashMap<String, Object> shareParkInfo;
+    String naviEndPointName;
 
     Button myShareParkInfoBackBtn;
     TextView myShareParkInfoIdContentTxt;
@@ -45,6 +47,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
     TextView myShareParkInfoShareParkDetailaddressContentTxt;
     TextView myShareParkInfoShareTimeContentTxt;
     TextView myShareParkInfoReservationTimeContentTxt;
+    Button myShareParkNaviBtn;
     Button myShareParkInfoCancelBtn;
     Button myShareParkInfoCalculateBtn;
 
@@ -67,6 +70,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
         myShareParkInfoShareParkDetailaddressContentTxt = findViewById(R.id.myShareParkInfoShareParkDetailaddressContentTxt);
         myShareParkInfoShareTimeContentTxt = findViewById(R.id.myShareParkInfoShareTimeContentTxt);
         myShareParkInfoReservationTimeContentTxt = findViewById(R.id.myShareParkInfoReservationTimeContentTxt);
+        myShareParkNaviBtn = findViewById(R.id.myShareParkNaviBtn);
         myShareParkInfoCancelBtn = findViewById(R.id.myShareParkInfoCancelBtn);
         myShareParkInfoCalculateBtn = findViewById(R.id.myShareParkInfoCalculateBtn);
 
@@ -75,6 +79,18 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
             @Override
             public void onDataLoaded(Object data) {
                 shareParkInfo = (HashMap<String, Object>) data;
+
+                TMapData tMapdata = new TMapData();
+                tMapdata.reverseGeocoding((double) shareParkInfo.get("lat"), (double) shareParkInfo.get("lon"), "A10", new TMapData.reverseGeocodingListenerCallback() {
+                    @Override
+                    public void onReverseGeocoding(TMapAddressInfo tMapAddressInfo) {
+                        if (tMapAddressInfo != null) {
+                            String [] adrresses = tMapAddressInfo.strFullAddress.split(",");
+                            naviEndPointName = adrresses[2] + " : " + shareParkInfo.get("parkDetailAddress");
+                        }
+                    }
+                });
+
                 init();
             }
 
@@ -350,6 +366,22 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                         Log.d(TAG, errorMessage);
                         Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
                         finish();
+                    }
+                });
+
+                myShareParkNaviBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TMapTapi tt = new TMapTapi(MyShareParkInformationActivity.this);
+                        boolean isTmapApp = tt.isTmapApplicationInstalled();
+                        if (isTmapApp) {
+                            if (naviEndPointName != null) {
+                                tt.invokeRoute(naviEndPointName, (float) ((double) shareParkInfo.get("lon")), (float) ((double) shareParkInfo.get("lat")));
+                            }
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(), "TMAP이 설치되어 있지 않습니다", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
 

@@ -209,7 +209,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
 
         // TMapGpsManager 설정
         gpsManager = new TMapGpsManager(this);
-        gpsManager.setMinTime(1000); // ms단위
+        gpsManager.setMinTime(500); // ms단위
         gpsManager.setMinDistance(1); // m단위
         gpsManager.setProvider(gpsManager.GPS_PROVIDER);
         gpsManager.OpenGps();
@@ -228,7 +228,6 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         tMapView.setLocationPoint(lon, lat);
         tMapView.setIcon(tmapMyLocationIcon);
         tMapView.setIconVisibility(true);
-        tMapView.setSightVisible(true);
 
         // TMapCircle 초기설정
         tMapCircle = new TMapCircle();
@@ -638,6 +637,94 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
 
                         for (int i = 0; i < arrayList.size(); i++) { // TMAP 검색
                             TMapPOIItem item = arrayList.get(i);
+
+                            Log.d(TAG,
+                                    "=========="+ "\n"
+                                            +item.id+ "\n"
+                                            +item.name+ "\n"
+                                            +item.telNo+ "\n"
+                                            +item.frontLat+ "\n"
+                                            +item.frontLon+ "\n"
+                                            +item.noorLat+ "\n"
+                                            +item.noorLon+ "\n"
+                                            +item.upperAddrName+ "\n"
+                                            +item.middleAddrName+ "\n"
+                                            +item.lowerAddrName+ "\n"
+                                            +item.detailAddrName+ "\n"
+                                            +item.firstNo+ "\n"
+                                            +item.secondNo+ "\n"
+                                            +item.upperBizName+ "\n"
+                                            +item.middleBizName+ "\n"
+                                            +item.lowerBizName+ "\n"
+                                            +item.detailBizName+ "\n"
+                                            +item.rpFlag+ "\n"
+                                            +item.parkFlag+ "\n"
+                                            +item.detailInfoFlag+ "\n"
+                                            +item.desc+ "\n"
+                                            +item.distance+ "\n"
+                                            +item.roadName+ "\n"
+                                            +item.buildingNo1+ "\n"
+                                            +item.buildingNo2+ "\n"
+                                            +item.merchanFlag+ "\n"
+                                            +item.radius+ "\n"
+                                            +item.pkey+ "\n"
+                                            +item.navSeq+ "\n"
+                                            +item.collectionType+ "\n"
+                                            +item.firstBuildNo+ "\n"
+                                            +item.secondBuildNo+ "\n"
+                                            +item.bizName+ "\n"
+                                            +item.dataKind+ "\n"
+                                            +item.stId+ "\n"
+                                            +item.highHhSale+ "\n"
+                                            +item.minOilYn+ "\n"
+                                            +item.oilBaseSdt+ "\n"
+                                            +item.hhPrice+ "\n"
+                                            +item.ggPrice+ "\n"
+                                            +item.llPrice+ "\n"
+                                            +item.highHhPrice+ "\n"
+                                            +item.highGgPrice+ "\n"
+                                            +item.viewId+ "\n"
+                                            +item.dbKind+ "\n"
+                                            +item.lcdName+ "\n"
+                                            +item.mcdName+ "\n"
+                                            +item.scdName+ "\n"
+                                            +item.dcdName+ "\n"
+                                            +item.bldAddr+ "\n"
+                                            +item.roadScdName+ "\n"
+                                            +item.bldNo1+ "\n"
+                                            +item.bldNo2+ "\n"
+                                            +item.menu1+ "\n"
+                                            +item.menu2+ "\n"
+                                            +item.menu3+ "\n"
+                                            +item.menu4+ "\n"
+                                            +item.menu5+ "\n"
+                                            +item.twFlag+ "\n"
+                                            +item.yaFlag+ "\n"
+                                            +item.facility+ "\n"
+                                            +item.upperLegalCode+ "\n"
+                                            +item.middleLegalCode+ "\n"
+                                            +item.lowerLegalCode+ "\n"
+                                            +item.detailLegalCode+ "\n"
+                                            +item.upperAdminCode+ "\n"
+                                            +item.middleAdminCode+ "\n"
+                                            +item.lowerAdminCode+ "\n"
+                                            +item.upperCode+ "\n"
+                                            +item.middleCode+ "\n"
+                                            +item.lowerCode+ "\n"
+                                            +item.participant+ "\n"
+                                            +item.point+ "\n"
+                                            +item.merchantFlag+ "\n"
+                                            +item.merchantDispType+ "\n"
+                                            +item.mngName+ "\n"
+                                            +item.mngId+ "\n"
+                                            +item.freeYn+ "\n"
+                                            +item.reservYn+ "\n"
+                                            +item.useTime+ "\n"
+                                            +item.payYn+ "\n"
+                                            +item.fee+ "\n"
+                                            +item.updateDt+ "\n"
+                                            +item.totalCnt+ "\n"
+                                            + "==========");
 
                             if (item.name.contains("공영")) {
                                 parkAdapter.addItem(new ParkItem(2, item.name, item.radius, item.fee, item.telNo, item.additionalInfo, 0, item.frontLat, item.frontLon, item.id, null));

@@ -178,7 +178,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
 
         // TMapGpsManager 설정
         gpsManager = new TMapGpsManager(this);
-        gpsManager.setMinTime(1000); // ms단위
+        gpsManager.setMinTime(500); // ms단위
         gpsManager.setMinDistance(1); // m단위
         gpsManager.setProvider(gpsManager.GPS_PROVIDER);
         gpsManager.OpenGps();
@@ -189,7 +189,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
 
         // TMapView 생성 및 보이기
         tMapView = new TMapView(this);
-        LinearLayout linearLayoutTmap = (LinearLayout)findViewById(R.id.linearLayoutTmap);
+        LinearLayout linearLayoutTmap = findViewById(R.id.linearLayoutTmap);
         linearLayoutTmap.addView( tMapView );
 
         // TMapView 초기설정
@@ -197,7 +197,6 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         tMapView.setLocationPoint(lon, lat);
         tMapView.setIcon(tmapMyLocationIcon);
         tMapView.setIconVisibility(true);
-        tMapView.setSightVisible(true);
 
         // TMapCircle 초기설정
         tMapCircle = new TMapCircle();

@@ -38,7 +38,7 @@ import com.skt.Tmap.TMapView;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements FragmentToActivityListener {
-    boolean apiKeyCertified = false;
+    boolean apiKeyCertified;
     String loginId;
 
     int containerViewId;

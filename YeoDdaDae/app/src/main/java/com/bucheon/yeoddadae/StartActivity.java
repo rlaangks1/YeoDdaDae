@@ -29,7 +29,7 @@ import com.skt.Tmap.TMapView;
 
 public class StartActivity extends AppCompatActivity {
     final int PERMISSION_REQUEST_CODE = 1;
-    final int loginIntentRequestCode = 2;
+    final int LOGIN_INTENT_REQUEST_CODE = 2;
     String loginId;
     boolean isAdmin;
     boolean isSkip;
@@ -51,7 +51,7 @@ public class StartActivity extends AppCompatActivity {
                 if (isNetworkConnected()) {
                     isSkip = false;
                     Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivityForResult(loginIntent, loginIntentRequestCode);
+                    startActivityForResult(loginIntent, LOGIN_INTENT_REQUEST_CODE);
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "인터넷 연결을 확인하세요", Toast.LENGTH_SHORT).show();
@@ -73,21 +73,21 @@ public class StartActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == loginIntentRequestCode && resultCode == RESULT_OK) {
-            loginId = data.getStringExtra("loginId");
-            isAdmin = data.getBooleanExtra("isAdmin", false);
-            checkPermission(); // 권한 확인. 결과 처리는 onRequestPermissionsResult에서 진행
-        }
-    }
-
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == LOGIN_INTENT_REQUEST_CODE && resultCode == RESULT_OK) {
+            loginId = data.getStringExtra("loginId");
+            isAdmin = data.getBooleanExtra("isAdmin", false);
+            checkPermission(); // 권한 확인. 결과 처리는 onRequestPermissionsResult에서 진행
+        }
     }
 
     private void checkPermission() {
@@ -109,8 +109,8 @@ public class StartActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            // 모든 필수 권한이 승인되었는지 확인
             boolean allPermissionsGranted = true;
+
             for (int grantResult : grantResults) {
                 if (grantResult != PackageManager.PERMISSION_GRANTED) {
                     allPermissionsGranted = false;
@@ -120,7 +120,7 @@ public class StartActivity extends AppCompatActivity {
 
             if (allPermissionsGranted) {
                 Log.d(TAG, "권한요청에서 허가");
-                proceedAfterPermissionGranted(); // 권한이 승인된 후에 처리
+                proceedAfterPermissionGranted();
             } else {
                 Toast.makeText(getApplicationContext(), "필수 권한이 거부되었습니다", Toast.LENGTH_SHORT).show();
             }
@@ -128,7 +128,6 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void proceedAfterPermissionGranted() {
-        // 권한이 모두 승인된 후에 실행할 로직
         Intent intent;
 
         if (!isSkip) {
@@ -142,9 +141,11 @@ public class StartActivity extends AppCompatActivity {
             intent.putExtra("isAdmin", isAdmin);
         }
         else {
+            loginId = "user111";
+            isAdmin = false;
             intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.putExtra("loginId", "user111");
-            intent.putExtra("isAdmin", false);
+            intent.putExtra("loginId", loginId);
+            intent.putExtra("isAdmin", isAdmin);
         }
 
         startActivity(intent);

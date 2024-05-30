@@ -145,7 +145,7 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
 
             // TMapGpsManager 설정
             gpsManager = new TMapGpsManager(this);
-            gpsManager.setMinTime(1000); // ms단위
+            gpsManager.setMinTime(500); // ms단위
             gpsManager.setMinDistance(1); // m단위
             gpsManager.setProvider(gpsManager.GPS_PROVIDER);
             gpsManager.OpenGps();
