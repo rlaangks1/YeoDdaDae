@@ -8,8 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,21 +19,21 @@ import com.google.firebase.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ApproveShareParkActivity extends AppCompatActivity {
+public class ApproveReportActivity extends AppCompatActivity {
     ShareParkAdapter spa;
 
-    Button approveShareParkBackBtn;
-    ListView approveShareParkListView;
-    TextView approveShareParkNoTxt;
+    Button approveReportBackBtn;
+    ListView approveReportListView;
+    TextView approveReportNoTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_approve_share_park);
+        setContentView(R.layout.activity_approve_report);
 
-        approveShareParkBackBtn = findViewById(R.id.approveShareParkBackBtn);
-        approveShareParkListView = findViewById(R.id.approveShareParkListView);
-        approveShareParkNoTxt = findViewById(R.id.approveShareParkNoTxt);
+        approveReportBackBtn = findViewById(R.id.approveReportBackBtn);
+        approveReportListView = findViewById(R.id.approveReportListView);
+        approveReportNoTxt = findViewById(R.id.approveReportNoTxt);
 
         approveShareParkBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,7 +59,7 @@ public class ApproveShareParkActivity extends AppCompatActivity {
         if (spa != null) {
             spa.clearItem();
         }
-        spa = new ShareParkAdapter(ApproveShareParkActivity.this);
+        spa = new ShareParkAdapter(ApproveReportActivity.this);
 
 
         FirestoreDatabase fd = new FirestoreDatabase();

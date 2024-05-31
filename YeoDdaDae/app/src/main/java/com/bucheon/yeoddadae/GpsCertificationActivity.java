@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.skt.Tmap.TMapCircle;
 import com.skt.Tmap.TMapData;
@@ -47,6 +48,7 @@ public class GpsCertificationActivity extends AppCompatActivity implements TMapG
 
     LinearLayout linearLayoutTmap;
     Button decisionBtn;
+    ConstraintLayout addressLayout;
     TextView newAddressTxt;
     TextView oldAddressTxt;
     Button zoomOutBtn;
@@ -64,6 +66,7 @@ public class GpsCertificationActivity extends AppCompatActivity implements TMapG
 
         linearLayoutTmap = findViewById(R.id.linearLayoutTmap);
         decisionBtn = findViewById(R.id.decisionBtn);
+        addressLayout = findViewById(R.id.addressLayout);
         newAddressTxt = findViewById(R.id.newAddressTxt);
         oldAddressTxt = findViewById(R.id.oldAddressTxt);
         zoomOutBtn = findViewById(R.id.zoomOutBtn);
@@ -214,8 +217,7 @@ public class GpsCertificationActivity extends AppCompatActivity implements TMapG
 
                                     newAddressTxt.setText(adrresses[2]);
                                     oldAddressTxt.setText(adrresses[1]);
-                                    newAddressTxt.setVisibility(View.VISIBLE);
-                                    oldAddressTxt.setVisibility(View.VISIBLE);
+                                    addressLayout.setVisibility(View.VISIBLE);
                                 }
                             });
                         }

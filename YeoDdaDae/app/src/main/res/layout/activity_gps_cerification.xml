@@ -32,33 +32,51 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:visibility="gone"/>
 
-            <TextView
-                android:id="@+id/newAddressTxt"
-                android:text="신주소"
-                android:textSize="16sp"
-                android:layout_width="0dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/addressLayout"
+                android:background="@color/white"
+                android:alpha="0.7"
+                android:visibility="gone"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/decisionBtn"
-                app:layout_constraintLeft_toLeftOf="@+id/decisionBtn"
-                android:visibility="gone"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp">
 
-            <TextView
-                android:id="@+id/oldAddressTxt"
-                android:text="구주소"
-                android:textSize="14sp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/newAddressTxt"
-                app:layout_constraintLeft_toLeftOf="@+id/newAddressTxt"
-                android:visibility="gone"/>
+                <TextView
+                    android:id="@+id/newAddressTxt"
+                    android:text="신주소"
+                    android:textSize="16sp"
+                    android:alpha="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"/>
+
+                <TextView
+                    android:id="@+id/oldAddressTxt"
+                    android:text="구주소"
+                    android:textSize="14sp"
+                    android:alpha="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/newAddressTxt"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
