@@ -4,8 +4,11 @@ package com.bucheon.yeoddadae;
 import static android.content.ContentValues.TAG;
 
 import android.Manifest;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,6 +16,7 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -33,6 +37,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
 import com.skt.Tmap.TMapCircle;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapGpsManager;
@@ -48,10 +53,10 @@ import com.skt.tmap.engine.navigation.SDKManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FindGasStationActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback, TMapView.OnClickListenerCallback {
+public class FindGasStationActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback, TMapView.OnClickListenerCallback, SttService.SttCallback {
     private static final int PERMISSION_REQUEST_CODE = 1;
     boolean firstOnLocationChangeCalled = false; // onLocationChange가 처음 불림 여부
-    boolean isItemSelected;
+    boolean isItemSelected = false;
     boolean isLoadingFirstCalled = false;
     int recievedSort;
     int nowSort;
@@ -69,11 +74,18 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     TMapMarkerItem selectedMarker;
     GasStationAdapter gasStationAdapter;
 
+    Intent serviceIntent;
+    SttService sttService;
+    ServiceConnection serviceConnection;
+    SttService.SttCallback sttCallback;
+    SttDialog sd;
+
     ListView gasStationListView;
     ImageButton findGasStationBackBtn;
     ImageButton zoomOutBtn;
     ImageButton zoomInBtn;
     ImageButton gpsBtn;
+    Button findGasStationSttBtn;
     HorizontalScrollView gasStationSortHorizontalScrollView;
     Button sortByDistanceBtn;
     Button sortByRateBtn;
@@ -108,6 +120,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         zoomOutBtn = findViewById(R.id.zoomOutBtn);
         zoomInBtn = findViewById(R.id.zoomInBtn);
         gpsBtn = findViewById(R.id.gpsBtn);
+        findGasStationSttBtn = findViewById(R.id.findGasStationSttBtn);
         gasStationSortHorizontalScrollView = findViewById(R.id.gasStationSortHorizontalScrollView);
         sortByDistanceBtn = findViewById(R.id.sortByDistanceBtn);
         sortByRateBtn = findViewById(R.id.sortByRateBtn);
@@ -123,6 +136,8 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         tmapMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_marker);
         tmapStartMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_start_marker);
         tmapSelectedMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_selected_marker);
+
+        initSttService();
 
         loadingStart(); // 로딩 시작
 
@@ -241,6 +256,13 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                     tMapView.MapZoomIn();
                     Log.d(TAG, "확대, 현재 ZoomLevel : " + tMapView.getZoomLevel());
                 }
+            }
+        });
+
+        findGasStationSttBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sttService.startListeningForMainCommand();
             }
         });
 
@@ -392,7 +414,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         gasStationSortHorizontalScrollView.setVisibility(View.VISIBLE);
     }
 
-    public void findGasStation(int sortBy) { // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:휘발유가순, 4: 경유가순
+    public void findGasStation(int sortBy) { // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:휘발유가순, 4: 경유가순 5: 고급휘발유가순, 6: 고급경유가순
         Log.d (TAG, "findGasStation 시작");
 
         loadingStart();
@@ -548,6 +570,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                                 sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByHighGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByHighDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
+                                gasStationAdapter.sortByDistance();
                                 break;
                             case 2 :
                                 sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
@@ -740,15 +763,261 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    void initSttService() {
+        sd = new SttDialog(this, new SttDialogListener() {
+            @Override
+            public void onMessageSend(String message) {
+                if (message.equals("SttDialog버튼클릭")) {
+                    sd.setSttStatusTxt("메인 명령어 듣는 중");
+                    sttService.startListeningForMainCommand();
+                }
+                else if (message.equals("SttDialog닫힘")) {
+                    sttService.startListeningForWakeUpWord();
+                }
+            }
+        });
 
+        serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                SttService.SttBinder binder = (SttService.SttBinder) service;
+                sttService = binder.getService();
+                sttService.setSttCallback(sttCallback);
+                Log.d(ExoPlayerLibraryInfo.TAG, "MainActivity : STT 서비스 연결됨");
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                Log.d(ExoPlayerLibraryInfo.TAG, "MainActivity : STT 서비스 연결 해제됨");
+            }
+        };
+
+        serviceIntent = new Intent(this, SttService.class);
+        startService(serviceIntent);
+        bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+        sttCallback = new SttService.SttCallback() {
+            @Override
+            public void onMainCommandReceived(String mainCommand) {
+                FindGasStationActivity.this.onMainCommandReceived(mainCommand);
+            }
+
+            @Override
+            public void onUpdateUI(String message) {
+                FindGasStationActivity.this.onUpdateUI(message);
+            }
+        };
+    }
+
+    @Override
+    public void onMainCommandReceived(String mainCommand) {
+        Log.d(TAG, "FindGasStationActivity에서 받은 명령: " + mainCommand);
+        // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:휘발유가순, 4: 경유가순 5: 고급휘발유가순, 6: 고급경유가순
+        if (mainCommand.contains("돌아") || mainCommand.contains("이전") || mainCommand.contains("메인")) {
+            sd.dismiss();
+            finish();
+        }
+        else if (!isItemSelected && (mainCommand.contains("순") || mainCommand.contains("정렬") || mainCommand.contains("검색") || mainCommand.contains("찾"))) {
+            sd.dismiss();
+            if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
+                findGasStation(2);
+            }
+            else if (mainCommand.contains("고급") && (mainCommand.contains("휘발") || mainCommand.contains("가솔린"))) {
+                findGasStation(5);
+            }
+            else if (mainCommand.contains("고급") && (mainCommand.contains("경유") || mainCommand.contains("디젤"))) {
+                findGasStation(6);
+            }
+            else if (mainCommand.contains("휘발") || mainCommand.contains("가솔린")) {
+                findGasStation(3);
+            }
+            else if (mainCommand.contains("경유") || mainCommand.contains("디젤")) {
+                findGasStation(4);
+            }
+            else {
+                findGasStation(1);
+            }
+        }
+        else if (!isItemSelected && (mainCommand.contains("순") || mainCommand.contains("정렬") || mainCommand.contains("검색") || mainCommand.contains("찾"))) {
+            sd.dismiss();
+            if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
+                findGasStation(2);
+            }
+            else if (mainCommand.contains("고급") && (mainCommand.contains("휘발") || mainCommand.contains("가솔린"))) {
+                findGasStation(5);
+            }
+            else if (mainCommand.contains("고급") && (mainCommand.contains("경유") || mainCommand.contains("디젤"))) {
+                findGasStation(6);
+            }
+            else if (mainCommand.contains("휘발") || mainCommand.contains("가솔린")) {
+                findGasStation(3);
+            }
+            else if (mainCommand.contains("경유") || mainCommand.contains("디젤")) {
+                findGasStation(4);
+            }
+            else {
+                findGasStation(1);
+            }
+        }
+        else if (isItemSelected && (mainCommand.contains("안내") || mainCommand.contains("내비") || mainCommand.contains("시작") || mainCommand.contains("출발"))) {
+            sd.dismiss();
+            TMapTapi tt = new TMapTapi(FindGasStationActivity.this);
+            boolean isTmapApp = tt.isTmapApplicationInstalled();
+            if (isTmapApp) {
+                tt.invokeRoute(naviEndPointName, (float) naviEndPoint.getLongitude(), (float) naviEndPoint.getLatitude());
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "TMAP이 설치되어 있지 않습니다", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else {
+            int number = 0;
+
+            if (mainCommand.matches(".*\\d.*")) {
+                String numberStr = mainCommand.replaceAll("\\D", ""); // 숫자 이외의 문자 제거
+                number = Integer.parseInt(numberStr);
+            }
+            else if (mainCommand.matches(".*[일이삼사오육칠팔구십].*")){
+                String numberStr = mainCommand.replaceAll("[^일이삼사오육칠팔구십]", ""); // 한글 숫자 이외의 문자 제거
+                switch (numberStr) {
+                    case "일":
+                        number = 1;
+                        break;
+                    case "이":
+                        number = 2;
+                        break;
+                    case "삼":
+                        number = 3;
+                        break;
+                    case "사":
+                        number = 4;
+                        break;
+                    case "오":
+                        number = 5;
+                        break;
+                    case "육":
+                        number = 6;
+                        break;
+                    case "칠":
+                        number = 7;
+                        break;
+                    case "팔":
+                        number = 8;
+                        break;
+                    case "구":
+                        number = 9;
+                        break;
+                    case "십":
+                        number = 10;
+                        break;
+                }
+            }
+            Log.d (TAG, "number 는 " + number);
+            if (number != 0) {
+                if (gasStationAdapter != null &&  0 < gasStationAdapter.getSize() && 0 < number && number <= gasStationAdapter.getSize()) {
+                    sd.dismiss();
+
+                    GasStationItem clickedGasStation = (GasStationItem) gasStationAdapter.getItem(number - 1);
+
+                    GasStationAdapter tempGasStationAdapter = new GasStationAdapter();
+                    tempGasStationAdapter.addItem(clickedGasStation);
+                    gasStationListView.setAdapter(tempGasStationAdapter);
+
+                    naviEndPoint = new TMapPoint (clickedGasStation.getLat(), clickedGasStation.getLon());
+                    naviEndPointName = clickedGasStation.getName();
+
+                    TMapData tmapdata = new TMapData();
+                    tmapdata.findPathData(nowPoint, naviEndPoint, new TMapData.FindPathDataListenerCallback() {
+                        @Override
+                        public void onFindPathData(TMapPolyLine polyLine) {
+                            if (selectedMarker != null) {
+                                selectedMarker.setIcon(tmapMarkerIcon);
+                            }
+
+                            tMapView.setTMapPathIcon(tmapStartMarkerIcon, null);
+                            TMapMarkerItem endMarker = tMapView.getMarkerItemFromID(clickedGasStation.getName());
+                            endMarker.setIcon(tmapSelectedMarkerIcon);
+
+                            selectedMarker = endMarker;
+
+                            tMapView.addTMapPath(polyLine);
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    tMapView.setCenterPoint(selectedMarker.longitude, selectedMarker.latitude);
+
+                                    DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                                    float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
+                                    gasStationListView.getLayoutParams().height = (int) px;
+                                    gasStationListView.requestLayout();
+
+                                    TextView gasStationOrder = findViewById(R.id.gasStationOrder);
+                                    gasStationOrder.setVisibility(View.GONE);
+
+                                    TextView gasStationName = findViewById(R.id.gasStationName);
+                                    ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) gasStationName.getLayoutParams();
+                                    params.leftToLeft = R.id.gasStationItemConstraintLayout;
+                                    gasStationName.setLayoutParams(params);
+
+                                    gasStationSortHorizontalScrollView.setVisibility(View.GONE);
+                                    cancelNaviBtn.setVisibility(View.VISIBLE);
+                                    toStartNaviBtn.setVisibility(View.VISIBLE);
+
+                                    isItemSelected = true;
+                                }
+                            });
+                        }
+                    });
+                }
+                else {
+                    sd.setSttStatusTxt(number + "번째 결과를 찾을 수 없습니다");
+                }
+            }
+            else {
+                sd.setSttStatusTxt(mainCommand + "\n알 수 없는 명령어입니다");
+            }
+        }
+    }
+
+    @Override
+    public void onUpdateUI(String message) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                loadingAlert.dismiss();
+                if (message.equals("메인명령어듣는중")) {
+                    sd.show();
+                    sd.setSttStatusTxt("메인 명령어 듣는 중");
+                }
+                else if (message.equals("음성인식실패")) {
+                    sd.setSttStatusTxt("음성 인식 실패\n'가까운 주유소 찾아줘'와 같이 말씀해보세요");
+                }
+                else if (message.equals("타임아웃")) {
+                    sd.setSttStatusTxt("음성 인식 타임 아웃\n'가까운 주유소 찾아줘'와 같이 말씀해보세요");
+                }
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        sttService.stopListening();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        sttService.startListeningForWakeUpWord();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        unbindService(serviceConnection);
+        stopService(serviceIntent);
     }
 }

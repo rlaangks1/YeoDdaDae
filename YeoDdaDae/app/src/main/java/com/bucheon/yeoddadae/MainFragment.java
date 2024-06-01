@@ -30,44 +30,11 @@ import com.skt.Tmap.TMapMarkerItem;
 import com.skt.Tmap.TMapTapi;
 import com.skt.Tmap.TMapView;
 
-public class MainFragment extends Fragment implements SttService.SttCallback {
+public class MainFragment extends Fragment {
     private int PERMISSION_REQUEST_CODE = 1;
-    boolean recordAudioPermissionGranted = false;
     boolean apiKeyCertified;
     String loginId;
-    SttDialog sd;
     FragmentToActivityListener dataPasser;
-    private Intent serviceIntent;
-    private SttService sttService;
-    private boolean serviceConnected = false;
-
-    private SttService.SttCallback sttCallback = new SttService.SttCallback() {
-        @Override
-        public void onMainCommandReceived(String mainCommand) {
-            MainFragment.this.onMainCommandReceived(mainCommand);
-        }
-
-        @Override
-        public void onUpdateUI(String message) {
-            MainFragment.this.onUpdateUI(message);
-        }
-    };
-
-    private ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            SttService.SttBinder binder = (SttService.SttBinder) service;
-            sttService = binder.getService();
-            sttService.setSttCallback(sttCallback);
-            serviceConnected = true; // 서비스에 연결되었음을 표시
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            serviceConnected = false; // 서비스 연결 해제됨을 표시
-            // 필요한 경우 연결이 끊겼을 때 처리
-        }
-    };
 
     ImageButton toSttImgBtn;
     ImageButton toFindParkImgBtn;
@@ -81,6 +48,18 @@ public class MainFragment extends Fragment implements SttService.SttCallback {
     public MainFragment(boolean apiKeyCertified, String loginId) {
         this.apiKeyCertified = apiKeyCertified;
         this.loginId = loginId;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) { // context가 OnDataPass 인터페이스를 구현한다면 dataPasser에 할당
+        super.onAttach(context);
+
+        if (context instanceof FragmentToActivityListener) {
+            dataPasser = (FragmentToActivityListener) context;
+        }
+        else {
+            throw new ClassCastException(context.toString() + " must implement OnDataPass");
+        }
     }
 
     @Nullable
@@ -97,33 +76,12 @@ public class MainFragment extends Fragment implements SttService.SttCallback {
         navigationView = view.findViewById(R.id.navigation_view);
         menubarBtn = view.findViewById(R.id.menubarBtn);
 
-        // 네비게이션뷰 아이디 표시
         View headerView = navigationView.getHeaderView(0);
         TextView navHeaderUsername = headerView.findViewById(R.id.nowIdTxt);
         if (loginId != null) {
             navHeaderUsername.setText(loginId);
         }
-
-        sd = new SttDialog(getActivity(), new SttDialogListener() {
-            @Override
-            public void onMessageSend(String message) {
-                if (message.equals("버튼클릭")) {
-                    sd.setSttStatusTxt("메인 명령어 듣는 중");
-                    sttService.startListeningForMainCommand();
-                } else if (message.equals("닫기")) {
-                    sttService.stopContinuousListening();
-                    sttService.startListeningForWakeUpWord();
-                }
-            }
-        });
-
-        serviceIntent = new Intent(getActivity(), SttService.class);
-        checkPermission();
-        if (recordAudioPermissionGranted) {
-            getActivity().startService(serviceIntent);
-            getActivity().bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-        }
-
+        
         menubarBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,14 +102,7 @@ public class MainFragment extends Fragment implements SttService.SttCallback {
         toSttImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkPermission();
-                if (recordAudioPermissionGranted) {
-                    sttService.startListeningForMainCommand();
-                    sd.show();
-                    sd.setSttStatusTxt("메인 명령어 듣는 중");
-                } else {
-                    Toast.makeText(getActivity().getApplicationContext(), "설정에서 마이크 권한을 부여하세요", Toast.LENGTH_SHORT).show();
-                }
+                dataPasser.onDataPassed("stt버튼클릭");
             }
         });
 
@@ -226,111 +177,5 @@ public class MainFragment extends Fragment implements SttService.SttCallback {
         */
 
         return view;
-    }
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (recordAudioPermissionGranted) {
-            sttService.stopContinuousListening();
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (recordAudioPermissionGranted) {
-            getActivity().startService(serviceIntent);
-        }
-    }
-
-    @Override
-    public void onMainCommandReceived(String mainCommand) {
-        Log.d("TAG", "MainFragment에서 받은 명령: " + mainCommand);
-
-        if (mainCommand.contains("로그아웃")) { // 로그아웃
-            if (loginId != null) {
-                dataPasser.onDataPassed("로그아웃");
-            }
-        } else if (mainCommand.contains("주유")) { // 주유소찾기 (사투리도 처리????)
-            if (apiKeyCertified) {
-                if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
-                    Intent findGasStationIntent = new Intent(getActivity().getApplicationContext(), FindGasStationActivity.class);
-                    findGasStationIntent.putExtra("SortBy", 2);
-                    startActivity(findGasStationIntent);
-                } else if (mainCommand.contains("휘발") || mainCommand.contains("가솔린")) {
-                    Intent findGasStationIntent = new Intent(getActivity().getApplicationContext(), FindGasStationActivity.class);
-                    findGasStationIntent.putExtra("SortBy", 3);
-                    startActivity(findGasStationIntent);
-                } else if (mainCommand.contains("경유") || mainCommand.contains("디젤")) {
-                    Intent findGasStationIntent = new Intent(getActivity().getApplicationContext(), FindGasStationActivity.class);
-                    findGasStationIntent.putExtra("SortBy", 4);
-                    startActivity(findGasStationIntent);
-                } else {
-                    Intent findGasStationIntent = new Intent(getActivity().getApplicationContext(), FindGasStationActivity.class);
-                    findGasStationIntent.putExtra("SortBy", 1);
-                    startActivity(findGasStationIntent);
-                }
-            }
-        } else {
-            sd.setSttStatusTxt(mainCommand + "\n알 수 없는 명령어입니다\n'가까운 주유소 찾아줘'와 같이 말씀해보세요");
-        }
-    }
-
-    @Override
-    public void onUpdateUI(String message) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (message.equals("메인명령어듣는중")) {
-                    sd.show();
-                    sd.setSttStatusTxt("메인 명령어 듣는 중");
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (serviceConnected) { // 서비스에 연결되어 있다면
-            getActivity().unbindService(serviceConnection); // 서비스 언바인딩
-            serviceConnected = false; // 플래그 재설정
-        }
-    }
-
-    private void checkPermission() {
-        if (getActivity().checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "권한 있음");
-            recordAudioPermissionGranted = true;
-        } else {
-            Log.d(TAG, "권한 없음. 요청");
-            String[] permissionArr = { Manifest.permission.RECORD_AUDIO };
-            requestPermissions(permissionArr, PERMISSION_REQUEST_CODE);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == PERMISSION_REQUEST_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "권한요청에서 허가");
-            recordAudioPermissionGranted = true;
-        } else {
-            Toast.makeText(getActivity().getApplicationContext(), "마이크 권한 거부되었습니다", Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "권한요청에서 거부or문제");
-        }
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        // context가 OnDataPass 인터페이스를 구현하는지 확인 후, dataPasser에 할당
-        if (context instanceof FragmentToActivityListener) {
-            dataPasser = (FragmentToActivityListener) context;
-        } else {
-            throw new ClassCastException(context.toString() + " must implement OnDataPass");
-        }
     }
 }

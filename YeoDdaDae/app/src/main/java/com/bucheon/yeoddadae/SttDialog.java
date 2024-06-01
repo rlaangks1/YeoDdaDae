@@ -44,7 +44,6 @@ public class SttDialog extends Dialog {
         sttBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onMessageSend("닫기");
                 dismiss();
             }
         });
@@ -52,9 +51,15 @@ public class SttDialog extends Dialog {
         sttListenBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onMessageSend("버튼클릭");
+                listener.onMessageSend("SttDialog버튼클릭");
             }
         });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        listener.onMessageSend("SttDialog닫힘");
     }
 
     void setSttStatusTxt(String s) {

@@ -612,7 +612,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         });
     } // init 끝
 
-    public void findPark(int sortBy) { // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:휘발유가순, 4: 경유가순, 5:LPG가순
+    public void findPark(int sortBy) { // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:주차가순
         Log.d (TAG, "findPark 시작");
         loadingStart();
         TMapPoint centerPoint = tMapView.getCenterPoint();

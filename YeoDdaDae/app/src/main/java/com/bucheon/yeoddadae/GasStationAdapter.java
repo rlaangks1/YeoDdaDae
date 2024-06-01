@@ -30,6 +30,23 @@ public class GasStationAdapter extends BaseAdapter {
         return null; // 못 찾은 경우 null 반환
     }
 
+    public int getSize() {
+        return items.size();
+    }
+
+    public void sortByDistance () {
+        if (items != null && items.size() > 1) {
+            Collections.sort(items, new Comparator<GasStationItem>() {
+                @Override
+                public int compare(GasStationItem o1, GasStationItem o2) {
+                    // Compare by star rate in descending order
+                    return Double.compare(Double.parseDouble(o1.getRadius()), Double.parseDouble(o2.getRadius()));
+                }
+            });
+            notifyDataSetChanged();
+        }
+    }
+
     public void sortByRate () {
         if (items != null && items.size() > 1) {
             Collections.sort(items, new Comparator<GasStationItem>() {

@@ -37,9 +37,15 @@ import com.skt.Tmap.TMapView;
 
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity implements FragmentToActivityListener {
+public class MainActivity extends AppCompatActivity implements FragmentToActivityListener, SttService.SttCallback {
     boolean apiKeyCertified;
     String loginId;
+
+    Intent serviceIntent;
+    SttService sttService;
+    ServiceConnection serviceConnection;
+    SttService.SttCallback sttCallback;
+    SttDialog sd;
 
     int containerViewId;
     BottomNavigationView bottomNavView;
@@ -57,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
 
         App app = (App) getApplication();
         apiKeyCertified = app.isApiKeyCertified();
+
+        initSttService();
 
         getSupportFragmentManager().beginTransaction()
                 .replace(containerViewId, new MainFragment(apiKeyCertified, loginId))
@@ -96,12 +104,159 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
     }
 
     @Override
-    public void onDataPassed(String data) {
+    protected void onPause() {
+        super.onPause();
+
+        sttService.stopListening();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        sttService.startListeningForWakeUpWord();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        unbindService(serviceConnection);
+        stopService(serviceIntent);
+    }
+
+    void initSttService() {
+        sd = new SttDialog(this, new SttDialogListener() {
+            @Override
+            public void onMessageSend(String message) {
+                if (message.equals("SttDialog버튼클릭")) {
+                    sd.setSttStatusTxt("메인 명령어 듣는 중");
+                    sttService.startListeningForMainCommand();
+                }
+                else if (message.equals("SttDialog닫힘")) {
+                    sttService.startListeningForWakeUpWord();
+                }
+            }
+        });
+
+        serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                SttService.SttBinder binder = (SttService.SttBinder) service;
+                sttService = binder.getService();
+                sttService.setSttCallback(sttCallback);
+                Log.d(TAG, "MainActivity : STT 서비스 연결됨");
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                Log.d(TAG, "MainActivity : STT 서비스 연결 해제됨");
+            }
+        };
+
+        serviceIntent = new Intent(this, SttService.class);
+        startService(serviceIntent);
+        bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+        sttCallback = new SttService.SttCallback() {
+            @Override
+            public void onMainCommandReceived(String mainCommand) {
+                MainActivity.this.onMainCommandReceived(mainCommand);
+            }
+
+            @Override
+            public void onUpdateUI(String message) {
+                MainActivity.this.onUpdateUI(message);
+            }
+        };
+    }
+
+    @Override
+    public void onDataPassed(String data) { // Fragment에서 메시지 받기
         if (data.equals("로그아웃")) {
             loginId = null;
             Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
             startActivity(logoutIntent);
             finish();
         }
+        else if (data.equals("stt버튼클릭")) {
+            sttService.startListeningForMainCommand();
+        }
+    }
+
+    public void onMainCommandReceived(String mainCommand) {
+        Log.d(TAG, "MainActivity에서 받은 명령: " + mainCommand);
+
+        if (mainCommand.contains("로그아웃")) {
+            sd.dismiss();
+            loginId = null;
+            Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
+            startActivity(logoutIntent);
+            finish();
+        }
+        else if (mainCommand.contains("주차")) {
+            sd.dismiss();
+            if (apiKeyCertified) {
+                Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
+                    findGasStationIntent.putExtra("SortBy", 2);
+                }
+                else if (mainCommand.contains("사용료") || mainCommand.contains("이용료") || mainCommand.contains("주차비") || mainCommand.contains("가격") || mainCommand.contains("싼") || mainCommand.contains("싸") || mainCommand.contains("저렴")) {
+                    findGasStationIntent.putExtra("SortBy", 3);
+                }
+                else {
+                    findGasStationIntent.putExtra("SortBy", 1);
+                }
+                startActivity(findGasStationIntent);
+            }
+        }
+        else if (mainCommand.contains("주유")) {
+            sd.dismiss();
+            if (apiKeyCertified) { // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:휘발유가순, 4: 경유가순 5: 고급휘발유가순, 6: 고급경유가순
+                Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
+                if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
+                    findGasStationIntent.putExtra("SortBy", 2);
+                }
+                else if (mainCommand.contains("고급") && (mainCommand.contains("휘발") || mainCommand.contains("가솔린"))) {
+                    findGasStationIntent.putExtra("SortBy", 5);
+                }
+                else if (mainCommand.contains("고급") && (mainCommand.contains("경유") || mainCommand.contains("디젤"))) {
+                    findGasStationIntent.putExtra("SortBy", 6);
+                }
+                else if (mainCommand.contains("휘발") || mainCommand.contains("가솔린")) {
+                    findGasStationIntent.putExtra("SortBy", 3);
+                }
+                else if (mainCommand.contains("경유") || mainCommand.contains("디젤")) {
+                    findGasStationIntent.putExtra("SortBy", 4);
+                }
+                else {
+                    findGasStationIntent.putExtra("SortBy", 1);
+                }
+                Log.d(TAG, "????");
+                startActivity(findGasStationIntent);
+            }
+        }
+        else {
+            sd.setSttStatusTxt(mainCommand + "\n알 수 없는 명령어입니다\n'가까운 주유소 찾아줘'와 같이 말씀해보세요");
+        }
+    }
+
+    @Override
+    public void onUpdateUI(String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (message.equals("메인명령어듣는중")) {
+                    sd.show();
+                    sd.setSttStatusTxt("메인 명령어 듣는 중");
+                }
+                else if (message.equals("음성인식실패")) {
+                    sd.setSttStatusTxt("음성 인식 실패\n'가까운 주유소 찾아줘'와 같이 말씀해보세요");
+                }
+                else if (message.equals("타임아웃")) {
+                    sd.setSttStatusTxt("음성 인식 타임 아웃\n'가까운 주유소 찾아줘'와 같이 말씀해보세요");
+                }
+            }
+        });
     }
 }
