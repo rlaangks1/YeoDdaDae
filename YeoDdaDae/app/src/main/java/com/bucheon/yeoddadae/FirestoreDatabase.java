@@ -1052,6 +1052,33 @@ public class FirestoreDatabase {
                 });
     }
 
+    public void loadUnapprovedReports (OnFirestoreDataLoadedListener listener) {
+        db.collection("reportDiscountPark")
+                .whereEqualTo("isApproval", false)
+                .whereEqualTo("isCancelled", false)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    ArrayList<HashMap<String, Object>> resultArrayList = new ArrayList<>();
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        HashMap<String, Object> data = new HashMap<>(documentSnapshot.getData());
+                        data.put("documentId", documentSnapshot.getId());
+                        resultArrayList.add(data);
+                    }
+
+                    if (resultArrayList.size() > 0 && resultArrayList != null) {
+                        Log.d (TAG, "승인 안된 할인주차장 제보 찾기 성공 갯수 : " + resultArrayList.size());
+                    }
+                    else {
+                        Log.d(TAG, "승인 안된 할인주차장 제보가 없음");
+                    }
+                    listener.onDataLoaded(resultArrayList);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
     public void loadRateCount (String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
         int[] perfectCount = {0};
         int[] mistakeCount = {0};

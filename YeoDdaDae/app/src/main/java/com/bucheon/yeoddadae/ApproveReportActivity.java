@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ApproveReportActivity extends AppCompatActivity {
-    ShareParkAdapter spa;
+    ReportDiscountParkAdapter rdpa;
 
     Button approveReportBackBtn;
     ListView approveReportListView;
@@ -35,19 +35,19 @@ public class ApproveReportActivity extends AppCompatActivity {
         approveReportListView = findViewById(R.id.approveReportListView);
         approveReportNoTxt = findViewById(R.id.approveReportNoTxt);
 
-        approveShareParkBackBtn.setOnClickListener(new View.OnClickListener() {
+        approveReportBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
 
-        approveShareParkListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        approveReportListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent approveShareParkInfoIntent = new Intent(getApplicationContext(), ApproveShareParkInformationActivity.class);
-                approveShareParkInfoIntent.putExtra("documentId", ((ShareParkItem) spa.getItem(position)).getDocumentId());
-                startActivity(approveShareParkInfoIntent);
+                Intent approveReportInfoIntent = new Intent(getApplicationContext(), ApproveReportInformationActivity.class);
+                approveReportInfoIntent.putExtra("documentId", ((ReportDiscountParkItem) rdpa.getItem(position)).getDocumentId());
+                startActivity(approveReportInfoIntent);
             }
         });
     }
@@ -56,41 +56,42 @@ public class ApproveReportActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        if (spa != null) {
-            spa.clearItem();
+        if (rdpa != null) {
+            rdpa.clearItem();
         }
-        spa = new ShareParkAdapter(ApproveReportActivity.this);
+        rdpa = new ReportDiscountParkAdapter(ApproveReportActivity.this);
 
 
         FirestoreDatabase fd = new FirestoreDatabase();
-        fd.loadUnapprovedShareParks(new OnFirestoreDataLoadedListener() {
+        fd.loadUnapprovedReports(new OnFirestoreDataLoadedListener() {
             @Override
             public void onDataLoaded(Object data) {
-                ArrayList<HashMap<String, Object>> myShareParks = (ArrayList<HashMap<String, Object>>) data;
+                ArrayList<HashMap<String, Object>> unapprovedReports = (ArrayList<HashMap<String, Object>>) data;
 
-                for (HashMap<String, Object> oneSharePark : myShareParks) {
-                    String ownerId = (String) oneSharePark.get("ownerId");
-                    double lat = (double) oneSharePark.get("lat");
-                    double lon = (double) oneSharePark.get("lon");
-                    String parkDetailAddress = (String) oneSharePark.get("parkDetailAddress");
-                    boolean isApproval = (boolean) oneSharePark.get("isApproval");
-                    boolean isCancelled = (boolean) oneSharePark.get("isCancelled");
-                    boolean isCalculated = (boolean) oneSharePark.get("isCalculated");
-                    long price = (long) oneSharePark.get("price");
-                    HashMap<String, ArrayList<String>> time = (HashMap<String, ArrayList<String>>) oneSharePark.get("time");
-                    Timestamp upTime = (Timestamp) oneSharePark.get("upTime");
-                    String documentId = (String) oneSharePark.get("documentId");
+                for (HashMap<String, Object> oneReport : unapprovedReports) {
+                    String reporterId = (String) oneReport.get("reporterId");
+                    String parkName = (String) oneReport.get("parkName");
+                    String parkCondition = (String) oneReport.get("parkCondition");
+                    long parkDiscount = (long) oneReport.get("parkDiscount");
+                    long ratePerfectCount = (long) oneReport.get("ratePerfectCount");
+                    long rateMistakeCount = (long) oneReport.get("rateMistakeCount");
+                    long rateWrongCount = (long) oneReport.get("rateWrongCount");
+                    boolean isCancelled = (boolean) oneReport.get("isCancelled");
+                    boolean isApproval = (boolean) oneReport.get("isApproval");
+                    Timestamp upTime = (Timestamp) oneReport.get("upTime");
+                    String poiID = (String) oneReport.get("poiID");
+                    String documentId = (String) oneReport.get("documentId");
 
-                    spa.addItem(new ShareParkItem(ownerId, lat, lon, parkDetailAddress, isApproval, isCancelled, isCalculated, price, time, upTime, documentId));
+                    rdpa.addItem(new ReportDiscountParkItem(reporterId, parkName, parkCondition, parkDiscount, ratePerfectCount, rateMistakeCount, rateWrongCount, isCancelled, isApproval, upTime, poiID, documentId));
                 }
-                if (myShareParks.size() == 0) {
-                    approveShareParkListView.setVisibility(View.GONE);
-                    approveShareParkNoTxt.setVisibility(View.VISIBLE);
+                if (unapprovedReports.size() == 0) {
+                    approveReportListView.setVisibility(View.GONE);
+                    approveReportNoTxt.setVisibility(View.VISIBLE);
                 }
                 else {
-                    approveShareParkListView.setVisibility(View.VISIBLE);
-                    approveShareParkNoTxt.setVisibility(View.GONE);
-                    approveShareParkListView.setAdapter(spa);
+                    approveReportListView.setVisibility(View.VISIBLE);
+                    approveReportNoTxt.setVisibility(View.GONE);
+                    approveReportListView.setAdapter(rdpa);
                 }
             }
 

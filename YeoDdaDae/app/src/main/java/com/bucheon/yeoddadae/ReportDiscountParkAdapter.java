@@ -128,7 +128,8 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
             }
         }
 
-        else if (activity instanceof AnotherReportDiscountParkActivity) {
+        else if (activity instanceof AnotherReportDiscountParkActivity
+                || activity instanceof ApproveReportActivity) {
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.report_discount_park_item, parent, false);

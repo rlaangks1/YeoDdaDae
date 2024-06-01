@@ -60,6 +60,7 @@
             <EditText
                 android:id="@+id/addReportDiscountParkConditionContentEditTxt"
                 android:textSize="20dp"
+                android:singleLine="true"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/sub"
@@ -93,6 +94,7 @@
                 android:id="@+id/addReportDiscountParkBenefitContentEditTxt"
                 android:textSize="20dp"
                 android:inputType="number"
+                android:singleLine="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/sub"

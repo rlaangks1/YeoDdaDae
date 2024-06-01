@@ -29,17 +29,13 @@
         <activity android:name=".MainActivity"/>
         <activity android:name=".YdPointChargeActivity"/>
         <activity android:name=".FindParkActivity"/>
-        <activity android:name=".MyReservationActivity"/>
         <activity android:name=".ReservationInformationActivity"/>
         <activity android:name=".ReservationParkActivity"/>
         <activity android:name=".PaymentActivity"/>
         <activity android:name=".FindGasStationActivity"/>
-        <activity android:name=".NavigationActivity"/>
-        <activity android:name=".MyShareParkActivity"/>
         <activity android:name=".MyShareParkInformationActivity"/>
         <activity android:name=".ShareParkActivity"/>
         <activity android:name=".GpsCertificationActivity"/>
-        <activity android:name=".MyReportDiscountParkActivity"/>
         <activity android:name=".AddReportDiscountParkActivity"/>
         <activity android:name=".ReportDiscountParkInformationActivity"/>
         <activity android:name=".AnotherReportDiscountParkActivity"/>
@@ -47,6 +43,8 @@
         <activity android:name=".AdminMainActivity"/>
         <activity android:name=".ApproveShareParkActivity"/>
         <activity android:name=".ApproveShareParkInformationActivity"/>
+        <activity android:name=".ApproveReportActivity"/>
+        <activity android:name=".ApproveReportInformationActivity"/>
         <service
             android:name=".SttService"
             android:enabled="true"

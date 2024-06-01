@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
                     selectedFragment = new MyReportDiscountParkFragment(loginId);
                 }
                 else if (itemId == R.id.bt_point) {
-                    // 포인트기록 선택 시 처리
+                    selectedFragment = new MyYdPointFragment(loginId);
                 }
 
                 if (selectedFragment != null) {
