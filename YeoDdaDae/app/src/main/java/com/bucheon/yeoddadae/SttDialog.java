@@ -16,10 +16,11 @@ public class SttDialog extends Dialog {
     Context context;
     SttDialogListener listener;
 
-    Button sttBackBtn;
+    ImageButton sttBackBtn;
     ImageButton sttListenBtn;
     TextView sttStatusTxt;
 
+    private boolean isListening = true;
 
     public SttDialog(@NonNull Context context, SttDialogListener listener) {
         super(context);
@@ -41,6 +42,9 @@ public class SttDialog extends Dialog {
         sttListenBtn = findViewById(R.id.sttListenBtn);
         sttStatusTxt = findViewById(R.id.sttStatusTxt);
 
+        sttListenBtn.setImageResource(R.drawable.mic_activate);
+        setSttStatusTxt("Listening...");
+
         sttBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,6 +55,7 @@ public class SttDialog extends Dialog {
         sttListenBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                toggleMicState();
                 listener.onMessageSend("SttDialog버튼클릭");
             }
         });
@@ -60,6 +65,13 @@ public class SttDialog extends Dialog {
     protected void onStop() {
         super.onStop();
         listener.onMessageSend("SttDialog닫힘");
+    }
+
+    private void toggleMicState() {
+        isListening = !isListening; // 상태 토글
+        sttListenBtn.setImageResource(isListening ? R.drawable.mic_activate : R.drawable.mic_inactivate); // 상태에 따라 이미지 변경
+        setSttStatusTxt(isListening ? "활성화" : "비활성화");
+
     }
 
     void setSttStatusTxt(String s) {

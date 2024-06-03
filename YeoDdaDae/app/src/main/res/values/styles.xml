@@ -151,4 +151,16 @@
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/blue</item>
     </style>
+    <style name="sharedpark_approval">
+        <item name="android:textSize">27sp</item>
+        <item name="android:textColor">@color/blue</item>
+    </style>
+    <style name="DC_approval_report">
+        <item name="android:textSize">27sp</item>
+        <item name="android:textColor">@color/blue</item>
+    </style>
+    <style name="statics">
+        <item name="android:textSize">27sp</item>
+        <item name="android:textColor">@color/blue</item>
+    </style>
 </resources>
