@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.skt.Tmap.TMapCircle;
 import com.skt.Tmap.TMapData;
@@ -36,17 +37,18 @@ import java.util.ArrayList;
 
 public class GpsCertificationActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback {
     private final int PERMISSION_REQUEST_CODE = 1;
-
     boolean isCloseEnough = false;
-
     boolean firstOnLocationChangeCalled = false;
-
     // 경복궁
     Double nowLat = 37.578611;
     Double nowLon= 126.977222;
+    TMapGpsManager gpsManager;
+    TMapView tMapView;
+    TMapCircle tMapCircle;
 
     LinearLayout linearLayoutTmap;
     Button decisionBtn;
+    ConstraintLayout addressLayout;
     TextView newAddressTxt;
     TextView oldAddressTxt;
     Button zoomOutBtn;
@@ -57,10 +59,6 @@ public class GpsCertificationActivity extends AppCompatActivity implements TMapG
     Bitmap tmapMyLocationIcon;
     Bitmap tmapMarkerIcon;
 
-    TMapGpsManager gpsManager;
-    TMapView tMapView;
-    TMapCircle tMapCircle;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +66,7 @@ public class GpsCertificationActivity extends AppCompatActivity implements TMapG
 
         linearLayoutTmap = findViewById(R.id.linearLayoutTmap);
         decisionBtn = findViewById(R.id.decisionBtn);
+        addressLayout = findViewById(R.id.addressLayout);
         newAddressTxt = findViewById(R.id.newAddressTxt);
         oldAddressTxt = findViewById(R.id.oldAddressTxt);
         zoomOutBtn = findViewById(R.id.zoomOutBtn);
@@ -117,7 +116,7 @@ public class GpsCertificationActivity extends AppCompatActivity implements TMapG
         nowLon = currentLocation.getLongitude();
 
         gpsManager = new TMapGpsManager(this);
-        gpsManager.setMinTime(1000); // ms단위
+        gpsManager.setMinTime(500); // ms단위
         gpsManager.setMinDistance(1); // m단위
         gpsManager.setProvider(gpsManager.GPS_PROVIDER);
         gpsManager.OpenGps();
@@ -134,7 +133,6 @@ public class GpsCertificationActivity extends AppCompatActivity implements TMapG
         tMapView.setLocationPoint(nowLon, nowLat);
         tMapView.setIcon(tmapMyLocationIcon);
         tMapView.setIconVisibility(true);
-        tMapView.setSightVisible(true);
 
         tMapCircle = new TMapCircle();
         tMapCircle.setCenterPoint(new TMapPoint(nowLat, nowLon));
@@ -219,8 +217,7 @@ public class GpsCertificationActivity extends AppCompatActivity implements TMapG
 
                                     newAddressTxt.setText(adrresses[2]);
                                     oldAddressTxt.setText(adrresses[1]);
-                                    newAddressTxt.setVisibility(View.VISIBLE);
-                                    oldAddressTxt.setVisibility(View.VISIBLE);
+                                    addressLayout.setVisibility(View.VISIBLE);
                                 }
                             });
                         }

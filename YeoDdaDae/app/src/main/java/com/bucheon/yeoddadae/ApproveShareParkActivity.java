@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +26,7 @@ public class ApproveShareParkActivity extends AppCompatActivity {
 
     Button approveShareParkBackBtn;
     ListView approveShareParkListView;
+    TextView approveShareParkNoTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +35,7 @@ public class ApproveShareParkActivity extends AppCompatActivity {
 
         approveShareParkBackBtn = findViewById(R.id.approveShareParkBackBtn);
         approveShareParkListView = findViewById(R.id.approveShareParkListView);
-
-        spa = new ShareParkAdapter(ApproveShareParkActivity.this);
+        approveShareParkNoTxt = findViewById(R.id.approveShareParkNoTxt);
 
         approveShareParkBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +58,11 @@ public class ApproveShareParkActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        spa.clearItem();
+        if (spa != null) {
+            spa.clearItem();
+        }
+        spa = new ShareParkAdapter(ApproveShareParkActivity.this);
+
 
         FirestoreDatabase fd = new FirestoreDatabase();
         fd.loadUnapprovedShareParks(new OnFirestoreDataLoadedListener() {
@@ -80,8 +85,15 @@ public class ApproveShareParkActivity extends AppCompatActivity {
 
                     spa.addItem(new ShareParkItem(ownerId, lat, lon, parkDetailAddress, isApproval, isCancelled, isCalculated, price, time, upTime, documentId));
                 }
-
-                approveShareParkListView.setAdapter(spa);
+                if (myShareParks.size() == 0) {
+                    approveShareParkListView.setVisibility(View.GONE);
+                    approveShareParkNoTxt.setVisibility(View.VISIBLE);
+                }
+                else {
+                    approveShareParkListView.setVisibility(View.VISIBLE);
+                    approveShareParkNoTxt.setVisibility(View.GONE);
+                    approveShareParkListView.setAdapter(spa);
+                }
             }
 
             @Override

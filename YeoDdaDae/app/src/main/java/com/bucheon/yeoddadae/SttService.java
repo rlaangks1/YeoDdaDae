@@ -17,14 +17,21 @@ import java.util.List;
 
 public class SttService extends Service {
     int originalStreamVolume;
-    int originalStreamVolume2;
-    int originalStreamVolume3;
     AudioManager amanager;
 
     private final String TAG = "SttService";
     private SpeechRecognizer speechRecognizer;
     private SttCallback sttCallback;
     private boolean isListeningForWakeUpWord = false;
+
+    public interface SttCallback {
+        void onMainCommandReceived(String mainCommand);
+        void onUpdateUI(String message);
+    }
+
+    public void setSttCallback(SttCallback callback) {
+        sttCallback = callback;
+    }
 
     public class SttBinder extends Binder {
         public SttService getService() {
@@ -42,9 +49,7 @@ public class SttService extends Service {
         super.onCreate();
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         amanager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-        originalStreamVolume = amanager.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
-        originalStreamVolume2 = amanager.getStreamVolume(AudioManager.STREAM_SYSTEM);
-        originalStreamVolume3 = amanager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        originalStreamVolume = amanager.getStreamVolume(AudioManager.STREAM_MUSIC);
     }
 
     @Override
@@ -53,20 +58,20 @@ public class SttService extends Service {
         return START_STICKY;
     }
 
-    public void stopContinuousListening() {
+    public void stopListening() {
         if (speechRecognizer != null) {
             speechRecognizer.destroy();
         }
     }
 
     public void startListeningForWakeUpWord() {
-        stopContinuousListening();
+        stopListening();
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         listenForWakeUpWord();
     }
 
     public void startListeningForMainCommand() {
-        stopContinuousListening();
+        stopListening();
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         listenForMainCommand();
     }
@@ -74,20 +79,15 @@ public class SttService extends Service {
     private void listenForWakeUpWord() {
         isListeningForWakeUpWord = true;
 
-        // 음성 인식을 위한 Intent 생성
+        amanager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, AudioManager.FLAG_PLAY_SOUND);
+
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR"); // 언어를 한국어로 설정
 
-        amanager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 0, AudioManager.FLAG_PLAY_SOUND);
-        amanager.setStreamVolume(AudioManager.STREAM_SYSTEM, 0, AudioManager.FLAG_PLAY_SOUND);
-        amanager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, AudioManager.FLAG_PLAY_SOUND);
+        speechRecognizer.startListening(intent); // 듣기 시작
 
-        // 듣기 시작
-        speechRecognizer.startListening(intent);
-
-        // RecognitionListener 설정
-        speechRecognizer.setRecognitionListener(new RecognitionListener() {
+        speechRecognizer.setRecognitionListener(new RecognitionListener() { // RecognitionListener 설정
             @Override
             public void onReadyForSpeech(Bundle params) {
                 Log.d(TAG, "호출어듣기 : 준비완료");
@@ -97,7 +97,9 @@ public class SttService extends Service {
             }
 
             @Override
-            public void onBeginningOfSpeech() {Log.d(TAG, "호출어듣기 : 말하기시작");}
+            public void onBeginningOfSpeech() {
+                Log.d(TAG, "호출어듣기 : 말하기시작");
+            }
 
             @Override
             public void onResults(Bundle results) {
@@ -107,27 +109,21 @@ public class SttService extends Service {
                     String wakeUpWord = matches.get(0);
 
                     Log.d(TAG, "호출어듣기 : 내용 : " + wakeUpWord);
-
-                    // 웨이크업 워드가 감지되었는지 확인
-                    if (wakeUpWord.contains("음성 명령")) {
-                        Log.d(TAG, "호출어듣기 : 호출어확인성공");
-                        amanager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, originalStreamVolume, AudioManager.FLAG_PLAY_SOUND);
-                        amanager.setStreamVolume(AudioManager.STREAM_SYSTEM, originalStreamVolume2, AudioManager.FLAG_PLAY_SOUND);
-                        amanager.setStreamVolume(AudioManager.STREAM_MUSIC, originalStreamVolume3, AudioManager.FLAG_PLAY_SOUND);
+                    
+                    if (wakeUpWord.contains("음성 명령")) { // 웨이크업 워드가 감지되었는지 확인
+                        Log.d(TAG, "호출어듣기 : 호출어 확인 성공");
+                        amanager.setStreamVolume(AudioManager.STREAM_MUSIC, originalStreamVolume, AudioManager.FLAG_PLAY_SOUND);
                         startListeningForMainCommand();
                     }
                     else {
-                        Log.d(TAG, "호출어듣기 : 호출어가아님");
-                        // 계속해서 웨이크업 워드를 듣기 시작
-                        // 돌아가기를 처리하기 전에 플래그를 확인합니다.
-                        if (isListeningForWakeUpWord) {
+                        Log.d(TAG, "호출어듣기 : 호출어가 아님");
+                        if (isListeningForWakeUpWord) { // 계속해서 웨이크업 워드를 듣기 시작. 돌아가기를 처리하기 전에 플래그를 확인
                             listenForWakeUpWord();
                         }
                     }
                 }
-                else {
-                    // 웨이크업 워드를 듣지 못한 경우에 대한 처리를 여기에 추가
-                    Log.d(TAG, "호출어듣기 : 웨이크업 워드를 듣지 못했습니다. 다시 시도합니다.");
+                else { // 결과가 null 이거나 없음
+                    Log.d(TAG, "호출어듣기 : 듣기 결과가 null 이거나 없음");
                     listenForWakeUpWord();
                 }
             }
@@ -135,19 +131,15 @@ public class SttService extends Service {
             @Override
             public void onError(int error) {
                 switch (error) {
-                    case SpeechRecognizer.ERROR_NO_MATCH:
-                        // 음성을 인식하지 못했을 때의 처리를 여기에 추가
+                    case SpeechRecognizer.ERROR_NO_MATCH: // 음성을 인식하지 못했을 때의 처리를 여기에 추가
                         Log.d(TAG, "호출어듣기 : 음성을 인식하지 못했습니다");
-                        listenForWakeUpWord(); // 다시 웨이크업 워드를 듣기 시작
+                        listenForWakeUpWord();
                         break;
-                    case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
-                        // 음성 입력이 타임아웃 되었을 때의 처리를 여기에 추가
+                    case SpeechRecognizer.ERROR_SPEECH_TIMEOUT: // 음성 입력이 타임아웃 되었을 때
                         Log.d(TAG, "호출어듣기 : 타임아웃");
-                        listenForWakeUpWord(); // 다시 웨이크업 워드를 듣기 시작
+                        listenForWakeUpWord();
                         break;
-                    // 다른 오류 코드에 대한 처리를 추가할 수 있습니다.
                     default:
-                        // 그 외의 경우에 대한 처리
                         break;
                 }
             }
@@ -168,16 +160,13 @@ public class SttService extends Service {
     private void listenForMainCommand() {
         isListeningForWakeUpWord = false;  // 플래그를 false로 설정
 
-        // 음성 인식을 위한 Intent 생성
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR"); // 언어를 한국어로 설정
 
-        // 듣기 시작
-        speechRecognizer.startListening(intent);
+        speechRecognizer.startListening(intent); // 듣기 시작
 
-        // RecognitionListener 설정
-        speechRecognizer.setRecognitionListener(new RecognitionListener() {
+        speechRecognizer.setRecognitionListener(new RecognitionListener() { // RecognitionListener 설정
             @Override
             public void onReadyForSpeech(Bundle params) {
                 Log.d(TAG, "명령어듣기 : 준비완료");
@@ -199,8 +188,6 @@ public class SttService extends Service {
                     String mainCommand = matches.get(0);
 
                     Log.d(TAG, "명령어듣기 : 내용 : " + mainCommand);
-
-                    // 콜백을 사용하여 mainCommand 전달
                     if (sttCallback != null) {
                         sttCallback.onMainCommandReceived(mainCommand);
                     }
@@ -210,15 +197,17 @@ public class SttService extends Service {
             @Override
             public void onError(int error) {
                 switch (error) {
-                    case SpeechRecognizer.ERROR_NO_MATCH:
-                        // 음성을 인식하지 못했을 때의 처리를 여기에 추가
-                        Log.d(TAG, "명령어듣기 : 음성을 인식하지 못했습니다");
-                        listenForWakeUpWord();
+                    case SpeechRecognizer.ERROR_NO_MATCH: // 음성을 인식하지 못했을 때의 처리를 여기에 추가
+                        Log.d(TAG, "명령어듣기 : 음성인식실패");
+                        if (sttCallback != null) {
+                            sttCallback.onUpdateUI("음성인식실패");
+                        }
                         break;
-                    case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
-                        // 음성 입력이 타임아웃 되었을 때의 처리를 여기에 추가
+                    case SpeechRecognizer.ERROR_SPEECH_TIMEOUT: // 음성 입력이 타임아웃 되었을 때의 처리를 여기에 추가
                         Log.d(TAG, "명령어듣기 : 타임아웃");
-                        listenForWakeUpWord();
+                        if (sttCallback != null) {
+                            sttCallback.onUpdateUI("타임아웃");
+                        }
                         break;
                     // 다른 오류 코드에 대한 처리를 추가할 수 있습니다.
                     default:
@@ -240,18 +229,9 @@ public class SttService extends Service {
         });
     }
 
-    public interface SttCallback {
-        void onMainCommandReceived(String mainCommand);
-        void onUpdateUI(String message);
-    }
-
-    public void setSttCallback(SttCallback callback) {
-        sttCallback = callback;
-    }
-
     @Override
     public void onDestroy() {
-        stopContinuousListening();
+        stopListening();
         super.onDestroy();
     }
 }

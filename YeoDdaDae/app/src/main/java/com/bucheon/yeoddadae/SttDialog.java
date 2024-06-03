@@ -48,7 +48,6 @@ public class SttDialog extends Dialog {
         sttBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onMessageSend("닫기");
                 dismiss();
             }
         });
@@ -57,15 +56,22 @@ public class SttDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 toggleMicState();
-                listener.onMessageSend("버튼클릭");
+                listener.onMessageSend("SttDialog버튼클릭");
             }
         });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        listener.onMessageSend("SttDialog닫힘");
     }
 
     private void toggleMicState() {
         isListening = !isListening; // 상태 토글
         sttListenBtn.setImageResource(isListening ? R.drawable.mic_activate : R.drawable.mic_inactivate); // 상태에 따라 이미지 변경
         setSttStatusTxt(isListening ? "활성화" : "비활성화");
+
     }
 
     void setSttStatusTxt(String s) {

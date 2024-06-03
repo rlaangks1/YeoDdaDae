@@ -122,9 +122,7 @@ public class PaymentActivity extends AppCompatActivity {
                         hm.put("isCancelled", false);
                         hm.put("upTime", FieldValue.serverTimestamp());
                         hm.put("price", price);
-                        fd.insertData("reservation", hm);
-
-                        fd.searchDocumentId("reservation", "id", loginId, "time", reservationTime, new OnFirestoreDataLoadedListener() {
+                        fd.insertData("reservation", hm, new OnFirestoreDataLoadedListener() {
                             @Override
                             public void onDataLoaded(Object data) {
                                 String reservationDocumentId = (String) data;
@@ -135,20 +133,29 @@ public class PaymentActivity extends AppCompatActivity {
                                 hm.put("reservationId", reservationDocumentId);
                                 hm.put("price", price);
                                 hm.put("upTime", FieldValue.serverTimestamp());
-                                fd.insertData("spendYdPointHistory", hm);
+                                fd.insertData("spendYdPointHistory", hm, new OnFirestoreDataLoadedListener() {
+                                    @Override
+                                    public void onDataLoaded(Object data) {
+                                        Toast.makeText(getApplicationContext(), "예약되었습니다", Toast.LENGTH_SHORT).show();
 
-                                Toast.makeText(getApplicationContext(), "예약되었습니다", Toast.LENGTH_SHORT);
+                                        Intent returnIntent = new Intent();
+                                        setResult(RESULT_OK, returnIntent);
 
-                                Intent returnIntent = new Intent();
-                                setResult(RESULT_OK, returnIntent);
+                                        finish();
+                                    }
 
-                                finish();
+                                    @Override
+                                    public void onDataLoadError(String errorMessage) {
+                                        Log.d(TAG, errorMessage);
+                                        Toast.makeText(getApplicationContext(), "소비 문서 추가 중 오류 발생", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                             }
 
                             @Override
                             public void onDataLoadError(String errorMessage) {
                                 Log.d(TAG, errorMessage);
-                                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "예약 문서 추가 중 오류 발생", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -166,10 +173,9 @@ public class PaymentActivity extends AppCompatActivity {
                                     })
                                     .setNegativeButton("아니오", (dialog, which) -> dialog.dismiss())
                                     .show();
-                        }
-                        else {
+                        } else {
                             Log.d(TAG, errorMessage);
-                            Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "결제 시도 중 오류 발생", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

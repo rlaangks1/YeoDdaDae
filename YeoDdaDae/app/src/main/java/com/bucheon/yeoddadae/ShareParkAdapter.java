@@ -88,7 +88,7 @@ public class ShareParkAdapter extends BaseAdapter {
         Context context = parent.getContext();
         ShareParkItem sharePark = items.get(position);
 
-        if (activity instanceof MyShareParkActivity) {
+        if (activity instanceof MainActivity) {
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.share_park_item, parent, false);
@@ -258,7 +258,7 @@ public class ShareParkAdapter extends BaseAdapter {
                 shareParkUpTimeTxt.setText(dateString);
             }
         }
-        else if (activity instanceof ApproveShareParkActivity) {
+        else if (context instanceof ApproveShareParkActivity) {
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.approve_share_park_item, parent, false);

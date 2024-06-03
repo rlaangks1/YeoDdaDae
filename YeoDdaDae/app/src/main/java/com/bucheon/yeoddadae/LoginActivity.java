@@ -17,7 +17,7 @@ import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
 import com.google.firebase.FirebaseApp;
 
 public class LoginActivity extends AppCompatActivity {
-    FirestoreDatabase fd = new FirestoreDatabase();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +59,7 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
                 else {
+                    FirestoreDatabase fd = new FirestoreDatabase();
                     fd.login(id, pw, new OnFirestoreDataLoadedListener() {
                         @Override
                         public void onDataLoaded(Object isAdmin) {
@@ -74,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
                         public void onDataLoadError(String errorMessage) {
                             // Handle login failure
                             if (errorMessage.equals("아이디 또는 비밀번호가 일치하지 않습니다")) {
-                                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "아이디 또는 비밀번호가 일치하지 않습니다", Toast.LENGTH_SHORT).show();
                             }
                             else {
                                 Log.d(TAG, errorMessage);

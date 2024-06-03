@@ -36,6 +36,11 @@ public class ReservationAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void clearItem () {
+        items.clear();
+        notifyDataSetChanged();
+    }
+
     public ReservationItem findItem(String id, Timestamp ts) {
         for (ReservationItem item : items) {
             if (item.getId().equals(id) && item.getUpTime().equals(ts)) {

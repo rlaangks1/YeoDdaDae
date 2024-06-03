@@ -64,21 +64,11 @@
         android:layout_marginTop="2dp"
         android:layout_marginLeft="10dp" />
 
-    <TextView
-        android:id="@+id/parkAddition"
-        android:text="부가정보"
-        android:textSize="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/parkPrice"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="2dp"
-        android:layout_marginLeft="10dp" />
 
     <TextView
-        android:id="@+id/parkStarRate"
-        android:text="☆☆☆☆☆"
-        android:textSize="10dp"
+        android:id="@+id/parkConditionAndDiscount"
+        android:text="조건/혜택"
+        android:textSize="12dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
