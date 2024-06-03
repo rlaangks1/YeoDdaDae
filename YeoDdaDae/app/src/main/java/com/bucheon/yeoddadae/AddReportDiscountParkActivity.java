@@ -25,13 +25,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AddReportDiscountParkActivity extends AppCompatActivity {
-
     String loginId;
     String poiId;
     double poiLat;
     double poiLon;
+    String poiPhone;
     SearchParkAdapter spa;
-
 
     ImageButton addReportDiscountParkBackBtn;
     EditText addReportDiscountParkAddressContentEditTxt;
@@ -107,19 +106,19 @@ public class AddReportDiscountParkActivity extends AppCompatActivity {
                                 TMapPOIItem item = arrayList.get(i);
 
                                 if (item.firstNo.equals("0") && item.secondNo.equals("0")) {
-                                    spa.addItem(new ParkItem(4, item.name, item.radius, null, item.telNo, null, 0, item.frontLat, item.frontLon, item.id, null));
+                                    spa.addItem(new ParkItem(4, item.name, item.radius, null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
                                 }
                                 else {
                                     if (item.name.contains("주차")) {
                                         if (item.name.contains("공영")) {
-                                            spa.addItem(new ParkItem(2, item.name, item.radius, null, item.telNo, null, 0, item.frontLat, item.frontLon, item.id, null));
+                                            spa.addItem(new ParkItem(2, item.name, item.radius, null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
                                         }
                                         else {
-                                            spa.addItem(new ParkItem(1, item.name, item.radius, null, item.telNo, null, 0, item.frontLat, item.frontLon, item.id, null));
+                                            spa.addItem(new ParkItem(1, item.name, item.radius, null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
                                         }
                                     }
                                     else {
-                                        spa.addItem(new ParkItem(5, item.name, item.radius, null, item.telNo, null, 0, item.frontLat, item.frontLon, item.id, null));
+                                        spa.addItem(new ParkItem(5, item.name, item.radius, null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
                                     }
 
                                 }
@@ -144,6 +143,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity {
                 poiId = pi.getPoiId();
                 poiLat = pi.getLat();
                 poiLon = pi.getLon();
+                poiPhone = pi.getPhone();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -201,6 +201,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity {
                 hm.put("poiID", poiId);
                 hm.put("poiLat", poiLat);
                 hm.put("poiLon", poiLon);
+                hm.put("poiPhone", poiPhone);
                 hm.put("parkName", parkName);
                 hm.put("parkCondition", condition);
                 hm.put("parkDiscount", discountInt);

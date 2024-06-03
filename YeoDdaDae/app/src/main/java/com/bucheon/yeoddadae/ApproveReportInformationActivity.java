@@ -26,55 +26,43 @@ import java.util.Locale;
 
 public class ApproveReportInformationActivity extends AppCompatActivity {
     String documentId;
-    HashMap<String, Object> shareParkInfo;
+    HashMap<String, Object> reportInfo;
 
-    Button approveShareParkInfoBackBtn;
-    TextView approveShareParkInfoIdContentTxt;
-    TextView approveShareParkInfoShareParkNewAddressContentTxt;
-    TextView approveShareParkInfoShareParkOldAddressContentTxt;
-    TextView approveShareParkInfoShareParkDetailaddressContentTxt;
-    TextView approveShareParkInfoOwnerIdContentTxt;
-    TextView approveShareParkInfoNameContentTxt;
-    TextView approveShareParkInfoPhoneContentTxt;
-    TextView approveShareParkInfoEmailContentTxt;
-    TextView approveShareParkInfoRelationContentTxt;
-    TextView approveShareParkInfoPriceContentTxt;
-    TextView approveShareParkInfoHourPerTxt;
-    TextView approveShareParkInfoWonTxt;
-    TextView approveShareParkInfoShareTimeContentTxt;
-    TextView approveShareParkInfoUpTimeContentTxt;
-    Button approveBtn;
+    Button approveReportInfoBackBtn;
+    TextView approveReportInfoIdContentTxt;
+    TextView approveReportInfoParkNameContentTxt;
+    TextView approveReportInfoParkNewAddressContentTxt;
+    TextView approveReportInfoParkOldAddressContentTxt;
+    TextView approveReportInfoConditionContentTxt;
+    TextView approveReportInfoDiscountContentTxt;
+    TextView approveReportInfoWonTxt;
+    TextView approveReportInfoUpTimeContentTxt;
+    Button approveReportInfoApproveBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apporve_report_information);
 
-        approveShareParkInfoBackBtn = findViewById(R.id.approveShareParkInfoBackBtn);
-        approveShareParkInfoIdContentTxt = findViewById(R.id.approveShareParkInfoIdContentTxt);
-        approveShareParkInfoShareParkNewAddressContentTxt = findViewById(R.id.approveShareParkInfoShareParkNewAddressContentTxt);
-        approveShareParkInfoShareParkOldAddressContentTxt = findViewById(R.id.approveShareParkInfoShareParkOldAddressContentTxt);
-        approveShareParkInfoShareParkDetailaddressContentTxt = findViewById(R.id.approveShareParkInfoShareParkDetailaddressContentTxt);
-        approveShareParkInfoOwnerIdContentTxt = findViewById(R.id.approveShareParkInfoOwnerIdContentTxt);
-        approveShareParkInfoNameContentTxt = findViewById(R.id.approveShareParkInfoNameContentTxt);
-        approveShareParkInfoPhoneContentTxt = findViewById(R.id.approveShareParkInfoPhoneContentTxt);
-        approveShareParkInfoEmailContentTxt = findViewById(R.id.approveShareParkInfoEmailContentTxt);
-        approveShareParkInfoRelationContentTxt = findViewById(R.id.approveShareParkInfoRelationContentTxt);
-        approveShareParkInfoPriceContentTxt = findViewById(R.id.approveShareParkInfoPriceContentTxt);
-        approveShareParkInfoHourPerTxt = findViewById(R.id.approveShareParkInfoHourPerTxt);
-        approveShareParkInfoWonTxt = findViewById(R.id.approveShareParkInfoWonTxt);
-        approveShareParkInfoShareTimeContentTxt = findViewById(R.id.approveShareParkInfoShareTimeContentTxt);
-        approveShareParkInfoUpTimeContentTxt = findViewById(R.id.approveShareParkInfoUpTimeContentTxt);
-        approveBtn = findViewById(R.id.approveBtn);
+        approveReportInfoBackBtn = findViewById(R.id.approveReportInfoBackBtn);
+        approveReportInfoIdContentTxt = findViewById(R.id.approveReportInfoIdContentTxt);
+        approveReportInfoParkNameContentTxt = findViewById(R.id.approveReportInfoParkNameContentTxt);
+        approveReportInfoParkNewAddressContentTxt = findViewById(R.id.approveReportInfoParkNewAddressContentTxt);
+        approveReportInfoParkOldAddressContentTxt = findViewById(R.id.approveReportInfoParkOldAddressContentTxt);
+        approveReportInfoConditionContentTxt = findViewById(R.id.approveReportInfoConditionContentTxt);
+        approveReportInfoDiscountContentTxt = findViewById(R.id.approveReportInfoDiscountContentTxt);
+        approveReportInfoWonTxt = findViewById(R.id.approveReportInfoWonTxt);
+        approveReportInfoUpTimeContentTxt = findViewById(R.id.approveReportInfoUpTimeContentTxt);
+        approveReportInfoApproveBtn = findViewById(R.id.approveReportInfoApproveBtn);
 
         Intent inIntent = getIntent();
         documentId = inIntent.getStringExtra("documentId");
 
         FirestoreDatabase fd = new FirestoreDatabase();
-        fd.loadShareParkInfo(documentId, new OnFirestoreDataLoadedListener() {
+        fd.loadOneReport(documentId, new OnFirestoreDataLoadedListener() {
             @Override
             public void onDataLoaded(Object data) {
-                shareParkInfo = (HashMap<String, Object>) data;
+                reportInfo = (HashMap<String, Object>) data;
                 init();
             }
 
@@ -86,18 +74,18 @@ public class ApproveReportInformationActivity extends AppCompatActivity {
             }
         });
 
-        approveShareParkInfoBackBtn.setOnClickListener(new View.OnClickListener() {
+        approveReportInfoBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
 
-        approveBtn.setOnClickListener(new View.OnClickListener() {
+        approveReportInfoApproveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirestoreDatabase fd = new FirestoreDatabase();
-                fd.approveSharePark(documentId, new OnFirestoreDataLoadedListener() {
+                fd.approveReport(documentId, new OnFirestoreDataLoadedListener() {
                     @Override
                     public void onDataLoaded(Object data) {
                         Toast.makeText(getApplicationContext(), "공유주차장 승인되었습니다", Toast.LENGTH_SHORT).show();
@@ -119,10 +107,12 @@ public class ApproveReportInformationActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                approveShareParkInfoIdContentTxt.setText(documentId);
+                approveReportInfoIdContentTxt.setText(documentId);
+
+                approveReportInfoParkNameContentTxt.setText((String) reportInfo.get("parkName"));
 
                 TMapData tMapData = new TMapData();
-                tMapData.reverseGeocoding((double) shareParkInfo.get("lat"), (double) shareParkInfo.get("lon"), "A10", new TMapData.reverseGeocodingListenerCallback() {
+                tMapData.reverseGeocoding((double) reportInfo.get("poiLat"), (double) reportInfo.get("poiLon"), "A10", new TMapData.reverseGeocodingListenerCallback() {
                     @Override
                     public void onReverseGeocoding(TMapAddressInfo tMapAddressInfo) {
                         if (tMapAddressInfo != null) {
@@ -130,62 +120,31 @@ public class ApproveReportInformationActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     String [] adrresses = tMapAddressInfo.strFullAddress.split(",");
-                                    approveShareParkInfoShareParkNewAddressContentTxt.setText(adrresses[2]);
-                                    approveShareParkInfoShareParkOldAddressContentTxt.setText(adrresses[1]);
+                                    approveReportInfoParkNewAddressContentTxt.setText(adrresses[2]);
+                                    approveReportInfoParkOldAddressContentTxt.setText(adrresses[1]);
                                 }
                             });
                         }
                     }
                 });
-                approveShareParkInfoShareParkDetailaddressContentTxt.setText((String) shareParkInfo.get("parkDetailAddress"));
 
-                approveShareParkInfoOwnerIdContentTxt.setText((String) shareParkInfo.get("ownerId"));
+                approveReportInfoConditionContentTxt.setText((String) reportInfo.get("parkCondition"));
 
-                approveShareParkInfoNameContentTxt.setText((String) shareParkInfo.get("ownerName"));
-
-                approveShareParkInfoPhoneContentTxt.setText((String) shareParkInfo.get("ownerPhone"));
-
-                approveShareParkInfoEmailContentTxt.setText((String) shareParkInfo.get("ownerEmail"));
-
-                approveShareParkInfoRelationContentTxt.setText((String) shareParkInfo.get("ownerParkingRelation"));
-                
-                if ((long) shareParkInfo.get("price") == 0) {
-                    approveShareParkInfoHourPerTxt.setVisibility(View.GONE);
-                    approveShareParkInfoWonTxt.setVisibility(View.GONE);
-                    approveShareParkInfoPriceContentTxt.setText("무료");
+                if ((long) reportInfo.get("parkDiscount") == 0) {
+                    approveReportInfoWonTxt.setVisibility(View.GONE);
+                    approveReportInfoDiscountContentTxt.setText("무료");
                 }
                 else {
-                    approveShareParkInfoPriceContentTxt.setText(Long.toString((long) shareParkInfo.get("price")));
+                    approveReportInfoWonTxt.setVisibility(View.VISIBLE);
+                    approveReportInfoDiscountContentTxt.setText(Long.toString((long) reportInfo.get("parkDiscount")));
                 }
 
-                HashMap<String, ArrayList<String>> shareTime = (HashMap<String, ArrayList<String>>) shareParkInfo.get("time");
-                List<String> keys = new ArrayList<>(shareTime.keySet());
-                Collections.sort(keys);
-                StringBuilder textBuilder = new StringBuilder();
-                for (String key : keys) {
-                    ArrayList<String> values = shareTime.get(key);
-
-                    int year = Integer.parseInt(key.substring(0, 4));
-                    int month = Integer.parseInt(key.substring(4, 6));
-                    int day = Integer.parseInt(key.substring(6));
-
-                    String startTimeString = values.get(0).substring(0,2) + ":" + values.get(0).substring(2);
-                    String endTimeString = values.get(1).substring(0,2) + ":" + values.get(1).substring(2);
-
-                    textBuilder.append(year + "년 " + month + "월 " + day + "일 " + startTimeString + "부터 " + endTimeString + "까지\n");
-                }
-                String shareTimeString = "";
-                if (!textBuilder.toString().equals("")) {
-                    shareTimeString = textBuilder.toString().substring(0, textBuilder.length() - 1);
-                }
-                approveShareParkInfoShareTimeContentTxt.setText(shareTimeString);
-
-                Timestamp timestamp = (Timestamp) shareParkInfo.get("upTime");
+                Timestamp timestamp = (Timestamp) reportInfo.get("upTime");
                 if (timestamp != null) {
                     Date date = timestamp.toDate();
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
                     String dateString = sdf.format(date);
-                    approveShareParkInfoUpTimeContentTxt.setText(dateString);
+                    approveReportInfoUpTimeContentTxt.setText(dateString);
                 }
             }
         });

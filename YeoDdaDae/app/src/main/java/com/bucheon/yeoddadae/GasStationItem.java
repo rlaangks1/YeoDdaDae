@@ -11,12 +11,10 @@ public class GasStationItem {
     private String highDieselPrice;
     private String phone;
     private String brand;
-    private String addition;
-    private int starRate; // 0:☆☆☆☆☆, 5: ★★★★★
     private double lat;
     private double lon;
 
-    public GasStationItem(String name, String radius, String gasolinePrice, String dieselPrice, String highGasolinePrice, String highDieselPrice, String phone, String brand,String addition, int starRate, String lat, String lon) {
+    public GasStationItem(String name, String radius, String gasolinePrice, String dieselPrice, String highGasolinePrice, String highDieselPrice, String phone, String brand, String lat, String lon) {
         this.name = name;
         this.radius = radius;
         this.gasolinePrice = gasolinePrice;
@@ -25,8 +23,6 @@ public class GasStationItem {
         this.highDieselPrice = highDieselPrice;
         this.phone = phone;
         this.brand = brand;
-        this.addition = addition;
-        this.starRate = starRate;
         this.lat = Double.parseDouble(lat);
         this.lon = Double.parseDouble(lon);
     }
@@ -55,14 +51,6 @@ public class GasStationItem {
     }
 
     public String getBrand() { return brand; }
-
-    public String getAddition() {
-        return addition;
-    }
-
-    public int getStarRate() {
-        return starRate;
-    }
 
     public double getLat() {
         return lat;

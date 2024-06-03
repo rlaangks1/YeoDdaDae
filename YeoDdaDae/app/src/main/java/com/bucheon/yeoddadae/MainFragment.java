@@ -31,7 +31,6 @@ import com.skt.Tmap.TMapTapi;
 import com.skt.Tmap.TMapView;
 
 public class MainFragment extends Fragment {
-    private int PERMISSION_REQUEST_CODE = 1;
     boolean apiKeyCertified;
     String loginId;
     FragmentToActivityListener dataPasser;

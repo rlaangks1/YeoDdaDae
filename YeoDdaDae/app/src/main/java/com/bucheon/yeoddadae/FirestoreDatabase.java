@@ -20,6 +20,10 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.Transaction;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.skt.Tmap.TMapData;
+import com.skt.Tmap.TMapPoint;
+import com.skt.Tmap.TMapPolyLine;
+import com.skt.Tmap.address_info.TMapAddressInfo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -430,16 +434,49 @@ public class FirestoreDatabase {
                 });
     }
 
+    public void findDicountPark(double nowLat, double nowLon, double radiusKiloMeter, OnFirestoreDataLoadedListener listener) {
+        ArrayList<ParkItem> resultList = new ArrayList<>();
+
+        db.collection("reportDiscountPark")
+                .whereEqualTo("isApproval", true)
+                .whereEqualTo("isCancelled", false)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        double discountParkLat = (double) document.get("poiLat");
+                        double discountParkLon = (double) document.get("poiLon");
+
+                        TMapPolyLine tpolyline = new TMapPolyLine();
+                        tpolyline.addLinePoint(new TMapPoint(nowLat, nowLon));
+                        tpolyline.addLinePoint(new TMapPoint(discountParkLat, discountParkLon));
+                        double distance = tpolyline.getDistance() / 1000; // km단위
+
+                        if (distance <= radiusKiloMeter) {
+                            resultList.add(new ParkItem(6, (String) document.get("parkName"), Double.toString(distance), null, (String) document.get("poiPhone"), (String) document.get("parkCondition"), (long) document.get("parkDiscount"), Double.toString(discountParkLat), Double.toString(discountParkLon), (String) document.get("poiID"), document.getId()));
+                        }
+                    }
+                    if (resultList != null && resultList.size() != 0) {
+                        Log.d(TAG, "제보주차장 검색 성공. 결과 수 : " + resultList.size());
+                    }
+                    else {
+                        Log.d(TAG, "해당 제보주차장이 없음");
+                    }
+                    listener.onDataLoaded(resultList);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
 
     public void findSharePark(String id, double nowLat, double nowLon, double radiusKiloMeter, OnFirestoreDataLoadedListener listener) {
-        List<ParkItem> resultList = new ArrayList<>();
+        ArrayList<ParkItem> resultList = new ArrayList<>();
 
         if (id == null || id.equals("")) {
             Log.d(TAG, "아이디가 null이거나 빈 문자열임");
             return;
         }
-
-        int[] i = {1};
 
         db.collection("sharePark")
                 .whereEqualTo("isApproval", true)
@@ -482,38 +519,26 @@ public class FirestoreDatabase {
                             continue;
                         }
 
-                        Double resultLat = (Double) document.get("lat");
-                        Double resultLon = (Double) document.get("lon");
+                        double shareParkLat = (double) document.get("lat");
+                        double shareParkLon = (double) document.get("lon");
 
-                        final double R = 6371e3; // 지구 반경 (미터)
-
-                        double lat1Rad = Math.toRadians(nowLat); // 위도 및 경도를 라디안으로 변환
-                        double lon1Rad = Math.toRadians(nowLon);
-                        double lat2Rad = Math.toRadians(resultLat);
-                        double lon2Rad = Math.toRadians(resultLon);
-
-                        double deltaLat = lat2Rad - lat1Rad; // 위도 및 경도의 차이 계산
-                        double deltaLon = lon2Rad - lon1Rad;
-
-                        // Haversine 공식 적용
-                        double a = Math.pow(Math.sin(deltaLat / 2), 2) + Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.pow(Math.sin(deltaLon / 2), 2);
-                        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-                        double distance = (R * c) / 1000; // 거리 계산 km 단위
+                        TMapPolyLine tpolyline = new TMapPolyLine();
+                        tpolyline.addLinePoint(new TMapPoint(nowLat, nowLon));
+                        tpolyline.addLinePoint(new TMapPoint(shareParkLat, shareParkLon));
+                        double distance = tpolyline.getDistance() / 1000; // km단위
 
                         if (distance <= radiusKiloMeter) {
-                            resultList.add(new ParkItem(3, Integer.toString(i[0]), Double.toString(distance), "10000", (String) document.get("ownerPhone"), "부가", 0, Double.toString(resultLat), Double.toString(resultLon), null, document.getId()));
-                            i[0]++;
+                            String parkName = id + ": " + (String) document.get("parkDetailAddress");
+                            resultList.add(new ParkItem(3, parkName, Double.toString(distance), Long.toString((long) document.get("price")), (String) document.get("ownerPhone"), null, -1, Double.toString(shareParkLat), Double.toString(shareParkLon), null, document.getId()));
                         }
                     }
                     if (resultList != null && resultList.size() != 0) {
                         Log.d(TAG, "공유주차장 검색 성공. 결과 수 : " + resultList.size());
-                        listener.onDataLoaded(resultList);
                     }
                     else {
                         Log.d(TAG, "해당 공유주차장이 없음");
-                        listener.onDataLoaded(null);
                     }
+                    listener.onDataLoaded(resultList);
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "데이터 검색 오류", e);
@@ -995,6 +1020,31 @@ public class FirestoreDatabase {
                 });
     }
 
+    public void approveReport (String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+        db.runTransaction((Transaction.Function<Void>) transaction -> {
+            DocumentSnapshot documentSnapshot = transaction.get(db.collection("reportDiscountPark").document(firestoreDocumentId));
+
+            if (!(boolean) documentSnapshot.get("isApproval")) {
+                if (!(boolean) documentSnapshot.get("isCancelled")) {
+
+                    transaction.update(db.collection("reportDiscountPark").document(firestoreDocumentId), "isApproval", true);
+                }
+                else {
+                    throw new FirebaseFirestoreException("취소된 제보임", FirebaseFirestoreException.Code.ABORTED);
+                }
+            }
+            else {
+                throw new FirebaseFirestoreException("이미 승인된 제보임", FirebaseFirestoreException.Code.ABORTED);
+            }
+
+            return null;
+        }).addOnSuccessListener(aVoid -> {
+            listener.onDataLoaded(true);
+        }).addOnFailureListener(e -> {
+            listener.onDataLoadError(e.getMessage());
+        });
+    }
+
     public void loadAnotherReports (int targetDistanceKM, double nowLat, double nowLon, String loginId, OnFirestoreDataLoadedListener listener) {
         db.collection("reportDiscountPark")
                 .whereNotEqualTo("reporterId", loginId)
@@ -1012,24 +1062,13 @@ public class FirestoreDatabase {
                             resultArrayList.add(data);
                         }
                         else {
-                            Double resultLat = (Double) documentSnapshot.get("poiLat");
-                            Double resultLon = (Double) documentSnapshot.get("poiLon");
+                            double reportLat = (double) documentSnapshot.get("poiLat");
+                            double reportLon = (double) documentSnapshot.get("poiLon");
 
-                            final double R = 6371e3; // 지구 반경 (미터)
-
-                            double lat1Rad = Math.toRadians(nowLat); // 위도 및 경도를 라디안으로 변환
-                            double lon1Rad = Math.toRadians(nowLon);
-                            double lat2Rad = Math.toRadians(resultLat);
-                            double lon2Rad = Math.toRadians(resultLon);
-
-                            double deltaLat = lat2Rad - lat1Rad; // 위도 및 경도의 차이 계산
-                            double deltaLon = lon2Rad - lon1Rad;
-
-                            // Haversine 공식 적용
-                            double a = Math.pow(Math.sin(deltaLat / 2), 2) + Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.pow(Math.sin(deltaLon / 2), 2);
-                            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-                            double distance = (R * c) / 1000; // 거리 계산 km 단위
+                            TMapPolyLine tpolyline = new TMapPolyLine();
+                            tpolyline.addLinePoint(new TMapPoint(nowLat, nowLon));
+                            tpolyline.addLinePoint(new TMapPoint(reportLat, reportLon));
+                            double distance = tpolyline.getDistance() / 1000; // km단위
 
                             if (distance <= targetDistanceKM) {
                                 HashMap<String, Object> data = new HashMap<>(documentSnapshot.getData());

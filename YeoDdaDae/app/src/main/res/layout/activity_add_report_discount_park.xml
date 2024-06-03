@@ -61,6 +61,7 @@
                 android:id="@+id/addReportDiscountParkConditionContentEditTxt"
                 android:textSize="20dp"
                 android:singleLine="true"
+                android:maxLength="50"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/sub"
@@ -94,6 +95,7 @@
                 android:id="@+id/addReportDiscountParkBenefitContentEditTxt"
                 android:textSize="20dp"
                 android:inputType="number"
+                android:maxLength="6"
                 android:singleLine="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -104,7 +106,7 @@
 
             <TextView
                 android:id="@+id/addReportDiscountParkBenefitWonTxt"
-                android:text="원"
+                android:text="원 할인"
                 android:textSize="15dp"
                 android:textColor="@color/blue"
                 android:layout_width="wrap_content"

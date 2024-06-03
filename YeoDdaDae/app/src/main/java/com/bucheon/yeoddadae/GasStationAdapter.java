@@ -47,19 +47,6 @@ public class GasStationAdapter extends BaseAdapter {
         }
     }
 
-    public void sortByRate () {
-        if (items != null && items.size() > 1) {
-            Collections.sort(items, new Comparator<GasStationItem>() {
-                @Override
-                public int compare(GasStationItem o1, GasStationItem o2) {
-                    // Compare by star rate in descending order
-                    return Integer.compare(o2.getStarRate(), o1.getStarRate());
-                }
-            });
-            notifyDataSetChanged(); // Notify adapter that dataset has changed
-        }
-    }
-
     public void sortByGasolinePrice () {
         if (items != null && items.size() > 1) {
             Collections.sort(items, new Comparator<GasStationItem>() {
@@ -175,8 +162,6 @@ public class GasStationAdapter extends BaseAdapter {
         TextView gasStationDistance = convertView.findViewById(R.id.gasStationDistance);
         TextView gasStationBrand = convertView.findViewById(R.id.gasStationBrand);
         TextView gasStationOilPrice = convertView.findViewById(R.id.gasStationOilPrice);
-        TextView gasStationAddition = convertView.findViewById(R.id.gasStationAddition);
-        TextView gasStationStarRate = convertView.findViewById(R.id.gasStationStarRate);
         TextView gasStationPhone = convertView.findViewById(R.id.gasStationPhone);
 
         // 뷰 내용
@@ -213,10 +198,6 @@ public class GasStationAdapter extends BaseAdapter {
             totalOilPriceString += "/고급경 " + formattedHighDieselPriceString;
         }
         gasStationOilPrice.setText(totalOilPriceString);
-
-        gasStationAddition.setText(gasStation.getAddition());
-
-        gasStationStarRate.setText(Integer.toString(gasStation.getStarRate()));
 
         String originalPhoneString = gasStation.getPhone();
         String newPhoneString = "";

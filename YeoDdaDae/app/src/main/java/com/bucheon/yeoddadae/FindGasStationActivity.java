@@ -88,7 +88,6 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     Button findGasStationSttBtn;
     HorizontalScrollView gasStationSortHorizontalScrollView;
     Button sortByDistanceBtn;
-    Button sortByRateBtn;
     Button sortByGasolinePriceBtn;
     Button sortByDieselPriceBtn;
     Button sortByHighGasolinePriceBtn;
@@ -123,7 +122,6 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         findGasStationSttBtn = findViewById(R.id.findGasStationSttBtn);
         gasStationSortHorizontalScrollView = findViewById(R.id.gasStationSortHorizontalScrollView);
         sortByDistanceBtn = findViewById(R.id.sortByDistanceBtn);
-        sortByRateBtn = findViewById(R.id.sortByRateBtn);
         sortByGasolinePriceBtn = findViewById(R.id.sortByGasolinePriceBtn);
         sortByDieselPriceBtn = findViewById(R.id.sortByDieselPriceBtn);
         sortByHighGasolinePriceBtn = findViewById(R.id.sortByHighGasolinePriceBtn);
@@ -273,38 +271,31 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
             }
         });
 
-        sortByRateBtn.setOnClickListener(new View.OnClickListener() {
+        sortByGasolinePriceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 findGasStation(2);
             }
         });
 
-        sortByGasolinePriceBtn.setOnClickListener(new View.OnClickListener() {
+        sortByDieselPriceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 findGasStation(3);
             }
         });
 
-        sortByDieselPriceBtn.setOnClickListener(new View.OnClickListener() {
+        sortByHighGasolinePriceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 findGasStation(4);
             }
         });
 
-        sortByHighGasolinePriceBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                findGasStation(5);
-            }
-        });
-
         sortByHighDieselPriceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findGasStation(6);
+                findGasStation(5);
             }
         });
 
@@ -316,8 +307,8 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                     GasStationItem clickedGasStation = (GasStationItem) parent.getItemAtPosition(position);
 
                     Log.d(TAG, "리스트뷰에서 주유소 아이템 클릭함 : " + clickedGasStation.getName() + ", " + clickedGasStation.getRadius() + ", " + clickedGasStation.getGasolinePrice()
-                            + ", " +  clickedGasStation.getDieselPrice() + ", " +  clickedGasStation.getPhone() + ", " + clickedGasStation.getAddition()
-                            + ", " + clickedGasStation.getStarRate() + ", " + clickedGasStation.getLat() + ", " + clickedGasStation.getLon());
+                            + ", " +  clickedGasStation.getDieselPrice() + ", " +  clickedGasStation.getPhone()
+                            + ", " + clickedGasStation.getLat()+ ", " + clickedGasStation.getLon());
 
                     // gasStationListView에 clickedGasStation만 있도록
                     GasStationAdapter tempGasStationAdapter = new GasStationAdapter();
@@ -434,96 +425,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                 for (int i = 0; i < arrayList.size(); i++) {
                     TMapPOIItem item = arrayList.get(i);
 
-                    Log.d(TAG,
-                            "=========="+ "\n"
-                                    +item.id+ "\n"
-                                    +item.name+ "\n"
-                                    +item.telNo+ "\n"
-                                    +item.frontLat+ "\n"
-                                    +item.frontLon+ "\n"
-                                    +item.noorLat+ "\n"
-                                    +item.noorLon+ "\n"
-                                    +item.upperAddrName+ "\n"
-                                    +item.middleAddrName+ "\n"
-                                    +item.lowerAddrName+ "\n"
-                                    +item.detailAddrName+ "\n"
-                                    +item.firstNo+ "\n"
-                                    +item.secondNo+ "\n"
-                                    +item.upperBizName+ "\n"
-                                    +item.middleBizName+ "\n"
-                                    +item.lowerBizName+ "\n"
-                                    +item.detailBizName+ "\n"
-                                    +item.rpFlag+ "\n"
-                                    +item.parkFlag+ "\n"
-                                    +item.detailInfoFlag+ "\n"
-                                    +item.desc+ "\n"
-                                    +item.distance+ "\n"
-                                    +item.roadName+ "\n"
-                                    +item.buildingNo1+ "\n"
-                                    +item.buildingNo2+ "\n"
-                                    +item.merchanFlag+ "\n"
-                                    +item.radius+ "\n"
-                                    +item.pkey+ "\n"
-                                    +item.navSeq+ "\n"
-                                    +item.collectionType+ "\n"
-                                    +item.firstBuildNo+ "\n"
-                                    +item.secondBuildNo+ "\n"
-                                    +item.bizName+ "\n"
-                                    +item.dataKind+ "\n"
-                                    +item.stId+ "\n"
-                                    +item.highHhSale+ "\n"
-                                    +item.minOilYn+ "\n"
-                                    +item.oilBaseSdt+ "\n"
-                                    +item.hhPrice+ "\n"
-                                    +item.ggPrice+ "\n"
-                                    +item.llPrice+ "\n"
-                                    +item.highHhPrice+ "\n"
-                                    +item.highGgPrice+ "\n"
-                                    +item.viewId+ "\n"
-                                    +item.dbKind+ "\n"
-                                    +item.lcdName+ "\n"
-                                    +item.mcdName+ "\n"
-                                    +item.scdName+ "\n"
-                                    +item.dcdName+ "\n"
-                                    +item.bldAddr+ "\n"
-                                    +item.roadScdName+ "\n"
-                                    +item.bldNo1+ "\n"
-                                    +item.bldNo2+ "\n"
-                                    +item.menu1+ "\n"
-                                    +item.menu2+ "\n"
-                                    +item.menu3+ "\n"
-                                    +item.menu4+ "\n"
-                                    +item.menu5+ "\n"
-                                    +item.twFlag+ "\n"
-                                    +item.yaFlag+ "\n"
-                                    +item.facility+ "\n"
-                                    +item.upperLegalCode+ "\n"
-                                    +item.middleLegalCode+ "\n"
-                                    +item.lowerLegalCode+ "\n"
-                                    +item.detailLegalCode+ "\n"
-                                    +item.upperAdminCode+ "\n"
-                                    +item.middleAdminCode+ "\n"
-                                    +item.lowerAdminCode+ "\n"
-                                    +item.upperCode+ "\n"
-                                    +item.middleCode+ "\n"
-                                    +item.lowerCode+ "\n"
-                                    +item.participant+ "\n"
-                                    +item.point+ "\n"
-                                    +item.merchantFlag+ "\n"
-                                    +item.merchantDispType+ "\n"
-                                    +item.mngName+ "\n"
-                                    +item.mngId+ "\n"
-                                    +item.freeYn+ "\n"
-                                    +item.reservYn+ "\n"
-                                    +item.useTime+ "\n"
-                                    +item.payYn+ "\n"
-                                    +item.fee+ "\n"
-                                    +item.updateDt+ "\n"
-                                    +item.totalCnt+ "\n"
-                                    + "==========");
-
-
-                    gasStationAdapter.addItem(new GasStationItem(item.name, item.radius, item.hhPrice, item.ggPrice, item.highHhPrice, item.highGgPrice, item.telNo, item.stId, item.menu1, 0, item.frontLat, item.frontLon));
+                    gasStationAdapter.addItem(new GasStationItem(item.name, item.radius, item.hhPrice, item.ggPrice, item.highHhPrice, item.highGgPrice, item.telNo, item.stId, item.frontLat, item.frontLon));
                     TMapPoint tpoint = new TMapPoint(Double.parseDouble(item.frontLat), Double.parseDouble(item.frontLon));
                     TMapMarkerItem tItem = new TMapMarkerItem();
                     tItem.setTMapPoint(tpoint);
@@ -542,7 +444,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
                         float px;
 
-                        switch (arrayList.size()) {
+                        switch (gasStationAdapter.getSize()) {
                             case 0:
                                 px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, displayMetrics);
                                 break;
@@ -565,7 +467,6 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                         switch (sortBy) {
                             case 1 :
                                 sortByDistanceBtn.setBackgroundColor(selectedBackgroundColor);
-                                sortByRateBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByHighGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
@@ -574,43 +475,30 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                                 break;
                             case 2 :
                                 sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByRateBtn.setBackgroundColor(selectedBackgroundColor);
-                                sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByHighGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByHighDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
-                                gasStationAdapter.sortByRate();
-                                break;
-                            case 3 :
-                                sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByRateBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByGasolinePriceBtn.setBackgroundColor(selectedBackgroundColor);
                                 sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByHighGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByHighDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
                                 gasStationAdapter.sortByGasolinePrice();
                                 break;
-                            case 4 :
+                            case 3 :
                                 sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByRateBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByDieselPriceBtn.setBackgroundColor(selectedBackgroundColor);
                                 sortByHighGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByHighDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
                                 gasStationAdapter.sortByDieselPrice();
                                 break;
-                            case 5 :
+                            case 4 :
                                 sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByRateBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByHighGasolinePriceBtn.setBackgroundColor(selectedBackgroundColor);
                                 sortByHighDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
                                 gasStationAdapter.sortByHighGasolinePrice();
                                 break;
-                            case 6 :
+                            case 5 :
                                 sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByRateBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
                                 sortByHighGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
@@ -783,12 +671,12 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                 SttService.SttBinder binder = (SttService.SttBinder) service;
                 sttService = binder.getService();
                 sttService.setSttCallback(sttCallback);
-                Log.d(ExoPlayerLibraryInfo.TAG, "MainActivity : STT 서비스 연결됨");
+                Log.d(ExoPlayerLibraryInfo.TAG, "FindGasStationActivity : STT 서비스 연결됨");
             }
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
-                Log.d(ExoPlayerLibraryInfo.TAG, "MainActivity : STT 서비스 연결 해제됨");
+                Log.d(ExoPlayerLibraryInfo.TAG, "FindGasStationActivity : STT 서비스 연결 해제됨");
             }
         };
 
@@ -819,41 +707,17 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         }
         else if (!isItemSelected && (mainCommand.contains("순") || mainCommand.contains("정렬") || mainCommand.contains("검색") || mainCommand.contains("찾"))) {
             sd.dismiss();
-            if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
-                findGasStation(2);
-            }
-            else if (mainCommand.contains("고급") && (mainCommand.contains("휘발") || mainCommand.contains("가솔린"))) {
-                findGasStation(5);
-            }
-            else if (mainCommand.contains("고급") && (mainCommand.contains("경유") || mainCommand.contains("디젤"))) {
-                findGasStation(6);
-            }
-            else if (mainCommand.contains("휘발") || mainCommand.contains("가솔린")) {
-                findGasStation(3);
-            }
-            else if (mainCommand.contains("경유") || mainCommand.contains("디젤")) {
+            if (mainCommand.contains("고급") && (mainCommand.contains("휘발") || mainCommand.contains("가솔린"))) {
                 findGasStation(4);
             }
-            else {
-                findGasStation(1);
-            }
-        }
-        else if (!isItemSelected && (mainCommand.contains("순") || mainCommand.contains("정렬") || mainCommand.contains("검색") || mainCommand.contains("찾"))) {
-            sd.dismiss();
-            if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
-                findGasStation(2);
-            }
-            else if (mainCommand.contains("고급") && (mainCommand.contains("휘발") || mainCommand.contains("가솔린"))) {
+            else if (mainCommand.contains("고급") && (mainCommand.contains("경유") || mainCommand.contains("디젤"))) {
                 findGasStation(5);
             }
-            else if (mainCommand.contains("고급") && (mainCommand.contains("경유") || mainCommand.contains("디젤"))) {
-                findGasStation(6);
-            }
             else if (mainCommand.contains("휘발") || mainCommand.contains("가솔린")) {
-                findGasStation(3);
+                findGasStation(2);
             }
             else if (mainCommand.contains("경유") || mainCommand.contains("디젤")) {
-                findGasStation(4);
+                findGasStation(3);
             }
             else {
                 findGasStation(1);
@@ -990,10 +854,10 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                     sd.setSttStatusTxt("메인 명령어 듣는 중");
                 }
                 else if (message.equals("음성인식실패")) {
-                    sd.setSttStatusTxt("음성 인식 실패\n'가까운 주유소 찾아줘'와 같이 말씀해보세요");
+                    sd.setSttStatusTxt("음성 인식 실패");
                 }
                 else if (message.equals("타임아웃")) {
-                    sd.setSttStatusTxt("음성 인식 타임 아웃\n'가까운 주유소 찾아줘'와 같이 말씀해보세요");
+                    sd.setSttStatusTxt("음성 인식 타임 아웃");
                 }
             }
         });
@@ -1003,21 +867,21 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     protected void onPause() {
         super.onPause();
 
-        sttService.stopListening();
+        if (loadingAlert.isShowing()) {
+            loadingAlert.dismiss();
+        }
+        if (sd.isShowing()) {
+            sd.dismiss();
+        }
+
+        unbindService(serviceConnection);
+        stopService(serviceIntent);
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
 
-        sttService.startListeningForWakeUpWord();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        unbindService(serviceConnection);
-        stopService(serviceIntent);
+        initSttService();
     }
 }

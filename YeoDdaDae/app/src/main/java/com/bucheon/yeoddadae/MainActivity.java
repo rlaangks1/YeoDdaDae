@@ -107,22 +107,15 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
     protected void onPause() {
         super.onPause();
 
-        sttService.stopListening();
+        unbindService(serviceConnection);
+        stopService(serviceIntent);
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
 
-        sttService.startListeningForWakeUpWord();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        unbindService(serviceConnection);
-        stopService(serviceIntent);
+        initSttService();
     }
 
     void initSttService() {
@@ -194,45 +187,59 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
             startActivity(logoutIntent);
             finish();
         }
+        else if (mainCommand.contains("메인")) {
+            sd.dismiss();
+            bottomNavView.setSelectedItemId(R.id.bt_main);
+        }
+        else if (mainCommand.contains("예약")) {
+            sd.dismiss();
+            bottomNavView.setSelectedItemId(R.id.bt_mybook);
+        }
+        else if (mainCommand.contains("공유") && mainCommand.contains("주차")) {
+            sd.dismiss();
+            bottomNavView.setSelectedItemId(R.id.bt_my_shared_park);
+        }
+        else if (mainCommand.contains("제보")) {
+            sd.dismiss();
+            bottomNavView.setSelectedItemId(R.id.bt_my_discount_park_report);
+        }
+        else if (mainCommand.contains("포인트")) {
+            sd.dismiss();
+            bottomNavView.setSelectedItemId(R.id.bt_point);
+        }
         else if (mainCommand.contains("주차")) {
             sd.dismiss();
             if (apiKeyCertified) {
-                Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
-                    findGasStationIntent.putExtra("SortBy", 2);
-                }
-                else if (mainCommand.contains("사용료") || mainCommand.contains("이용료") || mainCommand.contains("주차비") || mainCommand.contains("가격") || mainCommand.contains("싼") || mainCommand.contains("싸") || mainCommand.contains("저렴")) {
-                    findGasStationIntent.putExtra("SortBy", 3);
+                Intent findParkIntent = new Intent(getApplicationContext(), FindParkActivity.class);
+                findParkIntent.putExtra("loginId", loginId);
+                if (mainCommand.contains("사용료") || mainCommand.contains("이용료") || mainCommand.contains("주차비") || mainCommand.contains("가격") || mainCommand.contains("싼") || mainCommand.contains("싸") || mainCommand.contains("저렴")) {
+                    findParkIntent.putExtra("SortBy", 2);
                 }
                 else {
-                    findGasStationIntent.putExtra("SortBy", 1);
+                    findParkIntent.putExtra("SortBy", 1);
                 }
-                startActivity(findGasStationIntent);
+                startActivity(findParkIntent);
             }
         }
         else if (mainCommand.contains("주유")) {
             sd.dismiss();
             if (apiKeyCertified) { // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:휘발유가순, 4: 경유가순 5: 고급휘발유가순, 6: 고급경유가순
                 Intent findGasStationIntent = new Intent(getApplicationContext(), FindGasStationActivity.class);
-                if (mainCommand.contains("평점") || mainCommand.contains("별점") || mainCommand.contains("리뷰")) {
-                    findGasStationIntent.putExtra("SortBy", 2);
-                }
-                else if (mainCommand.contains("고급") && (mainCommand.contains("휘발") || mainCommand.contains("가솔린"))) {
-                    findGasStationIntent.putExtra("SortBy", 5);
+                if (mainCommand.contains("고급") && (mainCommand.contains("휘발") || mainCommand.contains("가솔린"))) {
+                    findGasStationIntent.putExtra("SortBy", 4);
                 }
                 else if (mainCommand.contains("고급") && (mainCommand.contains("경유") || mainCommand.contains("디젤"))) {
-                    findGasStationIntent.putExtra("SortBy", 6);
+                    findGasStationIntent.putExtra("SortBy", 5);
                 }
                 else if (mainCommand.contains("휘발") || mainCommand.contains("가솔린")) {
-                    findGasStationIntent.putExtra("SortBy", 3);
+                    findGasStationIntent.putExtra("SortBy", 2);
                 }
                 else if (mainCommand.contains("경유") || mainCommand.contains("디젤")) {
-                    findGasStationIntent.putExtra("SortBy", 4);
+                    findGasStationIntent.putExtra("SortBy", 3);
                 }
                 else {
                     findGasStationIntent.putExtra("SortBy", 1);
                 }
-                Log.d(TAG, "????");
                 startActivity(findGasStationIntent);
             }
         }
