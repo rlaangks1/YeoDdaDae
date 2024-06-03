@@ -14,8 +14,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.FieldValue;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class YdPointChargeActivity extends AppCompatActivity {
     String loginId;
@@ -45,10 +47,11 @@ public class YdPointChargeActivity extends AppCompatActivity {
             @Override
             public void onDataLoaded(Object data) {
                 ydPoint = (long) data;
+                String formattedYdPoint = NumberFormat.getNumberInstance(Locale.KOREA).format(ydPoint);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        chargeHavePointContentTxt.setText(Long.toString(ydPoint));
+                        chargeHavePointContentTxt.setText(formattedYdPoint);
                     }
                 });
             }

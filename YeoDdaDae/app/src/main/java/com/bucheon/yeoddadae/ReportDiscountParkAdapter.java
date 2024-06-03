@@ -1,5 +1,9 @@
 package com.bucheon.yeoddadae;
 
+import static android.content.ContentValues.TAG;
+
+import android.util.Log;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -40,6 +44,11 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
         return null; // 못 찾은 경우 null 반환
     }
 
+    public void clearItem () {
+        items.clear();
+        notifyDataSetChanged();
+    }
+
     public void sortByUpTime() {
         Collections.sort(items, new Comparator<ReportDiscountParkItem>() {
             @Override
@@ -71,7 +80,7 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
         Context context = parent.getContext();
         ReportDiscountParkItem report = items.get(position);
 
-        if (activity instanceof MyReportDiscountParkActivity) {
+        if (activity instanceof MainActivity) {
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.my_report_discount_park_item, parent, false);
@@ -111,13 +120,16 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
             }
 
             Timestamp timestamp = report.getUpTime();
-            Date date = timestamp.toDate();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
-            String dateString = sdf.format(date);
-            reportDiscountParkUpTimeTxt.setText(dateString);
+            if (timestamp != null) {
+                Date date = timestamp.toDate();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
+                String dateString = sdf.format(date);
+                reportDiscountParkUpTimeTxt.setText(dateString);
+            }
         }
 
-        else if (activity instanceof AnotherReportDiscountParkActivity) {
+        else if (activity instanceof AnotherReportDiscountParkActivity
+                || activity instanceof ApproveReportActivity) {
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.report_discount_park_item, parent, false);
@@ -147,10 +159,12 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
             reportDiscountParkIDTxt.setText(report.getReporterId());
 
             Timestamp timestamp = report.getUpTime();
-            Date date = timestamp.toDate();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
-            String dateString = sdf.format(date);
-            reportDiscountParkUpTimeTxt.setText(dateString);
+            if (timestamp != null) {
+                Date date = timestamp.toDate();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
+                String dateString = sdf.format(date);
+                reportDiscountParkUpTimeTxt.setText(dateString);
+            }
         }
 
         return convertView;

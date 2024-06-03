@@ -17,9 +17,11 @@
             android:id="@+id/linearLayoutTmap"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"></LinearLayout>
+            android:orientation="horizontal">
+        </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topConstraintLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp">
@@ -52,20 +54,16 @@
                         android:layout_height="wrap_content" />
 
                     <Button
-                        android:id="@+id/sortByRateBtn"
-                        android:text="평점순"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"/>
-
-                    <Button
                         android:id="@+id/sortByParkPriceBtn"
                         android:text="주차비"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"/>
+
                 </LinearLayout>
+
             </HorizontalScrollView>
+
             <ImageButton
                 android:id="@+id/searchStartBtn"
                 android:layout_width="85dp"
@@ -185,6 +183,15 @@
                 app:layout_constraintEnd_toEndOf="@+id/gpsBtn"
                 app:layout_constraintStart_toStartOf="@+id/gpsBtn"
                 app:layout_constraintTop_toTopOf="@+id/gpsBtn" />
+
+            <Button
+                android:id="@+id/findParkSttBtn"
+                android:text="stt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/gpsBtn"
+                app:layout_constraintLeft_toLeftOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -202,6 +209,23 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
 
+            <Button
+                android:id="@+id/findParkOnlyReportParkBtn"
+                android:text="제보만"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/findParkBackBtn"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginBottom="20dp" />
+
+            <Button
+                android:id="@+id/findParkOnlyShareParkBtn"
+                android:text="공유만"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/findParkOnlyReportParkBtn"
+                app:layout_constraintRight_toRightOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -214,6 +238,7 @@
 
             <EditText
                 android:id="@+id/searchEdTxt"
+                android:singleLine="true"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"

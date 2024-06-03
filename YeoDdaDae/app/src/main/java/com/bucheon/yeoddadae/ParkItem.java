@@ -1,26 +1,26 @@
 package com.bucheon.yeoddadae;
 
 public class ParkItem {
-    private int type; // 1:일반, 2:공영, 3:공유, 4:주소, 5:장소
+    private int type; // 1:일반, 2:공영, 3:공유, 4:주소, 5:장소, 6: 제보주차장
     private String name;
     private String radius;
     private String parkPrice;
     private String phone;
-    private String addition;
-    private int starRate; // 0:☆☆☆☆☆, 5: ★★★★★
+    private String condition;
+    private long discount;
     private double lat;
     private double lon;
     private String poiId;
     private String firestoreDocumentId;
 
-    public ParkItem(int type, String name, String radius, String parkPrice, String phone, String addition, int starRate, String lat, String lon, String poiId, String firestoreDocumentId) {
+    public ParkItem(int type, String name, String radius, String parkPrice, String phone, String condition, long discount, String lat, String lon, String poiId, String firestoreDocumentId) {
         this.type = type;
         this.name = name;
         this.radius = radius;
         this.parkPrice = parkPrice;
         this.phone = phone;
-        this.addition = addition;
-        this.starRate = starRate;
+        this.condition = condition;
+        this.discount = discount;
         this.lat = Double.parseDouble(lat);
         this.lon = Double.parseDouble(lon);
         this.poiId = poiId;
@@ -46,12 +46,12 @@ public class ParkItem {
         return phone;
     }
 
-    public String getAddition() {
-        return addition;
+    public String getCondition() {
+        return condition;
     }
 
-    public int getStarRate() {
-        return starRate;
+    public long getDiscount() {
+        return discount;
     }
 
     public double getLat() {

@@ -1,6 +1,9 @@
 package com.bucheon.yeoddadae;
 
+import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
+
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 
 public class ParkAdapter extends BaseAdapter {
     ArrayList<ParkItem> items = new ArrayList<ParkItem>();
@@ -28,6 +32,38 @@ public class ParkAdapter extends BaseAdapter {
         return null; // 못 찾은 경우 null 반환
     }
 
+    public int getSize() {
+        return items.size();
+    }
+
+    public void poiOverReport() {
+        if (items == null || items.size() < 2) {
+            return;
+        }
+
+        ArrayList<ParkItem> itemsToRemove = new ArrayList<>();
+        for (int i = 0; i < items.size(); i++) {
+            ParkItem item1 = items.get(i);
+            for (int j = i + 1; j < items.size(); j++) {
+                ParkItem item2 = items.get(j);
+                if ((item1.getPoiId() != null) && (item2.getPoiId() != null) && (item1.getPoiId().equals(item2.getPoiId()))) {
+                    if (item1.getType() == 6 && item2.getType() == 6) {
+                        Log.d(TAG, "한 poi에 제보가 2개 이상임");
+                        continue;
+                    }
+                    if (item1.getType() == 6) {
+                        itemsToRemove.add(item2);
+                    }
+                    else if (item2.getType() == 6) {
+                        itemsToRemove.add(item1);
+                    }
+                }
+            }
+        }
+        items.removeAll(itemsToRemove);
+        notifyDataSetChanged();
+    }
+
     public void sortByDistance () {
         if (items != null && items.size() > 1) {
             Collections.sort(items, new Comparator<ParkItem>() {
@@ -41,26 +77,25 @@ public class ParkAdapter extends BaseAdapter {
         }
     }
 
-    public void sortByRate () {
+    public void sortByParkPrice() {
         if (items != null && items.size() > 1) {
             Collections.sort(items, new Comparator<ParkItem>() {
                 @Override
                 public int compare(ParkItem o1, ParkItem o2) {
-                    // Compare by star rate in descending order
-                    return Integer.compare(o2.getStarRate(), o1.getStarRate());
-                }
-            });
-            notifyDataSetChanged(); // Notify adapter that dataset has changed
-        }
-    }
+                    String price1 = o1.getParkPrice();
+                    String price2 = o2.getParkPrice();
 
-    public void sortByParkPrice () {
-        if (items != null && items.size() > 1) {
-            Collections.sort(items, new Comparator<ParkItem>() {
-                @Override
-                public int compare(ParkItem o1, ParkItem o2) {
-                    // Compare by gasoline price in ascending order
-                    return Long.compare(Long.parseLong(o1.getParkPrice()), Long.parseLong(o2.getParkPrice()));
+                    if (price1 == null && price2 == null) {
+                        return 0; // Both are null, they are equal
+                    }
+                    if (price1 == null) {
+                        return 1;
+                    }
+                    if (price2 == null) {
+                        return -1;
+                    }
+
+                    return Long.compare(Long.parseLong(price1), Long.parseLong(price2)); // Both are not null, compare their values
                 }
             });
             notifyDataSetChanged(); // Notify adapter that dataset has changed
@@ -98,8 +133,7 @@ public class ParkAdapter extends BaseAdapter {
         TextView parkType = convertView.findViewById(R.id.parkType);
         TextView parkDistance = convertView.findViewById(R.id.parkDistance);
         TextView parkPrice = convertView.findViewById(R.id.parkPrice);
-        TextView parkAddition = convertView.findViewById(R.id.parkAddition);
-        TextView parkStarRate = convertView.findViewById(R.id.parkStarRate);
+        TextView parkConditionAndDiscount = convertView.findViewById(R.id.parkConditionAndDiscount);
         TextView parkPhone = convertView.findViewById(R.id.parkPhone);
 
         // 뷰 내용
@@ -122,6 +156,9 @@ public class ParkAdapter extends BaseAdapter {
             case 5 :
                 parkType.setText("장소");
                 break;
+            case 6 :
+                parkType.setText("제보주차장");
+                break;
             default :
                 parkType.setText("뭐냐고");
         }
@@ -137,19 +174,32 @@ public class ParkAdapter extends BaseAdapter {
         parkDistance.setText(formattedDistanceString + "km");
 
         String parkPriceValue = park.getParkPrice();
-        if (parkPriceValue != null && !parkPriceValue.equals("null")) {
-            formatter = new DecimalFormat("#,###");
-            number = Double.parseDouble(parkPriceValue);
-            String formattedPriceString = formatter.format(number);
-            parkPrice.setText("시간 당 " + formattedPriceString + "원");
+        if (parkPriceValue != null && !parkPriceValue.equals("null") ) {
+            if (Integer.parseInt(parkPriceValue) == 0) {
+                parkPrice.setText("무료");
+            }
+            else {
+                formatter = new DecimalFormat("#,###");
+                number = Double.parseDouble(parkPriceValue);
+                String formattedPriceString = formatter.format(number);
+                parkPrice.setText("시간 당 " + formattedPriceString + "원");
+            }
         }
         else {
             parkPrice.setText("");
         }
 
-        parkAddition.setText(park.getAddition());
-
-        parkStarRate.setText(Integer.toString(park.getStarRate()));
+        if (park.getCondition() != null && park.getDiscount() != -1) {
+            if (park.getDiscount() == 0) {
+                parkConditionAndDiscount.setText(park.getCondition() + "/무료");
+            }
+            else {
+                parkConditionAndDiscount.setText(park.getCondition() + "/" + park.getDiscount() + "원 할인");
+            }
+        }
+        else {
+            parkConditionAndDiscount.setText("");
+        }
 
         String originalPhoneString = park.getPhone();
         String newPhoneString = "";

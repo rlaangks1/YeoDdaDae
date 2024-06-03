@@ -202,12 +202,20 @@
         android:layout_marginRight="10dp" >
 
         <Button
+            android:id="@+id/myShareParkNaviBtn"
+            android:text="길 안내"
+            android:textSize="20sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
             android:id="@+id/myShareParkInfoCancelBtn"
             android:text="공유취소"
             android:textSize="20sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/myShareParkNaviBtn"
             app:layout_constraintLeft_toLeftOf="parent"/>
 
         <Button
@@ -216,7 +224,7 @@
             android:textSize="20sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/myShareParkNaviBtn"
             app:layout_constraintLeft_toLeftOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
