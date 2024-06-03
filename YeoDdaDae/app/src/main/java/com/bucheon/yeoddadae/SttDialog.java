@@ -55,7 +55,6 @@ public class SttDialog extends Dialog {
         sttListenBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toggleMicState();
                 listener.onMessageSend("SttDialog버튼클릭");
             }
         });
@@ -67,11 +66,12 @@ public class SttDialog extends Dialog {
         listener.onMessageSend("SttDialog닫힘");
     }
 
-    private void toggleMicState() {
-        isListening = !isListening; // 상태 토글
-        sttListenBtn.setImageResource(isListening ? R.drawable.mic_activate : R.drawable.mic_inactivate); // 상태에 따라 이미지 변경
-        setSttStatusTxt(isListening ? "활성화" : "비활성화");
+    void changeToActiveIcon () {
+        sttListenBtn.setImageResource(R.drawable.mic_activate);
+    }
 
+    void changeToInactivateIcon() {
+        sttListenBtn.setImageResource(R.drawable.mic_inactivate);
     }
 
     void setSttStatusTxt(String s) {

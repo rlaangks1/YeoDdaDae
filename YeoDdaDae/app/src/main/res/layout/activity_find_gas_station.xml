@@ -32,7 +32,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"/>
-            
+
             <HorizontalScrollView
                 android:id="@+id/gasStationSortHorizontalScrollView"
                 android:scrollbars="none"
@@ -183,9 +183,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="5dp"
-            android:layout_gravity="center|right" >
+            android:layout_gravity="bottom|right" >
 
             <ImageButton
                 android:id="@+id/findGasStationBackBtn"
@@ -194,7 +192,9 @@
                 android:src="@drawable/backbtn"
                 android:background="@android:color/transparent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginBottom="20dp"
+                android:layout_marginRight="5dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>

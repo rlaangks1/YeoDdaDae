@@ -244,6 +244,7 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
             }
         }
         else {
+            sd.changeToInactivateIcon();
             sd.setSttStatusTxt(mainCommand + "\n알 수 없는 명령어입니다\n'가까운 주유소 찾아줘'와 같이 말씀해보세요");
         }
     }
@@ -255,12 +256,15 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
             public void run() {
                 if (message.equals("메인명령어듣는중")) {
                     sd.show();
+                    sd.changeToActiveIcon();
                     sd.setSttStatusTxt("메인 명령어 듣는 중");
                 }
                 else if (message.equals("음성인식실패")) {
+                    sd.changeToInactivateIcon();
                     sd.setSttStatusTxt("음성 인식 실패\n'가까운 주유소 찾아줘'와 같이 말씀해보세요");
                 }
                 else if (message.equals("타임아웃")) {
+                    sd.changeToInactivateIcon();
                     sd.setSttStatusTxt("음성 인식 타임 아웃\n'가까운 주유소 찾아줘'와 같이 말씀해보세요");
                 }
             }

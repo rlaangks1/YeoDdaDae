@@ -5,7 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".AdminMainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -135,50 +135,6 @@
             app:layout_constraintStart_toEndOf="@+id/toStatisticsImg"
             app:layout_constraintTop_toTopOf="@+id/toStatisticsBtn" />
 
-        <ImageButton
-            android:id="@+id/toSttImgBtn"
-            android:layout_width="170dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/round_button"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toStatisticsBtn" />
-
-        <ImageView
-            android:id="@+id/toSttMicrophone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/microphone"
-            app:layout_constraintBottom_toBottomOf="@+id/toSttImgBtn"
-            app:layout_constraintEnd_toStartOf="@+id/toSttTxt"
-            app:layout_constraintStart_toStartOf="@+id/toSttImgBtn"
-            app:layout_constraintTop_toTopOf="@+id/toSttImgBtn" />
-
-        <TextView
-            android:id="@+id/toSttTxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:text="@string/microphone"
-            android:textAppearance="@style/microphone"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/toSttImgBtn"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/toSttImgBtn"
-            app:layout_constraintTop_toTopOf="@+id/toSttImgBtn" />
-
-        <ImageButton
-            android:id="@+id/adminLogoutBtn"
-            android:layout_width="110dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/round_button"
-            android:text="로그아웃"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toSttImgBtn" />
-
         <TextView
             android:id="@+id/newparking"
             android:layout_width="wrap_content"
@@ -191,34 +147,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mainicon" />
 
-        <FrameLayout
-            android:id="@+id/main_frame"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="300dp"
-            android:layout_height="200dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toStatisticsTxt"
-            app:srcCompat="@drawable/parking_image" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="로그아웃"
-            android:textColor="@color/white"
-            android:textSize="17dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/adminLogoutBtn"
-            app:layout_constraintEnd_toEndOf="@+id/adminLogoutBtn"
-            app:layout_constraintStart_toStartOf="@+id/adminLogoutBtn"
-            app:layout_constraintTop_toTopOf="@+id/adminLogoutBtn" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView

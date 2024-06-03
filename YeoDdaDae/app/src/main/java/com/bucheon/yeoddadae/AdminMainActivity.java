@@ -22,7 +22,6 @@ public class AdminMainActivity extends AppCompatActivity {
     ImageButton toApproveShareParkBtn;
     ImageButton toApproveReportBtn;
     ImageButton toStatisticsBtn;
-    ImageButton adminLogoutBtn;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ImageButton menubarBtn;
@@ -35,34 +34,18 @@ public class AdminMainActivity extends AppCompatActivity {
         toApproveShareParkBtn = findViewById(R.id.toApproveShareParkBtn);
         toApproveReportBtn = findViewById(R.id.toApproveReportBtn);
         toStatisticsBtn = findViewById(R.id.toStatisticsBtn);
-        adminLogoutBtn = findViewById(R.id.adminLogoutBtn);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.navigation_view);
+        menubarBtn = findViewById(R.id.menubarBtn);
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
 
-        toApproveShareParkBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent approveShareParkIntent = new Intent(getApplicationContext(), ApproveShareParkActivity.class);
-                startActivity(approveShareParkIntent);
-            }
-        });
-
-        toApproveReportBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent approveReportIntent = new Intent(getApplicationContext(), ApproveReportActivity.class);
-                startActivity(approveReportIntent);
-
-            }
-        });
-
-        toStatisticsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+        View headerView = navigationView.getHeaderView(0);
+        TextView navHeaderUsername = headerView.findViewById(R.id.nowIdTxt);
+        if (loginId != null) {
+            navHeaderUsername.setText(loginId);
+        }
 
         menubarBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,20 +68,26 @@ public class AdminMainActivity extends AppCompatActivity {
             }
         });
 
-        // 네비게이션뷰 아이디 표시
-        View headerView = navigationView.getHeaderView(0);
-        TextView navHeaderUsername = headerView.findViewById(R.id.nowIdTxt);
-        if (loginId != null) {
-            navHeaderUsername.setText(loginId);
-        }
-
-        adminLogoutBtn.setOnClickListener(new View.OnClickListener() {
+        toApproveShareParkBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginId = null;
-                Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
-                startActivity(logoutIntent);
-                finish();
+                Intent approveShareParkIntent = new Intent(getApplicationContext(), ApproveShareParkActivity.class);
+                startActivity(approveShareParkIntent);
+            }
+        });
+
+        toApproveReportBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent approveReportIntent = new Intent(getApplicationContext(), ApproveReportActivity.class);
+                startActivity(approveReportIntent);
+            }
+        });
+
+        toStatisticsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }

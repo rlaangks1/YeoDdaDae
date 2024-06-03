@@ -38,7 +38,6 @@ public class MainFragment extends Fragment {
     ImageButton toSttImgBtn;
     ImageButton toFindParkImgBtn;
     ImageButton toFindGasStationImgBtn;
-    ImageButton toSharedParkImgBtn;
     ImageButton toMyReportDiscountParkImgBtn;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -69,7 +68,6 @@ public class MainFragment extends Fragment {
         toSttImgBtn = view.findViewById(R.id.toSttImgBtn);
         toFindParkImgBtn = view.findViewById(R.id.toFindParkImgBtn);
         toFindGasStationImgBtn = view.findViewById(R.id.toFindGasStationImgBtn);
-        toSharedParkImgBtn = view.findViewById(R.id.toSharedParkImgBtn);
         toMyReportDiscountParkImgBtn = view.findViewById(R.id.toMyReportDiscountParkImgBtn);
         drawerLayout = view.findViewById(R.id.drawer_layout);
         navigationView = view.findViewById(R.id.navigation_view);
@@ -132,20 +130,6 @@ public class MainFragment extends Fragment {
             }
         });
 
-        toSharedParkImgBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "1");
-                if (apiKeyCertified) {
-                    Intent myReservationIntent = new Intent(getActivity().getApplicationContext(), ShareParkActivity.class);
-                    myReservationIntent.putExtra("loginId", loginId);
-                    startActivity(myReservationIntent);
-                } else {
-                    Toast.makeText(getActivity().getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
         toMyReportDiscountParkImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,22 +142,6 @@ public class MainFragment extends Fragment {
                 }
             }
         });
-
-        /*
-        toYdPointChargeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent ydPointChargeIntent = new Intent(getActivity().getApplicationContext(), YdPointChargeActivity.class);
-                ydPointChargeIntent.putExtra("loginId", loginId);
-                startActivity(ydPointChargeIntent);
-            }
-        });
-        toYdPointHistoryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
-        */
 
         return view;
     }
