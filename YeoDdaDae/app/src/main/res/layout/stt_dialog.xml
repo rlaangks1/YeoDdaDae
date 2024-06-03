@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="200dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <Button
+    <ImageButton
         android:id="@+id/sttBackBtn"
-        android:text="back"
-        android:textSize="15sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        android:src="@drawable/backbtn"
+        android:background="@android:color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/sttListenBtn"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:src="@drawable/mic_activate"
+        android:background="@android:color/transparent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -35,5 +38,7 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
