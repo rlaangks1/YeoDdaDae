@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
@@ -18,6 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.skt.Tmap.TMapData;
@@ -1020,29 +1023,49 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void approveReport (String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
-        db.runTransaction((Transaction.Function<Void>) transaction -> {
-            DocumentSnapshot documentSnapshot = transaction.get(db.collection("reportDiscountPark").document(firestoreDocumentId));
+    public void approveReport(String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+        db.collection("reportDiscountPark")
+            .document(firestoreDocumentId)
+            .get()
+            .addOnSuccessListener(documentSnapshot -> {
+                if (!(boolean) documentSnapshot.get("isApproval")) {
+                    if (!(boolean) documentSnapshot.get("isCancelled")) {
+                        String id = (String) documentSnapshot.get("reporterId");
 
-            if (!(boolean) documentSnapshot.get("isApproval")) {
-                if (!(boolean) documentSnapshot.get("isCancelled")) {
+                        db.collection("reportDiscountPark")
+                                .document(firestoreDocumentId)
+                                .update("isApproval", true)
+                                .addOnSuccessListener(aVoid -> {
+                                    receiveYdPoint(id, 3000, "할인주차장 제보 승인", new OnFirestoreDataLoadedListener() {
+                                        @Override
+                                        public void onDataLoaded(Object data) {
+                                            listener.onDataLoaded(true);
+                                        }
 
-                    transaction.update(db.collection("reportDiscountPark").document(firestoreDocumentId), "isApproval", true);
+                                        @Override
+                                        public void onDataLoadError(String errorMessage) {
+                                            Log.d(TAG, errorMessage);
+                                            listener.onDataLoadError(errorMessage);
+                                        }
+                                    });
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.d(TAG, "데이터 수정 오류", e);
+                                    listener.onDataLoadError(e.getMessage());
+                                });
+                    }
+                    else{
+                        listener.onDataLoadError("취소된 제보주차장임");
+                    }
                 }
                 else {
-                    throw new FirebaseFirestoreException("취소된 제보임", FirebaseFirestoreException.Code.ABORTED);
+                    listener.onDataLoadError("이미 승인된 제보주차장임");
                 }
-            }
-            else {
-                throw new FirebaseFirestoreException("이미 승인된 제보임", FirebaseFirestoreException.Code.ABORTED);
-            }
-
-            return null;
-        }).addOnSuccessListener(aVoid -> {
-            listener.onDataLoaded(true);
-        }).addOnFailureListener(e -> {
-            listener.onDataLoadError(e.getMessage());
-        });
+            })
+            .addOnFailureListener(e -> {
+                Log.d(TAG, "데이터 검색 오류", e);
+                listener.onDataLoadError(e.getMessage());
+            });
     }
 
     public void loadAnotherReports (int targetDistanceKM, double nowLat, double nowLon, String loginId, OnFirestoreDataLoadedListener listener) {
