@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
     ImageButton toSttImgBtn;
     ImageButton toFindParkImgBtn;
     ImageButton toFindGasStationImgBtn;
-    ImageButton toSharedParkImgBtn;
     ImageButton toMyReportDiscountParkImgBtn;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -94,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
         toSttImgBtn = findViewById(R.id.toSttImgBtn);
         toFindParkImgBtn = findViewById(R.id.toFindParkImgBtn);
         toFindGasStationImgBtn = findViewById(R.id.toFindGasStationImgBtn);
-        toSharedParkImgBtn = findViewById(R.id.toSharedParkImgBtn);
         toMyReportDiscountParkImgBtn = findViewById(R.id.toMyReportDiscountParkImgBtn);
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
@@ -215,31 +213,6 @@ public class MainActivity extends AppCompatActivity implements SttService.SttCal
                 }
             });
 
-            toSharedParkImgBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (apiKeyCertified) {
-                        Intent myReservationIntent = new Intent(getApplicationContext(), ShareParkActivity.class);
-                        myReservationIntent.putExtra("loginId", loginId);
-                        startActivity(myReservationIntent);
-                    } else {
-                        Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-
-            toSharedParkImgBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (apiKeyCertified) {
-                        Intent shareParkIntent = new Intent(getApplicationContext(), MyShareParkActivity.class);
-                        shareParkIntent.putExtra("loginId", loginId);
-                        startActivity(shareParkIntent);
-                    } else {
-                        Toast.makeText(getApplicationContext(), "API 키가 인증되지 않았습니다", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
 
             toMyReportDiscountParkImgBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
