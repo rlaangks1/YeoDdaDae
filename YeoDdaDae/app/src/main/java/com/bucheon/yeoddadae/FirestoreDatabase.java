@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
@@ -18,6 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.skt.Tmap.TMapData;
@@ -335,6 +338,66 @@ public class FirestoreDatabase {
                             listener.onDataLoadError("ydPoint 값이 null입니다.");
                         }
                     } else {
+                        Log.d(TAG, "해당 ID의 계정 없음");
+                        listener.onDataLoadError("해당 ID의 계정을 찾을 수 없습니다.");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void refundYdPoint(String id, int price, OnFirestoreDataLoadedListener listener) {
+        db.collection("account")
+                .whereEqualTo("id", id)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.size() > 0) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+                        Long ydPoint = document.getLong("ydPoint");
+
+                        if (ydPoint != null) {
+                            if (ydPoint > price) {
+                                db.collection("account")
+                                        .document(document.getId())
+                                        .update("ydPoint", ydPoint - price)
+                                        .addOnSuccessListener(aVoid -> {
+                                            HashMap<String, Object> hm = new HashMap<>();
+                                            hm.put("id", id);
+                                            hm.put("refundedYdPoint", price);
+                                            hm.put("upTime", FieldValue.serverTimestamp());
+                                            insertData("refundYdPoint", hm, new OnFirestoreDataLoadedListener() {
+                                                @Override
+                                                public void onDataLoaded(Object data) {
+                                                    Log.d(TAG, "포인트 환급 성공");
+                                                    listener.onDataLoaded(true);
+                                                }
+
+                                                @Override
+                                                public void onDataLoadError(String errorMessage) {
+                                                    Log.d(TAG, errorMessage);
+                                                    listener.onDataLoadError("포인트 충전 문서 기록 중 오류 발생");
+                                                }
+                                            });
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.d(TAG, "포인트 환급 중 오류", e);
+                                            listener.onDataLoadError(e.getMessage());
+                                        });
+
+                            }
+                            else {
+                                Log.d(TAG, "환급 포인트가 보유 포인트보다 큽니다");
+                                listener.onDataLoadError("환급 포인트가 보유 포인트보다 큽니다");
+                            }
+                        }
+                        else {
+                            Log.d(TAG, "ydPoint 값이 null입니다");
+                            listener.onDataLoadError("ydPoint 값이 null입니다.");
+                        }
+                    }
+                    else {
                         Log.d(TAG, "해당 ID의 계정 없음");
                         listener.onDataLoadError("해당 ID의 계정을 찾을 수 없습니다.");
                     }
@@ -1020,29 +1083,84 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void approveReport (String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
-        db.runTransaction((Transaction.Function<Void>) transaction -> {
-            DocumentSnapshot documentSnapshot = transaction.get(db.collection("reportDiscountPark").document(firestoreDocumentId));
+    public void approveReport(String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+        db.collection("reportDiscountPark")
+                .document(firestoreDocumentId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (!(boolean) documentSnapshot.get("isApproval")) {
+                        if (!(boolean) documentSnapshot.get("isCancelled")) {
+                            String reporterId = (String) documentSnapshot.get("reporterId");
 
-            if (!(boolean) documentSnapshot.get("isApproval")) {
-                if (!(boolean) documentSnapshot.get("isCancelled")) {
+                            db.collection("reportDiscountPark")
+                                    .document(firestoreDocumentId)
+                                    .update("isApproval", true)
+                                    .addOnSuccessListener(aVoid -> {
+                                        receiveYdPoint(reporterId, 3000, "할인주차장 제보 승인", new OnFirestoreDataLoadedListener() {
+                                            @Override
+                                            public void onDataLoaded(Object data) {
+                                                db.collection("rateReport")
+                                                        .whereEqualTo("reportDocumentID", firestoreDocumentId)
+                                                        .whereEqualTo("rate", "perfect")
+                                                        .get()
+                                                        .addOnSuccessListener(queryDocumentSnapshots -> {
+                                                            int documentSize = queryDocumentSnapshots.size();
+                                                            if (documentSize == 0) {
+                                                                listener.onDataLoaded(true);
+                                                            }
+                                                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                                                String raterId = (String) documentSnapshot.get("id");
 
-                    transaction.update(db.collection("reportDiscountPark").document(firestoreDocumentId), "isApproval", true);
-                }
-                else {
-                    throw new FirebaseFirestoreException("취소된 제보임", FirebaseFirestoreException.Code.ABORTED);
-                }
-            }
-            else {
-                throw new FirebaseFirestoreException("이미 승인된 제보임", FirebaseFirestoreException.Code.ABORTED);
-            }
+                                                                int count[] = {1};
+                                                                receiveYdPoint(raterId, 500, "긍정적 평가한 할인주차장 승인", new OnFirestoreDataLoadedListener() {
+                                                                    @Override
+                                                                    public void onDataLoaded(Object data) {
+                                                                        if (documentSize == count[0]) {
+                                                                            listener.onDataLoaded(true);
+                                                                        }
+                                                                        else {
+                                                                            count[0]++;
+                                                                        }
+                                                                    }
 
-            return null;
-        }).addOnSuccessListener(aVoid -> {
-            listener.onDataLoaded(true);
-        }).addOnFailureListener(e -> {
-            listener.onDataLoadError(e.getMessage());
-        });
+                                                                    @Override
+                                                                    public void onDataLoadError(String errorMessage) {
+                                                                        Log.d(TAG, errorMessage);
+                                                                        listener.onDataLoadError(errorMessage);
+                                                                    }
+                                                                });
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            Log.d(TAG, "평가자 포인트 지급 중 오류", e);
+                                                            listener.onDataLoadError(e.getMessage());
+                                                        });
+                                            }
+
+                                            @Override
+                                            public void onDataLoadError(String errorMessage) {
+                                                Log.d(TAG, errorMessage);
+                                                listener.onDataLoadError(errorMessage);
+                                            }
+                                        });
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.d(TAG, "제보자 포인트 지급 중 오류", e);
+                                        listener.onDataLoadError(e.getMessage());
+                                    });
+                        }
+                        else{
+                            listener.onDataLoadError("취소된 제보주차장임");
+                        }
+                    }
+                    else {
+                        listener.onDataLoadError("이미 승인된 제보주차장임");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
     }
 
     public void loadAnotherReports (int targetDistanceKM, double nowLat, double nowLon, String loginId, OnFirestoreDataLoadedListener listener) {

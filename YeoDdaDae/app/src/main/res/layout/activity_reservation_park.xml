@@ -171,7 +171,8 @@
                 app:layout_constraintLeft_toRightOf="@+id/reservationParkPricePerHour" />
 
             <TextView
-                android:text="원"
+                android:id="@+id/reservationParkPtTxt"
+                android:text="pt"
                 android:textSize="12sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

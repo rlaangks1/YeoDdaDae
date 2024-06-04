@@ -224,7 +224,7 @@
                 app:layout_constraintLeft_toRightOf="@+id/pricePerHourTxt" />
 
             <TextView
-                android:text="원"
+                android:text="pt"
                 android:textSize="12sp"
                 android:textColor="@color/blue"
                 android:layout_width="wrap_content"

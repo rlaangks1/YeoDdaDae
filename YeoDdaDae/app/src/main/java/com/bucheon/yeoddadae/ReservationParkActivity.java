@@ -59,6 +59,8 @@ public class ReservationParkActivity extends AppCompatActivity {
     TextView reservationSharerEmailContentTxt;
     TextView reservationSharerRelationContentTxt;
     TextView reservationPriceContentTxt;
+    TextView reservationParkPricePerHour;
+    TextView reservationParkPtTxt;
     TextView reservationWonTxt;
     TextView reservationShareTimeContentTxt;
     TextView reservationedTimeContentTxt;
@@ -82,6 +84,8 @@ public class ReservationParkActivity extends AppCompatActivity {
         reservationSharerEmailContentTxt = findViewById(R.id.reservationSharerEmailContentTxt);
         reservationSharerRelationContentTxt = findViewById(R.id.reservationSharerRelationContentTxt);
         reservationPriceContentTxt = findViewById(R.id.reservationPriceContentTxt);
+        reservationParkPricePerHour = findViewById(R.id.reservationParkPricePerHour);
+        reservationParkPtTxt = findViewById(R.id.reservationParkPtTxt);
         reservationWonTxt = findViewById(R.id.reservationWonTxt);
         reservationShareTimeContentTxt = findViewById(R.id.reservationShareTimeContentTxt);
         reservationedTimeContentTxt = findViewById(R.id.reservationedTimeContentTxt);
@@ -154,10 +158,16 @@ public class ReservationParkActivity extends AppCompatActivity {
                 }
                 String finalNewPhoneString = newPhoneString;
 
-                DecimalFormat formatter = new DecimalFormat("#,###");
                 int number = ((Long) hm.get("price")).intValue();
-                pricePerHour = number;
-                String newPriceString = formatter.format(number);
+                String newPriceString;
+                if (number == 0) {
+                    newPriceString = "무료";
+                }
+                else {
+                    DecimalFormat formatter = new DecimalFormat("#,###");
+                    pricePerHour = number;
+                    newPriceString = formatter.format(number);
+                }
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -168,6 +178,14 @@ public class ReservationParkActivity extends AppCompatActivity {
                         reservationSharerEmailContentTxt.setText((String) hm.get("ownerEmail"));
                         reservationSharerRelationContentTxt.setText((String) hm.get("ownerParkingRelation"));
                         reservationPriceContentTxt.setText(newPriceString);
+                        if (number == 0) {
+                            reservationParkPricePerHour.setVisibility(View.GONE);
+                            reservationParkPtTxt.setVisibility(View.GONE);
+                        }
+                        else {
+                            reservationParkPricePerHour.setVisibility(View.VISIBLE);
+                            reservationParkPtTxt.setVisibility(View.VISIBLE);
+                        }
                     }
                 });
 

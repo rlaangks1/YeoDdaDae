@@ -396,20 +396,25 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                             for (int i = 0; i < arrayList.size(); i++) {
                                 TMapPOIItem item = arrayList.get(i);
 
+                                TMapPolyLine tpolyline = new TMapPolyLine();
+                                tpolyline.addLinePoint(nowPoint);
+                                tpolyline.addLinePoint(new TMapPoint(Double.parseDouble(item.frontLat), Double.parseDouble(item.frontLon)));
+                                double distance = tpolyline.getDistance() / 1000; // km단위
+
                                 if (item.firstNo.equals("0") && item.secondNo.equals("0")) {
-                                    spa.addItem(new ParkItem(4, item.name, item.radius, null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                    spa.addItem(new ParkItem(4, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
                                 }
                                 else {
                                     if (item.name.contains("주차")) {
                                         if (item.name.contains("공영")) {
-                                            spa.addItem(new ParkItem(2, item.name, item.radius, null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                            spa.addItem(new ParkItem(2, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
                                         }
                                         else {
-                                            spa.addItem(new ParkItem(1, item.name, item.radius, null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                            spa.addItem(new ParkItem(1, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
                                         }
                                     }
                                     else {
-                                        spa.addItem(new ParkItem(5, item.name, item.radius, null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                        spa.addItem(new ParkItem(5, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
                                     }
                                 }
                             }
@@ -1235,10 +1240,12 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     });
                 }
                 else {
+                    sd.changeToInactivateIcon();
                     sd.setSttStatusTxt(number + "번째 결과를 찾을 수 없습니다");
                 }
             }
             else {
+                sd.changeToInactivateIcon();
                 sd.setSttStatusTxt(mainCommand + "\n알 수 없는 명령어입니다");
             }
         }
@@ -1251,12 +1258,15 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             public void run() {
                 if (message.equals("메인명령어듣는중")) {
                     sd.show();
+                    sd.changeToActiveIcon();
                     sd.setSttStatusTxt("메인 명령어 듣는 중");
                 }
                 else if (message.equals("음성인식실패")) {
+                    sd.changeToInactivateIcon();
                     sd.setSttStatusTxt("음성 인식 실패");
                 }
                 else if (message.equals("타임아웃")) {
+                    sd.changeToInactivateIcon();
                     sd.setSttStatusTxt("음성 인식 타임 아웃");
                 }
             }

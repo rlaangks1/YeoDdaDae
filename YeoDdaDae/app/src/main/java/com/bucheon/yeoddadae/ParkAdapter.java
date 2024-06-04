@@ -182,7 +182,12 @@ public class ParkAdapter extends BaseAdapter {
                 formatter = new DecimalFormat("#,###");
                 number = Double.parseDouble(parkPriceValue);
                 String formattedPriceString = formatter.format(number);
-                parkPrice.setText("시간 당 " + formattedPriceString + "원");
+                if (park.getType() == 3) {
+                    parkPrice.setText("시간 당 " + formattedPriceString + "pt");
+                }
+                else {
+                    parkPrice.setText("시간 당 " + formattedPriceString + "원");
+                }
             }
         }
         else {

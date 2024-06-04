@@ -40,6 +40,7 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity implements FragmentToActivityListener, SttService.SttCallback {
     boolean apiKeyCertified;
     String loginId;
+    Fragment savedFragment;
 
     Intent serviceIntent;
     SttService sttService;
