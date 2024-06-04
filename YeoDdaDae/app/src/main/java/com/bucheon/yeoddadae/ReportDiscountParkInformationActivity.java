@@ -98,7 +98,7 @@ public class ReportDiscountParkInformationActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        fd.cancelReport(loginId, documentId, new OnFirestoreDataLoadedListener() {
+                        fd.cancelReport(loginId, documentId, "공유자가 취소", new OnFirestoreDataLoadedListener() {
                             @Override
                             public void onDataLoaded(Object data) {
                                 Toast.makeText(getApplicationContext(), "제보 취소되었습니다", Toast.LENGTH_SHORT).show();

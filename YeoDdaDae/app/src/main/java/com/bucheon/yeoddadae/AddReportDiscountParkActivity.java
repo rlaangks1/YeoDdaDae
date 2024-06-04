@@ -225,6 +225,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                 hm.put("rateMistakeCount", 0);
                 hm.put("rateWrongCount", 0);
                 hm.put("isCancelled", false);
+                hm.put("cancelReason", null);
                 hm.put("isApproval", false);
                 hm.put("upTime", FieldValue.serverTimestamp());
 

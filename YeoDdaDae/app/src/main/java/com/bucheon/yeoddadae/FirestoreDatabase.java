@@ -45,6 +45,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -630,7 +631,7 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void cancelSharePark (String id, String firestoreDocumentId ,OnFirestoreDataLoadedListener listener) {
+    public void cancelSharePark (String id, String firestoreDocumentId, String cancelReason ,OnFirestoreDataLoadedListener listener) {
         db.collection("sharePark")
                 .document(firestoreDocumentId)
                 .get()
@@ -678,13 +679,14 @@ public class FirestoreDatabase {
                                         .whereNotEqualTo("isCancelled", false)
                                         .get()
                                         .addOnSuccessListener(documentSnapshots2 -> {
-                                            if (documentSnapshots2.size() > 0) {
-                                                listener.onDataLoadError("예약이 있어서 취소 불가");
-                                            }
-                                            else {
+                                            if (documentSnapshots2.size() == 0) {
+                                                Map<String, Object> updates = new HashMap<>();
+                                                updates.put("isCancelled", true);
+                                                updates.put("cancelReason", cancelReason);
+
                                                 db.collection("sharePark")
                                                         .document(firestoreDocumentId)
-                                                        .update("isCancelled", true)
+                                                        .update(updates)
                                                         .addOnSuccessListener(aVoid -> {
                                                             listener.onDataLoaded(true);
                                                         })
@@ -692,6 +694,9 @@ public class FirestoreDatabase {
                                                             Log.d(TAG, "공유 취소 실패");
                                                             listener.onDataLoadError(e.getMessage());
                                                         });
+                                            }
+                                            else {
+                                                listener.onDataLoadError("예약이 있어서 취소 불가");
                                             }
                                         })
                                         .addOnFailureListener(e -> {
@@ -1044,7 +1049,7 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void cancelReport (String loginId, String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+    public void cancelReport (String loginId, String firestoreDocumentId, String cancelReason, OnFirestoreDataLoadedListener listener) {
         db.collection("reportDiscountPark")
                 .document(firestoreDocumentId)
                 .get()
@@ -1052,9 +1057,13 @@ public class FirestoreDatabase {
                     if (documentSnapshot.exists()) {
                         if(documentSnapshot.get("reporterId").equals(loginId)) {
                             if (!(boolean) documentSnapshot.get("isApproval")) {
+                                Map<String, Object> updates = new HashMap<>();
+                                updates.put("isCancelled", true);
+                                updates.put("cancelReason", cancelReason);
+
                                 db.collection("reportDiscountPark")
                                         .document(firestoreDocumentId)
-                                        .update("isCancelled", true)
+                                        .update(updates)
                                         .addOnSuccessListener(aVoid -> {
                                             Log.d(TAG, "제보 취소 성공");
                                             listener.onDataLoaded(1);

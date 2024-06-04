@@ -392,7 +392,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                 myShareParkInfoCancelBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fd2.cancelSharePark(loginId, documentId, new OnFirestoreDataLoadedListener() {
+                        fd2.cancelSharePark(loginId, documentId, "공유자가 취소", new OnFirestoreDataLoadedListener() {
                             @Override
                             public void onDataLoaded(Object data) {
                                 Toast.makeText(getApplicationContext(), "공유 취소되었습니다", Toast.LENGTH_SHORT).show();
