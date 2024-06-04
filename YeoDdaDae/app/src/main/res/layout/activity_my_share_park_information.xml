@@ -76,8 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/myShareParkInfoPriceTxt"
-                app:layout_constraintLeft_toRightOf="@+id/myShareParkInfoHourPerTxt"
-                android:layout_marginLeft="5dp"/>
+                app:layout_constraintLeft_toRightOf="@+id/myShareParkInfoHourPerTxt" />
 
             <TextView
                 android:id="@+id/myShareParkInfoHourPerTxt"
@@ -87,11 +86,12 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/myShareParkInfoPriceContentTxt"
-                app:layout_constraintBottom_toBottomOf="@+id/myShareParkInfoPriceContentTxt" />
+                app:layout_constraintBottom_toBottomOf="@+id/myShareParkInfoPriceContentTxt"
+                android:layout_marginRight="5dp"/>
 
             <TextView
-                android:id="@+id/myShareParkInfoWonTxt"
-                android:text="원"
+                android:id="@+id/myShareParkInfoPtTxt"
+                android:text="pt"
                 android:textSize="12sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

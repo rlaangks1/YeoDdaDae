@@ -7,6 +7,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,18 +20,25 @@ import android.widget.Toast;
 
 import com.google.firebase.firestore.FieldValue;
 import com.skt.Tmap.TMapData;
+import com.skt.Tmap.TMapGpsManager;
+import com.skt.Tmap.TMapPoint;
+import com.skt.Tmap.TMapPolyLine;
 import com.skt.Tmap.poi_item.TMapPOIItem;
+import com.skt.tmap.engine.navigation.SDKManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AddReportDiscountParkActivity extends AppCompatActivity {
+public class AddReportDiscountParkActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback {
     String loginId;
     String poiId;
     double poiLat;
     double poiLon;
     String poiPhone;
     SearchParkAdapter spa;
+    double nowLat;
+    double nowLon;
+    TMapPoint nowPoint;
 
     ImageButton addReportDiscountParkBackBtn;
     EditText addReportDiscountParkAddressContentEditTxt;
@@ -43,14 +51,10 @@ public class AddReportDiscountParkActivity extends AppCompatActivity {
     Button searchBtn;
     ListView searchResultListView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_report_discount_park);
-
-        Intent inIntent = getIntent();
-        loginId = inIntent.getStringExtra("loginId");
 
         addReportDiscountParkBackBtn = findViewById(R.id.addReportDiscountParkBackBtn);
         addReportDiscountParkAddressContentEditTxt = findViewById(R.id.addReportDiscountParkAddressContentEditTxt);
@@ -62,6 +66,14 @@ public class AddReportDiscountParkActivity extends AppCompatActivity {
         searchContentEditTxt = findViewById(R.id.searchContentEditTxt);
         searchBtn = findViewById(R.id.searchBtn);
         searchResultListView = findViewById(R.id.searchResultListView);
+
+        Intent inIntent = getIntent();
+        loginId = inIntent.getStringExtra("loginId");
+
+        Location currentLocation = SDKManager.getInstance().getCurrentPosition();
+        nowLat = currentLocation.getLatitude();
+        nowLon = currentLocation.getLongitude();
+        nowPoint = new TMapPoint(nowLat, nowLon);
 
         addReportDiscountParkBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,22 +117,26 @@ public class AddReportDiscountParkActivity extends AppCompatActivity {
                             for (int i = 0; i < arrayList.size(); i++) {
                                 TMapPOIItem item = arrayList.get(i);
 
+                                TMapPolyLine tpolyline = new TMapPolyLine();
+                                tpolyline.addLinePoint(nowPoint);
+                                tpolyline.addLinePoint(new TMapPoint(Double.parseDouble(item.frontLat), Double.parseDouble(item.frontLon)));
+                                double distance = tpolyline.getDistance() / 1000; // km단위
+
                                 if (item.firstNo.equals("0") && item.secondNo.equals("0")) {
-                                    spa.addItem(new ParkItem(4, item.name, item.radius, null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                    spa.addItem(new ParkItem(4, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
                                 }
                                 else {
                                     if (item.name.contains("주차")) {
                                         if (item.name.contains("공영")) {
-                                            spa.addItem(new ParkItem(2, item.name, item.radius, null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                            spa.addItem(new ParkItem(2, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
                                         }
                                         else {
-                                            spa.addItem(new ParkItem(1, item.name, item.radius, null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                            spa.addItem(new ParkItem(1, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
                                         }
                                     }
                                     else {
-                                        spa.addItem(new ParkItem(5, item.name, item.radius, null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                        spa.addItem(new ParkItem(5, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
                                     }
-
                                 }
                             }
 
@@ -228,5 +244,16 @@ public class AddReportDiscountParkActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    @Override
+    public void onLocationChange(Location location) {
+        nowLat = location.getLatitude();
+        Log.d(ContentValues.TAG, "onLocationChange 호출됨 : lat(경도) = " + nowLat);
+
+        nowLon = location.getLongitude();
+        Log.d(ContentValues.TAG, "onLocationChange 호출됨 : lon(위도) = " + nowLon);
+
+        nowPoint = new TMapPoint(nowLat, nowLon);
     }
 }

@@ -115,8 +115,8 @@
                 app:layout_constraintLeft_toLeftOf="parent" />
 
             <TextView
-                android:id="@+id/reservationInfoWonTxt"
-                android:text="원"
+                android:id="@+id/reservationInfoPtTxt"
+                android:text="pt"
                 android:textSize="12sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

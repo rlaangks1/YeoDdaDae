@@ -41,7 +41,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
     TextView myShareParkInfoUpTimeContentTxt;
     TextView myShareParkInfoPriceContentTxt;
     TextView myShareParkInfoHourPerTxt;
-    TextView myShareParkInfoWonTxt;
+    TextView myShareParkInfoPtTxt;
     TextView myShareParkInfoShareParkNewAddressContentTxt;
     TextView myShareParkInfoShareParkOldAddressContentTxt;
     TextView myShareParkInfoShareParkDetailaddressContentTxt;
@@ -56,15 +56,13 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_share_park_information);
 
-        Intent inIntent = getIntent();
-        loginId = inIntent.getStringExtra("id");
-        documentId = inIntent.getStringExtra("documentId");
-
         myShareParkInfoBackBtn = findViewById(R.id.myShareParkInfoBackBtn);
         myShareParkInfoIdContentTxt = findViewById(R.id.myShareParkInfoIdContentTxt);
         myShareParkInfoStatusContentTxt = findViewById(R.id.myShareParkInfoStatusContentTxt);
         myShareParkInfoUpTimeContentTxt = findViewById(R.id.myShareParkInfoUpTimeContentTxt);
         myShareParkInfoPriceContentTxt = findViewById(R.id.myShareParkInfoPriceContentTxt);
+        myShareParkInfoHourPerTxt = findViewById(R.id.myShareParkInfoHourPerTxt);
+        myShareParkInfoPtTxt = findViewById(R.id.myShareParkInfoPtTxt);
         myShareParkInfoShareParkNewAddressContentTxt = findViewById(R.id.myShareParkInfoShareParkNewAddressContentTxt);
         myShareParkInfoShareParkOldAddressContentTxt = findViewById(R.id.myShareParkInfoShareParkOldAddressContentTxt);
         myShareParkInfoShareParkDetailaddressContentTxt = findViewById(R.id.myShareParkInfoShareParkDetailaddressContentTxt);
@@ -73,6 +71,10 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
         myShareParkNaviBtn = findViewById(R.id.myShareParkNaviBtn);
         myShareParkInfoCancelBtn = findViewById(R.id.myShareParkInfoCancelBtn);
         myShareParkInfoCalculateBtn = findViewById(R.id.myShareParkInfoCalculateBtn);
+
+        Intent inIntent = getIntent();
+        loginId = inIntent.getStringExtra("id");
+        documentId = inIntent.getStringExtra("documentId");
 
         FirestoreDatabase fd = new FirestoreDatabase();
         fd.loadShareParkInfo(documentId, new OnFirestoreDataLoadedListener() {
@@ -126,10 +128,12 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
 
                 if ((long) shareParkInfo.get("price") == 0) {
                     myShareParkInfoHourPerTxt.setVisibility(View.GONE);
-                    myShareParkInfoWonTxt.setVisibility(View.GONE);
+                    myShareParkInfoPtTxt.setVisibility(View.GONE);
                     myShareParkInfoPriceContentTxt.setText("무료");
                 }
                 else {
+                    myShareParkInfoHourPerTxt.setVisibility(View.VISIBLE);
+                    myShareParkInfoPtTxt.setVisibility(View.VISIBLE);
                     myShareParkInfoPriceContentTxt.setText(Long.toString((long) shareParkInfo.get("price")));
                 }
 

@@ -45,7 +45,7 @@ public class ReservationInformationActivity extends AppCompatActivity {
     TextView reservationInfoUpTimeContentTxt;
     TextView reservationInfoTimeContentTxt;
     TextView reservationInfoPriceContentTxt;
-    TextView reservationInfoWonTxt;
+    TextView reservationInfoPtTxt;
     TextView reservationInfoShareParkNewAddressContentTxt;
     TextView reservationInfoShareParkOldAddressContentTxt;
     TextView reservationInfoShareParkDetailaddressContentTxt;
@@ -63,6 +63,7 @@ public class ReservationInformationActivity extends AppCompatActivity {
         reservationInfoUpTimeContentTxt = findViewById(R.id.reservationInfoUpTimeContentTxt);
         reservationInfoTimeContentTxt = findViewById(R.id.reservationInfoTimeContentTxt);
         reservationInfoPriceContentTxt = findViewById(R.id.reservationInfoPriceContentTxt);
+        reservationInfoPtTxt = findViewById(R.id.reservationInfoPtTxt);
         reservationInfoShareParkNewAddressContentTxt = findViewById(R.id.reservationInfoShareParkNewAddressContentTxt);
         reservationInfoShareParkOldAddressContentTxt = findViewById(R.id.reservationInfoShareParkOldAddressContentTxt);
         reservationInfoShareParkDetailaddressContentTxt = findViewById(R.id.reservationInfoShareParkDetailaddressContentTxt);
@@ -269,11 +270,12 @@ public class ReservationInformationActivity extends AppCompatActivity {
 
                 if ((long) reservationInfo.get("price") == 0) {
                     reservationInfoPriceContentTxt.setText("무료");
-                    reservationInfoWonTxt.setVisibility(View.GONE);
+                    reservationInfoPtTxt.setVisibility(View.GONE);
 
                 }
                 else {
                     reservationInfoPriceContentTxt.setText(((Long) reservationInfo.get("price")).toString());
+                    reservationInfoPtTxt.setVisibility(View.VISIBLE);
                 }
 
                 reservationInfoShareParkDetailaddressContentTxt.setText((String) shareParkInfo.get("parkDetailAddress"));
