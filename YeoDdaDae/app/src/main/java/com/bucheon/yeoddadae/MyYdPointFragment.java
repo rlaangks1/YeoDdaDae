@@ -32,6 +32,7 @@ public class MyYdPointFragment extends Fragment {
 
     TextView myYdPointTxt;
     Button toChargeYdPointBtn;
+    Button toRefundYdPointBtn;
 
     public MyYdPointFragment(String id) {
         this.loginId = id;
@@ -45,13 +46,23 @@ public class MyYdPointFragment extends Fragment {
 
         myYdPointTxt = view.findViewById(R.id.myYdPointTxt);
         toChargeYdPointBtn = view.findViewById(R.id.toChargeYdPointBtn);
+        toRefundYdPointBtn = view.findViewById(R.id.toRefundYdPointBtn);
 
         toChargeYdPointBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent shareParkIntent = new Intent(getActivity(), YdPointChargeActivity.class);
-                shareParkIntent.putExtra("loginId", loginId);
-                startActivity(shareParkIntent);
+                Intent chargeYdPointIntent = new Intent(getActivity(), YdPointChargeActivity.class);
+                chargeYdPointIntent.putExtra("loginId", loginId);
+                startActivity(chargeYdPointIntent);
+            }
+        });
+
+        toRefundYdPointBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent refundYdPointIntent = new Intent(getActivity(), YdPointRefundActivity.class);
+                refundYdPointIntent.putExtra("loginId", loginId);
+                startActivity(refundYdPointIntent);
             }
         });
 

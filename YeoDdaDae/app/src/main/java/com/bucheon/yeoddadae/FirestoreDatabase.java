@@ -348,6 +348,66 @@ public class FirestoreDatabase {
                 });
     }
 
+    public void refundYdPoint(String id, int price, OnFirestoreDataLoadedListener listener) {
+        db.collection("account")
+                .whereEqualTo("id", id)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.size() > 0) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+                        Long ydPoint = document.getLong("ydPoint");
+
+                        if (ydPoint != null) {
+                            if (ydPoint > price) {
+                                db.collection("account")
+                                        .document(document.getId())
+                                        .update("ydPoint", ydPoint - price)
+                                        .addOnSuccessListener(aVoid -> {
+                                            HashMap<String, Object> hm = new HashMap<>();
+                                            hm.put("id", id);
+                                            hm.put("refundedYdPoint", price);
+                                            hm.put("upTime", FieldValue.serverTimestamp());
+                                            insertData("refundYdPoint", hm, new OnFirestoreDataLoadedListener() {
+                                                @Override
+                                                public void onDataLoaded(Object data) {
+                                                    Log.d(TAG, "포인트 환급 성공");
+                                                    listener.onDataLoaded(true);
+                                                }
+
+                                                @Override
+                                                public void onDataLoadError(String errorMessage) {
+                                                    Log.d(TAG, errorMessage);
+                                                    listener.onDataLoadError("포인트 충전 문서 기록 중 오류 발생");
+                                                }
+                                            });
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.d(TAG, "포인트 환급 중 오류", e);
+                                            listener.onDataLoadError(e.getMessage());
+                                        });
+
+                            }
+                            else {
+                                Log.d(TAG, "환급 포인트가 보유 포인트보다 큽니다");
+                                listener.onDataLoadError("환급 포인트가 보유 포인트보다 큽니다");
+                            }
+                        }
+                        else {
+                            Log.d(TAG, "ydPoint 값이 null입니다");
+                            listener.onDataLoadError("ydPoint 값이 null입니다.");
+                        }
+                    }
+                    else {
+                        Log.d(TAG, "해당 ID의 계정 없음");
+                        listener.onDataLoadError("해당 ID의 계정을 찾을 수 없습니다.");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
     public void receiveYdPoint(String id, int price, String type, OnFirestoreDataLoadedListener listener) {
         // type : "환불"
         db.collection("account")
