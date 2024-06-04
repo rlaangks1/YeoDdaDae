@@ -29,6 +29,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -67,9 +68,28 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
 
         initSttService();
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(containerViewId, new MainFragment(apiKeyCertified, loginId))
-                .commit();
+        if (savedInstanceState != null) { // 저장된 상태가 있는 경우 프래그먼트를 복원
+            Log.d(TAG, "MainActivity 저장된 상태가 있음");
+            String currentFragmentTag = savedInstanceState.getString("currentFragmentTag");
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            Fragment currentFragment = fragmentManager.findFragmentByTag(currentFragmentTag);
+
+            if (currentFragment != null) {
+                fragmentManager.beginTransaction()
+                        .replace(containerViewId, currentFragment, currentFragmentTag)
+                        .commit();
+            } else { // 만약 프래그먼트를 찾을 수 없는 경우 기본 메인 프래그먼트를 설정
+                fragmentManager.beginTransaction()
+                        .replace(containerViewId, new MainFragment(apiKeyCertified, loginId))
+                        .commit();
+            }
+        }
+        else { // 저장된 상태가 없는 경우 기본 메인 프래그먼트를 설정
+            Log.d(TAG, "MainActivity 저장된 상태가 없음");
+            getSupportFragmentManager().beginTransaction()
+                    .replace(containerViewId, new MainFragment(apiKeyCertified, loginId))
+                    .commit();
+        }
 
         bottomNavView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -270,5 +290,16 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
                 }
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // 현재 프래그먼트를 가져와서 태그를 저장합니다.
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(containerViewId);
+        if (currentFragment != null) {
+            outState.putString("currentFragmentTag", currentFragment.getTag());
+        }
     }
 }
