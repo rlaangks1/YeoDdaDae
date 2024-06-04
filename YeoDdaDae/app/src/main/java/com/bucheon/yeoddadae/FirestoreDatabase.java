@@ -1025,47 +1025,82 @@ public class FirestoreDatabase {
 
     public void approveReport(String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
         db.collection("reportDiscountPark")
-            .document(firestoreDocumentId)
-            .get()
-            .addOnSuccessListener(documentSnapshot -> {
-                if (!(boolean) documentSnapshot.get("isApproval")) {
-                    if (!(boolean) documentSnapshot.get("isCancelled")) {
-                        String id = (String) documentSnapshot.get("reporterId");
+                .document(firestoreDocumentId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (!(boolean) documentSnapshot.get("isApproval")) {
+                        if (!(boolean) documentSnapshot.get("isCancelled")) {
+                            String reporterId = (String) documentSnapshot.get("reporterId");
 
-                        db.collection("reportDiscountPark")
-                                .document(firestoreDocumentId)
-                                .update("isApproval", true)
-                                .addOnSuccessListener(aVoid -> {
-                                    receiveYdPoint(id, 3000, "할인주차장 제보 승인", new OnFirestoreDataLoadedListener() {
-                                        @Override
-                                        public void onDataLoaded(Object data) {
-                                            listener.onDataLoaded(true);
-                                        }
+                            db.collection("reportDiscountPark")
+                                    .document(firestoreDocumentId)
+                                    .update("isApproval", true)
+                                    .addOnSuccessListener(aVoid -> {
+                                        receiveYdPoint(reporterId, 3000, "할인주차장 제보 승인", new OnFirestoreDataLoadedListener() {
+                                            @Override
+                                            public void onDataLoaded(Object data) {
+                                                db.collection("rateReport")
+                                                        .whereEqualTo("reportDocumentID", firestoreDocumentId)
+                                                        .whereEqualTo("rate", "perfect")
+                                                        .get()
+                                                        .addOnSuccessListener(queryDocumentSnapshots -> {
+                                                            int documentSize = queryDocumentSnapshots.size();
+                                                            if (documentSize == 0) {
+                                                                listener.onDataLoaded(true);
+                                                            }
+                                                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                                                String raterId = (String) documentSnapshot.get("id");
 
-                                        @Override
-                                        public void onDataLoadError(String errorMessage) {
-                                            Log.d(TAG, errorMessage);
-                                            listener.onDataLoadError(errorMessage);
-                                        }
+                                                                int count[] = {1};
+                                                                receiveYdPoint(raterId, 500, "긍정적 평가한 할인주차장 승인", new OnFirestoreDataLoadedListener() {
+                                                                    @Override
+                                                                    public void onDataLoaded(Object data) {
+                                                                        if (documentSize == count[0]) {
+                                                                            listener.onDataLoaded(true);
+                                                                        }
+                                                                        else {
+                                                                            count[0]++;
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onDataLoadError(String errorMessage) {
+                                                                        Log.d(TAG, errorMessage);
+                                                                        listener.onDataLoadError(errorMessage);
+                                                                    }
+                                                                });
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            Log.d(TAG, "평가자 포인트 지급 중 오류", e);
+                                                            listener.onDataLoadError(e.getMessage());
+                                                        });
+                                            }
+
+                                            @Override
+                                            public void onDataLoadError(String errorMessage) {
+                                                Log.d(TAG, errorMessage);
+                                                listener.onDataLoadError(errorMessage);
+                                            }
+                                        });
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.d(TAG, "제보자 포인트 지급 중 오류", e);
+                                        listener.onDataLoadError(e.getMessage());
                                     });
-                                })
-                                .addOnFailureListener(e -> {
-                                    Log.d(TAG, "데이터 수정 오류", e);
-                                    listener.onDataLoadError(e.getMessage());
-                                });
+                        }
+                        else{
+                            listener.onDataLoadError("취소된 제보주차장임");
+                        }
                     }
-                    else{
-                        listener.onDataLoadError("취소된 제보주차장임");
+                    else {
+                        listener.onDataLoadError("이미 승인된 제보주차장임");
                     }
-                }
-                else {
-                    listener.onDataLoadError("이미 승인된 제보주차장임");
-                }
-            })
-            .addOnFailureListener(e -> {
-                Log.d(TAG, "데이터 검색 오류", e);
-                listener.onDataLoadError(e.getMessage());
-            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
     }
 
     public void loadAnotherReports (int targetDistanceKM, double nowLat, double nowLon, String loginId, OnFirestoreDataLoadedListener listener) {
