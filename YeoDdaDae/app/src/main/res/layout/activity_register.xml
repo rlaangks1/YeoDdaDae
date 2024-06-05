@@ -51,33 +51,48 @@
 
     <EditText
         android:id="@+id/registerIdTxt"
-        android:layout_width="380dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:inputType="text"
         android:hint="아이디"
         android:maxLength="30"
         android:singleLine="true"
+        android:textSize="20dp"
         android:textColorHint="@color/main"
         android:backgroundTint="@color/sub"
-        android:textSize="20dp"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userFace2" />
+        app:layout_constraintTop_toBottomOf="@id/userFace2" />
+
+    <EditText
+        android:id="@+id/registerEmailTxt"
+        android:inputType="textEmailAddress"
+        android:hint="이메일"
+        android:maxLength="42"
+        android:singleLine="true"
+        android:textSize="20dp"
+        android:textColorHint="@color/main"
+        android:backgroundTint="@color/sub"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/registerIdTxt" />
 
     <EditText
         android:id="@+id/registerPwTxt"
         android:inputType="textPassword"
-        android:layout_width="380dp"
-        android:layout_height="wrap_content"
-        android:maxLength="30"
-        android:textSize="20dp"
         android:hint="비밀번호"
+        android:maxLength="30"
         android:singleLine="true"
+        android:textSize="20dp"
         android:textColorHint="@color/main"
         android:backgroundTint="@color/sub"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/registerIdTxt" />
+        app:layout_constraintTop_toBottomOf="@id/registerEmailTxt" />
 
     <ImageButton
         android:id="@+id/registerBtn"

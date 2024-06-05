@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -244,6 +245,25 @@ public class FirestoreDatabase {
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void register (String id, String email, String pw, String uid, OnFirestoreDataLoadedListener listener) {
+        HashMap<String, Object> newAccount = new HashMap<>();
+        newAccount.put("id", id);
+        newAccount.put("email", email);
+        newAccount.put("pw", pw);
+        newAccount.put("isAdmin", false);
+        newAccount.put("ydPoint", 0);
+        newAccount.put("registerTime", FieldValue.serverTimestamp());
+
+        db.collection("account").document(uid).set(newAccount)
+                .addOnSuccessListener(aVoid -> {
+                    listener.onDataLoaded(true);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "회원 문서 추가 중 오류 발생: " + e.getMessage());
                     listener.onDataLoadError(e.getMessage());
                 });
     }

@@ -58,6 +58,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-auth")
 
     // Compose 버전 정의
     val compose_version = "1.3.1"
