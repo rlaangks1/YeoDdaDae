@@ -249,11 +249,10 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void register (String id, String email, String pw, String uid, OnFirestoreDataLoadedListener listener) {
+    public void register (String id, String email, String uid, OnFirestoreDataLoadedListener listener) {
         HashMap<String, Object> newAccount = new HashMap<>();
         newAccount.put("id", id);
         newAccount.put("email", email);
-        newAccount.put("pw", pw);
         newAccount.put("isAdmin", false);
         newAccount.put("ydPoint", 0);
         newAccount.put("registerTime", FieldValue.serverTimestamp());
