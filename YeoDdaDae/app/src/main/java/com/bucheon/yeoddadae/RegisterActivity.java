@@ -178,7 +178,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void checkEmailVerification(String id, String email, FirebaseUser user) {
         registerEmailVerificationTxt.setVisibility(View.VISIBLE);
-        final int[] timeLeft = {60}; //초 단위
+        final int[] timeLeft = {180}; //초 단위
         Runnable runnable = new Runnable() {
             @Override
             public void run() {

@@ -93,7 +93,7 @@
 
             <EditText
                 android:id="@+id/addReportDiscountParkBenefitContentEditTxt"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:inputType="number"
                 android:maxLength="6"
                 android:singleLine="true"

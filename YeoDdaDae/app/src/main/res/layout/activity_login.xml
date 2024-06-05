@@ -48,18 +48,18 @@
 
     <EditText
         android:id="@+id/loginIdTxt"
-        android:layout_width="380dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:hint="아이디"
+        android:textSize="20dp"
         android:maxLength="30"
         android:singleLine="true"
-        android:textSize="20dp"
-        android:hint="아이디"
         android:textColorHint="@color/main"
         android:backgroundTint="@color/sub"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userFace" />
+        app:layout_constraintTop_toBottomOf="@+id/userFace"
+        android:layout_marginTop="10dp" />
 
     <EditText
         android:id="@+id/loginPwTxt"
