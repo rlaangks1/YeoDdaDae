@@ -49,8 +49,8 @@
     <EditText
         android:id="@+id/loginIdTxt"
         android:hint="아이디"
-        android:textSize="20dp"
-        android:maxLength="30"
+        android:textSize="20sp"
+        android:maxLength="20"
         android:singleLine="true"
         android:textColorHint="@color/main"
         android:backgroundTint="@color/sub"
@@ -66,9 +66,9 @@
         android:inputType="textPassword"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
-        android:maxLength="30"
+        android:maxLength="20"
         android:singleLine="true"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:hint="비밀번호"
         android:textColorHint="@color/main"
         android:backgroundTint="@color/sub"
@@ -91,7 +91,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="로그인"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/loginBtn"
         app:layout_constraintEnd_toEndOf="@+id/loginBtn"
@@ -114,11 +114,21 @@
         android:layout_height="wrap_content"
         android:text="회원가입"
         android:textColor="@color/white"
-        android:textSize="20dp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/toRegisterBtn"
         app:layout_constraintEnd_toEndOf="@+id/toRegisterBtn"
         app:layout_constraintStart_toStartOf="@+id/toRegisterBtn"
         app:layout_constraintTop_toTopOf="@+id/toRegisterBtn" />
 
+    <TextView
+        android:id="@+id/toChangePasswordTxt"
+        android:text="비밀번호를 잊으셨나요?"
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="50dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

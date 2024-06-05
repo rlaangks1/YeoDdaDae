@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,16 +23,24 @@ import com.google.firebase.firestore.auth.User;
 public class LoginActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
 
+    ImageButton backBtn;
+    EditText idTxt;
+    EditText pwTxt;
+    ImageButton loginBtn;
+    ImageButton registerBtn;
+    TextView toChangePasswordTxt;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        ImageButton backBtn = findViewById(R.id.loginBackBtn);
-        EditText idTxt = findViewById(R.id.loginIdTxt);
-        EditText pwTxt = findViewById(R.id.loginPwTxt);
-        ImageButton loginBtn = findViewById(R.id.loginBtn);
-        ImageButton registerBtn = findViewById(R.id.toRegisterBtn);
+        backBtn = findViewById(R.id.loginBackBtn);
+        idTxt = findViewById(R.id.loginIdTxt);
+        pwTxt = findViewById(R.id.loginPwTxt);
+        loginBtn = findViewById(R.id.loginBtn);
+        registerBtn = findViewById(R.id.toRegisterBtn);
+        toChangePasswordTxt = findViewById(R.id.toChangePasswordTxt);
 
         mAuth = FirebaseAuth.getInstance();
         mAuth.signOut();
@@ -101,6 +110,14 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent registerIntent = new Intent(getApplicationContext(), RegisterActivity.class);
                 startActivity(registerIntent);
+            }
+        });
+
+        toChangePasswordTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent changePwIntent = new Intent(getApplicationContext(), ChangePasswordActivity.class);
+                startActivity(changePwIntent);
             }
         });
     }

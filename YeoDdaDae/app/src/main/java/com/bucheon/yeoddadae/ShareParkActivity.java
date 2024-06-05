@@ -216,7 +216,7 @@ public class ShareParkActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "이메일을 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
                 } else if (!isValidEmail(ownerEmail)) {
-                    Toast.makeText(getApplicationContext(), "유효하지 않은 이메일입니다", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "유효하지 않은 이메일 형식입니다", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
