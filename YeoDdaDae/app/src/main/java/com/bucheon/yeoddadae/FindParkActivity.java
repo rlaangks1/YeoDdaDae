@@ -1257,7 +1257,9 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             @Override
             public void run() {
                 if (message.equals("메인명령어듣는중")) {
-                    sd.show();
+                    if (!sd.isShowing()) {
+                        sd.show();
+                    }
                     sd.changeToActiveIcon();
                     sd.setSttStatusTxt("메인 명령어 듣는 중");
                 }

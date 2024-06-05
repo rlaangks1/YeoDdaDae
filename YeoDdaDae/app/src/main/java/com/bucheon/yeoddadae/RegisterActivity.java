@@ -31,6 +31,8 @@ public class RegisterActivity extends AppCompatActivity {
     FirestoreDatabase fd;
     FirebaseAuth mAuth;
     FirebaseUser user;
+    Handler handler;
+    boolean isRegisterSuccessed = false;
 
     ImageButton backBtn;
     EditText idTxt;
@@ -54,22 +56,14 @@ public class RegisterActivity extends AppCompatActivity {
         fd = new FirestoreDatabase();
 
         mAuth = FirebaseAuth.getInstance();
+        mAuth.signOut();
+
+        handler = new Handler();
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
-                if (user != null) {
-                    user.delete()
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    finish();
-                                }
-                            });
-                }
-                else {
-                    finish();
-                }
+                finish();
             }
         });
 
@@ -119,6 +113,18 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (!isRegisterSuccessed) {
+            if (user != null) {
+                user.delete();
+            }
+        }
+        mAuth.signOut();
     }
 
     private boolean isValidEmail(String email) {
@@ -173,7 +179,6 @@ public class RegisterActivity extends AppCompatActivity {
     private void checkEmailVerification(String id, String email, FirebaseUser user) {
         registerEmailVerificationTxt.setVisibility(View.VISIBLE);
         final int[] timeLeft = {60}; //초 단위
-        final Handler handler = new Handler();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -185,6 +190,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 @Override
                                 public void onDataLoaded(Object data) {
                                     Toast.makeText(getApplicationContext(), "회원가입 성공", Toast.LENGTH_SHORT).show();
+                                    isRegisterSuccessed = true;
                                     finish();
                                 }
 

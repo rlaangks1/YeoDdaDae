@@ -33,15 +33,19 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.skt.Tmap.TMapTapi;
 import com.skt.Tmap.TMapView;
 
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements FragmentToActivityListener, SttService.SttCallback {
+    final int CHANGE_EMAIL_REQUEST_CODE = 1;
+    FirebaseAuth mAuth;
+    FirebaseUser user;
     boolean apiKeyCertified;
     String loginId;
-    Fragment savedFragment;
 
     Intent serviceIntent;
     SttService sttService;
@@ -62,6 +66,9 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
+
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
 
         App app = (App) getApplication();
         apiKeyCertified = app.isApiKeyCertified();
@@ -189,10 +196,29 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
     public void onDataPassed(String data) { // Fragment에서 메시지 받기
         if (data.equals("로그아웃")) {
             loginId = null;
+            mAuth.signOut();
             Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
             startActivity(logoutIntent);
             finish();
         }
+        else if (data.equals("비밀번호 변경")) {
+            mAuth.sendPasswordResetEmail(user.getEmail())
+                    .addOnCompleteListener(this, task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), "이메일을 확인하여 비밀번호 변경 후 다시 로그인하세요", Toast.LENGTH_SHORT).show();
+                            loginId = null;
+                            mAuth.signOut();
+                            Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
+                            startActivity(logoutIntent);
+                            finish();
+                        }
+                        else {
+                            Log.d(ContentValues.TAG, "인증 이메일 전송 실패 : " + task.getException().getMessage());
+                            Toast.makeText(getApplicationContext(), "인증 이메일 전송 실패", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+
         else if (data.equals("stt버튼클릭")) {
             sttService.startListeningForMainCommand();
         }
@@ -203,6 +229,7 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
 
         if (mainCommand.contains("로그아웃")) {
             sd.dismiss();
+            mAuth.signOut();
             loginId = null;
             Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
             startActivity(logoutIntent);
@@ -276,7 +303,9 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
             @Override
             public void run() {
                 if (message.equals("메인명령어듣는중")) {
-                    sd.show();
+                    if(!sd.isShowing()) {
+                        sd.show();
+                    }
                     sd.changeToActiveIcon();
                     sd.setSttStatusTxt("메인 명령어 듣는 중");
                 }
@@ -300,6 +329,20 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(containerViewId);
         if (currentFragment != null) {
             outState.putString("currentFragmentTag", currentFragment.getTag());
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CHANGE_EMAIL_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                // Extract data from the Intent "data"
+                String result = data.getStringExtra("result_key");
+                // Process the result
+            } else if (resultCode == RESULT_CANCELED) {
+                // Handle when the user cancels the operation
+            }
         }
     }
 }

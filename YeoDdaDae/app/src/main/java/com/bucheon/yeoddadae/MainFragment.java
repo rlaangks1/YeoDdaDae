@@ -93,10 +93,7 @@ public class MainFragment extends Fragment {
                     dataPasser.onDataPassed("로그아웃");
                 }
                 else if (item.getItemId() == R.id.nav_change_password) {
-                    Intent findParkIntent = new Intent(getActivity().getApplicationContext(), FindParkActivity.class);
-                    findParkIntent.putExtra("loginId", loginId);
-                    findParkIntent.putExtra("SortBy", 1);
-                    startActivity(findParkIntent);
+                    dataPasser.onDataPassed("비밀번호 변경");
                 }
                 return false;
             }

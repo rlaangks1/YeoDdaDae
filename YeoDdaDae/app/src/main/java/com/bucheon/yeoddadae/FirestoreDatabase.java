@@ -267,6 +267,31 @@ public class FirestoreDatabase {
                 });
     }
 
+    public void findEmailAndIsAdminById (String id, OnFirestoreDataLoadedListener listener) {
+        db.collection("account")
+                .whereEqualTo("id", id)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.size() == 1) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+                        String email = (String) document.get("email");
+                        String isAdmin = Boolean.toString((boolean) document.get("isAdmin"));
+                        String result[] = {email, isAdmin};
+
+                        listener.onDataLoaded(result);
+                    }
+                    else if (queryDocumentSnapshots.size() == 0 || queryDocumentSnapshots == null) {
+                        listener.onDataLoadError("계정이 없음");
+                    }
+                    else {
+                        listener.onDataLoadError("계정이 여러개임");
+                    }
+                })
+                .addOnFailureListener(e -> {
+
+                });
+    }
+
     public void login(String id, String pw, OnFirestoreDataLoadedListener listener) {
         db.collection("account")
                 .whereEqualTo("id", id)
