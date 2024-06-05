@@ -41,7 +41,6 @@ import com.skt.Tmap.TMapView;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements FragmentToActivityListener, SttService.SttCallback {
-    final int CHANGE_EMAIL_REQUEST_CODE = 1;
     FirebaseAuth mAuth;
     FirebaseUser user;
     boolean apiKeyCertified;
@@ -329,20 +328,6 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(containerViewId);
         if (currentFragment != null) {
             outState.putString("currentFragmentTag", currentFragment.getTag());
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CHANGE_EMAIL_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                // Extract data from the Intent "data"
-                String result = data.getStringExtra("result_key");
-                // Process the result
-            } else if (resultCode == RESULT_CANCELED) {
-                // Handle when the user cancels the operation
-            }
         }
     }
 }
