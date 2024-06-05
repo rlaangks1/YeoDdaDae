@@ -180,19 +180,19 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         nowOnly = 0;
         onlyBtnColorSet();
 
-        findParkBackBtn.setOnClickListener(new View.OnClickListener() { // 액티비티 종료
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
         // 로딩 완료까지 뷰 없애기
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 parkListView.setVisibility(View.GONE);
                 parkSortHorizontalScrollView.setVisibility(View.GONE);
+            }
+        });
+
+        findParkBackBtn.setOnClickListener(new View.OnClickListener() { // 액티비티 종료
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 
