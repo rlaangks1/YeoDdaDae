@@ -33,6 +33,8 @@ public class ReportDiscountParkInformationActivity extends AppCompatActivity {
     Button reportInfoBackBtn;
     TextView reportInfoIdContentTxt;
     TextView reportInfoStatusContentTxt;
+    TextView reportInfoCancelReasonTxt;
+    TextView reportInfoCancelReasonContentTxt;
     TextView reportInfoParkNameContentTxt;
     TextView reportInfoParkNewAddressContentTxt;
     TextView reportInfoParkOldAddressContentTxt;
@@ -51,6 +53,8 @@ public class ReportDiscountParkInformationActivity extends AppCompatActivity {
         reportInfoBackBtn = findViewById(R.id.reportInfoBackBtn);
         reportInfoIdContentTxt = findViewById(R.id.reportInfoIdContentTxt);
         reportInfoStatusContentTxt = findViewById(R.id.reportInfoStatusContentTxt);
+        reportInfoCancelReasonTxt = findViewById(R.id.reportInfoCancelReasonTxt);
+        reportInfoCancelReasonContentTxt = findViewById(R.id.reportInfoCancelReasonContentTxt);
         reportInfoParkNameContentTxt = findViewById(R.id.reportInfoParkNameContentTxt);
         reportInfoParkNewAddressContentTxt = findViewById(R.id.reportInfoParkNewAddressContentTxt);
         reportInfoParkOldAddressContentTxt = findViewById(R.id.reportInfoParkOldAddressContentTxt);
@@ -133,14 +137,21 @@ public class ReportDiscountParkInformationActivity extends AppCompatActivity {
                 if ((boolean) reportInfo.get("isApproval")) {
                     reportInfoStatusContentTxt.setText("승인됨");
                     reportInfoCancelBtn.setVisibility(View.GONE);
+                    reportInfoCancelReasonTxt.setVisibility(View.GONE);
+                    reportInfoCancelReasonContentTxt.setVisibility(View.GONE);
                 }
                 else if ((boolean) reportInfo.get("isCancelled")) {
                     reportInfoStatusContentTxt.setText("취소됨");
                     reportInfoCancelBtn.setVisibility(View.GONE);
+                    reportInfoCancelReasonTxt.setVisibility(View.VISIBLE);
+                    reportInfoCancelReasonContentTxt.setVisibility(View.VISIBLE);
+                    reportInfoCancelReasonContentTxt.setText((String) reportInfo.get("cancelReason"));
                 }
                 else {
                     reportInfoStatusContentTxt.setText("평가 중");
                     reportInfoCancelBtn.setVisibility(View.VISIBLE);
+                    reportInfoCancelReasonTxt.setVisibility(View.GONE);
+                    reportInfoCancelReasonContentTxt.setVisibility(View.GONE);
                 }
 
                 reportInfoParkNameContentTxt.setText((String) reportInfo.get("parkName"));
