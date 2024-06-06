@@ -113,7 +113,8 @@ public class AdminMainActivity extends AppCompatActivity {
         toStatisticsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent statisticsIntent = new Intent(getApplicationContext(), StatisticsActivity.class);
+                startActivity(statisticsIntent);
             }
         });
     }

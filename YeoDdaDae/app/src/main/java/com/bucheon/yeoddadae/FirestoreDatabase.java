@@ -292,32 +292,6 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void login(String id, String pw, OnFirestoreDataLoadedListener listener) {
-        db.collection("account")
-                .whereEqualTo("id", id)
-                .whereEqualTo("pw", pw)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (queryDocumentSnapshots.size() > 0) {
-                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
-
-                        // Get the value of isAdmin property
-                        boolean isAdmin = document.getBoolean("isAdmin");
-
-                        Log.d(TAG, "로그인 성공");
-                        listener.onDataLoaded(isAdmin);
-                    }
-                    else {
-                        Log.d(TAG, "아이디 또는 비밀번호가 일치하지 않음");
-                        listener.onDataLoadError("아이디 또는 비밀번호가 일치하지 않습니다");
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.d(TAG, "로그인 중 오류", e);
-                    listener.onDataLoadError(e.getMessage());
-                });
-    }
-
     public void loadYdPoint(String id, OnFirestoreDataLoadedListener listener) {
         db.collection("account")
                 .whereEqualTo("id", id)
@@ -1266,6 +1240,7 @@ public class FirestoreDatabase {
         db.collection("reportDiscountPark")
                 .whereEqualTo("isApproval", false)
                 .whereEqualTo("isCancelled", false)
+                .orderBy("upTime", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     ArrayList<HashMap<String, Object>> resultArrayList = new ArrayList<>();
@@ -1543,6 +1518,164 @@ public class FirestoreDatabase {
         }).addOnFailureListener(e -> {
             listener.onDataLoadError(e.getMessage());
         });
+    }
+
+    public void getStatistics (Timestamp startTime, Timestamp endTime, OnFirestoreDataLoadedListener listener) {
+        HashMap<String, Long> resultHM = new HashMap<String, Long>();
+
+        db.collection("account")
+                .whereGreaterThanOrEqualTo("registerTime", startTime)
+                .whereLessThanOrEqualTo("registerTime", endTime)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots == null || queryDocumentSnapshots.size() == 0) {
+                        resultHM.put("회원", 0L);
+                    }
+                    else {
+                        resultHM.put("회원", (long) queryDocumentSnapshots.size());
+                    }
+                    db.collection("chargeYdPoint")
+                            .whereGreaterThanOrEqualTo("upTime", startTime)
+                            .whereLessThanOrEqualTo("upTime", endTime)
+                            .get()
+                            .addOnSuccessListener(queryDocumentSnapshots2 -> {
+                                long totalChargePrice = 0;
+                                for (DocumentSnapshot document : queryDocumentSnapshots2) {
+                                    totalChargePrice += (long) document.get("chargedYdPoint");
+                                }
+                                resultHM.put("충전총액", totalChargePrice);
+
+                                if (totalChargePrice == 0) {
+                                    resultHM.put("충전수", 0L);
+                                }
+                                else {
+                                    resultHM.put("충전수", (long) queryDocumentSnapshots2.size());
+                                }
+
+                                db.collection("refundYdPoint")
+                                        .whereGreaterThanOrEqualTo("upTime", startTime)
+                                        .whereLessThanOrEqualTo("upTime", endTime)
+                                        .get()
+                                        .addOnSuccessListener(queryDocumentSnapshots3 -> {
+                                            long totalRefundPrice = 0;
+                                            for (DocumentSnapshot document : queryDocumentSnapshots3) {
+                                                totalRefundPrice += (long) document.get("refundedYdPoint");
+                                            }
+                                            resultHM.put("환급총액", totalRefundPrice);
+
+                                            if (totalRefundPrice == 0) {
+                                                resultHM.put("환급수", 0L);
+                                            }
+                                            else {
+                                                resultHM.put("환급수", (long) queryDocumentSnapshots3.size());
+                                            }
+                                            db.collection("sharePark")
+                                                    .whereGreaterThanOrEqualTo("upTime", startTime)
+                                                    .whereLessThanOrEqualTo("upTime", endTime)
+                                                    .get()
+                                                    .addOnSuccessListener(queryDocumentSnapshots4 -> {
+                                                        long canceledShareParkCount = 0;
+                                                        long approvedShareParkCount = 0;
+
+                                                        if (queryDocumentSnapshots4 == null || queryDocumentSnapshots4.size() == 0) {
+                                                            resultHM.put("총공유주차장수", 0L);
+                                                        }
+                                                        else {
+                                                            resultHM.put("총공유주차장수", (long) queryDocumentSnapshots4.size());
+
+                                                            for (DocumentSnapshot document : queryDocumentSnapshots4) {
+                                                                if ((boolean) document.get("isCancelled")) {
+                                                                    canceledShareParkCount++;
+                                                                }
+                                                                else if ((boolean) document.get("isApproval")) {
+                                                                    approvedShareParkCount++;
+                                                                }
+                                                            }
+                                                        }
+
+                                                        resultHM.put("취소공유주차장수", canceledShareParkCount);
+                                                        resultHM.put("승인공유주차장수", approvedShareParkCount);
+
+                                                        db.collection("reservation")
+                                                                .whereGreaterThanOrEqualTo("upTime", startTime)
+                                                                .whereLessThanOrEqualTo("upTime", endTime)
+                                                                .get()
+                                                                .addOnSuccessListener(queryDocumentSnapshots5 -> {
+                                                                    long canceledReservationCount = 0;
+
+                                                                    if (queryDocumentSnapshots5 == null || queryDocumentSnapshots5.size() == 0) {
+                                                                        resultHM.put("총예약수", 0L);
+                                                                    }
+                                                                    else {
+                                                                        resultHM.put("총예약수", (long) queryDocumentSnapshots5.size());
+
+                                                                        for (DocumentSnapshot document : queryDocumentSnapshots5) {
+                                                                            if ((boolean) document.get("isCancelled")) {
+                                                                                canceledReservationCount++;
+                                                                            }
+                                                                        }
+                                                                    }
+
+                                                                    resultHM.put("취소예약수", canceledReservationCount);
+
+                                                                    db.collection("reportDiscountPark")
+                                                                            .whereGreaterThanOrEqualTo("upTime", startTime)
+                                                                            .whereLessThanOrEqualTo("upTime", endTime)
+                                                                            .get()
+                                                                            .addOnSuccessListener(queryDocumentSnapshots6 -> {
+                                                                                long canceledReportParkCount = 0;
+                                                                                long approvedReportParkCount = 0;
+
+                                                                                if (queryDocumentSnapshots6 == null || queryDocumentSnapshots6.size() == 0) {
+                                                                                    resultHM.put("총제보주차장수", 0L);
+                                                                                }
+                                                                                else {
+                                                                                    resultHM.put("총제보주차장수", (long) queryDocumentSnapshots6.size());
+
+                                                                                    for (DocumentSnapshot document : queryDocumentSnapshots6) {
+                                                                                        if ((boolean) document.get("isCancelled")) {
+                                                                                            canceledReportParkCount++;
+                                                                                        }
+                                                                                        else if ((boolean) document.get("isApproval")) {
+                                                                                            approvedReportParkCount++;
+                                                                                        }
+                                                                                    }
+                                                                                }
+
+                                                                                resultHM.put("취소제보주차장수", canceledReportParkCount);
+                                                                                resultHM.put("승인제보주차장수", approvedReportParkCount);
+
+                                                                                listener.onDataLoaded(resultHM);
+                                                                            })
+                                                                            .addOnFailureListener(e -> {
+                                                                                Log.d(TAG, "제보주차장찾기 중 오류", e);
+                                                                                listener.onDataLoadError("제보주차장찾기 중 오류");
+                                                                            });
+                                                                })
+                                                                .addOnFailureListener(e -> {
+                                                                    Log.d(TAG, "예약찾기 중 오류", e);
+                                                                    listener.onDataLoadError("예약찾기 중 오류");
+                                                                });
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                        Log.d(TAG, "공유주차장찾기 중 오류", e);
+                                                        listener.onDataLoadError("공유주차장찾기 중 오류");
+                                                    });
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.d(TAG, "환급찾기 중 오류", e);
+                                            listener.onDataLoadError("환급찾기 중 오류");
+                                        });
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.d(TAG, "충전찾기 중 오류", e);
+                                listener.onDataLoadError("충전찾기 중 오류");
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "회원찾기 중 오류", e);
+                    listener.onDataLoadError("회원찾기 중 오류");
+                });
     }
 
     /*
