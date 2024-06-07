@@ -315,6 +315,86 @@ public class FirestoreDatabase {
                 });
     }
 
+    public void loadYdPointHistory(String id, OnFirestoreDataLoadedListener listener) {
+        ArrayList<HashMap<String, Object>> chargeArrayList = new ArrayList<>();
+        ArrayList<HashMap<String, Object>> refundArrayList = new ArrayList<>();
+        ArrayList<HashMap<String, Object>> spendArrayList = new ArrayList<>();
+        ArrayList<HashMap<String, Object>> receiveArrayList = new ArrayList<>();
+
+        db.collection("chargeYdPoint")
+                .whereEqualTo("id", id)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots1 -> {
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots1) {
+                        HashMap<String, Object> data = new HashMap<>(documentSnapshot.getData());
+                        data.put("documentId", documentSnapshot.getId());
+                        chargeArrayList.add(data);
+                    }
+
+                    db.collection("refundYdPoint")
+                            .whereEqualTo("id", id)
+                            .get()
+                            .addOnSuccessListener(queryDocumentSnapshots2 -> {
+                                for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots2) {
+                                    HashMap<String, Object> data = new HashMap<>(documentSnapshot.getData());
+                                    data.put("documentId", documentSnapshot.getId());
+                                    refundArrayList.add(data);
+                                }
+
+                                db.collection("spendYdPointHistory")
+                                        .whereEqualTo("id", id)
+                                        .get()
+                                        .addOnSuccessListener(queryDocumentSnapshots3 -> {
+                                            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots3) {
+                                                HashMap<String, Object> data = new HashMap<>(documentSnapshot.getData());
+                                                data.put("documentId", documentSnapshot.getId());
+                                                spendArrayList.add(data);
+                                            }
+
+                                            db.collection("receiveYdPoint")
+                                                    .whereEqualTo("id", id)
+                                                    .get()
+                                                    .addOnSuccessListener(queryDocumentSnapshots4 -> {
+                                                        for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots4) {
+                                                            HashMap<String, Object> data = new HashMap<>(documentSnapshot.getData());
+                                                            data.put("documentId", documentSnapshot.getId());
+                                                            receiveArrayList.add(data);
+                                                        }
+
+                                                        Log.d(TAG, "충전수 : " + chargeArrayList.size());
+                                                        Log.d(TAG, "환급수 : " + refundArrayList.size());
+                                                        Log.d(TAG, "소비수 : " + spendArrayList.size());
+                                                        Log.d(TAG, "받음수 : " + receiveArrayList.size());
+
+                                                        ArrayList<ArrayList<HashMap<String, Object>>> resultArrayList = new ArrayList<>();
+                                                        resultArrayList.add(chargeArrayList);
+                                                        resultArrayList.add(refundArrayList);
+                                                        resultArrayList.add(spendArrayList);
+                                                        resultArrayList.add(receiveArrayList);
+
+                                                        listener.onDataLoaded(resultArrayList);
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                        Log.d(TAG, "포인트 받음 기록 찾기 실패", e);
+                                                        listener.onDataLoadError("포인트 받음 기록 찾기 실패");
+                                                    });
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.d(TAG, "포인트 소비 기록 찾기 실패", e);
+                                            listener.onDataLoadError("포인트 소비 기록 찾기 실패");
+                                        });
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.d(TAG, "포인트 환급 기록 찾기 실패", e);
+                                listener.onDataLoadError("포인트 환급 기록 찾기 실패");
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "포인트 충전 기록 찾기 실패", e);
+                    listener.onDataLoadError("포인트 충전 기록 찾기 실패");
+                });
+    }
+
     public void chargeYdPoint(String id, int chargedYdPoint, int price, OnFirestoreDataLoadedListener listener) {
         db.collection("account")
                 .whereEqualTo("id", id)

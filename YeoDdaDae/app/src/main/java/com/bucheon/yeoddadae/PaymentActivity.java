@@ -54,7 +54,6 @@ public class PaymentActivity extends AppCompatActivity {
     TextView paymentYdPointContentTxt;
     Button paymentPayBtn;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,26 +77,6 @@ public class PaymentActivity extends AppCompatActivity {
         }
 
         fd = new FirestoreDatabase();
-        fd.loadYdPoint(loginId, new OnFirestoreDataLoadedListener() {
-            @Override
-            public void onDataLoaded(Object data) {
-                ydPoint = (long) data;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        paymentYdPointContentTxt.setText(Long.toString(ydPoint));
-                        paymentTotalPriceContentTxt.setText(Integer.toString(price));
-                    }
-                });
-            }
-
-            @Override
-            public void onDataLoadError(String errorMessage) {
-                Log.d(TAG, errorMessage);
-                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        });
 
         paymentBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,6 +158,32 @@ public class PaymentActivity extends AppCompatActivity {
                         }
                     }
                 });
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        fd.loadYdPoint(loginId, new OnFirestoreDataLoadedListener() {
+            @Override
+            public void onDataLoaded(Object data) {
+                ydPoint = (long) data;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        paymentYdPointContentTxt.setText(Long.toString(ydPoint));
+                        paymentTotalPriceContentTxt.setText(Integer.toString(price));
+                    }
+                });
+            }
+
+            @Override
+            public void onDataLoadError(String errorMessage) {
+                Log.d(TAG, errorMessage);
+                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
     }

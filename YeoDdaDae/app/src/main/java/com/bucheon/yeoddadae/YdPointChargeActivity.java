@@ -27,6 +27,7 @@ public class YdPointChargeActivity extends AppCompatActivity {
     long ydPoint;
     int chargePoint;
     int price;
+    FirestoreDatabase fd;
 
     Button chargeBackBtn;
     TextView chargeHavePointContentTxt;
@@ -48,27 +49,7 @@ public class YdPointChargeActivity extends AppCompatActivity {
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
 
-        FirestoreDatabase fd = new FirestoreDatabase();
-        fd.loadYdPoint(loginId, new OnFirestoreDataLoadedListener() {
-            @Override
-            public void onDataLoaded(Object data) {
-                ydPoint = (long) data;
-                String formattedYdPoint = NumberFormat.getNumberInstance(Locale.KOREA).format(ydPoint);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        chargeHavePointContentTxt.setText(formattedYdPoint);
-                    }
-                });
-            }
-
-            @Override
-            public void onDataLoadError(String errorMessage) {
-                Log.d(TAG, errorMessage);
-                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        });
+        fd = new FirestoreDatabase();
 
         chargeBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,6 +110,32 @@ public class YdPointChargeActivity extends AppCompatActivity {
                 else {
                     Toast.makeText(getApplicationContext(), "포인트를 설정해주세요", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        fd.loadYdPoint(loginId, new OnFirestoreDataLoadedListener() {
+            @Override
+            public void onDataLoaded(Object data) {
+                ydPoint = (long) data;
+                String formattedYdPoint = NumberFormat.getNumberInstance(Locale.KOREA).format(ydPoint);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        chargeHavePointContentTxt.setText(formattedYdPoint);
+                    }
+                });
+            }
+
+            @Override
+            public void onDataLoadError(String errorMessage) {
+                Log.d(TAG, errorMessage);
+                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
     }

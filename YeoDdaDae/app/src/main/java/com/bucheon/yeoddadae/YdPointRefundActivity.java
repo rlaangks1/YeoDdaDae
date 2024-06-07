@@ -19,6 +19,7 @@ public class YdPointRefundActivity extends AppCompatActivity {
     String loginId;
     long ydPoint;
     int refundPoint;
+    FirestoreDatabase fd;
 
     Button refundBackBtn;
     TextView refundHavePointContentTxt;
@@ -38,27 +39,7 @@ public class YdPointRefundActivity extends AppCompatActivity {
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
 
-        FirestoreDatabase fd = new FirestoreDatabase();
-        fd.loadYdPoint(loginId, new OnFirestoreDataLoadedListener() {
-            @Override
-            public void onDataLoaded(Object data) {
-                ydPoint = (long) data;
-                String formattedYdPoint = NumberFormat.getNumberInstance(Locale.KOREA).format(ydPoint);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        refundHavePointContentTxt.setText(formattedYdPoint);
-                    }
-                });
-            }
-
-            @Override
-            public void onDataLoadError(String errorMessage) {
-                Log.d(TAG, errorMessage);
-                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        });
+        fd = new FirestoreDatabase();
 
         refundBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +77,32 @@ public class YdPointRefundActivity extends AppCompatActivity {
                         }
                     }
                 });
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        fd.loadYdPoint(loginId, new OnFirestoreDataLoadedListener() {
+            @Override
+            public void onDataLoaded(Object data) {
+                ydPoint = (long) data;
+                String formattedYdPoint = NumberFormat.getNumberInstance(Locale.KOREA).format(ydPoint);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        refundHavePointContentTxt.setText(formattedYdPoint);
+                    }
+                });
+            }
+
+            @Override
+            public void onDataLoadError(String errorMessage) {
+                Log.d(TAG, errorMessage);
+                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
     }
