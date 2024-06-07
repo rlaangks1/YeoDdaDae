@@ -5,7 +5,9 @@ import static android.content.ContentValues.TAG;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -49,6 +51,17 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick (View v) {
                 finish();
+            }
+        });
+
+        pwTxt.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    loginBtn.callOnClick();
+                }
+
+                return false;
             }
         });
 
