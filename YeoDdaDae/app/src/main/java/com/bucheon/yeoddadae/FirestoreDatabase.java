@@ -1085,7 +1085,54 @@ public class FirestoreDatabase {
                                         .update(updates)
                                         .addOnSuccessListener(aVoid -> {
                                             Log.d(TAG, "제보 취소 성공");
-                                            listener.onDataLoaded(1);
+                                            if (!cancelReason.equals("공유자가 취소")) {
+                                                db.collection("rateReport")
+                                                        .whereEqualTo("reportDocumentID", firestoreDocumentId)
+                                                        .get()
+                                                        .addOnSuccessListener(queryDocumentSnapshots -> {
+                                                            if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() != 0) {
+                                                                int docCount[] = {0};
+                                                                for (DocumentSnapshot documentSnapshot2 : queryDocumentSnapshots) {
+                                                                    if (documentSnapshot2.get("rate").equals("mistake") || documentSnapshot2.get("rate").equals("wrong")) {
+                                                                        docCount[0]++;
+                                                                    }
+                                                                }
+
+                                                                for (DocumentSnapshot documentSnapshot2 : queryDocumentSnapshots) {
+                                                                    String raterId = (String) documentSnapshot2.get("id");
+
+                                                                    int count[] = {1};
+                                                                    receiveYdPoint(raterId, 500, "부정적 평가한 할인주차장 취소", new OnFirestoreDataLoadedListener() {
+                                                                        @Override
+                                                                        public void onDataLoaded(Object data) {
+                                                                            if (docCount[0] == count[0]) {
+                                                                                listener.onDataLoaded(true);
+                                                                            }
+                                                                            else {
+                                                                                count[0]++;
+                                                                            }
+                                                                        }
+                                                                        @Override
+                                                                        public void onDataLoadError(String errorMessage) {
+                                                                            Log.d(TAG, errorMessage);
+                                                                            listener.onDataLoadError("포인트 지급 중 오류");
+                                                                        }
+                                                                    });
+
+                                                                }
+                                                            }
+                                                            else {
+                                                                listener.onDataLoaded(true);
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            Log.d(TAG, "부정 평가자 찾기 중 오류 발생");
+                                                            listener.onDataLoadError(e.getMessage());
+                                                        });
+                                            }
+                                            else {
+                                                listener.onDataLoaded(true);
+                                            }
                                         })
                                         .addOnFailureListener(e -> {
                                             Log.d(TAG, "제보 취소 실패");
@@ -1093,7 +1140,6 @@ public class FirestoreDatabase {
                                         });
                             }
                             else {
-                                Log.d(TAG, "dsdsdsdsddssds");
                                 listener.onDataLoadError("승인된 제보임");
                             }
                         }

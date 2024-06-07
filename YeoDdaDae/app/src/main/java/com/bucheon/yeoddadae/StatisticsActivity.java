@@ -22,6 +22,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.firebase.Timestamp;
 
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -314,17 +315,35 @@ public class StatisticsActivity extends AppCompatActivity {
 
     void init() {
         if (statisticsDatas != null) {
-            statisticsRegisterCountContentTxt.setText(Long.toString(statisticsDatas.get("회원")));
+            NumberFormat numberFormat = NumberFormat.getInstance();
+            String registerCount = numberFormat.format(statisticsDatas.get("회원"));
+            String totalChargedPoint = numberFormat.format(statisticsDatas.get("충전총포인트"));
+            String totalChargedPrice = numberFormat.format(statisticsDatas.get("충전총액"));
+            String totalChargedRevenue = numberFormat.format(statisticsDatas.get("충전총수익"));
+            String chargeCount = numberFormat.format(statisticsDatas.get("충전수"));
+            String totalRefundPrice = numberFormat.format(statisticsDatas.get("환급총액"));
+            String refundCount = numberFormat.format(statisticsDatas.get("환급수"));
+            String approvedShareParkCount = numberFormat.format(statisticsDatas.get("승인공유주차장수"));
+            String cancelledShareParkCount = numberFormat.format(statisticsDatas.get("취소공유주차장수"));
+            String shareParkCount = numberFormat.format(statisticsDatas.get("총공유주차장수"));
+            String cancelledReservationCount = numberFormat.format(statisticsDatas.get("취소예약수"));
+            String reservatitonCount = numberFormat.format(statisticsDatas.get("총예약수"));
+            String approvedReportParkCount = numberFormat.format(statisticsDatas.get("승인제보주차장수"));
+            String cancelledReportParkCount = numberFormat.format(statisticsDatas.get("취소제보주차장수"));
+            String reportParkCount = numberFormat.format(statisticsDatas.get("총제보주차장수"));
 
-            statisticsYdPointChargeContentTxt.setText(Long.toString(statisticsDatas.get("충전총포인트")) + "/" + Long.toString(statisticsDatas.get("충전총액")) + "/" + Long.toString(statisticsDatas.get("충전총수익")) + "/" + Long.toString(statisticsDatas.get("충전수")));
 
-            statisticsYdPointRefundContentTxt.setText(Long.toString(statisticsDatas.get("환급총액")) + "/" + Long.toString(statisticsDatas.get("환급수")));
+            statisticsRegisterCountContentTxt.setText(registerCount + "건");
 
-            statisticsShareParkCountContentTxt.setText(Long.toString(statisticsDatas.get("승인공유주차장수")) + "/" + Long.toString(statisticsDatas.get("취소공유주차장수")) + "/" + Long.toString(statisticsDatas.get("총공유주차장수")));
+            statisticsYdPointChargeContentTxt.setText(totalChargedPoint + "pt / " + totalChargedPrice + "원 / " + totalChargedRevenue + "원 / " + chargeCount + "건");
 
-            statisticsReservationCountContentTxt.setText(Long.toString(statisticsDatas.get("취소예약수")) + "/" + Long.toString(statisticsDatas.get("총예약수")));
+            statisticsYdPointRefundContentTxt.setText(totalRefundPrice + "원 / " + refundCount + "건");
 
-            statisticsReportParkCountContentTxt.setText(Long.toString(statisticsDatas.get("승인제보주차장수")) + "/" + Long.toString(statisticsDatas.get("취소제보주차장수")) + "/" + Long.toString(statisticsDatas.get("총제보주차장수")));
+            statisticsShareParkCountContentTxt.setText(approvedShareParkCount + "개 / " + cancelledShareParkCount + "개 / " + shareParkCount + "개");
+
+            statisticsReservationCountContentTxt.setText(cancelledReservationCount + "건 / " + reservatitonCount + "건");
+
+            statisticsReportParkCountContentTxt.setText(approvedReportParkCount + "개 / " + cancelledReportParkCount + "개 / " + reportParkCount + "개");
         }
     }
 

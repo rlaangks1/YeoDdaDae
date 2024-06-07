@@ -128,7 +128,7 @@
 
             <TextView
                 android:id="@+id/statisticsRegisterCountTxt"
-                android:text="회원가입자 수"
+                android:text="회원가입"
                 android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -145,7 +145,7 @@
 
             <TextView
                 android:id="@+id/statisticsYdPointChargeTxt"
-                android:text="여따대포인트 충전 (충전/수익)"
+                android:text="여따대포인트 충전 (충전 / 결제 / 수익 / 건)"
                 android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -163,7 +163,7 @@
 
             <TextView
                 android:id="@+id/statisticsYdPointRefundTxt"
-                android:text="여따대포인트 환급"
+                android:text="여따대포인트 환급 (환급액 / 건)"
                 android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -181,7 +181,7 @@
 
             <TextView
                 android:id="@+id/statisticsShareParkCountTxt"
-                android:text="공유주차장 수 (승인 / 전체)"
+                android:text="공유주차장 (승인 / 취소 / 전체)"
                 android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -199,7 +199,7 @@
 
             <TextView
                 android:id="@+id/statisticsReservationCountTxt"
-                android:text="공유주차장 예약 수"
+                android:text="공유주차장 예약 (취소 / 전체)"
                 android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -217,7 +217,7 @@
 
             <TextView
                 android:id="@+id/statisticsReportParkCountTxt"
-                android:text="제보주차장 수 (승인 / 전체)"
+                android:text="제보주차장 (승인 / 취소 / 전체)"
                 android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
