@@ -315,7 +315,7 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void chargeYdPoint(String id, int price, OnFirestoreDataLoadedListener listener) {
+    public void chargeYdPoint(String id, int chargedYdPoint, int price, OnFirestoreDataLoadedListener listener) {
         db.collection("account")
                 .whereEqualTo("id", id)
                 .get()
@@ -327,11 +327,12 @@ public class FirestoreDatabase {
                         if (ydPoint != null) {
                             db.collection("account")
                                     .document(document.getId())
-                                    .update("ydPoint", ydPoint + price)
+                                    .update("ydPoint", ydPoint + chargedYdPoint)
                                     .addOnSuccessListener(aVoid -> {
                                         HashMap<String, Object> hm = new HashMap<>();
                                         hm.put("id", id);
-                                        hm.put("chargedYdPoint", price);
+                                        hm.put("chargedYdPoint", chargedYdPoint);
+                                        hm.put("price", price);
                                         hm.put("upTime", FieldValue.serverTimestamp());
                                         insertData("chargeYdPoint", hm, new OnFirestoreDataLoadedListener() {
                                             @Override
@@ -367,7 +368,7 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void refundYdPoint(String id, int price, OnFirestoreDataLoadedListener listener) {
+    public void refundYdPoint(String id, int refundYdPoint, OnFirestoreDataLoadedListener listener) {
         db.collection("account")
                 .whereEqualTo("id", id)
                 .get()
@@ -377,14 +378,14 @@ public class FirestoreDatabase {
                         Long ydPoint = document.getLong("ydPoint");
 
                         if (ydPoint != null) {
-                            if (ydPoint > price) {
+                            if (ydPoint > refundYdPoint) {
                                 db.collection("account")
                                         .document(document.getId())
-                                        .update("ydPoint", ydPoint - price)
+                                        .update("ydPoint", ydPoint - refundYdPoint)
                                         .addOnSuccessListener(aVoid -> {
                                             HashMap<String, Object> hm = new HashMap<>();
                                             hm.put("id", id);
-                                            hm.put("refundedYdPoint", price);
+                                            hm.put("refundedYdPoint", refundYdPoint);
                                             hm.put("upTime", FieldValue.serverTimestamp());
                                             insertData("refundYdPoint", hm, new OnFirestoreDataLoadedListener() {
                                                 @Override
@@ -1539,13 +1540,18 @@ public class FirestoreDatabase {
                             .whereLessThanOrEqualTo("upTime", endTime)
                             .get()
                             .addOnSuccessListener(queryDocumentSnapshots2 -> {
+                                long totalChargePoint = 0;
                                 long totalChargePrice = 0;
-                                for (DocumentSnapshot document : queryDocumentSnapshots2) {
-                                    totalChargePrice += (long) document.get("chargedYdPoint");
-                                }
-                                resultHM.put("충전총액", totalChargePrice);
 
-                                if (totalChargePrice == 0) {
+                                for (DocumentSnapshot document : queryDocumentSnapshots2) {
+                                    totalChargePoint += (long) document.get("chargedYdPoint");
+                                    totalChargePrice += (long) document.get("price");
+                                }
+                                resultHM.put("충전총포인트", totalChargePoint);
+                                resultHM.put("충전총액", totalChargePrice);
+                                resultHM.put("충전총수익", totalChargePrice - totalChargePoint);
+
+                                if (totalChargePoint == 0) {
                                     resultHM.put("충전수", 0L);
                                 }
                                 else {

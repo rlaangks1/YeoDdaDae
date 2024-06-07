@@ -157,7 +157,7 @@ public class StatisticsActivity extends AppCompatActivity {
         if (statisticsDatas != null) {
             statisticsRegisterCountContentTxt.setText(Long.toString(statisticsDatas.get("회원")));
 
-            statisticsYdPointChargeContentTxt.setText(Long.toString(statisticsDatas.get("충전총액")) + "/" + Long.toString(statisticsDatas.get("충전수")));
+            statisticsYdPointChargeContentTxt.setText(Long.toString(statisticsDatas.get("충전총포인트")) + "/" + Long.toString(statisticsDatas.get("충전총액")) + "/" + Long.toString(statisticsDatas.get("충전총수익")) + "/" + Long.toString(statisticsDatas.get("충전수")));
 
             statisticsYdPointRefundContentTxt.setText(Long.toString(statisticsDatas.get("환급총액")) + "/" + Long.toString(statisticsDatas.get("환급수")));
 
