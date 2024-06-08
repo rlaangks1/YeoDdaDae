@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,8 +32,8 @@ public class MyYdPointFragment extends Fragment {
     long ydPoint;
 
     TextView myYdPointTxt;
-    Button toChargeYdPointBtn;
-    Button toRefundYdPointBtn;
+    ImageButton toChargeYdPointBtn;
+    ImageButton toRefundYdPointBtn;
 
     public MyYdPointFragment(String id) {
         this.loginId = id;
