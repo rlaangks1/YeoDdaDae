@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -51,8 +52,8 @@ public class MyYdPointFragment extends Fragment {
     FirestoreDatabase fd;
 
     TextView myYdPointTxt;
-    Button toChargeYdPointBtn;
-    Button toRefundYdPointBtn;
+    ImageButton toChargeYdPointBtn;
+    ImageButton toRefundYdPointBtn;
     Spinner pointSpinner;
     ConstraintLayout pointHistoryCustomTimeConstLayout;
     EditText pointHistoryCustomTimeStartDateEditTxt;

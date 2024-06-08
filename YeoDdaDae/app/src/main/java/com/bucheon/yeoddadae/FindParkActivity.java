@@ -93,7 +93,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     ImageButton zoomOutBtn;
     ImageButton zoomInBtn;
     ImageButton gpsBtn;
-    Button findParkSttBtn;
+    ImageButton findParkSttBtn;
     Button findParkOnlyReportParkBtn;
     Button findParkOnlyShareParkBtn;
     HorizontalScrollView parkSortHorizontalScrollView;

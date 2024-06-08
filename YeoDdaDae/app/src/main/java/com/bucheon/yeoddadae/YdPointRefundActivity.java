@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,13 +25,13 @@ public class YdPointRefundActivity extends AppCompatActivity {
     int refundPoint;
     FirestoreDatabase fd;
 
-    Button refundBackBtn;
+    ImageButton refundBackBtn;
     TextView refundHavePointContentTxt;
     EditText refundTargetPointContentEditTxt;
     TextView refundWonTxt;
     EditText refundBankContentEditTxt;
     EditText refundAccountNumberContentEditTxt;
-    Button refundBtn;
+    ImageButton refundBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

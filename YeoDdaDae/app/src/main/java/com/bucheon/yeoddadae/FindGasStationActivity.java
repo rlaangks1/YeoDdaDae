@@ -85,7 +85,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     ImageButton zoomOutBtn;
     ImageButton zoomInBtn;
     ImageButton gpsBtn;
-    Button findGasStationSttBtn;
+    ImageButton findGasStationSttBtn;
     HorizontalScrollView gasStationSortHorizontalScrollView;
     Button sortByDistanceBtn;
     Button sortByGasolinePriceBtn;

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,10 +50,10 @@ public class PaymentActivity extends AppCompatActivity {
     long ydPoint;
     FirestoreDatabase fd;
 
-    Button paymentBackBtn;
+    ImageButton paymentBackBtn;
     TextView paymentTotalPriceContentTxt;
     TextView paymentYdPointContentTxt;
-    Button paymentPayBtn;
+    ImageButton paymentPayBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

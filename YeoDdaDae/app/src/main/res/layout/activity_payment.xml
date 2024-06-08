@@ -7,94 +7,151 @@
     android:layout_height="match_parent"
     tools:context=".PaymentActivity">
 
-    <Button
+    <ImageButton
         android:id="@+id/paymentBackBtn"
-        android:text="back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@drawable/backbtn"
+        android:background="@android:color/transparent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:fillViewport="true" />
 
     <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/paymentBackBtn"
-        app:layout_constraintBottom_toTopOf="@+id/paymentPayBtn" >
+        app:layout_constraintBottom_toTopOf="@+id/paymentPayBtn"
+        app:layout_constraintTop_toBottomOf="@+id/paymentBackBtn">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <ImageView
+                android:id="@+id/paymentTotalPriceImg"
+                android:layout_width="380dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/main"
+                android:scaleType="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/paymentTotalPriceTxt"
-                android:text="총 액"
-                android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                android:layout_marginTop="20dp"
+                android:text="총 액"
+                android:textColor="@color/blue"
+                android:textSize="35sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/paymentTotalPriceContentTxt"
-                android:text="0"
-                android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/paymentTotalPriceTxt"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                android:layout_marginTop="20dp"
+                android:text="0"
+                android:textColor="@color/blue"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/paymentTotalPriceTxt" />
 
             <TextView
-                android:text="원"
-                android:textSize="12sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@+id/paymentTotalPriceContentTxt"
+                android:layout_marginLeft="5dp"
+                android:text="pt"
+                android:textColor="@color/sub"
+                android:textSize="25sp"
+                android:textStyle="bold|italic"
                 app:layout_constraintBottom_toBottomOf="@+id/paymentTotalPriceContentTxt"
                 app:layout_constraintLeft_toRightOf="@+id/paymentTotalPriceContentTxt"
-                android:layout_marginLeft="5dp"/>
+                app:layout_constraintTop_toTopOf="@+id/paymentTotalPriceContentTxt" />
+
+            <ImageView
+                android:id="@+id/paymentYdPointImg"
+                android:layout_width="380dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/main"
+                android:scaleType="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/paymentTotalPriceImg"
+                tools:layout_editor_absoluteX="36dp" />
 
             <TextView
                 android:id="@+id/paymentYdPointTxt"
-                android:text="보유 여따대포인트"
-                android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/paymentTotalPriceContentTxt"
+                android:layout_marginTop="20dp"
+                android:text="보유 여따대포인트"
+                android:textColor="@color/blue"
+                android:textSize="35sp"
+                android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/paymentYdPointImg" />
 
             <TextView
                 android:id="@+id/paymentYdPointContentTxt"
-                android:text="0"
-                android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/paymentYdPointTxt"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                android:layout_marginTop="20dp"
+                android:text="0"
+                android:textColor="@color/blue"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/paymentYdPointTxt" />
 
             <TextView
-                android:text="pt"
-                android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@id/paymentYdPointContentTxt"
+                android:layout_marginLeft="5dp"
+                android:text="pt"
+                android:textColor="@color/sub"
+                android:textSize="25sp"
+                android:textStyle="bold|italic"
                 app:layout_constraintBottom_toBottomOf="@+id/paymentYdPointContentTxt"
                 app:layout_constraintLeft_toRightOf="@id/paymentYdPointContentTxt"
-                android:layout_marginLeft="5dp"/>
+                app:layout_constraintTop_toTopOf="@id/paymentYdPointContentTxt" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
 
-    <Button
+    <ImageButton
         android:id="@+id/paymentPayBtn"
-        android:text="결제"
-        android:textSize="20sp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/round_button"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"/>
+
+    <TextView
+        android:id="@+id/paymentPayTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="결제"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/paymentPayBtn"
+        app:layout_constraintEnd_toEndOf="@+id/paymentPayBtn"
+        app:layout_constraintStart_toStartOf="@+id/paymentPayBtn"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

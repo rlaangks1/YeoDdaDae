@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,11 +30,12 @@ public class YdPointChargeActivity extends AppCompatActivity {
     int price;
     FirestoreDatabase fd;
 
-    Button chargeBackBtn;
+    ImageButton chargeBackBtn;
     TextView chargeHavePointContentTxt;
+    TextView chargeTargetPointContentEditTxt;
+    ImageButton chargeBtn;
     Spinner anotherReportDistanceSpinner;
     TextView anotherReportWonTxt;
-    Button chargeBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
