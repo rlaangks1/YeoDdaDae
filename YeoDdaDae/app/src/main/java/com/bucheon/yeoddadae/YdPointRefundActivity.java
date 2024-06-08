@@ -4,9 +4,12 @@ import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +26,10 @@ public class YdPointRefundActivity extends AppCompatActivity {
 
     Button refundBackBtn;
     TextView refundHavePointContentTxt;
-    TextView refundTargetPointContentEditTxt;
+    EditText refundTargetPointContentEditTxt;
+    TextView refundWonTxt;
+    EditText refundBankContentEditTxt;
+    EditText refundAccountNumberContentEditTxt;
     Button refundBtn;
 
     @Override
@@ -34,6 +40,9 @@ public class YdPointRefundActivity extends AppCompatActivity {
         refundBackBtn = findViewById(R.id.refundBackBtn);
         refundHavePointContentTxt = findViewById(R.id.refundHavePointContentTxt);
         refundTargetPointContentEditTxt = findViewById(R.id.refundTargetPointContentEditTxt);
+        refundWonTxt = findViewById(R.id.refundWonTxt);
+        refundBankContentEditTxt = findViewById(R.id.refundBankContentEditTxt);
+        refundAccountNumberContentEditTxt = findViewById(R.id.refundAccountNumberContentEditTxt);
         refundBtn = findViewById(R.id.refundBtn);
 
         Intent inIntent = getIntent();
@@ -48,35 +57,72 @@ public class YdPointRefundActivity extends AppCompatActivity {
             }
         });
 
+        refundTargetPointContentEditTxt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (refundTargetPointContentEditTxt.getText().toString() == null
+                        || refundTargetPointContentEditTxt.getText().toString().equals("")) {
+                    refundWonTxt.setText("(0 원)");
+                }
+                else {
+                    long won = Long.parseLong(refundTargetPointContentEditTxt.getText().toString());
+                    String formattedWon = NumberFormat.getNumberInstance(Locale.KOREA).format(won);
+                    refundWonTxt.setText("(" +  formattedWon+ " 원)");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         refundBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
+                String targetPoint = refundTargetPointContentEditTxt.getText().toString();
+                String bank = refundBankContentEditTxt.getText().toString();
+                String accountNumber = refundAccountNumberContentEditTxt.getText().toString();
+
+                if (targetPoint.equals("")) {
+                    Toast.makeText(getApplicationContext(), "환급할 금액을 입력해주세요", Toast.LENGTH_SHORT).show();
+                }
+                else if (bank.equals("")) {
+                    Toast.makeText(getApplicationContext(), "환급할 계좌의 은행을 입력해주세요", Toast.LENGTH_SHORT).show();
+                }
+                else if (accountNumber.equals("")) {
+                    Toast.makeText(getApplicationContext(), "환급할 계좌번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+                }
+                else if (accountNumber.length() < 10 || accountNumber.length() > 14) {
+                    Toast.makeText(getApplicationContext(), "계좌번호는 10~14자 입니다", Toast.LENGTH_SHORT).show();
+                }
+                else {
                     refundPoint = Integer.parseInt(refundTargetPointContentEditTxt.getText().toString());
-                }
-                catch (NumberFormatException e) {
-                    Toast.makeText(getApplicationContext(), "환급할 금액을 숫자로 입력해주세요", Toast.LENGTH_SHORT).show();
-                    return;
-                }
 
-                fd.refundYdPoint(loginId, refundPoint, new OnFirestoreDataLoadedListener() {
-                    @Override
-                    public void onDataLoaded(Object data) {
-                        Toast.makeText(getApplicationContext(), "환급 완료", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
+                    fd.refundYdPoint(loginId, refundPoint, bank, accountNumber, new OnFirestoreDataLoadedListener() {
+                        @Override
+                        public void onDataLoaded(Object data) {
+                            Toast.makeText(getApplicationContext(), "환급 완료", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
 
-                    @Override
-                    public void onDataLoadError(String errorMessage) {
-                        Log.d(TAG, errorMessage);
-                        if (errorMessage.equals("환급 포인트가 보유 포인트보다 큽니다")) {
-                            Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                        @Override
+                        public void onDataLoadError(String errorMessage) {
+                            Log.d(TAG, errorMessage);
+                            if (errorMessage.equals("환급 포인트가 보유 포인트보다 큽니다")) {
+                                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        else {
-                            Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                    });
+                }
             }
         });
     }

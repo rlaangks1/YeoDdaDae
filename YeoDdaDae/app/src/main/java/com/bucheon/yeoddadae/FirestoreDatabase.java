@@ -448,7 +448,7 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void refundYdPoint(String id, int refundYdPoint, OnFirestoreDataLoadedListener listener) {
+    public void refundYdPoint(String id, int refundYdPoint, String bank, String accountNumber, OnFirestoreDataLoadedListener listener) {
         db.collection("account")
                 .whereEqualTo("id", id)
                 .get()
@@ -466,6 +466,8 @@ public class FirestoreDatabase {
                                             HashMap<String, Object> hm = new HashMap<>();
                                             hm.put("id", id);
                                             hm.put("refundedYdPoint", refundYdPoint);
+                                            hm.put("bank", bank);
+                                            hm.put("accountNumber", accountNumber);
                                             hm.put("upTime", FieldValue.serverTimestamp());
                                             insertData("refundYdPoint", hm, new OnFirestoreDataLoadedListener() {
                                                 @Override

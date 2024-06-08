@@ -108,16 +108,16 @@ public class MyYdPointFragment extends Fragment {
                 ArrayList<HashMap<String, Object>> receive = result.get(3);
 
                 for (HashMap<String, Object> hm : charge) {
-                    ypha.addItem(new YdPointHistoryItem("충전", (long) hm.get("price"), null, null, null, (Timestamp) hm.get("upTime"), (String) hm.get("documentId")));
+                    ypha.addItem(new YdPointHistoryItem("충전", (long) hm.get("price"), null, null, null, null, null, (Timestamp) hm.get("upTime"), (String) hm.get("documentId")));
                 }
                 for (HashMap<String, Object> hm : refund) {
-                    ypha.addItem(new YdPointHistoryItem("환급", (long) hm.get("refundedYdPoint"), null, null, null, (Timestamp) hm.get("upTime"), (String) hm.get("documentId")));
+                    ypha.addItem(new YdPointHistoryItem("환급", (long) hm.get("refundedYdPoint"), (String) hm.get("bank"), (String) hm.get("accountNumber"), null, null, null, (Timestamp) hm.get("upTime"), (String) hm.get("documentId")));
                 }
                 for (HashMap<String, Object> hm : spend) {
-                    ypha.addItem(new YdPointHistoryItem("사용", (long) hm.get("price"), (String) hm.get("type"), (String) hm.get("reservationId"), null, (Timestamp) hm.get("upTime"), (String) hm.get("documentId")));
+                    ypha.addItem(new YdPointHistoryItem("사용", (long) hm.get("price"), null, null, (String) hm.get("type"), (String) hm.get("reservationId"), null, (Timestamp) hm.get("upTime"), (String) hm.get("documentId")));
                 }
                 for (HashMap<String, Object> hm : receive) {
-                    ypha.addItem(new YdPointHistoryItem("받음", (long) hm.get("receivedYdPoint"), null, null, (String) hm.get("type"), (Timestamp) hm.get("upTime"), (String) hm.get("documentId")));
+                    ypha.addItem(new YdPointHistoryItem("받음", (long) hm.get("receivedYdPoint"), null, null, null, null, (String) hm.get("type"), (Timestamp) hm.get("upTime"), (String) hm.get("documentId")));
                 }
 
                 ypha.sortByUpTime();

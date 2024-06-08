@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -136,6 +137,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void registerUser(String id, String email, String pw) {
         registerBtn.setEnabled(false);
+        registerBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.round_button_disable));
 
         mAuth.createUserWithEmailAndPassword(email, pw)
                 .addOnCompleteListener(this, task -> {
@@ -156,6 +158,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                         @Override
                                                         public void onComplete(@NonNull Task<Void> task) {
                                                             registerBtn.setEnabled(true);
+                                                            registerBtn.setBackground(ContextCompat.getDrawable(RegisterActivity.this, R.drawable.round_button));
                                                         }
                                                     });
                                         }
@@ -166,11 +169,13 @@ public class RegisterActivity extends AppCompatActivity {
                         if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                             Toast.makeText(getApplicationContext(), "이미 존재하는 이메일입니다", Toast.LENGTH_SHORT).show();
                             registerBtn.setEnabled(true);
+                            registerBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.round_button));
                         }
                         else {
                             Log.d(TAG, "계정 생성 실패" + task.getException().getMessage());
                             Toast.makeText(getApplicationContext(), "계정 생성 실패", Toast.LENGTH_SHORT).show();
                             registerBtn.setEnabled(true);
+                            registerBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.round_button));
                         }
                     }
                 });
@@ -203,6 +208,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     registerBtn.setEnabled(true);
+                                                    registerBtn.setBackground(ContextCompat.getDrawable(RegisterActivity.this, R.drawable.round_button));
                                                 }
                                             });
                                 }
@@ -224,6 +230,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     registerBtn.setEnabled(true);
+                                    registerBtn.setBackground(ContextCompat.getDrawable(RegisterActivity.this, R.drawable.round_button));
                                 }
                             });
                 }

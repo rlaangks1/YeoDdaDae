@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.skt.Tmap.TMapView;
 
 public class StartActivity extends AppCompatActivity {
@@ -143,6 +144,7 @@ public class StartActivity extends AppCompatActivity {
         else {
             loginId = "user111";
             isAdmin = false;
+
             intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.putExtra("loginId", loginId);
             intent.putExtra("isAdmin", isAdmin);
