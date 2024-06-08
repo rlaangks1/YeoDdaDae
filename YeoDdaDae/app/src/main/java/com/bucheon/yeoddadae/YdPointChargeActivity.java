@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,10 +25,10 @@ public class YdPointChargeActivity extends AppCompatActivity {
     long ydPoint;
     int chargePoint;
 
-    Button chargeBackBtn;
+    ImageButton chargeBackBtn;
     TextView chargeHavePointContentTxt;
     TextView chargeTargetPointContentEditTxt;
-    Button chargeBtn;
+    ImageButton chargeBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
