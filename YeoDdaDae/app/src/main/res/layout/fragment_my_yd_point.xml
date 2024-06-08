@@ -114,7 +114,4 @@
         app:layout_constraintStart_toEndOf="@+id/toRefundYdPointImg"
         app:layout_constraintTop_toTopOf="@+id/toRefundYdPointBtn" />
 
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

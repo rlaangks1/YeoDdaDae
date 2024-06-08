@@ -20,7 +20,6 @@ public class SttDialog extends Dialog {
     ImageButton sttListenBtn;
     TextView sttStatusTxt;
 
-    private boolean isListening = true;
 
     public SttDialog(@NonNull Context context, SttDialogListener listener) {
         super(context);

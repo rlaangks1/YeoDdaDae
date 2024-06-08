@@ -118,6 +118,9 @@
                 app:layout_constraintTop_toBottomOf="@id/refundTargetPointTxt" />
 
             <TextView
+                android:id="@+id/refundPtTxt"
+                android:text="pt"
+                android:textSize="12sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -128,6 +131,62 @@
                 app:layout_constraintBottom_toBottomOf="@+id/refundTargetPointContentEditTxt"
                 app:layout_constraintLeft_toRightOf="@id/refundTargetPointContentEditTxt"
                 app:layout_constraintTop_toTopOf="@id/refundTargetPointContentEditTxt" />
+
+            <TextView
+                android:id="@+id/refundWonTxt"
+                android:text="(0 원)"
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/refundTargetPointContentEditTxt"
+                app:layout_constraintBottom_toBottomOf="@+id/refundTargetPointContentEditTxt"
+                app:layout_constraintLeft_toRightOf="@id/refundPtTxt"
+                android:layout_marginLeft="10dp"/>
+
+            <TextView
+                android:id="@+id/refundBankTxt"
+                android:text="은행"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/refundTargetPointContentEditTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="20dp" />
+
+            <EditText
+                android:id="@+id/refundBankContentEditTxt"
+                android:textSize="20sp"
+                android:maxLength="10"
+                android:singleLine="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/refundBankTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+
+            <TextView
+                android:id="@+id/refundAccountNumberTxt"
+                android:text="계좌번호"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/refundBankContentEditTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="20dp" />
+
+            <EditText
+                android:id="@+id/refundAccountNumberContentEditTxt"
+                android:textSize="20sp"
+                android:maxLength="14"
+                android:singleLine="true"
+                android:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/refundAccountNumberTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

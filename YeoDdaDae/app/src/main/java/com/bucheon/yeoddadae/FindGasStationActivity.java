@@ -105,14 +105,6 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_gas_station);
 
-        // 메인액티비티에서 정렬기준 받기
-        Intent inIntent = getIntent();
-        recievedSort = inIntent.getIntExtra("SortBy", 0);
-        if (recievedSort == 0) {
-            Log.d(TAG, "sttSort가 0임 (오류)");
-            finish();
-        }
-
         // 뷰 정의
         gasStationListView = findViewById(R.id.gasStationListView);
         findGasStationBackBtn = findViewById(R.id.findGasStationBackBtn);
@@ -135,12 +127,19 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         tmapStartMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_start_marker);
         tmapSelectedMarkerIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_selected_marker);
 
-        initSttService();
-
         loadingStart(); // 로딩 시작
 
-        // 로딩 완료까지 뷰 없애기
-        runOnUiThread(new Runnable() {
+        // 메인액티비티에서 정렬기준 받기
+        Intent inIntent = getIntent();
+        recievedSort = inIntent.getIntExtra("SortBy", 0);
+        if (recievedSort == 0) {
+            Log.d(TAG, "sttSort가 0임 (오류)");
+            finish();
+        }
+
+        initSttService();
+
+        runOnUiThread(new Runnable() { // 로딩 완료까지 뷰 없애기
             @Override
             public void run() {
                 gasStationListView.setVisibility(View.GONE);
@@ -852,7 +851,9 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
             @Override
             public void run() {
                 if (message.equals("메인명령어듣는중")) {
-                    sd.show();
+                    if (!sd.isShowing()) {
+                        sd.show();
+                    }
                     sd.changeToActiveIcon();
                     sd.setSttStatusTxt("메인 명령어 듣는 중");
                 }

@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -41,6 +42,7 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
     Spinner anotherReportDistanceSpinner;
     ListView anotherReportListView;
     ImageButton toAddReportBtn;
+    TextView anotherReportNoTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
         anotherReportDistanceSpinner = findViewById(R.id.anotherReportDistanceSpinner);
         anotherReportListView = findViewById(R.id.anotherReportListView);
         toAddReportBtn = findViewById(R.id.toAddReportBtn);
+        anotherReportNoTxt = findViewById(R.id.anotherReportNoTxt);
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
@@ -73,20 +76,27 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
             @Override
             public void onDataLoaded(Object data) {
                 ArrayList<HashMap<String, Object>> myReports = (ArrayList<HashMap<String, Object>>) data;
-                for (HashMap<String, Object> oneReport : myReports) {
-                    String reporterId = (String) oneReport.get("reporterId");
-                    String parkName = (String) oneReport.get("parkName");
-                    String condition = (String) oneReport.get("parkCondition");
-                    long discount = (long) oneReport.get("parkDiscount");
-                    long ratePerfectCount = (long) oneReport.get("ratePerfectCount");
-                    long rateMistakeCount = (long) oneReport.get("rateMistakeCount");
-                    long rateWrongCount = (long) oneReport.get("rateWrongCount");
-                    boolean isCancelled = (boolean) oneReport.get("isCancelled");
-                    boolean isApproval = (boolean) oneReport.get("isApproval");
-                    Timestamp upTime = (Timestamp) oneReport.get("upTime");
-                    String poiID = (String) oneReport.get("poiID");
-                    String documentId = (String) oneReport.get("documentId");
-                    ra.addItem(new ReportDiscountParkItem(reporterId, parkName, condition, discount, ratePerfectCount, rateMistakeCount, rateWrongCount, isCancelled, isApproval, upTime, poiID, documentId));
+                if (myReports.size() >= 1 && myReports != null) {
+                    anotherReportNoTxt.setVisibility(View.GONE);
+
+                    for (HashMap<String, Object> oneReport : myReports) {
+                        String reporterId = (String) oneReport.get("reporterId");
+                        String parkName = (String) oneReport.get("parkName");
+                        String condition = (String) oneReport.get("parkCondition");
+                        long discount = (long) oneReport.get("parkDiscount");
+                        long ratePerfectCount = (long) oneReport.get("ratePerfectCount");
+                        long rateMistakeCount = (long) oneReport.get("rateMistakeCount");
+                        long rateWrongCount = (long) oneReport.get("rateWrongCount");
+                        boolean isCancelled = (boolean) oneReport.get("isCancelled");
+                        boolean isApproval = (boolean) oneReport.get("isApproval");
+                        Timestamp upTime = (Timestamp) oneReport.get("upTime");
+                        String poiID = (String) oneReport.get("poiID");
+                        String documentId = (String) oneReport.get("documentId");
+                        ra.addItem(new ReportDiscountParkItem(reporterId, parkName, condition, discount, ratePerfectCount, rateMistakeCount, rateWrongCount, isCancelled, isApproval, upTime, poiID, documentId));
+                    }
+                }
+                else {
+                    anotherReportNoTxt.setVisibility(View.VISIBLE);
                 }
             }
             @Override

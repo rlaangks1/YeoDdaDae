@@ -155,7 +155,7 @@
             <EditText
                 android:id="@+id/sharerEmailEditTxt"
                 android:textSize="20sp"
-                android:maxLength="40"
+                android:maxLength="32"
                 android:inputType="textEmailAddress"
                 android:singleLine="true"
                 android:layout_width="0dp"

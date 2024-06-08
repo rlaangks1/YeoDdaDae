@@ -51,33 +51,48 @@
 
     <EditText
         android:id="@+id/registerIdTxt"
-        android:layout_width="380dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:inputType="text"
         android:hint="아이디"
-        android:maxLength="30"
+        android:maxLength="20"
         android:singleLine="true"
+        android:textSize="20dp"
         android:textColorHint="@color/main"
         android:backgroundTint="@color/sub"
-        android:textSize="20dp"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userFace2" />
+        app:layout_constraintTop_toBottomOf="@id/userFace2" />
+
+    <EditText
+        android:id="@+id/registerEmailTxt"
+        android:inputType="textEmailAddress"
+        android:hint="이메일"
+        android:maxLength="32"
+        android:singleLine="true"
+        android:textSize="20dp"
+        android:textColorHint="@color/main"
+        android:backgroundTint="@color/sub"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/registerIdTxt" />
 
     <EditText
         android:id="@+id/registerPwTxt"
         android:inputType="textPassword"
-        android:layout_width="380dp"
-        android:layout_height="wrap_content"
-        android:maxLength="30"
-        android:textSize="20dp"
         android:hint="비밀번호"
+        android:maxLength="20"
         android:singleLine="true"
+        android:textSize="20dp"
         android:textColorHint="@color/main"
         android:backgroundTint="@color/sub"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/registerIdTxt" />
+        app:layout_constraintTop_toBottomOf="@id/registerEmailTxt" />
 
     <ImageButton
         android:id="@+id/registerBtn"
@@ -87,8 +102,7 @@
         android:background="@drawable/round_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/registerPwTxt"
-        />
+        app:layout_constraintTop_toBottomOf="@id/registerPwTxt" />
 
     <TextView
         android:id="@+id/registerBtnTxt"
@@ -101,5 +115,18 @@
         app:layout_constraintEnd_toEndOf="@+id/registerBtn"
         app:layout_constraintStart_toStartOf="@+id/registerBtn"
         app:layout_constraintTop_toTopOf="@+id/registerBtn" />
+
+    <TextView
+        android:id="@+id/registerEmailVerificationTxt"
+        android:text="0"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="50dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

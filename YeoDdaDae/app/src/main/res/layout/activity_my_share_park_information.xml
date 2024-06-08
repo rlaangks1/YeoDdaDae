@@ -61,12 +61,30 @@
                 app:layout_constraintLeft_toLeftOf="parent"/>
 
             <TextView
+                android:id="@+id/myShareParkInfoCancelReasonTxt"
+                android:text="취소 사유"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/myShareParkInfoStatusContentTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="20dp"/>
+
+            <TextView
+                android:id="@+id/myShareParkInfoCancelReasonContentTxt"
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/myShareParkInfoCancelReasonTxt"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <TextView
                 android:id="@+id/myShareParkInfoPriceTxt"
                 android:text="주차비"
                 android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/myShareParkInfoStatusContentTxt"
+                app:layout_constraintTop_toBottomOf="@id/myShareParkInfoCancelReasonContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="20dp"  />
 

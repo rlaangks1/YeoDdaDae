@@ -221,6 +221,8 @@
 
             <EditText
                 android:id="@+id/searchEdTxt"
+                android:hint="검색..."
+                android:maxLength="30"
                 android:singleLine="true"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

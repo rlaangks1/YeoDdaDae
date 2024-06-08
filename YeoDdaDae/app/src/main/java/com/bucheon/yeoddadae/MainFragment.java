@@ -92,6 +92,9 @@ public class MainFragment extends Fragment {
                 if (item.getItemId() == R.id.nav_logout) {
                     dataPasser.onDataPassed("로그아웃");
                 }
+                else if (item.getItemId() == R.id.nav_change_password) {
+                    dataPasser.onDataPassed("비밀번호 변경");
+                }
                 return false;
             }
         });

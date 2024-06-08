@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -45,6 +46,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -247,29 +249,46 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void login(String id, String pw, OnFirestoreDataLoadedListener listener) {
+    public void register (String id, String email, String uid, OnFirestoreDataLoadedListener listener) {
+        HashMap<String, Object> newAccount = new HashMap<>();
+        newAccount.put("id", id);
+        newAccount.put("email", email);
+        newAccount.put("isAdmin", false);
+        newAccount.put("ydPoint", 0);
+        newAccount.put("registerTime", FieldValue.serverTimestamp());
+
+        db.collection("account").document(uid).set(newAccount)
+                .addOnSuccessListener(aVoid -> {
+                    listener.onDataLoaded(true);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "회원 문서 추가 중 오류 발생: " + e.getMessage());
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void findEmailAndIsAdminById (String id, OnFirestoreDataLoadedListener listener) {
         db.collection("account")
                 .whereEqualTo("id", id)
-                .whereEqualTo("pw", pw)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (queryDocumentSnapshots.size() > 0) {
+                    if (queryDocumentSnapshots.size() == 1) {
                         DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+                        String email = (String) document.get("email");
+                        String isAdmin = Boolean.toString((boolean) document.get("isAdmin"));
+                        String result[] = {email, isAdmin};
 
-                        // Get the value of isAdmin property
-                        boolean isAdmin = document.getBoolean("isAdmin");
-
-                        Log.d(TAG, "로그인 성공");
-                        listener.onDataLoaded(isAdmin);
+                        listener.onDataLoaded(result);
+                    }
+                    else if (queryDocumentSnapshots.size() == 0 || queryDocumentSnapshots == null) {
+                        listener.onDataLoadError("계정이 없음");
                     }
                     else {
-                        Log.d(TAG, "아이디 또는 비밀번호가 일치하지 않음");
-                        listener.onDataLoadError("아이디 또는 비밀번호가 일치하지 않습니다");
+                        listener.onDataLoadError("계정이 여러개임");
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.d(TAG, "로그인 중 오류", e);
-                    listener.onDataLoadError(e.getMessage());
+
                 });
     }
 
@@ -296,7 +315,87 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void chargeYdPoint(String id, int price, OnFirestoreDataLoadedListener listener) {
+    public void loadYdPointHistory(String id, OnFirestoreDataLoadedListener listener) {
+        ArrayList<HashMap<String, Object>> chargeArrayList = new ArrayList<>();
+        ArrayList<HashMap<String, Object>> refundArrayList = new ArrayList<>();
+        ArrayList<HashMap<String, Object>> spendArrayList = new ArrayList<>();
+        ArrayList<HashMap<String, Object>> receiveArrayList = new ArrayList<>();
+
+        db.collection("chargeYdPoint")
+                .whereEqualTo("id", id)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots1 -> {
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots1) {
+                        HashMap<String, Object> data = new HashMap<>(documentSnapshot.getData());
+                        data.put("documentId", documentSnapshot.getId());
+                        chargeArrayList.add(data);
+                    }
+
+                    db.collection("refundYdPoint")
+                            .whereEqualTo("id", id)
+                            .get()
+                            .addOnSuccessListener(queryDocumentSnapshots2 -> {
+                                for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots2) {
+                                    HashMap<String, Object> data = new HashMap<>(documentSnapshot.getData());
+                                    data.put("documentId", documentSnapshot.getId());
+                                    refundArrayList.add(data);
+                                }
+
+                                db.collection("spendYdPointHistory")
+                                        .whereEqualTo("id", id)
+                                        .get()
+                                        .addOnSuccessListener(queryDocumentSnapshots3 -> {
+                                            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots3) {
+                                                HashMap<String, Object> data = new HashMap<>(documentSnapshot.getData());
+                                                data.put("documentId", documentSnapshot.getId());
+                                                spendArrayList.add(data);
+                                            }
+
+                                            db.collection("receiveYdPoint")
+                                                    .whereEqualTo("id", id)
+                                                    .get()
+                                                    .addOnSuccessListener(queryDocumentSnapshots4 -> {
+                                                        for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots4) {
+                                                            HashMap<String, Object> data = new HashMap<>(documentSnapshot.getData());
+                                                            data.put("documentId", documentSnapshot.getId());
+                                                            receiveArrayList.add(data);
+                                                        }
+
+                                                        Log.d(TAG, "충전수 : " + chargeArrayList.size());
+                                                        Log.d(TAG, "환급수 : " + refundArrayList.size());
+                                                        Log.d(TAG, "소비수 : " + spendArrayList.size());
+                                                        Log.d(TAG, "받음수 : " + receiveArrayList.size());
+
+                                                        ArrayList<ArrayList<HashMap<String, Object>>> resultArrayList = new ArrayList<>();
+                                                        resultArrayList.add(chargeArrayList);
+                                                        resultArrayList.add(refundArrayList);
+                                                        resultArrayList.add(spendArrayList);
+                                                        resultArrayList.add(receiveArrayList);
+
+                                                        listener.onDataLoaded(resultArrayList);
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                        Log.d(TAG, "포인트 받음 기록 찾기 실패", e);
+                                                        listener.onDataLoadError("포인트 받음 기록 찾기 실패");
+                                                    });
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.d(TAG, "포인트 소비 기록 찾기 실패", e);
+                                            listener.onDataLoadError("포인트 소비 기록 찾기 실패");
+                                        });
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.d(TAG, "포인트 환급 기록 찾기 실패", e);
+                                listener.onDataLoadError("포인트 환급 기록 찾기 실패");
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "포인트 충전 기록 찾기 실패", e);
+                    listener.onDataLoadError("포인트 충전 기록 찾기 실패");
+                });
+    }
+
+    public void chargeYdPoint(String id, int chargedYdPoint, int price, OnFirestoreDataLoadedListener listener) {
         db.collection("account")
                 .whereEqualTo("id", id)
                 .get()
@@ -308,11 +407,12 @@ public class FirestoreDatabase {
                         if (ydPoint != null) {
                             db.collection("account")
                                     .document(document.getId())
-                                    .update("ydPoint", ydPoint + price)
+                                    .update("ydPoint", ydPoint + chargedYdPoint)
                                     .addOnSuccessListener(aVoid -> {
                                         HashMap<String, Object> hm = new HashMap<>();
                                         hm.put("id", id);
-                                        hm.put("chargedYdPoint", price);
+                                        hm.put("chargedYdPoint", chargedYdPoint);
+                                        hm.put("price", price);
                                         hm.put("upTime", FieldValue.serverTimestamp());
                                         insertData("chargeYdPoint", hm, new OnFirestoreDataLoadedListener() {
                                             @Override
@@ -348,7 +448,7 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void refundYdPoint(String id, int price, OnFirestoreDataLoadedListener listener) {
+    public void refundYdPoint(String id, int refundYdPoint, String bank, String accountNumber, OnFirestoreDataLoadedListener listener) {
         db.collection("account")
                 .whereEqualTo("id", id)
                 .get()
@@ -358,14 +458,16 @@ public class FirestoreDatabase {
                         Long ydPoint = document.getLong("ydPoint");
 
                         if (ydPoint != null) {
-                            if (ydPoint > price) {
+                            if (ydPoint > refundYdPoint) {
                                 db.collection("account")
                                         .document(document.getId())
-                                        .update("ydPoint", ydPoint - price)
+                                        .update("ydPoint", ydPoint - refundYdPoint)
                                         .addOnSuccessListener(aVoid -> {
                                             HashMap<String, Object> hm = new HashMap<>();
                                             hm.put("id", id);
-                                            hm.put("refundedYdPoint", price);
+                                            hm.put("refundedYdPoint", refundYdPoint);
+                                            hm.put("bank", bank);
+                                            hm.put("accountNumber", accountNumber);
                                             hm.put("upTime", FieldValue.serverTimestamp());
                                             insertData("refundYdPoint", hm, new OnFirestoreDataLoadedListener() {
                                                 @Override
@@ -630,7 +732,7 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void cancelSharePark (String id, String firestoreDocumentId ,OnFirestoreDataLoadedListener listener) {
+    public void cancelSharePark (String id, String firestoreDocumentId, String cancelReason ,OnFirestoreDataLoadedListener listener) {
         db.collection("sharePark")
                 .document(firestoreDocumentId)
                 .get()
@@ -678,13 +780,14 @@ public class FirestoreDatabase {
                                         .whereNotEqualTo("isCancelled", false)
                                         .get()
                                         .addOnSuccessListener(documentSnapshots2 -> {
-                                            if (documentSnapshots2.size() > 0) {
-                                                listener.onDataLoadError("예약이 있어서 취소 불가");
-                                            }
-                                            else {
+                                            if (documentSnapshots2.size() == 0) {
+                                                Map<String, Object> updates = new HashMap<>();
+                                                updates.put("isCancelled", true);
+                                                updates.put("cancelReason", cancelReason);
+
                                                 db.collection("sharePark")
                                                         .document(firestoreDocumentId)
-                                                        .update("isCancelled", true)
+                                                        .update(updates)
                                                         .addOnSuccessListener(aVoid -> {
                                                             listener.onDataLoaded(true);
                                                         })
@@ -692,6 +795,9 @@ public class FirestoreDatabase {
                                                             Log.d(TAG, "공유 취소 실패");
                                                             listener.onDataLoadError(e.getMessage());
                                                         });
+                                            }
+                                            else {
+                                                listener.onDataLoadError("예약이 있어서 취소 불가");
                                             }
                                         })
                                         .addOnFailureListener(e -> {
@@ -1044,7 +1150,7 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void cancelReport (String loginId, String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+    public void cancelReport (String loginId, String firestoreDocumentId, String cancelReason, OnFirestoreDataLoadedListener listener) {
         db.collection("reportDiscountPark")
                 .document(firestoreDocumentId)
                 .get()
@@ -1052,12 +1158,63 @@ public class FirestoreDatabase {
                     if (documentSnapshot.exists()) {
                         if(documentSnapshot.get("reporterId").equals(loginId)) {
                             if (!(boolean) documentSnapshot.get("isApproval")) {
+                                Map<String, Object> updates = new HashMap<>();
+                                updates.put("isCancelled", true);
+                                updates.put("cancelReason", cancelReason);
+
                                 db.collection("reportDiscountPark")
                                         .document(firestoreDocumentId)
-                                        .update("isCancelled", true)
+                                        .update(updates)
                                         .addOnSuccessListener(aVoid -> {
                                             Log.d(TAG, "제보 취소 성공");
-                                            listener.onDataLoaded(1);
+                                            if (!cancelReason.equals("공유자가 취소")) {
+                                                db.collection("rateReport")
+                                                        .whereEqualTo("reportDocumentID", firestoreDocumentId)
+                                                        .get()
+                                                        .addOnSuccessListener(queryDocumentSnapshots -> {
+                                                            if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() != 0) {
+                                                                int docCount[] = {0};
+                                                                for (DocumentSnapshot documentSnapshot2 : queryDocumentSnapshots) {
+                                                                    if (documentSnapshot2.get("rate").equals("mistake") || documentSnapshot2.get("rate").equals("wrong")) {
+                                                                        docCount[0]++;
+                                                                    }
+                                                                }
+
+                                                                for (DocumentSnapshot documentSnapshot2 : queryDocumentSnapshots) {
+                                                                    String raterId = (String) documentSnapshot2.get("id");
+
+                                                                    int count[] = {1};
+                                                                    receiveYdPoint(raterId, 500, "부정적 평가한 할인주차장 취소", new OnFirestoreDataLoadedListener() {
+                                                                        @Override
+                                                                        public void onDataLoaded(Object data) {
+                                                                            if (docCount[0] == count[0]) {
+                                                                                listener.onDataLoaded(true);
+                                                                            }
+                                                                            else {
+                                                                                count[0]++;
+                                                                            }
+                                                                        }
+                                                                        @Override
+                                                                        public void onDataLoadError(String errorMessage) {
+                                                                            Log.d(TAG, errorMessage);
+                                                                            listener.onDataLoadError("포인트 지급 중 오류");
+                                                                        }
+                                                                    });
+
+                                                                }
+                                                            }
+                                                            else {
+                                                                listener.onDataLoaded(true);
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            Log.d(TAG, "부정 평가자 찾기 중 오류 발생");
+                                                            listener.onDataLoadError(e.getMessage());
+                                                        });
+                                            }
+                                            else {
+                                                listener.onDataLoaded(true);
+                                            }
                                         })
                                         .addOnFailureListener(e -> {
                                             Log.d(TAG, "제보 취소 실패");
@@ -1065,7 +1222,6 @@ public class FirestoreDatabase {
                                         });
                             }
                             else {
-                                Log.d(TAG, "dsdsdsdsddssds");
                                 listener.onDataLoadError("승인된 제보임");
                             }
                         }
@@ -1213,6 +1369,7 @@ public class FirestoreDatabase {
         db.collection("reportDiscountPark")
                 .whereEqualTo("isApproval", false)
                 .whereEqualTo("isCancelled", false)
+                .orderBy("upTime", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     ArrayList<HashMap<String, Object>> resultArrayList = new ArrayList<>();
@@ -1490,6 +1647,169 @@ public class FirestoreDatabase {
         }).addOnFailureListener(e -> {
             listener.onDataLoadError(e.getMessage());
         });
+    }
+
+    public void getStatistics (Timestamp startTime, Timestamp endTime, OnFirestoreDataLoadedListener listener) {
+        HashMap<String, Long> resultHM = new HashMap<String, Long>();
+
+        db.collection("account")
+                .whereGreaterThanOrEqualTo("registerTime", startTime)
+                .whereLessThanOrEqualTo("registerTime", endTime)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots == null || queryDocumentSnapshots.size() == 0) {
+                        resultHM.put("회원", 0L);
+                    }
+                    else {
+                        resultHM.put("회원", (long) queryDocumentSnapshots.size());
+                    }
+                    db.collection("chargeYdPoint")
+                            .whereGreaterThanOrEqualTo("upTime", startTime)
+                            .whereLessThanOrEqualTo("upTime", endTime)
+                            .get()
+                            .addOnSuccessListener(queryDocumentSnapshots2 -> {
+                                long totalChargePoint = 0;
+                                long totalChargePrice = 0;
+
+                                for (DocumentSnapshot document : queryDocumentSnapshots2) {
+                                    totalChargePoint += (long) document.get("chargedYdPoint");
+                                    totalChargePrice += (long) document.get("price");
+                                }
+                                resultHM.put("충전총포인트", totalChargePoint);
+                                resultHM.put("충전총액", totalChargePrice);
+                                resultHM.put("충전총수익", totalChargePrice - totalChargePoint);
+
+                                if (totalChargePoint == 0) {
+                                    resultHM.put("충전수", 0L);
+                                }
+                                else {
+                                    resultHM.put("충전수", (long) queryDocumentSnapshots2.size());
+                                }
+
+                                db.collection("refundYdPoint")
+                                        .whereGreaterThanOrEqualTo("upTime", startTime)
+                                        .whereLessThanOrEqualTo("upTime", endTime)
+                                        .get()
+                                        .addOnSuccessListener(queryDocumentSnapshots3 -> {
+                                            long totalRefundPrice = 0;
+                                            for (DocumentSnapshot document : queryDocumentSnapshots3) {
+                                                totalRefundPrice += (long) document.get("refundedYdPoint");
+                                            }
+                                            resultHM.put("환급총액", totalRefundPrice);
+
+                                            if (totalRefundPrice == 0) {
+                                                resultHM.put("환급수", 0L);
+                                            }
+                                            else {
+                                                resultHM.put("환급수", (long) queryDocumentSnapshots3.size());
+                                            }
+                                            db.collection("sharePark")
+                                                    .whereGreaterThanOrEqualTo("upTime", startTime)
+                                                    .whereLessThanOrEqualTo("upTime", endTime)
+                                                    .get()
+                                                    .addOnSuccessListener(queryDocumentSnapshots4 -> {
+                                                        long canceledShareParkCount = 0;
+                                                        long approvedShareParkCount = 0;
+
+                                                        if (queryDocumentSnapshots4 == null || queryDocumentSnapshots4.size() == 0) {
+                                                            resultHM.put("총공유주차장수", 0L);
+                                                        }
+                                                        else {
+                                                            resultHM.put("총공유주차장수", (long) queryDocumentSnapshots4.size());
+
+                                                            for (DocumentSnapshot document : queryDocumentSnapshots4) {
+                                                                if ((boolean) document.get("isCancelled")) {
+                                                                    canceledShareParkCount++;
+                                                                }
+                                                                else if ((boolean) document.get("isApproval")) {
+                                                                    approvedShareParkCount++;
+                                                                }
+                                                            }
+                                                        }
+
+                                                        resultHM.put("취소공유주차장수", canceledShareParkCount);
+                                                        resultHM.put("승인공유주차장수", approvedShareParkCount);
+
+                                                        db.collection("reservation")
+                                                                .whereGreaterThanOrEqualTo("upTime", startTime)
+                                                                .whereLessThanOrEqualTo("upTime", endTime)
+                                                                .get()
+                                                                .addOnSuccessListener(queryDocumentSnapshots5 -> {
+                                                                    long canceledReservationCount = 0;
+
+                                                                    if (queryDocumentSnapshots5 == null || queryDocumentSnapshots5.size() == 0) {
+                                                                        resultHM.put("총예약수", 0L);
+                                                                    }
+                                                                    else {
+                                                                        resultHM.put("총예약수", (long) queryDocumentSnapshots5.size());
+
+                                                                        for (DocumentSnapshot document : queryDocumentSnapshots5) {
+                                                                            if ((boolean) document.get("isCancelled")) {
+                                                                                canceledReservationCount++;
+                                                                            }
+                                                                        }
+                                                                    }
+
+                                                                    resultHM.put("취소예약수", canceledReservationCount);
+
+                                                                    db.collection("reportDiscountPark")
+                                                                            .whereGreaterThanOrEqualTo("upTime", startTime)
+                                                                            .whereLessThanOrEqualTo("upTime", endTime)
+                                                                            .get()
+                                                                            .addOnSuccessListener(queryDocumentSnapshots6 -> {
+                                                                                long canceledReportParkCount = 0;
+                                                                                long approvedReportParkCount = 0;
+
+                                                                                if (queryDocumentSnapshots6 == null || queryDocumentSnapshots6.size() == 0) {
+                                                                                    resultHM.put("총제보주차장수", 0L);
+                                                                                }
+                                                                                else {
+                                                                                    resultHM.put("총제보주차장수", (long) queryDocumentSnapshots6.size());
+
+                                                                                    for (DocumentSnapshot document : queryDocumentSnapshots6) {
+                                                                                        if ((boolean) document.get("isCancelled")) {
+                                                                                            canceledReportParkCount++;
+                                                                                        }
+                                                                                        else if ((boolean) document.get("isApproval")) {
+                                                                                            approvedReportParkCount++;
+                                                                                        }
+                                                                                    }
+                                                                                }
+
+                                                                                resultHM.put("취소제보주차장수", canceledReportParkCount);
+                                                                                resultHM.put("승인제보주차장수", approvedReportParkCount);
+
+                                                                                listener.onDataLoaded(resultHM);
+                                                                            })
+                                                                            .addOnFailureListener(e -> {
+                                                                                Log.d(TAG, "제보주차장찾기 중 오류", e);
+                                                                                listener.onDataLoadError("제보주차장찾기 중 오류");
+                                                                            });
+                                                                })
+                                                                .addOnFailureListener(e -> {
+                                                                    Log.d(TAG, "예약찾기 중 오류", e);
+                                                                    listener.onDataLoadError("예약찾기 중 오류");
+                                                                });
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                        Log.d(TAG, "공유주차장찾기 중 오류", e);
+                                                        listener.onDataLoadError("공유주차장찾기 중 오류");
+                                                    });
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.d(TAG, "환급찾기 중 오류", e);
+                                            listener.onDataLoadError("환급찾기 중 오류");
+                                        });
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.d(TAG, "충전찾기 중 오류", e);
+                                listener.onDataLoadError("충전찾기 중 오류");
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "회원찾기 중 오류", e);
+                    listener.onDataLoadError("회원찾기 중 오류");
+                });
     }
 
     /*
