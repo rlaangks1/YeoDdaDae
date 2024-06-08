@@ -48,7 +48,7 @@
             android:layout_width="90dp"
             android:layout_height="90dp"
             android:layout_marginLeft="15dp"
-            android:background="@drawable/shared_park"
+            android:background="@drawable/sharedpark_approval"
             app:layout_constraintBottom_toBottomOf="@+id/toApproveShareParkBtn"
             app:layout_constraintStart_toStartOf="@+id/toApproveShareParkBtn"
             app:layout_constraintTop_toTopOf="@+id/toApproveShareParkBtn" />
@@ -83,7 +83,7 @@
             android:layout_width="90dp"
             android:layout_height="90dp"
             android:layout_marginLeft="15dp"
-            android:background="@drawable/discount_park"
+            android:background="@drawable/dc_approval_report"
             app:layout_constraintBottom_toBottomOf="@+id/toApproveReportBtn"
             app:layout_constraintStart_toStartOf="@+id/toApproveReportBtn"
             app:layout_constraintTop_toTopOf="@+id/toApproveReportBtn" />
