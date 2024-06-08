@@ -104,77 +104,49 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:layout_marginBottom="10dp"
             android:layout_gravity="bottom|left" >
 
             <ImageButton
                 android:id="@+id/zoomOutBtn"
-                android:layout_width="70dp"
-                android:layout_height="40dp"
-                android:background="@drawable/round_button"
+                android:layout_width="55dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/minus"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"/>
 
-            <TextView
-                android:id="@+id/zoomOutTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="-"
-                android:textSize="50dp"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/zoomOutBtn"
-                app:layout_constraintStart_toStartOf="@+id/zoomOutBtn"
-                app:layout_constraintTop_toTopOf="@+id/zoomOutBtn" />
 
             <ImageButton
                 android:id="@+id/zoomInBtn"
-                android:layout_width="70dp"
-                android:layout_height="40dp"
+                android:layout_width="55dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginBottom="5dp"
-                android:background="@drawable/round_button"
+                android:background="@drawable/plus"
                 app:layout_constraintBottom_toTopOf="@id/zoomOutBtn"
                 app:layout_constraintLeft_toLeftOf="parent" />
 
-            <TextView
-                android:id="@+id/zoomInTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="+"
-                android:textSize="30dp"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toTopOf="@+id/zoomOutBtn"
-                app:layout_constraintEnd_toEndOf="@+id/zoomInBtn"
-                app:layout_constraintStart_toStartOf="@+id/zoomInBtn"
-                app:layout_constraintTop_toTopOf="@+id/zoomInBtn" />
 
             <ImageButton
                 android:id="@+id/gpsBtn"
-                android:layout_width="85dp"
-                android:layout_height="40dp"
-                android:background="@drawable/round_button"
+                android:layout_width="55dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/gps_point"
                 android:layout_marginBottom="5dp"
                 app:layout_constraintBottom_toTopOf="@id/zoomInBtn"
                 app:layout_constraintLeft_toLeftOf="parent" />
 
-            <TextView
-                android:id="@+id/gpsTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:text="GPS"
-                android:textSize="20dp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/gpsBtn"
-                app:layout_constraintEnd_toEndOf="@+id/gpsBtn"
-                app:layout_constraintStart_toStartOf="@+id/gpsBtn"
-                app:layout_constraintTop_toTopOf="@+id/gpsBtn" />
 
-            <Button
+
+            <ImageButton
                 android:id="@+id/findGasStationSttBtn"
                 android:text="stt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="55dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/find_mic"
                 app:layout_constraintBottom_toTopOf="@+id/gpsBtn"
                 app:layout_constraintLeft_toLeftOf="parent" />
 
