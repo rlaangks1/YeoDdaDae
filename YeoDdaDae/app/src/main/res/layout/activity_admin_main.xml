@@ -21,6 +21,18 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/mainicon" />
 
+        <TextView
+            android:id="@+id/newparking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/new_start"
+            android:textColor="@color/sub"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mainicon" />
+
         <ImageButton
             android:id="@+id/menubarBtn"
             android:layout_width="wrap_content"
@@ -57,7 +69,7 @@
             android:id="@+id/toApproveShareParkTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="공유주차장 승인\n Sharedpark approval"
+            android:text="공유주차장 승인\n Shared Park approval"
             android:textAppearance="@style/sharedpark_approval"
             android:textStyle="bold|italic"
             app:layout_constraintBottom_toBottomOf="@+id/toApproveShareParkBtn"
@@ -136,16 +148,14 @@
             app:layout_constraintTop_toTopOf="@+id/toStatisticsBtn" />
 
         <TextView
-            android:id="@+id/newparking"
+            android:text="관리자 모드입니다"
+            android:textSize="25sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="@string/new_start"
-            android:textColor="@color/sub"
-            android:textSize="15dp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainicon" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginBottom="30dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -32,10 +32,9 @@ public class YdPointChargeActivity extends AppCompatActivity {
 
     ImageButton chargeBackBtn;
     TextView chargeHavePointContentTxt;
-    TextView chargeTargetPointContentEditTxt;
-    ImageButton chargeBtn;
-    Spinner anotherReportDistanceSpinner;
+    Spinner chargePointSpinner;
     TextView anotherReportWonTxt;
+    ImageButton chargeBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +43,7 @@ public class YdPointChargeActivity extends AppCompatActivity {
 
         chargeBackBtn = findViewById(R.id.chargeBackBtn);
         chargeHavePointContentTxt = findViewById(R.id.chargeHavePointContentTxt);
-        anotherReportDistanceSpinner = findViewById(R.id.anotherReportDistanceSpinner);
+        chargePointSpinner = findViewById(R.id.chargePointSpinner);
         anotherReportWonTxt = findViewById(R.id.anotherReportWonTxt);
         chargeBtn = findViewById(R.id.chargeBtn);
 
@@ -60,7 +59,7 @@ public class YdPointChargeActivity extends AppCompatActivity {
             }
         });
 
-        anotherReportDistanceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        chargePointSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
@@ -84,7 +83,10 @@ public class YdPointChargeActivity extends AppCompatActivity {
                     chargePoint = 100000;
                 }
                 price = chargePoint * 110 / 100;
-                anotherReportWonTxt.setText("(" + price + "원)");
+
+                String formattedPrice = NumberFormat.getNumberInstance(Locale.KOREA).format(price);
+
+                anotherReportWonTxt.setText("(" + formattedPrice + "원)");
             }
 
             @Override

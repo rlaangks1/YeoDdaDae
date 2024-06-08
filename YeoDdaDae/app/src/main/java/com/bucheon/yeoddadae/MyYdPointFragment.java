@@ -52,8 +52,8 @@ public class MyYdPointFragment extends Fragment {
     FirestoreDatabase fd;
 
     TextView myYdPointTxt;
-    ImageButton toChargeYdPointBtn;
-    ImageButton toRefundYdPointBtn;
+    ImageButton toChargeYdPointImgBtn;
+    ImageButton toRefundYdPointImgBtn;
     Spinner pointSpinner;
     ConstraintLayout pointHistoryCustomTimeConstLayout;
     EditText pointHistoryCustomTimeStartDateEditTxt;
@@ -74,8 +74,8 @@ public class MyYdPointFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_my_yd_point, container, false);
 
         myYdPointTxt = view.findViewById(R.id.myYdPointTxt);
-        toChargeYdPointBtn = view.findViewById(R.id.toChargeYdPointBtn);
-        toRefundYdPointBtn = view.findViewById(R.id.toRefundYdPointBtn);
+        toChargeYdPointImgBtn = view.findViewById(R.id.toChargeYdPointImgBtn);
+        toRefundYdPointImgBtn = view.findViewById(R.id.toRefundYdPointImgBtn);
         pointSpinner = view.findViewById(R.id.pointSpinner);
         pointHistoryCustomTimeConstLayout = view.findViewById(R.id.pointHistoryCustomTimeConstLayout);
         pointHistoryCustomTimeStartDateEditTxt = view.findViewById(R.id.pointHistoryCustomTimeStartDateEditTxt);
@@ -85,7 +85,7 @@ public class MyYdPointFragment extends Fragment {
         pointHistoryListView = view.findViewById(R.id.pointHistoryListView);
         pointHistoryNoTxt = view.findViewById(R.id.pointHistoryNoTxt);
 
-        toChargeYdPointBtn.setOnClickListener(new View.OnClickListener() {
+        toChargeYdPointImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent chargeYdPointIntent = new Intent(getActivity(), YdPointChargeActivity.class);
@@ -94,7 +94,7 @@ public class MyYdPointFragment extends Fragment {
             }
         });
 
-        toRefundYdPointBtn.setOnClickListener(new View.OnClickListener() {
+        toRefundYdPointImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent refundYdPointIntent = new Intent(getActivity(), YdPointRefundActivity.class);
