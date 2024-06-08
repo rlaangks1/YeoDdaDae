@@ -52,12 +52,11 @@
         <item>1Km</item>
     </string-array>
 
-    <string-array name="my_spinner_time_items">
-        <item>오늘</item>
-        <item>이번 주</item>
-        <item>이번 달</item>
-        <item>올해</item>
-        <item>직접 설정</item>
+    <string-array name="my_spinner_point_history_items">
+        <item>전체</item>
+        <item>증가만</item>
+        <item>감소만</item>
+        <item>기간 직접 설정</item>
     </string-array>
 
     <string-array name="my_spinner_charge_point_items">
@@ -67,6 +66,14 @@
         <item>30000pt</item>
         <item>50000pt</item>
         <item>100000pt</item>
+    </string-array>
+
+    <string-array name="my_spinner_time_items">
+        <item>오늘</item>
+        <item>이번 주</item>
+        <item>이번 달</item>
+        <item>올해</item>
+        <item>직접 설정</item>
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
