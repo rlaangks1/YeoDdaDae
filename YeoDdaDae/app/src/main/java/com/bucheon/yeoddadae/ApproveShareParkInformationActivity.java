@@ -2,11 +2,15 @@ package com.bucheon.yeoddadae;
 
 import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +50,7 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
     TextView approveShareParkInfoShareTimeContentTxt;
     TextView approveShareParkInfoUpTimeContentTxt;
     Button approveBtn;
+    Button rejectionBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +73,7 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
         approveShareParkInfoShareTimeContentTxt = findViewById(R.id.approveShareParkInfoShareTimeContentTxt);
         approveShareParkInfoUpTimeContentTxt = findViewById(R.id.approveShareParkInfoUpTimeContentTxt);
         approveBtn = findViewById(R.id.approveBtn);
+        rejectionBtn = findViewById(R.id.rejectionBtn);
 
         Intent inIntent = getIntent();
         documentId = inIntent.getStringExtra("documentId");
@@ -113,6 +119,48 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
                     }
                 });
 
+            }
+        });
+
+        rejectionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ApproveShareParkInformationActivity.this);
+                builder.setTitle("거절 사유 입력");
+
+                // Set up the input
+                final EditText input = new EditText(ApproveShareParkInformationActivity.this);
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
+
+                // Set up the buttons
+                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String cancelReason = input.getText().toString();
+                        fd.cancelSharePark((String) shareParkInfo.get("ownerId"), documentId, cancelReason, new OnFirestoreDataLoadedListener() {
+                            @Override
+                            public void onDataLoaded(Object data) {
+                                Toast.makeText(getApplicationContext(), "공유주차장 거부되었습니다", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+
+                            @Override
+                            public void onDataLoadError(String errorMessage) {
+                                Log.d(TAG, errorMessage);
+                                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
             }
         });
     }

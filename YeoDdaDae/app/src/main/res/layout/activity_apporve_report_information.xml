@@ -179,7 +179,18 @@
         android:textSize="20sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/approveReportInfoRejectionBtn"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
+
+    <Button
+        android:id="@+id/approveReportInfoRejectionBtn"
+        android:text="거부"
+        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

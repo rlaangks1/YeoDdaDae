@@ -26,6 +26,7 @@
         </activity>
         <activity android:name=".LoginActivity"/>
         <activity android:name=".RegisterActivity"/>
+        <activity android:name=".ChangePasswordActivity"/>
         <activity android:name=".MainActivity"/>
         <activity android:name=".YdPointChargeActivity"/>
         <activity android:name=".YdPointRefundActivity"/>
@@ -46,6 +47,7 @@
         <activity android:name=".ApproveShareParkInformationActivity"/>
         <activity android:name=".ApproveReportActivity"/>
         <activity android:name=".ApproveReportInformationActivity"/>
+        <activity android:name=".StatisticsActivity"/>
         <service
             android:name=".SttService"
             android:enabled="true"

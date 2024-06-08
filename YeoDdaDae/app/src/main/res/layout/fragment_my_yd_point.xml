@@ -6,24 +6,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/myYdPointTxt"
-        android:text="0"
-        android:textSize="20sp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/havePointConstLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="30dp">
 
-    <TextView
-        android:text="pt"
-        android:textSize="15sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toRightOf="@+id/myYdPointTxt"
-        app:layout_constraintTop_toTopOf="@+id/myYdPointTxt"
-        app:layout_constraintBottom_toBottomOf="@+id/myYdPointTxt"
-        android:layout_marginLeft="5dp"/>
+        <TextView
+            android:id="@+id/myYdPointTxt"
+            android:text="0"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:text="pt"
+            android:textSize="15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/myYdPointTxt"
+            app:layout_constraintBottom_toBottomOf="@+id/myYdPointTxt"
+            app:layout_constraintLeft_toRightOf="@+id/myYdPointTxt"
+            android:layout_marginLeft="5dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
         android:id="@+id/toChargeYdPointBtn"
@@ -31,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/myYdPointTxt" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/toRefundYdPointBtn"
@@ -40,5 +51,12 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/toChargeYdPointBtn"
         app:layout_constraintLeft_toLeftOf="parent" />
+
+    <ListView
+        android:id="@+id/pointHistoryListView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/toRefundYdPointBtn"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

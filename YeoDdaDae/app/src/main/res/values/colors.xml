@@ -10,5 +10,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="main">#9DE3F9</color>
     <color name="sub">#1FB4F1</color>
+    <color name="disable">#666666</color>
 
 </resources>

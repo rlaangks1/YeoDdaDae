@@ -38,6 +38,8 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
     Button myShareParkInfoBackBtn;
     TextView myShareParkInfoIdContentTxt;
     TextView myShareParkInfoStatusContentTxt;
+    TextView myShareParkInfoCancelReasonTxt;
+    TextView myShareParkInfoCancelReasonContentTxt;
     TextView myShareParkInfoUpTimeContentTxt;
     TextView myShareParkInfoPriceContentTxt;
     TextView myShareParkInfoHourPerTxt;
@@ -59,6 +61,8 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
         myShareParkInfoBackBtn = findViewById(R.id.myShareParkInfoBackBtn);
         myShareParkInfoIdContentTxt = findViewById(R.id.myShareParkInfoIdContentTxt);
         myShareParkInfoStatusContentTxt = findViewById(R.id.myShareParkInfoStatusContentTxt);
+        myShareParkInfoCancelReasonTxt = findViewById(R.id.myShareParkInfoCancelReasonTxt);
+        myShareParkInfoCancelReasonContentTxt = findViewById(R.id.myShareParkInfoCancelReasonContentTxt);
         myShareParkInfoUpTimeContentTxt = findViewById(R.id.myShareParkInfoUpTimeContentTxt);
         myShareParkInfoPriceContentTxt = findViewById(R.id.myShareParkInfoPriceContentTxt);
         myShareParkInfoHourPerTxt = findViewById(R.id.myShareParkInfoHourPerTxt);
@@ -245,8 +249,14 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                             myShareParkInfoStatusContentTxt.setText("취소됨");
                             myShareParkInfoCancelBtn.setVisibility(View.GONE);
                             myShareParkInfoCalculateBtn.setVisibility(View.GONE);
+                            myShareParkInfoCancelReasonTxt.setVisibility(View.VISIBLE);
+                            myShareParkInfoCancelReasonContentTxt.setVisibility(View.VISIBLE);
+                            myShareParkInfoCancelReasonContentTxt.setText((String) shareParkInfo.get("cancelReason"));
                         }
                         else if (!isApproval) {
+                            myShareParkInfoCancelReasonTxt.setVisibility(View.GONE);
+                            myShareParkInfoCancelReasonContentTxt.setVisibility(View.GONE);
+
                             Calendar ca = Calendar.getInstance();
                             int year = ca.get(Calendar.YEAR);
                             int month = ca.get(Calendar.MONTH) + 1;
@@ -292,6 +302,9 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                             }
                         }
                         else {
+                            myShareParkInfoCancelReasonTxt.setVisibility(View.GONE);
+                            myShareParkInfoCancelReasonContentTxt.setVisibility(View.GONE);
+
                             Calendar ca = Calendar.getInstance();
                             int year = ca.get(Calendar.YEAR);
                             int month = ca.get(Calendar.MONTH) + 1;
@@ -392,7 +405,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                 myShareParkInfoCancelBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fd2.cancelSharePark(loginId, documentId, new OnFirestoreDataLoadedListener() {
+                        fd2.cancelSharePark(loginId, documentId, "공유자가 취소", new OnFirestoreDataLoadedListener() {
                             @Override
                             public void onDataLoaded(Object data) {
                                 Toast.makeText(getApplicationContext(), "공유 취소되었습니다", Toast.LENGTH_SHORT).show();
