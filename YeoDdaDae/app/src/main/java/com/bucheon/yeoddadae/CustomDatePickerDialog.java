@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -26,13 +27,15 @@ import java.text.ParseException;
 
 public class CustomDatePickerDialog extends Dialog {
     Context context;
+    Fragment frag;
     int startOrEnd;
 
     MaterialCalendarView customDatePicker;
 
-    public CustomDatePickerDialog(@NonNull Context context, int startOrEnd) {
+    public CustomDatePickerDialog(@NonNull Context context, Fragment frag, int startOrEnd) {
         super(context);
         this.context = context;
+        this.frag = frag;
         this.startOrEnd = startOrEnd;
     }
 
@@ -81,6 +84,23 @@ public class CustomDatePickerDialog extends Dialog {
                         }
                     }
                 }
+                else if (context instanceof MainActivity && frag instanceof MyYdPointFragment) {
+                    if (startOrEnd == 0) {
+                        try {
+                            ((MyYdPointFragment) frag).setStartDate(formattedDate);
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    else if (startOrEnd == 1) {
+                        try {
+                            ((MyYdPointFragment) frag).setEndDate(formattedDate);
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+
                 dismiss();
             }
         });

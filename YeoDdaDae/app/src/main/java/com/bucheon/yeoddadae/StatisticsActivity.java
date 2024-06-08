@@ -195,7 +195,7 @@ public class StatisticsActivity extends AppCompatActivity {
         statisticsCustomTimeStartDateEditTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CustomDatePickerDialog sdpd = new CustomDatePickerDialog(StatisticsActivity.this, 0);
+                CustomDatePickerDialog sdpd = new CustomDatePickerDialog(StatisticsActivity.this, null, 0);
                 sdpd.show();
             }
         });
@@ -242,7 +242,7 @@ public class StatisticsActivity extends AppCompatActivity {
         statisticsCustomTimeEndDateEditTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CustomDatePickerDialog sdpd = new CustomDatePickerDialog(StatisticsActivity.this, 1);
+                CustomDatePickerDialog sdpd = new CustomDatePickerDialog(StatisticsActivity.this, null, 1);
                 sdpd.show();
             }
         });

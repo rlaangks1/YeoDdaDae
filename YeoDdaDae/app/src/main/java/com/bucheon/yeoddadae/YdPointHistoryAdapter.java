@@ -33,27 +33,10 @@ public class YdPointHistoryAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public void removeItem(YdPointHistoryItem item) {
-        items.remove(item);
-        notifyDataSetChanged();
-    }
-
     public void clear() {
         items.clear();
         notifyDataSetChanged();
     }
-
-    /*
-    public YdPointHistoryItem findItem(CalendarDay date) {
-        for (YdPointHistoryItem item : items) {
-            if (item.getDate().equals(date)) {
-                return item;
-            }
-        }
-        return null; // 못 찾은 경우 null 반환
-    }
-
-     */
 
     public void sortByUpTime() {
         if (items != null && items.size() > 1) {
@@ -66,6 +49,46 @@ public class YdPointHistoryAdapter extends BaseAdapter {
 
             notifyDataSetChanged(); // Notify adapter that dataset has changed
         }
+    }
+
+    public void onlyPlus() {
+        ArrayList<YdPointHistoryItem> removeItems = new ArrayList<>();
+
+        for (YdPointHistoryItem item : items) {
+            if (!item.getType().equals("충전") && !item.getType().equals("받음")) {
+                removeItems.add(item);
+            }
+        }
+        items.removeAll(removeItems);
+
+        notifyDataSetChanged();
+    }
+
+    public void onlyMinus() {
+        ArrayList<YdPointHistoryItem> removeItems = new ArrayList<>();
+
+        for (YdPointHistoryItem item : items) {
+            if (!item.getType().equals("환급") && !item.getType().equals("사용")) {
+                removeItems.add(item);
+            }
+        }
+        items.removeAll(removeItems);
+
+        notifyDataSetChanged();
+    }
+
+    public void customPeriod(Timestamp startTs, Timestamp endTs) {
+        ArrayList<YdPointHistoryItem> removeItems = new ArrayList<>();
+
+        for (YdPointHistoryItem item : items) {
+            Timestamp upTime = item.getUpTime();
+            if (upTime != null && (upTime.compareTo(startTs) < 0 || upTime.compareTo(endTs) > 0)) {
+                removeItems.add(item);
+            }
+        }
+        items.removeAll(removeItems);
+
+        notifyDataSetChanged();
     }
 
     @Override
@@ -120,7 +143,7 @@ public class YdPointHistoryAdapter extends BaseAdapter {
             if (item.getType().equals("환급")) {
                 typeTxt.setText("환급");
                 additionType.setVisibility(View.VISIBLE);
-                additionType.setText(item.refundBank + "\n" + item.refundAccountNumber);
+                additionType.setText(item.getRefundBank() + "\n" + item.getRefundAccountNumber());
             }
             else if (item.getType().equals("사용")) {
                 typeTxt.setText("사용");
