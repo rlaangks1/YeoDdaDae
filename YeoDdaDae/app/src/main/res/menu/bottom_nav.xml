@@ -3,7 +3,7 @@
     <item
         android:id="@+id/bt_main"
         android:enabled="true"
-        android:icon="@drawable/mainicon"
+        android:icon="@drawable/main_icon_cut"
         android:title="메인화면" />
     <item
         android:id="@+id/bt_mybook"
