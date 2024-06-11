@@ -81,6 +81,9 @@ public class YdPointChargeActivity extends AppCompatActivity {
                 else if (selectedItem.equals("100000pt")) {
                     chargePoint = 100000;
                 }
+
+                String formattedWon = NumberFormat.getNumberInstance(Locale.KOREA).format(chargePoint);
+                anotherReportWonTxt.setText("(" + formattedWon + "원 )");
             }
 
             @Override

@@ -127,7 +127,6 @@
                 app:layout_constraintBottom_toTopOf="@id/zoomOutBtn"
                 app:layout_constraintLeft_toLeftOf="parent" />
 
-
             <ImageButton
                 android:id="@+id/gpsBtn"
                 android:layout_width="55dp"
@@ -138,17 +137,18 @@
                 app:layout_constraintBottom_toTopOf="@id/zoomInBtn"
                 app:layout_constraintLeft_toLeftOf="parent" />
 
-
-
             <ImageButton
                 android:id="@+id/findGasStationSttBtn"
-                android:text="stt"
-                android:layout_width="55dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/find_mic"
-                app:layout_constraintBottom_toTopOf="@+id/gpsBtn"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                android:src="@drawable/temp_4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitStart"
+                app:layout_constraintWidth_default="percent"
+                app:layout_constraintWidth_percent="0.5"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

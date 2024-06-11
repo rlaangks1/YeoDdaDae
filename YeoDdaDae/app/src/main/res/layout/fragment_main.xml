@@ -56,13 +56,16 @@
 
         <ImageView
             android:id="@+id/toFindParkImg"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_marginLeft="15dp"
-            android:background="@drawable/find_parking"
+            android:src="@drawable/temp_2"
+            android:adjustViewBounds="true"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@+id/toFindParkImgBtn"
             app:layout_constraintBottom_toBottomOf="@+id/toFindParkImgBtn"
-            app:layout_constraintStart_toStartOf="@+id/toFindParkImgBtn"
-            app:layout_constraintTop_toTopOf="@+id/toFindParkImgBtn" />
+            app:layout_constraintLeft_toLeftOf="@+id/toFindParkImgBtn"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"/>
 
         <TextView
             android:id="@+id/toFindParkTxt"
@@ -100,13 +103,16 @@
 
         <ImageView
             android:id="@+id/toFindGasStationImg"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_marginLeft="15dp"
-            android:background="@drawable/find_gasstation"
+            android:src="@drawable/temp_1"
+            android:adjustViewBounds="true"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@+id/toFindGasStationImgBtn"
             app:layout_constraintBottom_toBottomOf="@+id/toFindGasStationImgBtn"
-            app:layout_constraintStart_toStartOf="@+id/toFindGasStationImgBtn"
-            app:layout_constraintTop_toTopOf="@+id/toFindGasStationImgBtn" />
+            app:layout_constraintLeft_toLeftOf="@+id/toFindGasStationImgBtn"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="30dp" />
 
         <TextView
             android:id="@+id/toFindGasStationTxt"
@@ -144,13 +150,16 @@
 
         <ImageView
             android:id="@+id/toMyReportDiscountParkImg"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_marginStart="15dp"
-            android:background="@drawable/discount_park"
+            android:src="@drawable/temp_3"
+            android:adjustViewBounds="true"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@+id/toMyReportDiscountParkImgBtn"
             app:layout_constraintBottom_toBottomOf="@+id/toMyReportDiscountParkImgBtn"
-            app:layout_constraintStart_toStartOf="@+id/toMyReportDiscountParkImgBtn"
-            app:layout_constraintTop_toTopOf="@+id/toMyReportDiscountParkImgBtn" />
+            app:layout_constraintLeft_toLeftOf="@+id/toMyReportDiscountParkImgBtn"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"/>
 
         <TextView
             android:id="@+id/toMyReportDiscountParkImgTxt"
@@ -178,7 +187,7 @@
             android:id="@+id/toSttImgBtn"
             android:background="@drawable/stt_button"
             android:layout_width="170dp"
-            android:layout_height="60dp"
+            android:layout_height="80dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginBottom="10dp"
@@ -205,7 +214,8 @@
             app:layout_constraintTop_toTopOf="@+id/toSttImgBtn"
             app:layout_constraintBottom_toBottomOf="@+id/toSttImgBtn"
             app:layout_constraintLeft_toRightOf="@+id/micIcon"
-            app:layout_constraintRight_toRightOf="@+id/toSttImgBtn" />
+            app:layout_constraintRight_toRightOf="@+id/toSttImgBtn"
+            android:layout_marginRight="15dp"/>
 
         <ImageView
             android:id="@+id/imageView"
