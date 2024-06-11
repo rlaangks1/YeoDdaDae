@@ -44,16 +44,15 @@
 
         <ImageButton
             android:id="@+id/toFindParkImgBtn"
-            android:layout_width="380dp"
+            android:background="@drawable/gradate_button"
+            android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="80dp"
-            android:layout_marginRight="15dp"
-            android:background="@color/main"
-            android:scaleType="center"
+            app:layout_constraintTop_toBottomOf="@+id/newparking"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
 
         <ImageView
             android:id="@+id/toFindParkImg"
@@ -67,29 +66,37 @@
 
         <TextView
             android:id="@+id/toFindParkTxt"
+            android:text="주차장 찾기"
+            android:textAppearance="@style/find_parkin"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="주차장 찾아가기\n Find parking lot"
-            android:textAppearance="@style/find_parkin"
-            android:textStyle="bold|italic"
-            app:layout_constraintBottom_toBottomOf="@+id/toFindParkImgBtn"
-            app:layout_constraintEnd_toEndOf="@+id/toFindParkImgBtn"
-            app:layout_constraintStart_toEndOf="@+id/toFindParkImg"
-            app:layout_constraintTop_toTopOf="@+id/toFindParkImgBtn" />
+            app:layout_constraintTop_toTopOf="@+id/toFindParkImgBtn"
+            app:layout_constraintRight_toRightOf="@+id/toFindParkImgBtn"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"/>
 
+        <TextView
+            android:text="전국 주차장 찾아가기"
+            android:textAppearance="@style/find_parkin_sub"
+            android:textStyle="bold|italic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/toFindParkImgBtn"
+            app:layout_constraintRight_toRightOf="@+id/toFindParkTxt"
+            android:layout_marginBottom="10dp"/>
 
         <ImageButton
             android:id="@+id/toFindGasStationImgBtn"
-            android:layout_width="380dp"
+            android:background="@drawable/gradate_button"
+            android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginRight="15dp"
-            android:background="@color/main"
+            app:layout_constraintTop_toBottomOf="@+id/toFindParkImgBtn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toFindParkImgBtn" />
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
 
         <ImageView
             android:id="@+id/toFindGasStationImg"
@@ -103,28 +110,37 @@
 
         <TextView
             android:id="@+id/toFindGasStationTxt"
+            android:text="주유소 찾기"
+            android:textAppearance="@style/find_gas_st"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:gravity="top"
-            android:text="주유소 찾아가기\n Find gas station"
-            android:textAppearance="@style/find_gas_st"
-            android:textStyle="bold|italic"
-            app:layout_constraintBottom_toBottomOf="@+id/toFindGasStationImgBtn"
-            app:layout_constraintEnd_toEndOf="@+id/toFindGasStationImgBtn"
-            app:layout_constraintStart_toEndOf="@+id/toFindGasStationImg"
-            app:layout_constraintTop_toTopOf="@+id/toFindGasStationImgBtn" />
+            app:layout_constraintTop_toTopOf="@+id/toFindGasStationImgBtn"
+            app:layout_constraintRight_toRightOf="@+id/toFindGasStationImgBtn"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"/>
 
+        <TextView
+            android:text="내 주변 주유소 찾아가기"
+            android:textAppearance="@style/find_gas_st_sub"
+            android:textStyle="bold|italic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/toFindGasStationImgBtn"
+            app:layout_constraintRight_toRightOf="@+id/toFindGasStationTxt"
+            android:layout_marginBottom="10dp"/>
 
         <ImageButton
             android:id="@+id/toMyReportDiscountParkImgBtn"
-            android:layout_width="380dp"
+            android:background="@drawable/gradate_button"
+            android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_marginTop="12dp"
-            android:background="@color/main"
+            app:layout_constraintTop_toBottomOf="@+id/toFindGasStationImgBtn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toFindGasStationImgBtn" />
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
 
         <ImageView
             android:id="@+id/toMyReportDiscountParkImg"
@@ -138,66 +154,72 @@
 
         <TextView
             android:id="@+id/toMyReportDiscountParkImgTxt"
+            android:text="할인주차장 제보 평가"
+            android:textAppearance="@style/discount_park_report"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="top"
-            android:text="할인주차장 제보 평가\n Discount park report"
-            android:textAppearance="@style/discount_park_report"
+            app:layout_constraintTop_toTopOf="@+id/toMyReportDiscountParkImgBtn"
+            app:layout_constraintRight_toRightOf="@+id/toMyReportDiscountParkImgBtn"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"/>
+
+        <TextView
+            android:text="무료/할인주차장 제보 평가하기"
+            android:textAppearance="@style/discount_park_report_sub"
             android:textStyle="bold|italic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@+id/toMyReportDiscountParkImgBtn"
-            app:layout_constraintEnd_toEndOf="@+id/toMyReportDiscountParkImgBtn"
-            app:layout_constraintStart_toEndOf="@+id/toMyReportDiscountParkImg"
-            app:layout_constraintTop_toTopOf="@+id/toMyReportDiscountParkImgBtn" />
+            app:layout_constraintRight_toRightOf="@+id/toMyReportDiscountParkImgTxt"
+            android:layout_marginBottom="10dp"/>
 
         <ImageButton
             android:id="@+id/toSttImgBtn"
+            android:background="@drawable/stt_button"
             android:layout_width="170dp"
             android:layout_height="60dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/round_button"
-            android:text="음성을\n인식해주세요"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toMyReportDiscountParkImgBtn" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"/>
 
         <ImageView
-            android:id="@+id/toSttMicrophone"
-            android:layout_width="wrap_content"
+            android:id="@+id/micIcon"
+            android:src="@drawable/microphone"
+            android:adjustViewBounds="true"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/microphone"
+            app:layout_constraintTop_toTopOf="@+id/toSttImgBtn"
             app:layout_constraintBottom_toBottomOf="@+id/toSttImgBtn"
-            app:layout_constraintEnd_toStartOf="@+id/toSttTxt"
-            app:layout_constraintStart_toStartOf="@+id/toSttImgBtn"
-            app:layout_constraintTop_toTopOf="@+id/toSttImgBtn" />
+            app:layout_constraintLeft_toLeftOf="@+id/toSttImgBtn"
+            android:layout_marginLeft="10dp"/>
 
         <TextView
-            android:id="@+id/toSttTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:text="@string/microphone"
+            android:text="'음성명령'이라고\n말해보세요"
             android:textAppearance="@style/microphone"
+            android:gravity="center"
             android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="@+id/toSttImgBtn"
             app:layout_constraintBottom_toBottomOf="@+id/toSttImgBtn"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/toSttImgBtn"
-            app:layout_constraintTop_toTopOf="@+id/toSttImgBtn" />
-
-        <FrameLayout
-            android:id="@+id/main_frame"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintLeft_toRightOf="@+id/micIcon"
+            app:layout_constraintRight_toRightOf="@+id/toSttImgBtn" />
 
         <ImageView
             android:id="@+id/imageView"
+            android:src="@drawable/parking_image"
+            android:adjustViewBounds="true"
             android:layout_width="0dp"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/toSttImgBtn"
-            app:layout_constraintTop_toBottomOf="@+id/toMyReportDiscountParkImgBtn"
-            app:srcCompat="@drawable/parking_image" />
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView
