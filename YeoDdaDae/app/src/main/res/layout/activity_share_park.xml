@@ -224,6 +224,7 @@
                 app:layout_constraintLeft_toRightOf="@+id/pricePerHourTxt" />
 
             <TextView
+                android:id="@+id/ptTxt"
                 android:text="pt"
                 android:textSize="12sp"
                 android:textColor="@color/blue"
@@ -232,6 +233,17 @@
                 app:layout_constraintTop_toTopOf="@id/parkPriceEditTxt"
                 app:layout_constraintBottom_toBottomOf="@id/parkPriceEditTxt"
                 app:layout_constraintLeft_toRightOf="@id/parkPriceEditTxt"
+                android:layout_marginLeft="5dp"/>
+
+            <TextView
+                android:text="(5%는 수수료입니다)"
+                android:textSize="15sp"
+                android:textColor="@color/blue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/parkPriceEditTxt"
+                app:layout_constraintBottom_toBottomOf="@id/parkPriceEditTxt"
+                app:layout_constraintLeft_toRightOf="@id/ptTxt"
                 android:layout_marginLeft="5dp"/>
 
             <TextView

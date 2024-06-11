@@ -27,7 +27,6 @@ public class YdPointChargeActivity extends AppCompatActivity {
     String loginId;
     long ydPoint;
     int chargePoint;
-    int price;
     FirestoreDatabase fd;
 
     ImageButton chargeBackBtn;
@@ -82,11 +81,6 @@ public class YdPointChargeActivity extends AppCompatActivity {
                 else if (selectedItem.equals("100000pt")) {
                     chargePoint = 100000;
                 }
-                price = chargePoint * 110 / 100;
-
-                String formattedPrice = NumberFormat.getNumberInstance(Locale.KOREA).format(price);
-
-                anotherReportWonTxt.setText("(" + formattedPrice + "원)");
             }
 
             @Override
@@ -96,8 +90,8 @@ public class YdPointChargeActivity extends AppCompatActivity {
         chargeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (chargePoint != 0 && price != 0) {
-                    fd.chargeYdPoint(loginId, chargePoint, price, new OnFirestoreDataLoadedListener() {
+                if (chargePoint != 0) {
+                    fd.chargeYdPoint(loginId, chargePoint, new OnFirestoreDataLoadedListener() {
                         @Override
                         public void onDataLoaded(Object data) {
                             Toast.makeText(getApplicationContext(), "충전 완료", Toast.LENGTH_SHORT).show();

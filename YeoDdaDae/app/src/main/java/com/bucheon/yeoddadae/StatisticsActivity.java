@@ -318,8 +318,6 @@ public class StatisticsActivity extends AppCompatActivity {
             NumberFormat numberFormat = NumberFormat.getInstance();
             String registerCount = numberFormat.format(statisticsDatas.get("회원"));
             String totalChargedPoint = numberFormat.format(statisticsDatas.get("충전총포인트"));
-            String totalChargedPrice = numberFormat.format(statisticsDatas.get("충전총액"));
-            String totalChargedRevenue = numberFormat.format(statisticsDatas.get("충전총수익"));
             String chargeCount = numberFormat.format(statisticsDatas.get("충전수"));
             String totalRefundPrice = numberFormat.format(statisticsDatas.get("환급총액"));
             String refundCount = numberFormat.format(statisticsDatas.get("환급수"));
@@ -331,17 +329,18 @@ public class StatisticsActivity extends AppCompatActivity {
             String approvedReportParkCount = numberFormat.format(statisticsDatas.get("승인제보주차장수"));
             String cancelledReportParkCount = numberFormat.format(statisticsDatas.get("취소제보주차장수"));
             String reportParkCount = numberFormat.format(statisticsDatas.get("총제보주차장수"));
+            String totalCommission = numberFormat.format(statisticsDatas.get("총수수료"));
 
 
             statisticsRegisterCountContentTxt.setText(registerCount + "건");
 
-            statisticsYdPointChargeContentTxt.setText(totalChargedPoint + "pt / " + totalChargedPrice + "원 / " + totalChargedRevenue + "원 / " + chargeCount + "건");
+            statisticsYdPointChargeContentTxt.setText(totalChargedPoint + "pt / " + chargeCount + "건");
 
             statisticsYdPointRefundContentTxt.setText(totalRefundPrice + "원 / " + refundCount + "건");
 
             statisticsShareParkCountContentTxt.setText(approvedShareParkCount + "개 / " + cancelledShareParkCount + "개 / " + shareParkCount + "개");
 
-            statisticsReservationCountContentTxt.setText(cancelledReservationCount + "건 / " + reservatitonCount + "건");
+            statisticsReservationCountContentTxt.setText(cancelledReservationCount + "건 / " + reservatitonCount + "건 / " + totalCommission + "원");
 
             statisticsReportParkCountContentTxt.setText(approvedReportParkCount + "개 / " + cancelledReportParkCount + "개 / " + reportParkCount + "개");
         }

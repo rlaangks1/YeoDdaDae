@@ -351,7 +351,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                                     myShareParkInfoCancelBtn.setVisibility(View.VISIBLE);
                                     myShareParkInfoCalculateBtn.setVisibility(View.GONE);
                                 }
-                            } else if (nowString.compareTo(endTime) < 0) {
+                            } else if (nowString.compareTo(endTime) <= 0) {
                                 if (isThereReservation[0]) {
                                     myShareParkInfoStatusContentTxt.setText("승인됨. 공유 중. 예약 있음");
                                     myShareParkInfoCancelBtn.setVisibility(View.GONE);

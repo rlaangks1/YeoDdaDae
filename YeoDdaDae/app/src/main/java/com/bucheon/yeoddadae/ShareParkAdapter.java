@@ -188,7 +188,7 @@ public class ShareParkAdapter extends BaseAdapter {
                     statusColor = Color.rgb(0, 0, 255);
                     shareParkIsCancelledTxt.setVisibility(View.VISIBLE);
                 }
-                else if (nowString.compareTo(endTime) < 0){
+                else if (nowString.compareTo(endTime) <= 0){
                     shareParkIsCancelledTxt.setText("사용중");
                     statusColor = Color.rgb(0, 0, 255);
                     shareParkIsCancelledTxt.setVisibility(View.VISIBLE);

@@ -395,7 +395,7 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void chargeYdPoint(String id, int chargedYdPoint, int price, OnFirestoreDataLoadedListener listener) {
+    public void chargeYdPoint(String id, int chargedYdPoint, OnFirestoreDataLoadedListener listener) {
         db.collection("account")
                 .whereEqualTo("id", id)
                 .get()
@@ -412,7 +412,6 @@ public class FirestoreDatabase {
                                         HashMap<String, Object> hm = new HashMap<>();
                                         hm.put("id", id);
                                         hm.put("chargedYdPoint", chargedYdPoint);
-                                        hm.put("price", price);
                                         hm.put("upTime", FieldValue.serverTimestamp());
                                         insertData("chargeYdPoint", hm, new OnFirestoreDataLoadedListener() {
                                             @Override
@@ -869,13 +868,14 @@ public class FirestoreDatabase {
                                             for (QueryDocumentSnapshot documentSnapshot2 : queryDocumentSnapshots) {
                                                 totalPrice += (long) documentSnapshot2.get("price");
                                             }
+                                            int calculatedValue = ((int) (totalPrice * 95 / 100));
                                             if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() > 0) {
                                                 Log.d(TAG, "정산할 예약 수 : " + queryDocumentSnapshots.size() );
                                             }
                                             else {
                                                 Log.d(TAG, "정산할 예약이 없음");
                                             }
-                                            receiveYdPoint(id, (int) totalPrice, "공유주차장 정산", new OnFirestoreDataLoadedListener() {
+                                            receiveYdPoint(id, calculatedValue, "공유주차장 정산", new OnFirestoreDataLoadedListener() {
                                                 @Override
                                                 public void onDataLoaded(Object data) {
                                                     db.collection("sharePark")
@@ -1669,15 +1669,11 @@ public class FirestoreDatabase {
                             .get()
                             .addOnSuccessListener(queryDocumentSnapshots2 -> {
                                 long totalChargePoint = 0;
-                                long totalChargePrice = 0;
 
                                 for (DocumentSnapshot document : queryDocumentSnapshots2) {
                                     totalChargePoint += (long) document.get("chargedYdPoint");
-                                    totalChargePrice += (long) document.get("price");
                                 }
                                 resultHM.put("충전총포인트", totalChargePoint);
-                                resultHM.put("충전총액", totalChargePrice);
-                                resultHM.put("충전총수익", totalChargePrice - totalChargePoint);
 
                                 if (totalChargePoint == 0) {
                                     resultHM.put("충전수", 0L);
@@ -1710,6 +1706,7 @@ public class FirestoreDatabase {
                                                     .addOnSuccessListener(queryDocumentSnapshots4 -> {
                                                         long canceledShareParkCount = 0;
                                                         long approvedShareParkCount = 0;
+                                                        ArrayList<String> calculatedShareParkDocumentId = new ArrayList<>();
 
                                                         if (queryDocumentSnapshots4 == null || queryDocumentSnapshots4.size() == 0) {
                                                             resultHM.put("총공유주차장수", 0L);
@@ -1723,6 +1720,10 @@ public class FirestoreDatabase {
                                                                 }
                                                                 else if ((boolean) document.get("isApproval")) {
                                                                     approvedShareParkCount++;
+
+                                                                    if ((boolean) document.get("isCalculated")) {
+                                                                        calculatedShareParkDocumentId.add(document.getId());
+                                                                    }
                                                                 }
                                                             }
                                                         }
@@ -1737,6 +1738,8 @@ public class FirestoreDatabase {
                                                                 .addOnSuccessListener(queryDocumentSnapshots5 -> {
                                                                     long canceledReservationCount = 0;
 
+                                                                    long totalReservationPay = 0;
+
                                                                     if (queryDocumentSnapshots5 == null || queryDocumentSnapshots5.size() == 0) {
                                                                         resultHM.put("총예약수", 0L);
                                                                     }
@@ -1747,10 +1750,17 @@ public class FirestoreDatabase {
                                                                             if ((boolean) document.get("isCancelled")) {
                                                                                 canceledReservationCount++;
                                                                             }
+
+                                                                            if (calculatedShareParkDocumentId.contains((String) document.get("shareParkDocumentName"))) {
+                                                                                totalReservationPay += (long) document.get("price");
+                                                                            }
                                                                         }
                                                                     }
 
+                                                                    long totalCommission = totalReservationPay - ((int) totalReservationPay * 95 / 100);
+
                                                                     resultHM.put("취소예약수", canceledReservationCount);
+                                                                    resultHM.put("총수수료", totalCommission);
 
                                                                     db.collection("reportDiscountPark")
                                                                             .whereGreaterThanOrEqualTo("upTime", startTime)
