@@ -160,15 +160,27 @@
         <item name="android:textColor">@color/blue</item>
     </style>
     <style name="sharedpark_approval">
-        <item name="android:textSize">27sp</item>
-        <item name="android:textColor">@color/blue</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+    <style name="sharedpark_approval_sub">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#FFFFFF</item>
     </style>
     <style name="DC_approval_report">
         <item name="android:textSize">27sp</item>
-        <item name="android:textColor">@color/blue</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+    <style name="DC_approval_report_sub">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#FFFFFF</item>
     </style>
     <style name="statics">
-        <item name="android:textSize">27sp</item>
-        <item name="android:textColor">@color/blue</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+    <style name="statics_sub">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#FFFFFF</item>
     </style>
 </resources>
