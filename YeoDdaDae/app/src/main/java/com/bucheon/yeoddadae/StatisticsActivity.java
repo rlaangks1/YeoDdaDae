@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -41,7 +43,7 @@ public class StatisticsActivity extends AppCompatActivity {
     String endDate;
     String endTime;
 
-    Button statisticsBackBtn;
+    ImageButton statisticsBackBtn;
     Spinner statisticsTimeSpinner;
     ConstraintLayout statisticsCustomTimeConstLayout;
     EditText statisticsCustomTimeStartDateEditTxt;
@@ -73,6 +75,13 @@ public class StatisticsActivity extends AppCompatActivity {
         statisticsShareParkCountContentTxt = findViewById(R.id.statisticsShareParkCountContentTxt);
         statisticsReservationCountContentTxt = findViewById(R.id.statisticsReservationCountContentTxt);
         statisticsReportParkCountContentTxt = findViewById(R.id.statisticsReportParkCountContentTxt);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.my_spinner_time_items,
+                R.layout.my_spinner
+        );
+        statisticsTimeSpinner.setAdapter(adapter);
 
         statisticsBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override

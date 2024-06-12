@@ -7,13 +7,17 @@
     android:layout_height="match_parent"
     tools:context=".ApproveShareParkInformationActivity">
 
-    <Button
+    <ImageButton
         android:id="@+id/approveShareParkInfoBackBtn"
-        android:text="back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:src="@drawable/back_icon"
+        android:scaleType="fitCenter"
+        android:background="@android:color/transparent"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -245,22 +249,54 @@
 
     </ScrollView>
 
-    <Button
+    <ImageButton
         android:id="@+id/approveBtn"
-        android:text="승인"
-        android:textSize="20sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:src="@drawable/gradate_button"
+        android:scaleType="fitCenter"
+        android:background="@android:color/transparent"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/rejectionBtn"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
 
-    <Button
-        android:id="@+id/rejectionBtn"
-        android:text="거부"
-        android:textSize="20sp"
-        android:layout_width="match_parent"
+    <TextView
+        android:text="승인"
+        android:textSize="25sp"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/approveBtn"
+        app:layout_constraintEnd_toEndOf="@+id/approveBtn"
+        app:layout_constraintStart_toStartOf="@+id/approveBtn"
+        app:layout_constraintTop_toTopOf="@+id/approveBtn" />
+
+    <ImageButton
+        android:id="@+id/rejectionBtn"
+        android:src="@drawable/gradate_button"
+        android:scaleType="fitCenter"
+        android:background="@android:color/transparent"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
+
+    <TextView
+        android:text="거부"
+        android:textSize="25sp"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/rejectionBtn"
+        app:layout_constraintEnd_toEndOf="@+id/rejectionBtn"
+        app:layout_constraintStart_toStartOf="@+id/rejectionBtn"
+        app:layout_constraintTop_toTopOf="@+id/rejectionBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

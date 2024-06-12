@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +33,7 @@ public class ApproveReportInformationActivity extends AppCompatActivity {
     String documentId;
     HashMap<String, Object> reportInfo;
 
-    Button approveReportInfoBackBtn;
+    ImageButton approveReportInfoBackBtn;
     TextView approveReportInfoIdContentTxt;
     TextView approveReportInfoParkNameContentTxt;
     TextView approveReportInfoParkNewAddressContentTxt;
@@ -40,9 +41,10 @@ public class ApproveReportInformationActivity extends AppCompatActivity {
     TextView approveReportInfoConditionContentTxt;
     TextView approveReportInfoDiscountContentTxt;
     TextView approveReportInfoWonTxt;
+    TextView approveReportInfoRateContentTxt;
     TextView approveReportInfoUpTimeContentTxt;
-    Button approveReportInfoApproveBtn;
-    Button approveReportInfoRejectionBtn;
+    ImageButton approveReportInfoApproveBtn;
+    ImageButton approveReportInfoRejectionBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,7 @@ public class ApproveReportInformationActivity extends AppCompatActivity {
         approveReportInfoConditionContentTxt = findViewById(R.id.approveReportInfoConditionContentTxt);
         approveReportInfoDiscountContentTxt = findViewById(R.id.approveReportInfoDiscountContentTxt);
         approveReportInfoWonTxt = findViewById(R.id.approveReportInfoWonTxt);
+        approveReportInfoRateContentTxt =findViewById(R.id.approveReportInfoRateContentTxt);
         approveReportInfoUpTimeContentTxt = findViewById(R.id.approveReportInfoUpTimeContentTxt);
         approveReportInfoApproveBtn = findViewById(R.id.approveReportInfoApproveBtn);
         approveReportInfoRejectionBtn = findViewById(R.id.approveReportInfoRejectionBtn);
@@ -185,6 +188,8 @@ public class ApproveReportInformationActivity extends AppCompatActivity {
                     approveReportInfoWonTxt.setVisibility(View.VISIBLE);
                     approveReportInfoDiscountContentTxt.setText(Long.toString((long) reportInfo.get("parkDiscount")));
                 }
+
+                approveReportInfoRateContentTxt.setText((long) reportInfo.get("ratePerfectCount") + " / " + (long) reportInfo.get("rateMistakeCount") + " / " + (long) reportInfo.get("rateWrongCount"));
 
                 Timestamp timestamp = (Timestamp) reportInfo.get("upTime");
                 if (timestamp != null) {

@@ -24,7 +24,7 @@ import java.util.HashMap;
 public class ApproveShareParkActivity extends AppCompatActivity {
     ShareParkAdapter spa;
 
-    Button approveShareParkBackBtn;
+    ImageButton approveShareParkBackBtn;
     ListView approveShareParkListView;
     TextView approveShareParkNoTxt;
 

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +35,7 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
     String documentId;
     HashMap<String, Object> shareParkInfo;
 
-    Button approveShareParkInfoBackBtn;
+    ImageButton approveShareParkInfoBackBtn;
     TextView approveShareParkInfoIdContentTxt;
     TextView approveShareParkInfoShareParkNewAddressContentTxt;
     TextView approveShareParkInfoShareParkOldAddressContentTxt;
@@ -49,8 +50,8 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
     TextView approveShareParkInfoWonTxt;
     TextView approveShareParkInfoShareTimeContentTxt;
     TextView approveShareParkInfoUpTimeContentTxt;
-    Button approveBtn;
-    Button rejectionBtn;
+    ImageButton approveBtn;
+    ImageButton rejectionBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

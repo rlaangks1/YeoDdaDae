@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.FieldValue;
@@ -53,6 +54,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
     EditText searchContentEditTxt;
     ImageButton searchBtn;
     ListView searchResultListView;
+    TextView searchNoTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
         searchContentEditTxt = findViewById(R.id.searchContentEditTxt);
         searchBtn = findViewById(R.id.searchBtn);
         searchResultListView = findViewById(R.id.searchResultListView);
+        searchNoTxt = findViewById(R.id.searchNoTxt);
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
@@ -111,55 +114,75 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String searchContent = searchContentEditTxt.getText().toString();
+                if (!searchContentEditTxt.getText().toString().equals("")) {
 
-                if (searchContent.isEmpty()) {
-                    Log.d(TAG, "검색 내용이 비어있음");
-                    return;
-                }
-                else {
+                    if (spa != null) {
+                        spa.clearItem();
+                    }
+
+                    spa = new SearchParkAdapter();
+
                     TMapData tMapData = new TMapData();
 
-                    tMapData.findAllPOI(searchContent, new TMapData.FindAllPOIListenerCallback() {
+                    tMapData.findAllPOI(searchContentEditTxt.getText().toString(), new TMapData.FindAllPOIListenerCallback() {
                         @Override
                         public void onFindAllPOI(ArrayList<TMapPOIItem> arrayList) {
-                            if (arrayList == null) {
-                                return;
-                            }
-                            spa = new SearchParkAdapter();
+                            if (arrayList != null) {
+                                for (int i = 0; i < arrayList.size(); i++) {
+                                    TMapPOIItem item = arrayList.get(i);
 
-                            for (int i = 0; i < arrayList.size(); i++) {
-                                TMapPOIItem item = arrayList.get(i);
+                                    TMapPolyLine tpolyline = new TMapPolyLine();
+                                    tpolyline.addLinePoint(nowPoint);
+                                    tpolyline.addLinePoint(new TMapPoint(Double.parseDouble(item.frontLat), Double.parseDouble(item.frontLon)));
+                                    double distance = tpolyline.getDistance() / 1000; // km단위
 
-                                TMapPolyLine tpolyline = new TMapPolyLine();
-                                tpolyline.addLinePoint(nowPoint);
-                                tpolyline.addLinePoint(new TMapPoint(Double.parseDouble(item.frontLat), Double.parseDouble(item.frontLon)));
-                                double distance = tpolyline.getDistance() / 1000; // km단위
-
-                                if (item.firstNo.equals("0") && item.secondNo.equals("0")) {
-                                    spa.addItem(new ParkItem(4, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
-                                }
-                                else {
-                                    if (item.name.contains("주차")) {
-                                        if (item.name.contains("공영")) {
-                                            spa.addItem(new ParkItem(2, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
-                                        }
-                                        else {
-                                            spa.addItem(new ParkItem(1, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
-                                        }
+                                    if (item.firstNo.equals("0") && item.secondNo.equals("0")) {
+                                        spa.addItem(new ParkItem(4, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
                                     }
                                     else {
-                                        spa.addItem(new ParkItem(5, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                        if (item.name.contains("주차")) {
+                                            if (item.name.contains("공영")) {
+                                                spa.addItem(new ParkItem(2, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                            }
+                                            else {
+                                                spa.addItem(new ParkItem(1, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                            }
+                                        }
+                                        else {
+                                            spa.addItem(new ParkItem(5, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                        }
                                     }
                                 }
-                            }
 
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    searchResultListView.setAdapter(spa);
+                                if (spa.getSize() == 0) {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            searchResultListView.setVisibility(View.GONE);
+                                            searchNoTxt.setVisibility(View.VISIBLE);
+                                        }
+                                    });
                                 }
-                            });
+                                else {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            searchResultListView.setAdapter(spa);
+                                            searchResultListView.setVisibility(View.VISIBLE);
+                                            searchNoTxt.setVisibility(View.GONE);
+                                        }
+                                    });
+                                }
+                            }
+                            else {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        searchResultListView.setVisibility(View.GONE);
+                                        searchNoTxt.setVisibility(View.VISIBLE);
+                                    }
+                                });
+                            }
                         }
                     });
                 }

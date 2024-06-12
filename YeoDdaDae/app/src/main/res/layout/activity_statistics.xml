@@ -7,20 +7,23 @@
     android:layout_height="match_parent"
     tools:context=".StatisticsActivity">
 
-    <Button
+    <ImageButton
         android:id="@+id/statisticsBackBtn"
-        android:text="back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:src="@drawable/back_icon"
+        android:scaleType="fitCenter"
+        android:background="@android:color/transparent"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp" />
 
     <Spinner
         android:id="@+id/statisticsTimeSpinner"
         android:layout_marginLeft="10dp"
         android:spinnerMode="dropdown"
         android:dropDownWidth="match_parent"
-        android:entries="@array/my_spinner_time_items"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/statisticsBackBtn"

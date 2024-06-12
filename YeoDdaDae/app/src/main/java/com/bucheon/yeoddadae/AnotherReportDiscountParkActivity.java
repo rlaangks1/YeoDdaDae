@@ -62,7 +62,6 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
                 R.array.my_spinner_distance_items,
                 R.layout.my_spinner
         );
-
         anotherReportDistanceSpinner.setAdapter(adapter);
 
         Intent inIntent = getIntent();
