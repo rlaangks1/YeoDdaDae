@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.EditText;
@@ -84,6 +85,13 @@ public class MyYdPointFragment extends Fragment {
         pointHistoryCustomTimeEndTimeEditTxt = view.findViewById(R.id.pointHistoryCustomTimeEndTimeEditTxt);
         pointHistoryListView = view.findViewById(R.id.pointHistoryListView);
         pointHistoryNoTxt = view.findViewById(R.id.pointHistoryNoTxt);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                getActivity(),
+                R.array.my_spinner_point_history_items,
+                R.layout.my_spinner
+        );
+        pointSpinner.setAdapter(adapter);
 
         toChargeYdPointImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override

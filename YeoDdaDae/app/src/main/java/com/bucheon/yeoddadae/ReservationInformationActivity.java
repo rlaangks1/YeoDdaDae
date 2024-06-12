@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +40,7 @@ public class ReservationInformationActivity extends AppCompatActivity {
     HashMap<String, Object> shareParkInfo;
     String naviEndPointName;
 
-    Button reservationInfoBackBtn;
+    ImageButton reservationInfoBackBtn;
     TextView reservationInfoIdContentTxt;
     TextView reservationInfoStatusContentTxt;
     TextView reservationInfoUpTimeContentTxt;
@@ -49,8 +50,10 @@ public class ReservationInformationActivity extends AppCompatActivity {
     TextView reservationInfoShareParkNewAddressContentTxt;
     TextView reservationInfoShareParkOldAddressContentTxt;
     TextView reservationInfoShareParkDetailaddressContentTxt;
-    Button reservationInfoNaviBtn;
-    Button reservationInfoCancelBtn;
+    ImageButton reservationInfoCancelBtn;
+    TextView reservationInfoCancelTxt;
+    ImageButton reservationInfoNaviBtn;
+    TextView reservationInfoNaviTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +70,10 @@ public class ReservationInformationActivity extends AppCompatActivity {
         reservationInfoShareParkNewAddressContentTxt = findViewById(R.id.reservationInfoShareParkNewAddressContentTxt);
         reservationInfoShareParkOldAddressContentTxt = findViewById(R.id.reservationInfoShareParkOldAddressContentTxt);
         reservationInfoShareParkDetailaddressContentTxt = findViewById(R.id.reservationInfoShareParkDetailaddressContentTxt);
-        reservationInfoNaviBtn = findViewById(R.id.reservationInfoNaviBtn);
         reservationInfoCancelBtn = findViewById(R.id.reservationInfoCancelBtn);
+        reservationInfoCancelTxt = findViewById(R.id.reservationInfoCancelTxt);
+        reservationInfoNaviBtn = findViewById(R.id.reservationInfoNaviBtn);
+        reservationInfoNaviTxt = findViewById(R.id.reservationInfoNaviTxt);
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("id");
@@ -190,6 +195,7 @@ public class ReservationInformationActivity extends AppCompatActivity {
                 if (isCancelled) {
                     reservationInfoStatusContentTxt.setText("취소됨");
                     reservationInfoCancelBtn.setVisibility(View.GONE);
+                    reservationInfoCancelTxt.setVisibility(View.GONE);
                 }
                 else {
                     Calendar ca = Calendar.getInstance();
@@ -230,12 +236,15 @@ public class ReservationInformationActivity extends AppCompatActivity {
                     if (nowString.compareTo(firstTime) < 0) {
                         reservationInfoStatusContentTxt.setText("사용 예정");
                         reservationInfoCancelBtn.setVisibility(View.VISIBLE);
+                        reservationInfoCancelTxt.setVisibility(View.VISIBLE);
                     } else if (nowString.compareTo(endTime) < 0) {
                         reservationInfoStatusContentTxt.setText("사용 중");
                         reservationInfoCancelBtn.setVisibility(View.GONE);
+                        reservationInfoCancelTxt.setVisibility(View.GONE);
                     } else {
                         reservationInfoStatusContentTxt.setText("사용 종료");
                         reservationInfoCancelBtn.setVisibility(View.GONE);
+                        reservationInfoCancelTxt.setVisibility(View.GONE);
                     }
                 }
 

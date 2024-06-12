@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -49,6 +50,13 @@ public class YdPointChargeActivity extends AppCompatActivity {
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
 
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.my_spinner_charge_point_items,
+                R.layout.my_spinner
+        );
+        chargePointSpinner.setAdapter(adapter);
+
         fd = new FirestoreDatabase();
 
         chargeBackBtn.setOnClickListener(new View.OnClickListener() {
@@ -63,22 +71,22 @@ public class YdPointChargeActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
 
-                if (selectedItem.equals("1000pt")) {
+                if (selectedItem.equals("1,000pt")) {
                     chargePoint = 1000;
                 }
-                else if (selectedItem.equals("5000pt")) {
+                else if (selectedItem.equals("5,000pt")) {
                     chargePoint = 5000;
                 }
-                else if (selectedItem.equals("10000pt")) {
+                else if (selectedItem.equals("10,000pt")) {
                     chargePoint = 10000;
                 }
-                else if (selectedItem.equals("30000pt")) {
+                else if (selectedItem.equals("30,000pt")) {
                     chargePoint = 30000;
                 }
-                else if (selectedItem.equals("50000pt")) {
+                else if (selectedItem.equals("50,000pt")) {
                     chargePoint = 50000;
                 }
-                else if (selectedItem.equals("100000pt")) {
+                else if (selectedItem.equals("10,0000pt")) {
                     chargePoint = 100000;
                 }
 

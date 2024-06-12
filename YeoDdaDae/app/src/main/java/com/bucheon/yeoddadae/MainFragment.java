@@ -38,7 +38,7 @@ public class MainFragment extends Fragment {
     ImageButton toSttImgBtn;
     ImageButton toFindParkImgBtn;
     ImageButton toFindGasStationImgBtn;
-    ImageButton toMyReportDiscountParkImgBtn;
+    ImageButton toRateReportDiscountParkImgBtn;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ImageButton menubarBtn;
@@ -68,7 +68,7 @@ public class MainFragment extends Fragment {
         toSttImgBtn = view.findViewById(R.id.toSttImgBtn);
         toFindParkImgBtn = view.findViewById(R.id.toFindParkImgBtn);
         toFindGasStationImgBtn = view.findViewById(R.id.toFindGasStationImgBtn);
-        toMyReportDiscountParkImgBtn = view.findViewById(R.id.toMyReportDiscountParkImgBtn);
+        toRateReportDiscountParkImgBtn = view.findViewById(R.id.toRateReportDiscountParkImgBtn);
         drawerLayout = view.findViewById(R.id.drawer_layout);
         navigationView = view.findViewById(R.id.navigation_view);
         menubarBtn = view.findViewById(R.id.menubarBtn);
@@ -133,7 +133,7 @@ public class MainFragment extends Fragment {
             }
         });
 
-        toMyReportDiscountParkImgBtn.setOnClickListener(new View.OnClickListener() {
+        toRateReportDiscountParkImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (apiKeyCertified) {

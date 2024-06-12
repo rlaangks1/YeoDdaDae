@@ -6,11 +6,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,9 +49,9 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
     EditText addReportDiscountParkBenefitContentEditTxt;
     ImageButton reportBtn;
     ConstraintLayout findLocationConstLayout;
-    Button findBackBtn;
+    ImageButton findBackBtn;
     EditText searchContentEditTxt;
-    Button searchBtn;
+    ImageButton searchBtn;
     ListView searchResultListView;
 
     @Override
@@ -91,6 +94,17 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                         findLocationConstLayout.setVisibility(View.VISIBLE);
                     }
                 });
+            }
+        });
+
+        searchContentEditTxt.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    searchBtn.callOnClick();
+                }
+
+                return false;
             }
         });
 
@@ -165,6 +179,11 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                     public void run() {
                         addReportDiscountParkAddressContentEditTxt.setText(pi.getName());
                         findLocationConstLayout.setVisibility(View.GONE);
+
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        if (imm != null) {
+                            imm.hideSoftInputFromWindow(searchContentEditTxt.getWindowToken(), 0);
+                        }
                     }
                 });
             }
@@ -177,6 +196,11 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                     @Override
                     public void run() {
                         findLocationConstLayout.setVisibility(View.GONE);
+
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        if (imm != null) {
+                            imm.hideSoftInputFromWindow(searchContentEditTxt.getWindowToken(), 0);
+                        }
                     }
                 });
             }

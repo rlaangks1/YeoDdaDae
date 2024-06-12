@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,10 +36,12 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
     TextView rateReportDiscountContentTxt;
     TextView rateReportWonTxt;
     TextView rateReportUpTimeContentTxt;
-    Button rateReportPerfectBtn;
-    Button rateReportMistakeBtn;
-    Button rateReportWrongBtn;
-
+    ImageButton rateReportPerfectBtn;
+    TextView perfectTxt;
+    ImageButton rateReportMistakeBtn;
+    TextView mistakeTxt;
+    ImageButton rateReportWrongBtn;
+    TextView wrongTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +62,11 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
         rateReportWonTxt = findViewById(R.id.rateReportWonTxt);
         rateReportUpTimeContentTxt = findViewById(R.id.rateReportUpTimeContentTxt);
         rateReportPerfectBtn = findViewById(R.id.rateReportPerfectBtn);
+        perfectTxt = findViewById(R.id.perfectTxt);
         rateReportMistakeBtn = findViewById(R.id.rateReportMistakeBtn);
+        mistakeTxt = findViewById(R.id.mistakeTxt);
         rateReportWrongBtn = findViewById(R.id.rateReportWrongBtn);
+        wrongTxt = findViewById(R.id.wrongTxt);
 
         FirestoreDatabase fd = new FirestoreDatabase();
         fd.loadOneReport(documentId, new OnFirestoreDataLoadedListener() {
@@ -143,7 +149,7 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
     void getRateCount () {
         FirestoreDatabase fd = new FirestoreDatabase();
 
-        fd.loadRateCount(documentId, new OnFirestoreDataLoadedListener() {
+        fd.loadRateCount(loginId, documentId, new OnFirestoreDataLoadedListener() {
             @Override
             public void onDataLoaded(Object data) {
                 int[] rates = (int[]) data;
@@ -151,9 +157,24 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        rateReportPerfectBtn.setText(Integer.toString(rates[0]));
-                        rateReportMistakeBtn.setText(Integer.toString(rates[1]));
-                        rateReportWrongBtn.setText(Integer.toString(rates[2]));
+                        perfectTxt.setText(Integer.toString(rates[0]));
+                        mistakeTxt.setText(Integer.toString(rates[1]));
+                        wrongTxt.setText(Integer.toString(rates[2]));
+
+                        rateReportPerfectBtn.setImageResource(R.drawable.disabled_button);
+                        rateReportMistakeBtn.setImageResource(R.drawable.disabled_button);
+                        rateReportWrongBtn.setImageResource(R.drawable.disabled_button);
+
+                        if (rates[3] == 1) {
+                            rateReportPerfectBtn.setImageResource(R.drawable.gradate_button);
+                        }
+                        else if (rates[3] == 2) {
+                            rateReportMistakeBtn.setImageResource(R.drawable.gradate_button);
+
+                        }
+                        else if (rates[3] == 3) {
+                            rateReportWrongBtn.setImageResource(R.drawable.gradate_button);
+                        }
                     }
                 });
             }

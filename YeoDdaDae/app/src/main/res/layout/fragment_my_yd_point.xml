@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/pointTopConstLayout"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="160dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" >
 
@@ -26,13 +26,13 @@
 
         <ImageView
             android:id="@+id/toChargeYdPointImg"
-            app:srcCompat="@drawable/charge_ydpoint"
+            app:srcCompat="@drawable/charge_icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             app:layout_constraintTop_toTopOf="@+id/toChargeYdPointImgBtn"
             app:layout_constraintBottom_toBottomOf="@+id/toChargeYdPointImgBtn"
             app:layout_constraintLeft_toLeftOf="@+id/toChargeYdPointImgBtn"
-            android:layout_marginLeft="15dp"/>
+            android:layout_marginLeft="10dp"/>
 
         <TextView
             android:text="포인트 충전"
@@ -45,8 +45,7 @@
             app:layout_constraintTop_toTopOf="@+id/toChargeYdPointImgBtn"
             app:layout_constraintBottom_toBottomOf="@+id/toChargeYdPointImgBtn"
             app:layout_constraintLeft_toRightOf="@+id/toChargeYdPointImg"
-            app:layout_constraintRight_toRightOf="@+id/toChargeYdPointImgBtn"
-            android:layout_marginLeft="5dp" />
+            app:layout_constraintRight_toRightOf="@+id/toChargeYdPointImgBtn" />
 
         <ImageButton
             android:id="@+id/toRefundYdPointImgBtn"
@@ -62,13 +61,13 @@
 
         <ImageView
             android:id="@+id/toRefundYdPointImg"
-            app:srcCompat="@drawable/refund_ydpoint"
+            app:srcCompat="@drawable/refund_icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             app:layout_constraintTop_toTopOf="@+id/toRefundYdPointImgBtn"
             app:layout_constraintBottom_toBottomOf="@+id/toRefundYdPointImgBtn"
             app:layout_constraintLeft_toLeftOf="@+id/toRefundYdPointImgBtn"
-            android:layout_marginLeft="15dp"/>
+            android:layout_marginLeft="10dp"/>
 
         <TextView
             android:text="포인트 환급"
@@ -81,8 +80,7 @@
             app:layout_constraintTop_toTopOf="@+id/toRefundYdPointImgBtn"
             app:layout_constraintBottom_toBottomOf="@+id/toRefundYdPointImgBtn"
             app:layout_constraintLeft_toRightOf="@+id/toRefundYdPointImg"
-            app:layout_constraintRight_toRightOf="@+id/toRefundYdPointImgBtn"
-            android:layout_marginLeft="5dp" />
+            app:layout_constraintRight_toRightOf="@+id/toRefundYdPointImgBtn" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/havePointConstLayout"
@@ -114,15 +112,10 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
-
-
         <Spinner
             android:id="@+id/pointSpinner"
             android:spinnerMode="dropdown"
             android:dropDownWidth="match_parent"
-            android:entries="@array/my_spinner_point_history_items"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintRight_toRightOf="parent"

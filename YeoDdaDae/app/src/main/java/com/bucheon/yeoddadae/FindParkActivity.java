@@ -62,6 +62,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     private static final int PERMISSION_REQUEST_CODE = 1;
     boolean firstOnLocationChangeCalled = false; // onLocationChange가 처음 불림 여부
     boolean isItemSelected;
+    boolean isSearchLayoutShowing;
     boolean isLoadingFirstCalled = false;
     int recievedSort;
     int nowSort;
@@ -81,6 +82,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     TMapData tMapData;
     TMapMarkerItem selectedMarker;
     ParkAdapter parkAdapter;
+    SearchParkAdapter spa;
 
     Intent serviceIntent;
     SttService sttService;
@@ -95,6 +97,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     ImageButton zoomInBtn;
     ImageButton gpsBtn;
     ImageButton findParkSttBtn;
+    ConstraintLayout onlyConstLayout;
     ImageButton findParkOnlyReportParkBtn;
     ImageButton findParkOnlyShareParkBtn;
     HorizontalScrollView parkSortHorizontalScrollView;
@@ -110,6 +113,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     ImageButton searchBtn;
     ImageButton searchBackBtn;
     ListView searchListView;
+    TextView searchNoTxt;
 
     Bitmap tmapMyLocationIcon;
     Bitmap tmapViewCenterPointIcon;
@@ -131,8 +135,6 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         topConstraintLayout = findViewById(R.id.topConstraintLayout);
         parkListView = findViewById(R.id.parkListView);
         findParkBackBtn = findViewById(R.id.findParkBackBtn);
-        findParkOnlyReportParkBtn = findViewById(R.id.findParkOnlyReportParkBtn);
-        findParkOnlyShareParkBtn = findViewById(R.id.findParkOnlyShareParkBtn);
         zoomOutBtn = findViewById(R.id.zoomOutBtn);
         zoomInBtn = findViewById(R.id.zoomInBtn);
         gpsBtn = findViewById(R.id.gpsBtn);
@@ -144,12 +146,16 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         cancelNaviBtn = findViewById(R.id.cancelNaviBtn);
         toStartNaviBtn = findViewById(R.id.toStartNaviBtn);
         toReservationBtn = findViewById(R.id.toReservationBtn);
+        onlyConstLayout = findViewById(R.id.onlyConstLayout);
+        findParkOnlyReportParkBtn = findViewById(R.id.findParkOnlyReportParkBtn);
+        findParkOnlyShareParkBtn = findViewById(R.id.findParkOnlyShareParkBtn);
         searchStartBtn = findViewById(R.id.searchStartBtn);
         searchConstraintLayout = findViewById(R.id.searchConstraintLayout);
         searchEdTxt = findViewById(R.id.searchEdTxt);
         searchBtn = findViewById(R.id.searchBtn);
         searchBackBtn = findViewById(R.id.searchBackBtn);
         searchListView = findViewById(R.id.searchListView);
+        searchNoTxt = findViewById(R.id.searchNoTxt);
         
         // Bitmap 정의
         tmapMyLocationIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_my_location);
@@ -335,8 +341,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
 
                         parkSortHorizontalScrollView.setVisibility(View.VISIBLE);
                         searchStartBtn.setVisibility(View.VISIBLE);
-                        findParkOnlyReportParkBtn.setVisibility(View.VISIBLE);
-                        findParkOnlyShareParkBtn.setVisibility(View.VISIBLE);
+                        onlyConstLayout.setVisibility(View.VISIBLE);
                         naviConstLayout.setVisibility(View.GONE);
 
                         findPark(nowSort);
@@ -376,6 +381,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     @Override
                     public void run() {
                         searchConstraintLayout.setVisibility(View.VISIBLE);
+                        isSearchLayoutShowing = true;
                     }
                 });
             }
@@ -396,48 +402,74 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             @Override
             public void onClick(View v) {
                 if (!searchEdTxt.getText().toString().equals("")) {
+
+                    if (spa != null) {
+                        spa.clearItem();
+                    }
+
+                    spa = new SearchParkAdapter();
+
                     tMapData = new TMapData();
 
                     tMapData.findAllPOI(searchEdTxt.getText().toString(), new TMapData.FindAllPOIListenerCallback() {
                         @Override
                         public void onFindAllPOI(ArrayList<TMapPOIItem> arrayList) {
-                            if (arrayList == null) {
-                                return;
-                            }
-                            SearchParkAdapter spa = new SearchParkAdapter();
+                            if (arrayList != null) {
+                                for (int i = 0; i < arrayList.size(); i++) {
+                                    TMapPOIItem item = arrayList.get(i);
 
-                            for (int i = 0; i < arrayList.size(); i++) {
-                                TMapPOIItem item = arrayList.get(i);
+                                    TMapPolyLine tpolyline = new TMapPolyLine();
+                                    tpolyline.addLinePoint(nowPoint);
+                                    tpolyline.addLinePoint(new TMapPoint(Double.parseDouble(item.frontLat), Double.parseDouble(item.frontLon)));
+                                    double distance = tpolyline.getDistance() / 1000; // km단위
 
-                                TMapPolyLine tpolyline = new TMapPolyLine();
-                                tpolyline.addLinePoint(nowPoint);
-                                tpolyline.addLinePoint(new TMapPoint(Double.parseDouble(item.frontLat), Double.parseDouble(item.frontLon)));
-                                double distance = tpolyline.getDistance() / 1000; // km단위
-
-                                if (item.firstNo.equals("0") && item.secondNo.equals("0")) {
-                                    spa.addItem(new ParkItem(4, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
-                                }
-                                else {
-                                    if (item.name.contains("주차")) {
-                                        if (item.name.contains("공영")) {
-                                            spa.addItem(new ParkItem(2, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
-                                        }
-                                        else {
-                                            spa.addItem(new ParkItem(1, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
-                                        }
+                                    if (item.firstNo.equals("0") && item.secondNo.equals("0")) {
+                                        spa.addItem(new ParkItem(4, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
                                     }
                                     else {
-                                        spa.addItem(new ParkItem(5, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                        if (item.name.contains("주차")) {
+                                            if (item.name.contains("공영")) {
+                                                spa.addItem(new ParkItem(2, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                            }
+                                            else {
+                                                spa.addItem(new ParkItem(1, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                            }
+                                        }
+                                        else {
+                                            spa.addItem(new ParkItem(5, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                        }
                                     }
                                 }
-                            }
 
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    searchListView.setAdapter(spa);
+                                if (spa.getSize() == 0) {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            searchListView.setVisibility(View.GONE);
+                                            searchNoTxt.setVisibility(View.VISIBLE);
+                                        }
+                                    });
                                 }
-                            });
+                                else {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            searchListView.setAdapter(spa);
+                                            searchListView.setVisibility(View.VISIBLE);
+                                            searchNoTxt.setVisibility(View.GONE);
+                                        }
+                                    });
+                                }
+                            }
+                            else {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        searchListView.setVisibility(View.GONE);
+                                        searchNoTxt.setVisibility(View.VISIBLE);
+                                    }
+                                });
+                            }
                         }
                     });
                 }
@@ -451,8 +483,14 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     @Override
                     public void run() {
                         searchConstraintLayout.setVisibility(View.GONE);
+                        isSearchLayoutShowing = false;
                     }
                 });
+
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(searchEdTxt.getWindowToken(), 0);
+                }
             }
         });
 
@@ -558,8 +596,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
 
                                     parkSortHorizontalScrollView.setVisibility(View.GONE);
                                     searchStartBtn.setVisibility(View.GONE);
-                                    findParkOnlyReportParkBtn.setVisibility(View.GONE);
-                                    findParkOnlyShareParkBtn.setVisibility(View.GONE);
+                                    onlyConstLayout.setVisibility(View.GONE);
                                     naviConstLayout.setVisibility(View.VISIBLE);
                                     if (clickedPark.getType() == 3) {
                                         reservationFirestoreDocumentId = clickedPark.getFirebaseDocumentId();
@@ -589,9 +626,9 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                         + ", " + clickedPark.getLat() + ", " + clickedPark.getLon());
 
                 // 키보드 내리기
-                InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                if (manager != null && getCurrentFocus() != null && getCurrentFocus().getWindowToken() != null) {
-                    manager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(searchEdTxt.getWindowToken(), 0);
                 }
 
                 tMapView.setCenterPoint(clickedPark.getLon(), clickedPark.getLat());
@@ -696,6 +733,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     tMapView.setZoomLevel(13);
                 }
                 searchConstraintLayout.setVisibility(View.GONE);
+                isSearchLayoutShowing = false;
             }
         });
     } // init 끝
@@ -956,8 +994,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
 
                             parkSortHorizontalScrollView.setVisibility(View.GONE);
                             searchStartBtn.setVisibility(View.GONE);
-                            findParkOnlyReportParkBtn.setVisibility(View.GONE);
-                            findParkOnlyShareParkBtn.setVisibility(View.GONE);
+                            onlyConstLayout.setVisibility(View.GONE);
                             naviConstLayout.setVisibility(View.VISIBLE);
                             if (clickedPark.getType() == 3) {
                                 reservationFirestoreDocumentId = clickedPark.getFirebaseDocumentId();
@@ -1092,11 +1129,45 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     public void onMainCommandReceived(String mainCommand) {
         Log.d(TAG, "FindParkActivity에서 받은 명령: " + mainCommand);
         // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:주차가순)
-        if (mainCommand.contains("돌아") || mainCommand.contains("이전") || mainCommand.contains("메인")) {
+        if (mainCommand.contains("메인")) {
             sd.dismiss();
             finish();
         }
-        else if (!isItemSelected && (mainCommand.contains("순") || mainCommand.contains("정렬") || mainCommand.contains("검색") || mainCommand.contains("찾"))) {
+        else if (mainCommand.contains("돌아") || mainCommand.contains("이전")) {
+            if (isItemSelected) {
+                sd.dismiss();
+                cancelNaviBtn.callOnClick();
+            }
+            else if (isSearchLayoutShowing) {
+                sd.dismiss();
+                searchBackBtn.callOnClick();
+            }
+            else {
+                sd.dismiss();
+                finish();
+            }
+        }
+        else if (mainCommand.contains("검색")) {
+            sd.dismiss();
+            if (!isItemSelected) {
+                int index = mainCommand.indexOf("검색");
+                String seartchStirng = mainCommand.substring(0, index).trim();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(searchConstraintLayout.getVisibility() == View.GONE) {
+                            searchConstraintLayout.setVisibility(View.VISIBLE);
+                            isSearchLayoutShowing = true;
+                        }
+                        searchEdTxt.setText(seartchStirng);
+
+                        searchBtn.callOnClick();
+                    }
+                });
+            }
+        }
+        else if (!isItemSelected && (mainCommand.contains("순") || mainCommand.contains("정렬") || mainCommand.contains("찾") )) {
             sd.dismiss();
             if (mainCommand.contains("차비") && (mainCommand.contains("요금") || mainCommand.contains("료"))) {
                 findPark(2);
@@ -1160,94 +1231,216 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             }
             Log.d (TAG, "number 는 " + number);
             if (number != 0) {
-                if (parkAdapter != null &&  0 < parkAdapter.getSize() && 0 < number && number <= parkAdapter.getSize()) {
-                    sd.dismiss();
+                if (isSearchLayoutShowing) {
+                    if (spa != null &&  0 < spa.getSize() && 0 < number && number <= spa.getSize()) {
+                        sd.dismiss();
 
-                    ParkItem clickedPark = (ParkItem) parkAdapter.getItem(number - 1);
+                        ParkItem clickedPark = (ParkItem) spa.getItem(number - 1);
 
-                    // parkListView에 clickedPark만 있도록
-                    ParkAdapter pa = new ParkAdapter();
-                    pa.addItem(clickedPark);
-                    parkListView.setAdapter(pa);
+                        Log.d(TAG, "검색 리스트뷰에서 음성으로 아이템 클릭함 : " + clickedPark.getType()  + ", " + clickedPark.getName()
+                                + ", " + clickedPark.getRadius() + ", " + clickedPark.getParkPrice() + ", " + clickedPark.getPhone()
+                                + ", " + clickedPark.getLat() + ", " + clickedPark.getLon());
 
-                    // 도착점 설정
-                    naviEndPoint = new TMapPoint (clickedPark.getLat(), clickedPark.getLon());
-                    naviEndPointName = clickedPark.getName();
+                        // 키보드 내리기
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        if (imm != null) {
+                            imm.hideSoftInputFromWindow(searchEdTxt.getWindowToken(), 0);
+                        }
 
-                    // 길 찾기 및 선 표시
-                    TMapData tmapdata = new TMapData();
-                    tmapdata.findPathData(nowPoint, naviEndPoint, new TMapData.FindPathDataListenerCallback() {
-                        @Override
-                        public void onFindPathData(TMapPolyLine polyLine) {
-                            if (selectedMarker != null) {
-                                if (clickedPark.getType() == 3) {
-                                    selectedMarker.setIcon(tmapShareParkMarkerIcon);
-                                }
-                                else if (clickedPark.getType() == 6) {
-                                    selectedMarker.setIcon(tmapReportParkMarkerIcon);
-                                }
-                                else {
-                                    selectedMarker.setIcon(tmapMarkerIcon);
-                                }
-                            }
+                        tMapView.setCenterPoint(clickedPark.getLon(), clickedPark.getLat());
+                        findPark(nowSort);
 
-                            tMapView.setTMapPathIcon(tmapStartMarkerIcon, null);
-                            TMapMarkerItem endMarker = tMapView.getMarkerItemFromID(clickedPark.getName());
-                            if (clickedPark.getType() == 3) {
-                                endMarker.setIcon(tmapSelectedShareParkMarkerIcon);
-                            }
-                            else if (clickedPark.getType() == 6) {
-                                endMarker.setIcon(tmapSelectedReportParkMarkerIcon);
-                            }
-                            else {
-                                endMarker.setIcon(tmapSelectedMarkerIcon);
-                            }
-                            tMapView.bringMarkerToFront(endMarker);
+                        if (clickedPark.getType() == 1 || clickedPark.getType() == 2 || clickedPark.getType() == 3 || clickedPark.getType() == 6) {
+                            Log.d(TAG, "검색 리스트뷰에서 주차장 아이템 클릭함 : " + clickedPark.getType()  + ", " + clickedPark.getName()
+                                    + ", " + clickedPark.getRadius() + ", " + clickedPark.getParkPrice() + ", " + clickedPark.getPhone()
+                                    + ", " + clickedPark.getLat()  + ", " + clickedPark.getLon());
 
-                            selectedMarker = endMarker;
+                            // parkListView에 clickedPark만 있도록
+                            ParkAdapter pa = new ParkAdapter();
+                            pa.addItem(clickedPark);
+                            parkListView.setAdapter(pa);
 
-                            tMapView.addTMapPath(polyLine);
+                            // 도착점 설정
+                            naviEndPoint = new TMapPoint (clickedPark.getLat(), clickedPark.getLon());
+                            naviEndPointName = clickedPark.getName();
 
-                            runOnUiThread(new Runnable() {
+                            // 길 찾기 및 선 표시
+                            TMapData tmapdata = new TMapData();
+                            tmapdata.findPathData(nowPoint, naviEndPoint, new TMapData.FindPathDataListenerCallback() {
                                 @Override
-                                public void run() {
-                                    tMapView.setCenterPoint(selectedMarker.longitude, selectedMarker.latitude);
+                                public void onFindPathData(TMapPolyLine polyLine) {
+                                    if (selectedMarker != null) {
+                                        if (clickedPark.getType() == 3) {
+                                            selectedMarker.setIcon(tmapShareParkMarkerIcon);
+                                        }
+                                        else if (clickedPark.getType() == 6) {
+                                            selectedMarker.setIcon(tmapReportParkMarkerIcon);
+                                        }
+                                        else {
+                                            selectedMarker.setIcon(tmapMarkerIcon);
+                                        }
+                                    }
 
-                                    DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-                                    float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
-                                    parkListView.getLayoutParams().height = (int) px;
-                                    parkListView.requestLayout();
-
-                                    TextView parkOrder = findViewById(R.id.parkOrder);
-                                    parkOrder.setVisibility(View.GONE);
-
-                                    TextView parkName = findViewById(R.id.parkName);
-                                    ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) parkName.getLayoutParams();
-                                    params.leftToLeft = R.id.parkItemConstraintLayout;
-                                    parkName.setLayoutParams(params);
-
-                                    parkSortHorizontalScrollView.setVisibility(View.GONE);
-                                    searchStartBtn.setVisibility(View.GONE);
-                                    findParkOnlyReportParkBtn.setVisibility(View.GONE);
-                                    findParkOnlyShareParkBtn.setVisibility(View.GONE);
-                                    naviConstLayout.setVisibility(View.VISIBLE);
+                                    tMapView.setTMapPathIcon(tmapStartMarkerIcon, null);
+                                    tMapView.addMarkerItem(clickedPark.getName(), new TMapMarkerItem());
+                                    TMapMarkerItem endMarker = tMapView.getMarkerItemFromID(clickedPark.getName());
                                     if (clickedPark.getType() == 3) {
-                                        reservationFirestoreDocumentId = clickedPark.getFirebaseDocumentId();
-                                        toReservationBtn.setVisibility(View.VISIBLE);
+                                        endMarker.setIcon(tmapSelectedShareParkMarkerIcon);
+                                    }
+                                    else if (clickedPark.getType() == 6) {
+                                        endMarker.setIcon(tmapSelectedReportParkMarkerIcon);
                                     }
                                     else {
-                                        toReservationBtn.setVisibility(View.GONE);
+                                        endMarker.setIcon(tmapSelectedMarkerIcon);
                                     }
 
-                                    isItemSelected = true;
+                                    tMapView.bringMarkerToFront(endMarker);
+                                    selectedMarker = endMarker;
+
+                                    tMapView.addTMapPath(polyLine);
+
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            tMapView.setCenterPoint(selectedMarker.longitude, selectedMarker.latitude);
+
+                                            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                                            float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
+                                            parkListView.getLayoutParams().height = (int) px;
+                                            parkListView.requestLayout();
+
+                                            TextView parkOrder = findViewById(R.id.parkOrder);
+                                            parkOrder.setVisibility(View.GONE);
+
+                                            TextView parkName = findViewById(R.id.parkName);
+                                            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) parkName.getLayoutParams();
+                                            params.leftToLeft = R.id.parkItemConstraintLayout;
+                                            parkName.setLayoutParams(params);
+
+                                            parkSortHorizontalScrollView.setVisibility(View.GONE);
+                                            searchStartBtn.setVisibility(View.GONE);
+                                            naviConstLayout.setVisibility(View.VISIBLE);
+                                            if (clickedPark.getType() == 3) {
+                                                reservationFirestoreDocumentId = clickedPark.getFirebaseDocumentId();
+                                                toReservationBtn.setVisibility(View.VISIBLE);
+                                            }
+                                            else {
+                                                toReservationBtn.setVisibility(View.GONE);
+                                            }
+                                        }
+                                    });
                                 }
                             });
                         }
-                    });
+
+                        if (clickedPark.getType() == 4) {
+                            // 주소
+                        }
+                        else if (clickedPark.getType() == 5){
+                            // 장소
+                            TMapPoint tpoint = new TMapPoint(clickedPark.getLat(), clickedPark.getLon());
+                            TMapMarkerItem tItem = new TMapMarkerItem();
+                            tItem.setTMapPoint(tpoint);
+                            tItem.setName(clickedPark.getName());
+                            tItem.setVisible(TMapMarkerItem.VISIBLE);
+                            tItem.setIcon(tmapSearchPlaceMarker);
+                            tItem.setPosition(0.5f,1.0f); // 마커의 중심점을 하단, 중앙으로 설정
+                            tMapView.addMarkerItem(clickedPark.getName(), tItem);
+                            tMapView.setZoomLevel(13);
+                        }
+                        searchConstraintLayout.setVisibility(View.GONE);
+                        isSearchLayoutShowing = false;
+                    }
                 }
                 else {
-                    sd.changeToInactivateIcon();
-                    sd.setSttStatusTxt(number + "번째 결과를 찾을 수 없습니다");
+                    if (parkAdapter != null &&  0 < parkAdapter.getSize() && 0 < number && number <= parkAdapter.getSize()) {
+                        sd.dismiss();
+
+                        ParkItem clickedPark = (ParkItem) parkAdapter.getItem(number - 1);
+
+                        // parkListView에 clickedPark만 있도록
+                        ParkAdapter pa = new ParkAdapter();
+                        pa.addItem(clickedPark);
+                        parkListView.setAdapter(pa);
+
+                        // 도착점 설정
+                        naviEndPoint = new TMapPoint (clickedPark.getLat(), clickedPark.getLon());
+                        naviEndPointName = clickedPark.getName();
+
+                        // 길 찾기 및 선 표시
+                        TMapData tmapdata = new TMapData();
+                        tmapdata.findPathData(nowPoint, naviEndPoint, new TMapData.FindPathDataListenerCallback() {
+                            @Override
+                            public void onFindPathData(TMapPolyLine polyLine) {
+                                if (selectedMarker != null) {
+                                    if (clickedPark.getType() == 3) {
+                                        selectedMarker.setIcon(tmapShareParkMarkerIcon);
+                                    }
+                                    else if (clickedPark.getType() == 6) {
+                                        selectedMarker.setIcon(tmapReportParkMarkerIcon);
+                                    }
+                                    else {
+                                        selectedMarker.setIcon(tmapMarkerIcon);
+                                    }
+                                }
+
+                                tMapView.setTMapPathIcon(tmapStartMarkerIcon, null);
+                                TMapMarkerItem endMarker = tMapView.getMarkerItemFromID(clickedPark.getName());
+                                if (clickedPark.getType() == 3) {
+                                    endMarker.setIcon(tmapSelectedShareParkMarkerIcon);
+                                }
+                                else if (clickedPark.getType() == 6) {
+                                    endMarker.setIcon(tmapSelectedReportParkMarkerIcon);
+                                }
+                                else {
+                                    endMarker.setIcon(tmapSelectedMarkerIcon);
+                                }
+                                tMapView.bringMarkerToFront(endMarker);
+
+                                selectedMarker = endMarker;
+
+                                tMapView.addTMapPath(polyLine);
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        tMapView.setCenterPoint(selectedMarker.longitude, selectedMarker.latitude);
+
+                                        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                                        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
+                                        parkListView.getLayoutParams().height = (int) px;
+                                        parkListView.requestLayout();
+
+                                        TextView parkOrder = findViewById(R.id.parkOrder);
+                                        parkOrder.setVisibility(View.GONE);
+
+                                        TextView parkName = findViewById(R.id.parkName);
+                                        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) parkName.getLayoutParams();
+                                        params.leftToLeft = R.id.parkItemConstraintLayout;
+                                        parkName.setLayoutParams(params);
+
+                                        parkSortHorizontalScrollView.setVisibility(View.GONE);
+                                        searchStartBtn.setVisibility(View.GONE);
+                                        onlyConstLayout.setVisibility(View.GONE);
+                                        naviConstLayout.setVisibility(View.VISIBLE);
+                                        if (clickedPark.getType() == 3) {
+                                            reservationFirestoreDocumentId = clickedPark.getFirebaseDocumentId();
+                                            toReservationBtn.setVisibility(View.VISIBLE);
+                                        }
+                                        else {
+                                            toReservationBtn.setVisibility(View.GONE);
+                                        }
+
+                                        isItemSelected = true;
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    else {
+                        sd.changeToInactivateIcon();
+                        sd.setSttStatusTxt(number + "번째 결과를 찾을 수 없습니다");
+                    }
                 }
             }
             else {

@@ -2,11 +2,13 @@ package com.bucheon.yeoddadae;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -83,6 +85,13 @@ public class RegisterActivity extends AppCompatActivity {
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(idTxt.getWindowToken(), 0);
+                    imm.hideSoftInputFromWindow(emailTxt.getWindowToken(), 0);
+                    imm.hideSoftInputFromWindow(pwTxt.getWindowToken(), 0);
+                }
+
                 String id = idTxt.getText().toString();
                 String email = emailTxt.getText().toString();
                 String pw = pwTxt.getText().toString();
@@ -149,7 +158,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void registerUser(String id, String email, String pw) {
         registerBtn.setEnabled(false);
-        registerBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.round_button_disable));
+        registerBtn.setImageResource(R.drawable.disabled_button);
 
         mAuth.createUserWithEmailAndPassword(email, pw)
                 .addOnCompleteListener(this, task -> {
@@ -170,7 +179,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                         @Override
                                                         public void onComplete(@NonNull Task<Void> task) {
                                                             registerBtn.setEnabled(true);
-                                                            registerBtn.setBackground(ContextCompat.getDrawable(RegisterActivity.this, R.drawable.round_button));
+                                                            registerBtn.setImageResource(R.drawable.gradate_button);
                                                         }
                                                     });
                                         }
@@ -181,13 +190,13 @@ public class RegisterActivity extends AppCompatActivity {
                         if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                             Toast.makeText(getApplicationContext(), "이미 존재하는 이메일입니다", Toast.LENGTH_SHORT).show();
                             registerBtn.setEnabled(true);
-                            registerBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.round_button));
+                            registerBtn.setImageResource(R.drawable.gradate_button);
                         }
                         else {
                             Log.d(TAG, "계정 생성 실패" + task.getException().getMessage());
                             Toast.makeText(getApplicationContext(), "계정 생성 실패", Toast.LENGTH_SHORT).show();
                             registerBtn.setEnabled(true);
-                            registerBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.round_button));
+                            registerBtn.setImageResource(R.drawable.gradate_button);
                         }
                     }
                 });
@@ -220,7 +229,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     registerBtn.setEnabled(true);
-                                                    registerBtn.setBackground(ContextCompat.getDrawable(RegisterActivity.this, R.drawable.round_button));
+                                                    registerBtn.setImageResource(R.drawable.gradate_button);
                                                 }
                                             });
                                 }
@@ -242,7 +251,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     registerBtn.setEnabled(true);
-                                    registerBtn.setBackground(ContextCompat.getDrawable(RegisterActivity.this, R.drawable.round_button));
+                                    registerBtn.setImageResource(R.drawable.gradate_button);
                                 }
                             });
                 }

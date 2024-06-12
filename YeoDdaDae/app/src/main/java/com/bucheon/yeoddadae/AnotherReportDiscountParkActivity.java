@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -34,6 +35,7 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
     String loginId;
     double nowLat;
     double nowLon;
+    int km;
     TMapGpsManager gpsManager;
     boolean firstInitCalled = false;
     ReportDiscountParkAdapter ra;
@@ -54,6 +56,14 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
         anotherReportListView = findViewById(R.id.anotherReportListView);
         toAddReportBtn = findViewById(R.id.toAddReportBtn);
         anotherReportNoTxt = findViewById(R.id.anotherReportNoTxt);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.my_spinner_distance_items,
+                R.layout.my_spinner
+        );
+
+        anotherReportDistanceSpinner.setAdapter(adapter);
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
@@ -163,7 +173,6 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
             gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
             gpsManager.OpenGps();
             */
-            firstInitCalled = true;
         }
 
         Log.d(TAG, "현재 Lat : "  + nowLat);
@@ -190,18 +199,21 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
                 if (selectedItem.equals("무제한")) {
-                    getReports(0, nowLat, nowLon);
+                    km = 0;
+                    if (firstInitCalled) {
+                        getReports(km, nowLat, nowLon);
+                    }
                 }
                 else {
-                    int km = Integer.parseInt(selectedItem.substring(0, 1));
-                    getReports (km, nowLat, nowLon);
+                    km = Integer.parseInt(selectedItem.substring(0, 1));
+                    if(firstInitCalled) {
+                        getReports(km, nowLat, nowLon);
+                    }
                 }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
 
         anotherReportListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -213,5 +225,9 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
                 startActivity(toRateReportIntent);
             }
         });
+
+        getReports (km, nowLat, nowLon);
+
+        firstInitCalled = true;
     }
 }

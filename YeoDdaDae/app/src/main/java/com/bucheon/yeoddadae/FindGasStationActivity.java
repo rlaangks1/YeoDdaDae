@@ -697,11 +697,21 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     public void onMainCommandReceived(String mainCommand) {
         Log.d(TAG, "FindGasStationActivity에서 받은 명령: " + mainCommand);
         // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:휘발유가순, 4: 경유가순 5: 고급휘발유가순, 6: 고급경유가순
-        if (mainCommand.contains("돌아") || mainCommand.contains("이전") || mainCommand.contains("메인")) {
+        if (mainCommand.contains("메인")) {
             sd.dismiss();
             finish();
         }
-        else if (!isItemSelected && (mainCommand.contains("순") || mainCommand.contains("정렬") || mainCommand.contains("검색") || mainCommand.contains("찾"))) {
+        else if (mainCommand.contains("돌아") || mainCommand.contains("이전")) {
+            if (isItemSelected) {
+                sd.dismiss();
+                cancelNaviBtn.callOnClick();
+            }
+            else {
+                sd.dismiss();
+                finish();
+            }
+        }
+        else if (!isItemSelected && (mainCommand.contains("순") || mainCommand.contains("정렬") || mainCommand.contains("찾"))) {
             sd.dismiss();
             if (mainCommand.contains("고급") && (mainCommand.contains("휘발") || mainCommand.contains("가솔린"))) {
                 findGasStation(4);

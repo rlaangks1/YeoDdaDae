@@ -1393,10 +1393,11 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void loadRateCount (String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+    public void loadRateCount (String id, String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
         int[] perfectCount = {0};
         int[] mistakeCount = {0};
         int[] wrongCount = {0};
+        int myRate[] = {0};
 
         db.collection("rateReport")
                 .whereEqualTo("reportDocumentID", firestoreDocumentId)
@@ -1406,16 +1407,25 @@ public class FirestoreDatabase {
                         String rate = documentSnapshot.getString("rate");
                         if (rate.equals("perfect")) {
                             perfectCount[0]++;
+                            if (((String) documentSnapshot.get("id")).equals(id)) {
+                                myRate[0] = 1;
+                            }
                         }
                         else if (rate.equals("mistake")) {
                             mistakeCount[0]++;
+                            if (((String) documentSnapshot.get("id")).equals(id)) {
+                                myRate[0] = 2;
+                            }
                         }
                         else if (rate.equals("wrong")) {
                             wrongCount[0]++;
+                            if (((String) documentSnapshot.get("id")).equals(id)) {
+                                myRate[0] = 3;
+                            }
                         }
                     }
 
-                    int [] result = {perfectCount[0], mistakeCount[0], wrongCount[0]};
+                    int [] result = {perfectCount[0], mistakeCount[0], wrongCount[0], myRate[0]};
                     listener.onDataLoaded(result);
                 })
                 .addOnFailureListener(e -> {
@@ -1440,58 +1450,249 @@ public class FirestoreDatabase {
                 break;
         }
 
-        // 먼저 해당 조건에 맞는 문서가 있는지 확인
-        db.collection("rateReport")
-                .whereEqualTo("id", loginId)
-                .whereEqualTo("reportDocumentID", firestoreDocumentId)
+        db.collection("reportDiscountPark")
+                .document(firestoreDocumentId)
                 .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (!queryDocumentSnapshots.isEmpty()) {
-                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                            // 문서 삭제
-                            if (documentSnapshot.get("rate").equals(rate[0])) {
-                                documentSnapshot.getReference().delete()
-                                        .addOnSuccessListener(aVoid -> {
-                                            listener.onDataLoaded("평가 삭제됨 : " + rate[0]);
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            Log.d(TAG, "문서 삭제 오류", e);
-                                            listener.onDataLoadError(e.getMessage());
-                                        });
-                            }
-                            // 문서 rate 수정
-                            else {
-                                documentSnapshot.getReference().update("rate", rate[0])
-                                        .addOnSuccessListener(aVoid -> {
-                                            listener.onDataLoaded("평가 수정됨 : " + rate[0]);
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            Log.d(TAG, "문서 업데이트 오류", e);
-                                            listener.onDataLoadError(e.getMessage());
-                                        });
-                            }
-                        }
-                    }
-                    else {
-                        // 문서가 존재하지 않으면 새로 추가
-                        HashMap<String, Object> data = new HashMap<>();
-                        data.put("id", loginId);
-                        data.put("reportDocumentID", firestoreDocumentId);
-                        data.put("rate", rate[0]);
-                        
-                        insertData("rateReport", data, new OnFirestoreDataLoadedListener() {
-                            @Override
-                            public void onDataLoaded(Object data) {
-                                listener.onDataLoaded("새로 평가함 : " + rate[0]);
-                            }
+                .addOnSuccessListener(documentSnapshot -> {
+                    long rateCount[] = {(long) documentSnapshot.get("ratePerfectCount"), (long) documentSnapshot.get("rateMistakeCount"), (long) documentSnapshot.get("rateWrongCount")};
 
-                            @Override
-                            public void onDataLoadError(String errorMessage) {
-                                Log.d(TAG, errorMessage);
-                                listener.onDataLoadError("주차장 제보 평가 중 오류 발생");
-                            }
-                        });
-                    }
+                    // 먼저 해당 조건에 맞는 문서가 있는지 확인
+                    db.collection("rateReport")
+                            .whereEqualTo("id", loginId)
+                            .whereEqualTo("reportDocumentID", firestoreDocumentId)
+                            .get()
+                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                                if (!queryDocumentSnapshots.isEmpty()) {
+                                    for (QueryDocumentSnapshot documentSnapshot2 : queryDocumentSnapshots) {
+                                        // 문서 삭제
+                                        if (documentSnapshot2.get("rate").equals(rate[0])) {
+                                            documentSnapshot2.getReference().delete()
+                                                    .addOnSuccessListener(aVoid -> {
+                                                        if (rate[0].equals("perfect")) {
+                                                            db.collection("reportDiscountPark")
+                                                                    .document(firestoreDocumentId)
+                                                                    .update("ratePerfectCount", rateCount[0] - 1)
+                                                                    .addOnSuccessListener(aVoid2 -> {
+                                                                        listener.onDataLoaded("평가 삭제됨 : " + rate[0]);
+                                                                    })
+                                                                    .addOnFailureListener(e -> {
+                                                                        Log.d(TAG, "데이터 검색 오류", e);
+                                                                        listener.onDataLoadError(e.getMessage());
+                                                                    });
+                                                        }
+                                                        else if (rate[0].equals("mistake")) {
+                                                            db.collection("reportDiscountPark")
+                                                                    .document(firestoreDocumentId)
+                                                                    .update("rateMistakeCount", rateCount[1] - 1)
+                                                                    .addOnSuccessListener(aVoid2 -> {
+                                                                        listener.onDataLoaded("평가 삭제됨 : " + rate[0]);
+                                                                    })
+                                                                    .addOnFailureListener(e -> {
+                                                                        Log.d(TAG, "데이터 검색 오류", e);
+                                                                        listener.onDataLoadError(e.getMessage());
+                                                                    });
+                                                        }
+                                                        else if (rate[0].equals("wrong")) {
+                                                            db.collection("reportDiscountPark")
+                                                                    .document(firestoreDocumentId)
+                                                                    .update("rateWrongCount", rateCount[2] - 1)
+                                                                    .addOnSuccessListener(aVoid2 -> {
+                                                                        listener.onDataLoaded("평가 삭제됨 : " + rate[0]);
+                                                                    })
+                                                                    .addOnFailureListener(e -> {
+                                                                        Log.d(TAG, "데이터 검색 오류", e);
+                                                                        listener.onDataLoadError(e.getMessage());
+                                                                    });
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                        Log.d(TAG, "문서 삭제 오류", e);
+                                                        listener.onDataLoadError(e.getMessage());
+                                                    });
+                                        }
+                                        // 문서 rate 수정
+                                        else {
+                                            String originalRate = (String) documentSnapshot2.get("rate");
+
+                                            documentSnapshot2.getReference().update("rate", rate[0])
+                                                    .addOnSuccessListener(aVoid -> {
+                                                        if (originalRate.equals("perfect")) {
+                                                            db.collection("reportDiscountPark")
+                                                                    .document(firestoreDocumentId)
+                                                                    .update("ratePerfectCount", rateCount[0] - 1)
+                                                                    .addOnSuccessListener(aVoid2 -> {
+
+                                                                        if (rate[0].equals("mistake")) {
+                                                                            db.collection("reportDiscountPark")
+                                                                                    .document(firestoreDocumentId)
+                                                                                    .update("rateMisakeCount", rateCount[1] + 1)
+                                                                                    .addOnSuccessListener(aVoid3 -> {
+                                                                                        listener.onDataLoaded(null);
+                                                                                    })
+                                                                                    .addOnFailureListener(e -> {
+                                                                                        Log.d(TAG, "데이터 검색 오류", e);
+                                                                                        listener.onDataLoadError(e.getMessage());
+                                                                                    });
+                                                                        }
+                                                                        else if (rate[0].equals("wrong")) {
+                                                                            db.collection("reportDiscountPark")
+                                                                                    .document(firestoreDocumentId)
+                                                                                    .update("rateWrongCount", rateCount[2] + 1)
+                                                                                    .addOnSuccessListener(aVoid3 -> {
+                                                                                        listener.onDataLoaded(null);
+                                                                                    })
+                                                                                    .addOnFailureListener(e -> {
+                                                                                        Log.d(TAG, "데이터 검색 오류", e);
+                                                                                        listener.onDataLoadError(e.getMessage());
+                                                                                    });
+                                                                        }
+                                                                    })
+                                                                    .addOnFailureListener(e -> {
+                                                                        Log.d(TAG, "데이터 검색 오류", e);
+                                                                        listener.onDataLoadError(e.getMessage());
+                                                                    });
+                                                        }
+                                                        else if (originalRate.equals("mistake")) {
+                                                            db.collection("reportDiscountPark")
+                                                                    .document(firestoreDocumentId)
+                                                                    .update("rateMistakeCount", rateCount[1] - 1)
+                                                                    .addOnSuccessListener(aVoid2 -> {
+
+                                                                        if (rate[0].equals("perfect")) {
+                                                                            db.collection("reportDiscountPark")
+                                                                                    .document(firestoreDocumentId)
+                                                                                    .update("ratePerfectCount", rateCount[0] + 1)
+                                                                                    .addOnSuccessListener(aVoid3 -> {
+                                                                                        listener.onDataLoaded(null);
+                                                                                    })
+                                                                                    .addOnFailureListener(e -> {
+                                                                                        Log.d(TAG, "데이터 검색 오류", e);
+                                                                                        listener.onDataLoadError(e.getMessage());
+                                                                                    });
+                                                                        }
+                                                                        else if (rate[0].equals("wrong")) {
+                                                                            db.collection("reportDiscountPark")
+                                                                                    .document(firestoreDocumentId)
+                                                                                    .update("rateWrongCount", rateCount[2] + 1)
+                                                                                    .addOnSuccessListener(aVoid3 -> {
+                                                                                        listener.onDataLoaded(null);
+                                                                                    })
+                                                                                    .addOnFailureListener(e -> {
+                                                                                        Log.d(TAG, "데이터 검색 오류", e);
+                                                                                        listener.onDataLoadError(e.getMessage());
+                                                                                    });
+                                                                        }
+                                                                    })
+                                                                    .addOnFailureListener(e -> {
+                                                                        Log.d(TAG, "데이터 검색 오류", e);
+                                                                        listener.onDataLoadError(e.getMessage());
+                                                                    });
+                                                        }
+                                                        else if (originalRate.equals("wrong")) {
+                                                            db.collection("reportDiscountPark")
+                                                                    .document(firestoreDocumentId)
+                                                                    .update("rateWrongCount", rateCount[2] - 1)
+                                                                    .addOnSuccessListener(aVoid2 -> {
+
+                                                                        if (rate[0].equals("perfect")) {
+                                                                            db.collection("reportDiscountPark")
+                                                                                    .document(firestoreDocumentId)
+                                                                                    .update("ratePerfectCount", rateCount[0] + 1)
+                                                                                    .addOnSuccessListener(aVoid3 -> {
+                                                                                        listener.onDataLoaded(null);
+                                                                                    })
+                                                                                    .addOnFailureListener(e -> {
+                                                                                        Log.d(TAG, "데이터 검색 오류", e);
+                                                                                        listener.onDataLoadError(e.getMessage());
+                                                                                    });
+                                                                        }
+                                                                        else if (rate[0].equals("mistake")) {
+                                                                            db.collection("reportDiscountPark")
+                                                                                    .document(firestoreDocumentId)
+                                                                                    .update("rateMistakeCount", rateCount[1] + 1)
+                                                                                    .addOnSuccessListener(aVoid3 -> {
+                                                                                        listener.onDataLoaded(null);
+                                                                                    })
+                                                                                    .addOnFailureListener(e -> {
+                                                                                        Log.d(TAG, "데이터 검색 오류", e);
+                                                                                        listener.onDataLoadError(e.getMessage());
+                                                                                    });
+                                                                        }
+                                                                    })
+                                                                    .addOnFailureListener(e -> {
+                                                                        Log.d(TAG, "데이터 검색 오류", e);
+                                                                        listener.onDataLoadError(e.getMessage());
+                                                                    });
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                        Log.d(TAG, "문서 업데이트 오류", e);
+                                                        listener.onDataLoadError(e.getMessage());
+                                                    });
+                                        }
+                                    }
+                                }
+                                else {
+                                    // 문서가 존재하지 않으면 새로 추가
+                                    HashMap<String, Object> data = new HashMap<>();
+                                    data.put("id", loginId);
+                                    data.put("reportDocumentID", firestoreDocumentId);
+                                    data.put("rate", rate[0]);
+
+                                    insertData("rateReport", data, new OnFirestoreDataLoadedListener() {
+                                        @Override
+                                        public void onDataLoaded(Object data) {
+
+                                            if (rate[0].equals("perfect")) {
+                                                db.collection("reportDiscountPark")
+                                                        .document(firestoreDocumentId)
+                                                        .update("ratePerfectCount", rateCount[0] + 1)
+                                                        .addOnSuccessListener(aVoid -> {
+                                                            listener.onDataLoaded("새로 평가함 : " + rate[0]);
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            Log.d(TAG, "데이터 검색 오류", e);
+                                                            listener.onDataLoadError(e.getMessage());
+                                                        });
+                                            }
+                                            else if (rate[0].equals("mistake")) {
+                                                db.collection("reportDiscountPark")
+                                                        .document(firestoreDocumentId)
+                                                        .update("rateMistakeCount", rateCount[1] + 1)
+                                                        .addOnSuccessListener(aVoid -> {
+                                                            listener.onDataLoaded("새로 평가함 : " + rate[0]);
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            Log.d(TAG, "데이터 검색 오류", e);
+                                                            listener.onDataLoadError(e.getMessage());
+                                                        });
+                                            }
+                                            else if (rate[0].equals("wrong")) {
+                                                db.collection("reportDiscountPark")
+                                                        .document(firestoreDocumentId)
+                                                        .update("rateWrongCount", rateCount[2] + 1)
+                                                        .addOnSuccessListener(aVoid -> {
+                                                            listener.onDataLoaded("새로 평가함 : " + rate[0]);
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            Log.d(TAG, "데이터 검색 오류", e);
+                                                            listener.onDataLoadError(e.getMessage());
+                                                        });
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onDataLoadError(String errorMessage) {
+                                            Log.d(TAG, errorMessage);
+                                            listener.onDataLoadError("주차장 제보 평가 중 오류 발생");
+                                        }
+                                    });
+                                }
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.d(TAG, "데이터 검색 오류", e);
+                                listener.onDataLoadError(e.getMessage());
+                            });
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "데이터 검색 오류", e);

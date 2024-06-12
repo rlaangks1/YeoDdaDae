@@ -31,7 +31,7 @@
 
     <ImageView
         android:id="@+id/startMainIcon"
-        android:src="@drawable/main_icon_cut"
+        android:src="@drawable/main_icon_cutted_gradated"
         android:adjustViewBounds="true"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
 
     <ImageButton
         android:id="@+id/toLoginBtn"
-        android:background="@drawable/round_button"
+        android:background="@drawable/gradate_button"
         android:layout_width="0dp"
         android:layout_height="60dp"
         app:layout_constraintBottom_toBottomOf="parent"

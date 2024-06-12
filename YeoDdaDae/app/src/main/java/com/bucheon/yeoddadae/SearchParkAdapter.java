@@ -21,6 +21,15 @@ public class SearchParkAdapter extends BaseAdapter {
         items.add(item);
     }
 
+    public void clearItem() {
+        items.clear();
+        notifyDataSetChanged();
+    }
+
+    public int getSize() {
+        return items.size();
+    }
+
     public ParkItem findItem(String parkItemName) {
         for (ParkItem item : items) {
             if (item.getName().equals(parkItemName)) {
@@ -43,18 +52,6 @@ public class SearchParkAdapter extends BaseAdapter {
         }
     }
 
-    public void sortByParkPrice () {
-        if (items != null && items.size() > 1) {
-            Collections.sort(items, new Comparator<ParkItem>() {
-                @Override
-                public int compare(ParkItem o1, ParkItem o2) {
-                    // Compare by gasoline price in ascending order
-                    return Long.compare(Long.parseLong(o1.getParkPrice()), Long.parseLong(o2.getParkPrice()));
-                }
-            });
-            notifyDataSetChanged(); // Notify adapter that dataset has changed
-        }
-    }
 
     @Override
     public int getCount() {

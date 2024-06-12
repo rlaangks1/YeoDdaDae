@@ -3,10 +3,13 @@ package com.bucheon.yeoddadae;
 import static android.content.ContentValues.TAG;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -24,10 +27,10 @@ import java.util.regex.Pattern;
 public class ChangePasswordActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
 
-    Button changePasswordBackBtn;
+    ImageButton changePasswordBackBtn;
     EditText changePasswordIdTxt;
     EditText changePasswordEmailTxt;
-    Button changePasswordSendEmailBtn;
+    ImageButton changePasswordSendEmailBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +51,26 @@ public class ChangePasswordActivity extends AppCompatActivity {
             }
         });
 
+        changePasswordEmailTxt.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    changePasswordSendEmailBtn.callOnClick();
+                }
+
+                return false;
+            }
+        });
+
         changePasswordSendEmailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(changePasswordIdTxt.getWindowToken(), 0);
+                    imm.hideSoftInputFromWindow(changePasswordEmailTxt.getWindowToken(), 0);
+                }
+
                 String id = changePasswordIdTxt.getText().toString();
                 String email = changePasswordEmailTxt.getText().toString();
 

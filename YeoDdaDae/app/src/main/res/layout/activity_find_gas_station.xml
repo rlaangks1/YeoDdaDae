@@ -284,7 +284,8 @@
 
             <ImageButton
                 android:id="@+id/findGasStationBackBtn"
-                android:src="@drawable/backbtn"
+                android:src="@drawable/back_icon"
+                android:scaleType="fitCenter"
                 android:background="@android:color/transparent"
                 android:layout_width="50dp"
                 android:layout_height="50dp"

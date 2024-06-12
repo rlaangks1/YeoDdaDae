@@ -59,12 +59,12 @@
     </string-array>
 
     <string-array name="my_spinner_charge_point_items">
-        <item>1000pt</item>
-        <item>5000pt</item>
-        <item>10000pt</item>
-        <item>30000pt</item>
-        <item>50000pt</item>
-        <item>100000pt</item>
+        <item>1,000pt</item>
+        <item>5,000pt</item>
+        <item>10,000pt</item>
+        <item>30,000pt</item>
+        <item>50,000pt</item>
+        <item>100,000pt</item>
     </string-array>
 
     <string-array name="my_spinner_time_items">

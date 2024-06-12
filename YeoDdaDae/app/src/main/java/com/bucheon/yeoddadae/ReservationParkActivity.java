@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,7 +51,7 @@ public class ReservationParkActivity extends AppCompatActivity {
 
     TimeAdapter ta;
 
-    Button reservationBackBtn;
+    ImageButton reservationBackBtn;
     TextView reservationParkNewAddressContentTxt;
     TextView reservationParkOldAddressContentTxt;
     TextView reservationParkDetailAddressContentTxt;
@@ -64,11 +65,11 @@ public class ReservationParkActivity extends AppCompatActivity {
     TextView reservationWonTxt;
     TextView reservationShareTimeContentTxt;
     TextView reservationedTimeContentTxt;
-    Button resetBtn;
+    ImageButton resetBtn;
     MaterialCalendarView reservationParkDateCalendar;
     ListView reservationParkTimeListView;
     TextView reservationTotalPriceContentTxt;
-    Button reservationBtn;
+    ImageButton reservationBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

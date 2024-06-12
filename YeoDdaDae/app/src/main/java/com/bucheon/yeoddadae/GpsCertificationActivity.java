@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,14 +48,15 @@ public class GpsCertificationActivity extends AppCompatActivity implements TMapG
     TMapCircle tMapCircle;
 
     LinearLayout linearLayoutTmap;
-    Button decisionBtn;
+    ImageButton decisionBtn;
+    TextView decisionTxt;
     ConstraintLayout addressLayout;
     TextView newAddressTxt;
     TextView oldAddressTxt;
-    Button zoomOutBtn;
-    Button zoomInBtn;
-    Button gpsBtn;
-    Button gpsCerificationBackBtn;
+    ImageButton zoomOutBtn;
+    ImageButton zoomInBtn;
+    ImageButton gpsBtn;
+    ImageButton gpsCerificationBackBtn;
 
     Bitmap tmapMyLocationIcon;
     Bitmap tmapMarkerIcon;
@@ -66,6 +68,7 @@ public class GpsCertificationActivity extends AppCompatActivity implements TMapG
 
         linearLayoutTmap = findViewById(R.id.linearLayoutTmap);
         decisionBtn = findViewById(R.id.decisionBtn);
+        decisionTxt = findViewById(R.id.decisionTxt);
         addressLayout = findViewById(R.id.addressLayout);
         newAddressTxt = findViewById(R.id.newAddressTxt);
         oldAddressTxt = findViewById(R.id.oldAddressTxt);
@@ -248,6 +251,7 @@ public class GpsCertificationActivity extends AppCompatActivity implements TMapG
                     @Override
                     public void run() {
                         decisionBtn.setVisibility(View.VISIBLE);
+                        decisionTxt.setVisibility(View.VISIBLE);
                     }
                 });
             }
@@ -257,6 +261,7 @@ public class GpsCertificationActivity extends AppCompatActivity implements TMapG
                     @Override
                     public void run() {
                         decisionBtn.setVisibility(View.GONE);
+                        decisionTxt.setVisibility(View.GONE);
                     }
                 });
             }
