@@ -350,7 +350,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                                     gasStationListView.requestLayout();
 
                                     TextView gasStationOrder = findViewById(R.id.gasStationOrder);
-                                    gasStationOrder.setVisibility(View.GONE);
+                                    gasStationOrder.setVisibility(View.INVISIBLE);
 
                                     TextView gasStationName = findViewById(R.id.gasStationName);
                                     ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) gasStationName.getLayoutParams();
@@ -562,7 +562,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                             gasStationListView.requestLayout();
 
                             TextView gasStationOrder = findViewById(R.id.gasStationOrder);
-                            gasStationOrder.setVisibility(View.GONE);
+                            gasStationOrder.setVisibility(View.INVISIBLE);
 
                             TextView gasStationName = findViewById(R.id.gasStationName);
                             ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) gasStationName.getLayoutParams();
@@ -823,7 +823,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                                     gasStationListView.requestLayout();
 
                                     TextView gasStationOrder = findViewById(R.id.gasStationOrder);
-                                    gasStationOrder.setVisibility(View.GONE);
+                                    gasStationOrder.setVisibility(View.INVISIBLE);
 
                                     TextView gasStationName = findViewById(R.id.gasStationName);
                                     ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) gasStationName.getLayoutParams();

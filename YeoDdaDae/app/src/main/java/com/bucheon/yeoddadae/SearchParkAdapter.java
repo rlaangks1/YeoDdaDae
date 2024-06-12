@@ -75,7 +75,7 @@ public class SearchParkAdapter extends BaseAdapter {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.park_item, parent, false);
+            convertView = inflater.inflate(R.layout.search_park_item, parent, false);
         }
 
         // 파인드 뷰

@@ -587,7 +587,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                     parkListView.requestLayout();
 
                                     TextView parkOrder = findViewById(R.id.parkOrder);
-                                    parkOrder.setVisibility(View.GONE);
+                                    parkOrder.setVisibility(View.INVISIBLE);
 
                                     TextView parkName = findViewById(R.id.parkName);
                                     ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) parkName.getLayoutParams();
@@ -694,7 +694,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                     parkListView.requestLayout();
 
                                     TextView parkOrder = findViewById(R.id.parkOrder);
-                                    parkOrder.setVisibility(View.GONE);
+                                    parkOrder.setVisibility(View.INVISIBLE);
 
                                     TextView parkName = findViewById(R.id.parkName);
                                     ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) parkName.getLayoutParams();
@@ -985,7 +985,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                             parkListView.requestLayout();
 
                             TextView parkOrder = findViewById(R.id.parkOrder);
-                            parkOrder.setVisibility(View.GONE);
+                            parkOrder.setVisibility(View.INVISIBLE);
 
                             TextView parkName = findViewById(R.id.parkName);
                             ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) parkName.getLayoutParams();
@@ -1310,7 +1310,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                             parkListView.requestLayout();
 
                                             TextView parkOrder = findViewById(R.id.parkOrder);
-                                            parkOrder.setVisibility(View.GONE);
+                                            parkOrder.setVisibility(View.INVISIBLE);
 
                                             TextView parkName = findViewById(R.id.parkName);
                                             ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) parkName.getLayoutParams();
@@ -1412,7 +1412,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                         parkListView.requestLayout();
 
                                         TextView parkOrder = findViewById(R.id.parkOrder);
-                                        parkOrder.setVisibility(View.GONE);
+                                        parkOrder.setVisibility(View.INVISIBLE);
 
                                         TextView parkName = findViewById(R.id.parkName);
                                         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) parkName.getLayoutParams();

@@ -187,15 +187,23 @@ public class GasStationAdapter extends BaseAdapter {
         String formattedDieselPriceString = formatter.format(number);
         totalOilPriceString += "휘 " + formattedGasolinePriceString + "/경 " + formattedDieselPriceString;
 
-        if (!gasStation.getHighGasolinePrice().equals("0")) {
+        if (!gasStation.getHighGasolinePrice().equals("0") && !gasStation.getHighDieselPrice().equals("0")) {
             number = Long.parseLong(gasStation.getHighGasolinePrice());
             String formattedHighGasolinePriceString = formatter.format(number);
-            totalOilPriceString += "/고급휘 " + formattedHighGasolinePriceString;
-        }
-        if (!gasStation.getHighDieselPrice().equals("0")) {
             number = Long.parseLong(gasStation.getHighDieselPrice());
             String formattedHighDieselPriceString = formatter.format(number);
-            totalOilPriceString += "/고급경 " + formattedHighDieselPriceString;
+
+            totalOilPriceString += "\n고급휘 " + formattedHighGasolinePriceString + "/고급경 " + formattedHighDieselPriceString;
+        }
+        else if (!gasStation.getHighGasolinePrice().equals("0")) {
+            number = Long.parseLong(gasStation.getHighGasolinePrice());
+            String formattedHighGasolinePriceString = formatter.format(number);
+            totalOilPriceString += "\n고급휘 " + formattedHighGasolinePriceString;
+        }
+        else if (!gasStation.getHighDieselPrice().equals("0")) {
+            number = Long.parseLong(gasStation.getHighDieselPrice());
+            String formattedHighDieselPriceString = formatter.format(number);
+            totalOilPriceString += "\n고급경 " + formattedHighDieselPriceString;
         }
         gasStationOilPrice.setText(totalOilPriceString);
 
