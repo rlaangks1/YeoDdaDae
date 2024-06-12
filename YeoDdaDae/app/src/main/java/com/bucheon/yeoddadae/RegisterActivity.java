@@ -5,6 +5,7 @@ import static android.content.ContentValues.TAG;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -65,6 +66,17 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick (View v) {
                 finish();
+            }
+        });
+
+        pwTxt.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    registerBtn.callOnClick();
+                }
+
+                return false;
             }
         });
 

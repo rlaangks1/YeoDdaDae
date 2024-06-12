@@ -19,6 +19,7 @@ import android.os.IBinder;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,19 +95,20 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     ImageButton zoomInBtn;
     ImageButton gpsBtn;
     ImageButton findParkSttBtn;
-    Button findParkOnlyReportParkBtn;
-    Button findParkOnlyShareParkBtn;
+    ImageButton findParkOnlyReportParkBtn;
+    ImageButton findParkOnlyShareParkBtn;
     HorizontalScrollView parkSortHorizontalScrollView;
-    Button sortByDistanceBtn;
-    Button sortByParkPriceBtn;
-    Button cancelNaviBtn;
-    Button toStartNaviBtn;
-    Button toReservationBtn;
+    ImageButton sortByDistanceBtn;
+    ImageButton sortByParkPriceBtn;
+    ConstraintLayout naviConstLayout;
+    ImageButton cancelNaviBtn;
+    ImageButton toStartNaviBtn;
+    ImageButton toReservationBtn;
     ImageButton searchStartBtn;
     ConstraintLayout searchConstraintLayout;
     EditText searchEdTxt;
-    Button searchBtn;
-    Button searchBackBtn;
+    ImageButton searchBtn;
+    ImageButton searchBackBtn;
     ListView searchListView;
 
     Bitmap tmapMyLocationIcon;
@@ -138,6 +140,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         parkSortHorizontalScrollView = findViewById(R.id.parkSortHorizontalScrollView);
         sortByDistanceBtn = findViewById(R.id.sortByDistanceBtn);
         sortByParkPriceBtn = findViewById(R.id.sortByParkPriceBtn);
+        naviConstLayout = findViewById(R.id.naviConstLayout);
         cancelNaviBtn = findViewById(R.id.cancelNaviBtn);
         toStartNaviBtn = findViewById(R.id.toStartNaviBtn);
         toReservationBtn = findViewById(R.id.toReservationBtn);
@@ -334,9 +337,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                         searchStartBtn.setVisibility(View.VISIBLE);
                         findParkOnlyReportParkBtn.setVisibility(View.VISIBLE);
                         findParkOnlyShareParkBtn.setVisibility(View.VISIBLE);
-                        cancelNaviBtn.setVisibility(View.GONE);
-                        toStartNaviBtn.setVisibility(View.GONE);
-                        toReservationBtn.setVisibility(View.GONE);
+                        naviConstLayout.setVisibility(View.GONE);
 
                         findPark(nowSort);
                     }
@@ -379,6 +380,18 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                 });
             }
         });
+
+        searchEdTxt.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    searchBtn.callOnClick();
+                }
+
+                return false;
+            }
+        });
+
         searchBtn.setOnClickListener(new View.OnClickListener() { // 검색 시작
             @Override
             public void onClick(View v) {
@@ -547,8 +560,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                     searchStartBtn.setVisibility(View.GONE);
                                     findParkOnlyReportParkBtn.setVisibility(View.GONE);
                                     findParkOnlyShareParkBtn.setVisibility(View.GONE);
-                                    cancelNaviBtn.setVisibility(View.VISIBLE);
-                                    toStartNaviBtn.setVisibility(View.VISIBLE);
+                                    naviConstLayout.setVisibility(View.VISIBLE);
                                     if (clickedPark.getType() == 3) {
                                         reservationFirestoreDocumentId = clickedPark.getFirebaseDocumentId();
                                         toReservationBtn.setVisibility(View.VISIBLE);
@@ -654,8 +666,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
 
                                     parkSortHorizontalScrollView.setVisibility(View.GONE);
                                     searchStartBtn.setVisibility(View.GONE);
-                                    cancelNaviBtn.setVisibility(View.VISIBLE);
-                                    toStartNaviBtn.setVisibility(View.VISIBLE);
+                                    naviConstLayout.setVisibility(View.VISIBLE);
                                     if (clickedPark.getType() == 3) {
                                         reservationFirestoreDocumentId = clickedPark.getFirebaseDocumentId();
                                         toReservationBtn.setVisibility(View.VISIBLE);
@@ -817,18 +828,15 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                         parkListView.getLayoutParams().height = (int) px;
                                         parkListView.requestLayout();
 
-                                        int originalBackgroundColor = Color.rgb(128,128,128);
-                                        int selectedBackgroundColor = Color.rgb(0,0,255);
-
                                         switch (sortBy) {
                                             case 1 :
-                                                sortByDistanceBtn.setBackgroundColor(selectedBackgroundColor);
-                                                sortByParkPriceBtn.setBackgroundColor(originalBackgroundColor);
+                                                sortByDistanceBtn.setImageResource(R.drawable.gradate_button);
+                                                sortByParkPriceBtn.setImageResource(R.drawable.disabled_button);
                                                 parkAdapter.sortByDistance();
                                                 break;
                                             case 2 :
-                                                sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
-                                                sortByParkPriceBtn.setBackgroundColor(selectedBackgroundColor);
+                                                sortByDistanceBtn.setImageResource(R.drawable.disabled_button);
+                                                sortByParkPriceBtn.setImageResource(R.drawable.gradate_button);
                                                 parkAdapter.sortByParkPrice();
                                                 break;
                                         }
@@ -950,8 +958,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                             searchStartBtn.setVisibility(View.GONE);
                             findParkOnlyReportParkBtn.setVisibility(View.GONE);
                             findParkOnlyShareParkBtn.setVisibility(View.GONE);
-                            cancelNaviBtn.setVisibility(View.VISIBLE);
-                            toStartNaviBtn.setVisibility(View.VISIBLE);
+                            naviConstLayout.setVisibility(View.VISIBLE);
                             if (clickedPark.getType() == 3) {
                                 reservationFirestoreDocumentId = clickedPark.getFirebaseDocumentId();
                                 toReservationBtn.setVisibility(View.VISIBLE);
@@ -1223,8 +1230,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                     searchStartBtn.setVisibility(View.GONE);
                                     findParkOnlyReportParkBtn.setVisibility(View.GONE);
                                     findParkOnlyShareParkBtn.setVisibility(View.GONE);
-                                    cancelNaviBtn.setVisibility(View.VISIBLE);
-                                    toStartNaviBtn.setVisibility(View.VISIBLE);
+                                    naviConstLayout.setVisibility(View.VISIBLE);
                                     if (clickedPark.getType() == 3) {
                                         reservationFirestoreDocumentId = clickedPark.getFirebaseDocumentId();
                                         toReservationBtn.setVisibility(View.VISIBLE);
@@ -1298,20 +1304,17 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     }
 
     void onlyBtnColorSet () {
-        int originalBackgroundColor = Color.rgb(128,128,128);
-        int selectedBackgroundColor = Color.rgb(0,0,255);
-
         if (nowOnly == 0) {
-            findParkOnlyReportParkBtn.setBackgroundColor(originalBackgroundColor);
-            findParkOnlyShareParkBtn.setBackgroundColor(originalBackgroundColor);
+            findParkOnlyReportParkBtn.setImageResource(R.drawable.disabled_button);
+            findParkOnlyShareParkBtn.setImageResource(R.drawable.disabled_button);
         }
         else if (nowOnly == 1) {
-            findParkOnlyReportParkBtn.setBackgroundColor(selectedBackgroundColor);
-            findParkOnlyShareParkBtn.setBackgroundColor(originalBackgroundColor);
+            findParkOnlyReportParkBtn.setImageResource(R.drawable.gradate_button);
+            findParkOnlyShareParkBtn.setImageResource(R.drawable.disabled_button);
         }
         else if (nowOnly == 2) {
-            findParkOnlyReportParkBtn.setBackgroundColor(originalBackgroundColor);
-            findParkOnlyShareParkBtn.setBackgroundColor(selectedBackgroundColor);
+            findParkOnlyReportParkBtn.setImageResource(R.drawable.disabled_button);
+            findParkOnlyShareParkBtn.setImageResource(R.drawable.gradate_button);
         }
     }
 }

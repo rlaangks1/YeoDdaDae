@@ -56,7 +56,7 @@
 
         <ImageView
             android:id="@+id/toFindParkImg"
-            android:src="@drawable/temp_2"
+            android:src="@drawable/parking_icon"
             android:adjustViewBounds="true"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -103,7 +103,7 @@
 
         <ImageView
             android:id="@+id/toFindGasStationImg"
-            android:src="@drawable/temp_1"
+            android:src="@drawable/gas_station_icon"
             android:adjustViewBounds="true"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -150,7 +150,7 @@
 
         <ImageView
             android:id="@+id/toMyReportDiscountParkImg"
-            android:src="@drawable/temp_3"
+            android:src="@drawable/discount_park_icon"
             android:adjustViewBounds="true"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -195,7 +195,7 @@
 
         <ImageView
             android:id="@+id/micIcon"
-            android:src="@drawable/microphone"
+            android:src="@drawable/mic_icon"
             android:adjustViewBounds="true"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
