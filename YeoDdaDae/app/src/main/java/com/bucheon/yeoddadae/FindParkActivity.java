@@ -881,6 +881,9 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
 
                                         parkListView.setVisibility(View.VISIBLE);
                                         parkSortHorizontalScrollView.setVisibility(View.VISIBLE);
+                                        naviConstLayout.setVisibility(View.GONE);
+
+                                        isItemSelected = false;
                                     }
                                 });
                                 tMapCircle.setCenterPoint(centerPoint);
