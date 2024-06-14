@@ -27,7 +27,7 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
     String documentId;
     HashMap<String, Object> reportInfo;
 
-    Button reportInfoBackBtn;
+    ImageButton reportInfoBackBtn;
     TextView rateReportIdContentTxt;
     TextView rateReportParkNameContentTxt;
     TextView rateReportParkNewAddressContentTxt;

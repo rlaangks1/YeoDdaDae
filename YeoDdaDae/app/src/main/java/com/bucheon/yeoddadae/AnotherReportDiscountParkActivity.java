@@ -76,36 +76,41 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
     }
 
     public void getReports (int distanceKm, double nowLat, double nowLon) {
+        if (ra != null) {
+            ra.clearItem();
+        }
 
         ra = new ReportDiscountParkAdapter(AnotherReportDiscountParkActivity.this);
-        anotherReportListView.setAdapter(ra);
         FirestoreDatabase fd = new FirestoreDatabase();
-
         fd.loadAnotherReports(distanceKm, nowLat, nowLon, loginId, new OnFirestoreDataLoadedListener() {
             @Override
             public void onDataLoaded(Object data) {
                 ArrayList<HashMap<String, Object>> myReports = (ArrayList<HashMap<String, Object>>) data;
-                if (myReports.size() >= 1 && myReports != null) {
-                    anotherReportNoTxt.setVisibility(View.GONE);
 
-                    for (HashMap<String, Object> oneReport : myReports) {
-                        String reporterId = (String) oneReport.get("reporterId");
-                        String parkName = (String) oneReport.get("parkName");
-                        String condition = (String) oneReport.get("parkCondition");
-                        long discount = (long) oneReport.get("parkDiscount");
-                        long ratePerfectCount = (long) oneReport.get("ratePerfectCount");
-                        long rateMistakeCount = (long) oneReport.get("rateMistakeCount");
-                        long rateWrongCount = (long) oneReport.get("rateWrongCount");
-                        boolean isCancelled = (boolean) oneReport.get("isCancelled");
-                        boolean isApproval = (boolean) oneReport.get("isApproval");
-                        Timestamp upTime = (Timestamp) oneReport.get("upTime");
-                        String poiID = (String) oneReport.get("poiID");
-                        String documentId = (String) oneReport.get("documentId");
-                        ra.addItem(new ReportDiscountParkItem(reporterId, parkName, condition, discount, ratePerfectCount, rateMistakeCount, rateWrongCount, isCancelled, isApproval, upTime, poiID, documentId));
-                    }
+                for (HashMap<String, Object> oneReport : myReports) {
+                    String reporterId = (String) oneReport.get("reporterId");
+                    String parkName = (String) oneReport.get("parkName");
+                    String condition = (String) oneReport.get("parkCondition");
+                    long discount = (long) oneReport.get("parkDiscount");
+                    long ratePerfectCount = (long) oneReport.get("ratePerfectCount");
+                    long rateMistakeCount = (long) oneReport.get("rateMistakeCount");
+                    long rateWrongCount = (long) oneReport.get("rateWrongCount");
+                    boolean isCancelled = (boolean) oneReport.get("isCancelled");
+                    boolean isApproval = (boolean) oneReport.get("isApproval");
+                    Timestamp upTime = (Timestamp) oneReport.get("upTime");
+                    String poiID = (String) oneReport.get("poiID");
+                    String documentId = (String) oneReport.get("documentId");
+
+                    ra.addItem(new ReportDiscountParkItem(reporterId, parkName, condition, discount, ratePerfectCount, rateMistakeCount, rateWrongCount, isCancelled, isApproval, upTime, poiID, documentId));
+                }
+                if (myReports.size() == 0) {
+                    anotherReportListView.setVisibility(View.GONE);
+                    anotherReportNoTxt.setVisibility(View.VISIBLE);
                 }
                 else {
-                    anotherReportNoTxt.setVisibility(View.VISIBLE);
+                    anotherReportListView.setVisibility(View.VISIBLE);
+                    anotherReportNoTxt.setVisibility(View.GONE);
+                    anotherReportListView.setAdapter(ra);
                 }
             }
             @Override
@@ -199,15 +204,11 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
                 String selectedItem = parent.getItemAtPosition(position).toString();
                 if (selectedItem.equals("무제한")) {
                     km = 0;
-                    if (firstInitCalled) {
-                        getReports(km, nowLat, nowLon);
-                    }
+                    getReports(km, nowLat, nowLon);
                 }
                 else {
                     km = Integer.parseInt(selectedItem.substring(0, 1));
-                    if(firstInitCalled) {
-                        getReports(km, nowLat, nowLon);
-                    }
+                    getReports(km, nowLat, nowLon);
                 }
             }
 
@@ -224,8 +225,6 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
                 startActivity(toRateReportIntent);
             }
         });
-
-        getReports (km, nowLat, nowLon);
 
         firstInitCalled = true;
     }

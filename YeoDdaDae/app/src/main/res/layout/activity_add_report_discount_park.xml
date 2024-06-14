@@ -39,7 +39,7 @@
 
             <EditText
                 android:id="@+id/addReportDiscountParkAddressContentEditTxt"
-                android:textSize="15dp"
+                android:textSize="18dp"
                 android:focusable="false"
                 android:backgroundTint="@color/sub"
                 android:layout_width="0dp"
@@ -148,7 +148,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
-            android:visibility="visible">
+            android:visibility="gone">
             
             <ImageButton
                 android:id="@+id/findBackBtn"
