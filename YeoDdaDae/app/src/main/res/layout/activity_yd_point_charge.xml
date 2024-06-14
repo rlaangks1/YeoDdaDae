@@ -37,7 +37,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/chargeHavePointContentTxt"
@@ -48,7 +49,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/chargeHavePointTxt"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:text="pt"
@@ -70,7 +72,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/chargeHavePointContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp" />
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <Spinner
                 android:id="@+id/chargePointSpinner"
@@ -79,7 +82,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/chargeTargetPointTxt"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/anotherReportWonTxt"
@@ -101,7 +105,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/chargePointSpinner"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="60dp" />
+                android:layout_marginTop="60dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/anotherReportAfterChargePointContentTxt"
@@ -112,7 +117,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/anotherReportAfterChargePointTxt"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/paymentAfterPayPointPtTxt"

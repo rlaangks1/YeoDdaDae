@@ -36,7 +36,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp"/>
 
             <TextView
                 android:id="@+id/approveReportInfoIdContentTxt"
@@ -46,7 +47,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reprtInfoIdTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp"/>
 
             <TextView
                 android:id="@+id/approveReportInfoParkNameTxt"
@@ -56,7 +58,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/approveReportInfoIdContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"/>
 
             <TextView
                 android:id="@+id/approveReportInfoParkNameContentTxt"
@@ -66,7 +69,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/approveReportInfoParkNameTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp"/>
 
             <TextView
                 android:id="@+id/approveReportInfoParkAddressTxt"
@@ -76,7 +80,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/approveReportInfoParkNameContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/approveReportInfoParkNewAddressContentTxt"
@@ -86,7 +91,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/approveReportInfoParkAddressTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/approveReportInfoParkOldAddressContentTxt"
@@ -96,7 +102,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/approveReportInfoParkNewAddressContentTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/approveReportInfoConditionTxt"
@@ -106,7 +113,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/approveReportInfoParkOldAddressContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/approveReportInfoConditionContentTxt"
@@ -116,7 +124,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/approveReportInfoConditionTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/approveReportInfoDiscountTxt"
@@ -126,7 +135,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/approveReportInfoConditionContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"  />
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/approveReportInfoDiscountContentTxt"
@@ -136,7 +146,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/approveReportInfoDiscountTxt"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/approveReportInfoWonTxt"
@@ -159,7 +170,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/approveReportInfoDiscountContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/approveReportInfoRateContentTxt"
@@ -169,7 +181,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/approveReportInfoRateTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/approveReportInfoUpTimeTxt"
@@ -179,7 +192,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/approveReportInfoRateContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/approveReportInfoUpTimeContentTxt"
@@ -189,7 +203,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/approveReportInfoUpTimeTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

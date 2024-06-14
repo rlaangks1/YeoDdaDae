@@ -36,7 +36,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoIdContentTxt"
@@ -46,7 +47,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reprtInfoIdTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoStatusTxt"
@@ -56,7 +58,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/reportInfoIdContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoStatusContentTxt"
@@ -66,7 +69,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoStatusTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoCancelReasonTxt"
@@ -76,7 +80,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/reportInfoStatusContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoCancelReasonContentTxt"
@@ -86,7 +91,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoCancelReasonTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoParkNameTxt"
@@ -96,7 +102,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoCancelReasonContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoParkNameContentTxt"
@@ -106,7 +113,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoParkNameTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoParkAddressTxt"
@@ -116,7 +124,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoParkNameContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoParkNewAddressContentTxt"
@@ -126,7 +135,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoParkAddressTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoParkOldAddressContentTxt"
@@ -136,7 +146,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoParkNewAddressContentTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoConditionTxt"
@@ -146,7 +157,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoParkOldAddressContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoConditionContentTxt"
@@ -156,7 +168,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoConditionTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoDiscountTxt"
@@ -166,7 +179,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoConditionContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"  />
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoDiscountContentTxt"
@@ -176,7 +190,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/reportInfoDiscountTxt"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoWonTxt"
@@ -199,7 +214,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoDiscountContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoRateContentTxt"
@@ -209,7 +225,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoRateTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoUpTimeTxt"
@@ -219,7 +236,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoRateContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoUpTimeContentTxt"
@@ -229,7 +247,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoUpTimeTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,7 +1,6 @@
 package com.bucheon.yeoddadae;
 
 import com.google.firebase.Timestamp;
-import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 public class YdPointHistoryItem {
     String type;

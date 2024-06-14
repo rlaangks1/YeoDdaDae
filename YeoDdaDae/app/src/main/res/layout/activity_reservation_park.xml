@@ -27,7 +27,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp" >
 
             <TextView
                 android:id="@+id/reservationParkAddressTxt"
@@ -36,7 +37,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reservationParkNewAddressContentTxt"
@@ -46,7 +48,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationParkAddressTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reservationParkOldAddressContentTxt"
@@ -56,7 +59,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationParkNewAddressContentTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reservationParkDetailAddressTxt"
@@ -66,7 +70,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationParkOldAddressContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="25dp"/>
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reservationParkDetailAddressContentTxt"
@@ -76,7 +81,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationParkDetailAddressTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reservationSharerNameTxt"
@@ -86,7 +92,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationParkDetailAddressContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="25dp"/>
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reservationSharerNameContentTxt"
@@ -96,7 +103,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationSharerNameTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reservationSharerPhoneTxt"
@@ -106,7 +114,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationSharerNameContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="25dp"/>
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reservationSharerPhoneContentTxt"
@@ -116,7 +125,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationSharerPhoneTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reservationSharerEmailTxt"
@@ -126,7 +136,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationSharerPhoneContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="25dp"/>
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reservationSharerEmailContentTxt"
@@ -136,7 +147,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationSharerEmailTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reservationSharerRelationTxt"
@@ -146,7 +158,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationSharerEmailContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="25dp"/>
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reservationSharerRelationContentTxt"
@@ -156,7 +169,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationSharerRelationTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reservationParkPriceTxt"
@@ -166,7 +180,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationSharerRelationContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="25dp"/>
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reservationParkPricePerHour"
@@ -178,7 +193,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/reservationPriceContentTxt"
                 app:layout_constraintBottom_toBottomOf="@id/reservationPriceContentTxt"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reservationPriceContentTxt"
@@ -213,17 +229,19 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationPriceContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="25dp"/>
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reservationShareTimeContentTxt"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationShareTimeTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reservationedTimeTxt"
@@ -232,17 +250,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationShareTimeContentTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reservationedTimeContentTxt"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/reservationedTimeTxt"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reservationParkDateTxt"
@@ -252,7 +272,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationedTimeContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="25dp" />
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="10dp" />
 
             <ImageButton
                 android:id="@+id/resetBtn"
@@ -294,7 +315,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationParkTimeListView"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="25dp"  />
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reservationTotalPriceContentTxt"
@@ -304,7 +326,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/reservationTotalPriceTxt"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reservationWonTxt"

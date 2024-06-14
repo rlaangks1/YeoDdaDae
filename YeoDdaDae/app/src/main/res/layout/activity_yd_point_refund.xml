@@ -37,7 +37,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/refundHavePointContentTxt"
@@ -48,7 +49,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/refundHavePointTxt"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:text="pt"
@@ -70,7 +72,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/refundHavePointContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp" />
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <EditText
                 android:id="@+id/refundTargetPointContentEditTxt"
@@ -82,8 +85,10 @@
                 android:singleLine="true"
                 android:textSize="40sp"
                 android:textStyle="bold"
+                android:backgroundTint="@color/sub"
                 app:layout_constraintTop_toBottomOf="@+id/refundTargetPointTxt"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/refundPtTxt"
@@ -118,11 +123,15 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/refundTargetPointContentEditTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp" />
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <EditText
                 android:id="@+id/refundBankContentEditTxt"
                 android:textSize="30sp"
+                android:textColor="@color/sub"
+                android:textColorHint="@color/sub"
+                android:backgroundTint="@color/sub"
                 android:maxLength="10"
                 android:singleLine="true"
                 android:layout_width="0dp"
@@ -141,11 +150,15 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/refundBankContentEditTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp" />
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <EditText
                 android:id="@+id/refundAccountNumberContentEditTxt"
                 android:textSize="30sp"
+                android:textColor="@color/sub"
+                android:textColorHint="@color/sub"
+                android:backgroundTint="@color/sub"
                 android:maxLength="14"
                 android:singleLine="true"
                 android:inputType="number"
@@ -159,13 +172,14 @@
 
             <TextView
                 android:id="@+id/refundAfterRefundPointTxt"
-                android:text="환급후 남은 여따대포인트"
+                android:text="환급후 남을 여따대포인트"
                 android:textSize="30sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/refundAccountNumberContentEditTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp" />
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/refundAfterRefundPointContentTxt"
@@ -175,7 +189,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/refundAfterRefundPointTxt"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/refundAfterRefundPointPtTxt"

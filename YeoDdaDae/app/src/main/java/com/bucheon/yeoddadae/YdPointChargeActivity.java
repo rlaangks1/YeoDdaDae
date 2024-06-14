@@ -2,13 +2,14 @@ package com.bucheon.yeoddadae;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -16,12 +17,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.FieldValue;
-
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
 
 public class YdPointChargeActivity extends AppCompatActivity {
@@ -110,19 +106,34 @@ public class YdPointChargeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (chargePoint != 0) {
-                    fd.chargeYdPoint(loginId, chargePoint, new OnFirestoreDataLoadedListener() {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(YdPointChargeActivity.this);
+                    builder.setTitle("충전하시겠습니까?");
+                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onDataLoaded(Object data) {
-                            Toast.makeText(getApplicationContext(), "충전 완료", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
+                        public void onClick(DialogInterface dialog, int which) {
+                            fd.chargeYdPoint(loginId, chargePoint, new OnFirestoreDataLoadedListener() {
+                                @Override
+                                public void onDataLoaded(Object data) {
+                                    Toast.makeText(getApplicationContext(), "충전 완료", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                }
 
-                        @Override
-                        public void onDataLoadError(String errorMessage) {
-                            Log.d(TAG, errorMessage);
-                            Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                                @Override
+                                public void onDataLoadError(String errorMessage) {
+                                    Log.d(TAG, errorMessage);
+                                    Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     });
+                    builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    builder.show();
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "포인트를 설정해주세요", Toast.LENGTH_SHORT).show();

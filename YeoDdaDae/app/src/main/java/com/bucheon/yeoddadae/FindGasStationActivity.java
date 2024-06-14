@@ -14,7 +14,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -24,8 +23,6 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -37,14 +34,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 
-import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
 import com.skt.Tmap.TMapCircle;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapGpsManager;
 import com.skt.Tmap.TMapMarkerItem;
-import com.skt.Tmap.TMapMarkerItem2;
 import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapPolyLine;
 import com.skt.Tmap.TMapTapi;
@@ -53,7 +47,6 @@ import com.skt.Tmap.poi_item.TMapPOIItem;
 import com.skt.tmap.engine.navigation.SDKManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class FindGasStationActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback, TMapView.OnClickListenerCallback, SttService.SttCallback {
     private static final int PERMISSION_REQUEST_CODE = 1;
@@ -198,10 +191,8 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         gpsManager.setMinDistance(1); // m단위
         gpsManager.setProvider(gpsManager.GPS_PROVIDER);
         gpsManager.OpenGps();
-        /* 가상머신 말고 실제 기기로 실내에서 사용 시 필요
         gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
         gpsManager.OpenGps();
-         */
 
         // TMapView 생성 및 보이기
         tMapView = new TMapView(this);
@@ -670,12 +661,12 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                 SttService.SttBinder binder = (SttService.SttBinder) service;
                 sttService = binder.getService();
                 sttService.setSttCallback(sttCallback);
-                Log.d(ExoPlayerLibraryInfo.TAG, "FindGasStationActivity : STT 서비스 연결됨");
+                Log.d(TAG, "FindGasStationActivity : STT 서비스 연결됨");
             }
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
-                Log.d(ExoPlayerLibraryInfo.TAG, "FindGasStationActivity : STT 서비스 연결 해제됨");
+                Log.d(TAG, "FindGasStationActivity : STT 서비스 연결 해제됨");
             }
         };
 

@@ -1,9 +1,6 @@
 package com.bucheon.yeoddadae;
 
-import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import static android.content.ContentValues.TAG;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -15,12 +12,14 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.firebase.firestore.FieldValue;
 import com.skt.Tmap.TMapData;
@@ -87,10 +86,8 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
         gpsManager.setMinDistance(1); // m단위
         gpsManager.setProvider(gpsManager.GPS_PROVIDER);
         gpsManager.OpenGps();
-        /* 가상머신 말고 실제 기기로 실내에서 사용 시 필요
         gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
         gpsManager.OpenGps();
-        */
 
         addReportDiscountParkBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override

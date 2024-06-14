@@ -27,7 +27,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
 
             <TextView
                 android:id="@+id/parkAddressTxt"
@@ -36,7 +37,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="@+id/gpsBtn"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <ImageButton
                 android:id="@+id/gpsBtn"
@@ -56,7 +58,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/parkAddressTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/parkOldAddressContentTxt"
@@ -65,7 +68,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/parkNewAddressContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/parkDetailAddressTxt"
@@ -75,11 +79,13 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/parkOldAddressContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <EditText
                 android:id="@+id/parkDetailAddressEditTxt"
                 android:textSize="20sp"
+                android:textColor="@color/sub"
                 android:maxLength="30"
                 android:inputType="text"
                 android:singleLine="true"
@@ -89,8 +95,8 @@
                 app:layout_constraintTop_toBottomOf="@id/parkDetailAddressTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
             <TextView
                 android:id="@+id/sharerNameTxt"
@@ -100,11 +106,13 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/parkDetailAddressEditTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <EditText
                 android:id="@+id/sharerNameEditTxt"
                 android:textSize="20sp"
+                android:textColor="@color/sub"
                 android:maxLength="30"
                 android:inputType="text"
                 android:singleLine="true"
@@ -114,8 +122,8 @@
                 app:layout_constraintTop_toBottomOf="@id/sharerNameTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
             <TextView
                 android:id="@+id/sharerPhoneTxt"
@@ -126,11 +134,13 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/sharerNameEditTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <EditText
                 android:id="@+id/sharerPhoneEditTxt"
                 android:textSize="20sp"
+                android:textColor="@color/sub"
                 android:maxLength="12"
                 android:inputType="phone"
                 android:singleLine="true"
@@ -140,8 +150,8 @@
                 app:layout_constraintTop_toBottomOf="@id/sharerPhoneTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
             <TextView
                 android:id="@+id/sharerEmailTxt"
@@ -151,11 +161,13 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/sharerPhoneEditTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <EditText
                 android:id="@+id/sharerEmailEditTxt"
                 android:textSize="20sp"
+                android:textColor="@color/sub"
                 android:maxLength="32"
                 android:inputType="textEmailAddress"
                 android:singleLine="true"
@@ -165,8 +177,8 @@
                 app:layout_constraintTop_toBottomOf="@id/sharerEmailTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
             <TextView
                 android:id="@+id/sharerRelationTxt"
@@ -176,11 +188,13 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/sharerEmailEditTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <EditText
                 android:id="@+id/sharerRelationEditTxt"
                 android:textSize="20sp"
+                android:textColor="@color/sub"
                 android:maxLength="30"
                 android:inputType="text"
                 android:singleLine="true"
@@ -190,8 +204,8 @@
                 app:layout_constraintTop_toBottomOf="@id/sharerRelationTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
             <TextView
                 android:id="@+id/parkPriceTxt"
@@ -201,7 +215,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/sharerRelationEditTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/pricePerHourTxt"
@@ -212,12 +227,15 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/parkPriceEditTxt"
                 app:layout_constraintBottom_toBottomOf="@id/parkPriceEditTxt"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <EditText
                 android:id="@+id/parkPriceEditTxt"
                 android:hint="0"
                 android:textSize="20sp"
+                android:textColor="@color/sub"
+                android:textColorHint="@color/sub"
                 android:maxLength="5"
                 android:inputType="number"
                 android:singleLine="true"
@@ -258,7 +276,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/parkPriceEditTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp" />
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <ImageButton
                 android:id="@+id/resetBtn"

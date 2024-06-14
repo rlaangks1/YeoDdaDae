@@ -1,28 +1,21 @@
 package com.bucheon.yeoddadae;
 
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.google.firebase.Timestamp;
-import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
 
 public class YdPointHistoryAdapter extends BaseAdapter {

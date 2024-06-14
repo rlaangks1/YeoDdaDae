@@ -1,6 +1,6 @@
 package com.bucheon.yeoddadae;
 
-import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
+import static android.content.ContentValues.TAG;
 
 import android.Manifest;
 import android.content.ContentValues;
@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -173,10 +172,8 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
             gpsManager.setMinDistance(1); // m단위
             gpsManager.setProvider(gpsManager.GPS_PROVIDER);
             gpsManager.OpenGps();
-            /* 가상머신 말고 실제 기기로 실내에서 사용 시 필요
             gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
             gpsManager.OpenGps();
-            */
         }
 
         Log.d(TAG, "현재 Lat : "  + nowLat);

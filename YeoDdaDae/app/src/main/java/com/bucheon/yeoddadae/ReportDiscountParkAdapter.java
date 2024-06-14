@@ -1,9 +1,5 @@
 package com.bucheon.yeoddadae;
 
-import static android.content.ContentValues.TAG;
-
-import android.util.Log;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
