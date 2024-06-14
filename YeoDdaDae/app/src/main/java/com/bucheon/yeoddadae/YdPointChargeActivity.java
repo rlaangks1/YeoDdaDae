@@ -26,7 +26,7 @@ import java.util.Locale;
 
 public class YdPointChargeActivity extends AppCompatActivity {
     String loginId;
-    long ydPoint;
+    long ydPoint = -1;
     int chargePoint;
     FirestoreDatabase fd;
 
@@ -34,6 +34,7 @@ public class YdPointChargeActivity extends AppCompatActivity {
     TextView chargeHavePointContentTxt;
     Spinner chargePointSpinner;
     TextView anotherReportWonTxt;
+    TextView anotherReportAfterChargePointContentTxt;
     ImageButton chargeBtn;
 
     @Override
@@ -45,6 +46,7 @@ public class YdPointChargeActivity extends AppCompatActivity {
         chargeHavePointContentTxt = findViewById(R.id.chargeHavePointContentTxt);
         chargePointSpinner = findViewById(R.id.chargePointSpinner);
         anotherReportWonTxt = findViewById(R.id.anotherReportWonTxt);
+        anotherReportAfterChargePointContentTxt = findViewById(R.id.anotherReportAfterChargePointContentTxt);
         chargeBtn = findViewById(R.id.chargeBtn);
 
         Intent inIntent = getIntent();
@@ -53,7 +55,7 @@ public class YdPointChargeActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this,
                 R.array.my_spinner_charge_point_items,
-                R.layout.my_spinner
+                R.layout.my_spinner_3
         );
         chargePointSpinner.setAdapter(adapter);
 
@@ -86,12 +88,18 @@ public class YdPointChargeActivity extends AppCompatActivity {
                 else if (selectedItem.equals("50,000pt")) {
                     chargePoint = 50000;
                 }
-                else if (selectedItem.equals("10,0000pt")) {
+                else if (selectedItem.equals("100,000pt")) {
                     chargePoint = 100000;
                 }
 
                 String formattedWon = NumberFormat.getNumberInstance(Locale.KOREA).format(chargePoint);
                 anotherReportWonTxt.setText("(" + formattedWon + "원 )");
+
+                if (ydPoint != -1 && chargePoint != 0) {
+                    String formattedAfterChargePoint = NumberFormat.getNumberInstance(Locale.KOREA).format(ydPoint + chargePoint);
+
+                    anotherReportAfterChargePointContentTxt.setText(formattedAfterChargePoint);
+                }
             }
 
             @Override
@@ -136,6 +144,12 @@ public class YdPointChargeActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         chargeHavePointContentTxt.setText(formattedYdPoint);
+
+                        if (ydPoint != -1 && chargePoint != 0) {
+                            String formattedAfterChargePoint = NumberFormat.getNumberInstance(Locale.KOREA).format(ydPoint + chargePoint);
+
+                            anotherReportAfterChargePointContentTxt.setText(formattedAfterChargePoint);
+                        }
                     }
                 });
             }

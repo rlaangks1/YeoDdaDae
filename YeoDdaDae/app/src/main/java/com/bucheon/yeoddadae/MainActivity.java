@@ -134,8 +134,12 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
     protected void onPause() {
         super.onPause();
 
-        unbindService(serviceConnection);
-        stopService(serviceIntent);
+        if (serviceConnection != null && serviceIntent != null) {
+            unbindService(serviceConnection);
+            stopService(serviceIntent);
+            serviceConnection = null;
+            serviceIntent = null;
+        }
     }
 
     @Override

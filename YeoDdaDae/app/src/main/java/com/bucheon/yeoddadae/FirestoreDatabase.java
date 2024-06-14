@@ -457,7 +457,7 @@ public class FirestoreDatabase {
                         Long ydPoint = document.getLong("ydPoint");
 
                         if (ydPoint != null) {
-                            if (ydPoint > refundYdPoint) {
+                            if (ydPoint >= refundYdPoint) {
                                 db.collection("account")
                                         .document(document.getId())
                                         .update("ydPoint", ydPoint - refundYdPoint)
@@ -1184,7 +1184,7 @@ public class FirestoreDatabase {
                                                                     String raterId = (String) documentSnapshot2.get("id");
 
                                                                     int count[] = {1};
-                                                                    receiveYdPoint(raterId, 500, "부정적 평가한 할인주차장 취소", new OnFirestoreDataLoadedListener() {
+                                                                    receiveYdPoint(raterId, 300, "부정적 평가한 할인주차장 취소", new OnFirestoreDataLoadedListener() {
                                                                         @Override
                                                                         public void onDataLoaded(Object data) {
                                                                             if (docCount[0] == count[0]) {
@@ -1252,7 +1252,7 @@ public class FirestoreDatabase {
                                     .document(firestoreDocumentId)
                                     .update("isApproval", true)
                                     .addOnSuccessListener(aVoid -> {
-                                        receiveYdPoint(reporterId, 3000, "할인주차장 제보 승인", new OnFirestoreDataLoadedListener() {
+                                        receiveYdPoint(reporterId, 1500, "할인주차장 제보 승인", new OnFirestoreDataLoadedListener() {
                                             @Override
                                             public void onDataLoaded(Object data) {
                                                 db.collection("rateReport")
@@ -1268,7 +1268,7 @@ public class FirestoreDatabase {
                                                                 String raterId = (String) documentSnapshot.get("id");
 
                                                                 int count[] = {1};
-                                                                receiveYdPoint(raterId, 500, "긍정적 평가한 할인주차장 승인", new OnFirestoreDataLoadedListener() {
+                                                                receiveYdPoint(raterId, 300, "긍정적 평가한 할인주차장 승인", new OnFirestoreDataLoadedListener() {
                                                                     @Override
                                                                     public void onDataLoaded(Object data) {
                                                                         if (documentSize == count[0]) {

@@ -123,7 +123,7 @@ public class YdPointHistoryAdapter extends BaseAdapter {
 
         String formattedYdPoint = NumberFormat.getNumberInstance(Locale.KOREA).format(item.getPoint());
         if (item.getType().equals("충전") || item.getType().equals("받음") ) {
-            priceTxt.setTextColor(Color.rgb(128, 128 , 255));
+            priceTxt.setTextColor(Color.rgb(64, 64 , 255));
             priceTxt.setText("+" + formattedYdPoint);
 
             if (item.getType().equals("충전")) {
@@ -137,7 +137,7 @@ public class YdPointHistoryAdapter extends BaseAdapter {
             }
         }
         else {
-            priceTxt.setTextColor(Color.rgb(255, 128 , 128));
+            priceTxt.setTextColor(Color.rgb(255, 64 , 64));
             priceTxt.setText("-" + formattedYdPoint);
 
             if (item.getType().equals("환급")) {

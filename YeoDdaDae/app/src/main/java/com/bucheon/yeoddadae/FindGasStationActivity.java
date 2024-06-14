@@ -889,8 +889,12 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
             sd.dismiss();
         }
 
-        unbindService(serviceConnection);
-        stopService(serviceIntent);
+        if (serviceConnection != null && serviceIntent != null) {
+            unbindService(serviceConnection);
+            stopService(serviceIntent);
+            serviceConnection = null;
+            serviceIntent = null;
+        }
     }
 
     @Override
