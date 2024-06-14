@@ -1,16 +1,8 @@
 package com.bucheon.yeoddadae;
 
-import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
-
-import android.Manifest;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,9 +18,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.navigation.NavigationView;
-import com.skt.Tmap.TMapMarkerItem;
-import com.skt.Tmap.TMapTapi;
-import com.skt.Tmap.TMapView;
 
 public class MainFragment extends Fragment {
     boolean apiKeyCertified;
@@ -38,7 +27,7 @@ public class MainFragment extends Fragment {
     ImageButton toSttImgBtn;
     ImageButton toFindParkImgBtn;
     ImageButton toFindGasStationImgBtn;
-    ImageButton toMyReportDiscountParkImgBtn;
+    ImageButton toRateReportDiscountParkImgBtn;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ImageButton menubarBtn;
@@ -68,7 +57,7 @@ public class MainFragment extends Fragment {
         toSttImgBtn = view.findViewById(R.id.toSttImgBtn);
         toFindParkImgBtn = view.findViewById(R.id.toFindParkImgBtn);
         toFindGasStationImgBtn = view.findViewById(R.id.toFindGasStationImgBtn);
-        toMyReportDiscountParkImgBtn = view.findViewById(R.id.toMyReportDiscountParkImgBtn);
+        toRateReportDiscountParkImgBtn = view.findViewById(R.id.toRateReportDiscountParkImgBtn);
         drawerLayout = view.findViewById(R.id.drawer_layout);
         navigationView = view.findViewById(R.id.navigation_view);
         menubarBtn = view.findViewById(R.id.menubarBtn);
@@ -133,7 +122,7 @@ public class MainFragment extends Fragment {
             }
         });
 
-        toMyReportDiscountParkImgBtn.setOnClickListener(new View.OnClickListener() {
+        toRateReportDiscountParkImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (apiKeyCertified) {

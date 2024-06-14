@@ -1,13 +1,13 @@
 package com.bucheon.yeoddadae;
 
-import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
+import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +22,7 @@ import java.util.HashMap;
 public class ApproveReportActivity extends AppCompatActivity {
     ReportDiscountParkAdapter rdpa;
 
-    Button approveReportBackBtn;
+    ImageButton approveReportBackBtn;
     ListView approveReportListView;
     TextView approveReportNoTxt;
 

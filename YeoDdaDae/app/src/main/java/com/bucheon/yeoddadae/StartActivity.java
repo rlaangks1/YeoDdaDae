@@ -1,32 +1,22 @@
 package com.bucheon.yeoddadae;
 
-import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
+import static android.content.ContentValues.TAG;
 
 import android.Manifest;
-import android.app.Application;
-import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.skt.Tmap.TMapView;
 
 public class StartActivity extends AppCompatActivity {
     final int PERMISSION_REQUEST_CODE = 1;
@@ -36,7 +26,6 @@ public class StartActivity extends AppCompatActivity {
     boolean isSkip;
 
     ImageButton toLoginBtn;
-    ImageButton loginSkipBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +33,6 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
 
         toLoginBtn = findViewById(R.id.toLoginBtn);
-        loginSkipBtn = findViewById(R.id.loginSkipBtn);
 
         toLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,19 +41,6 @@ public class StartActivity extends AppCompatActivity {
                     isSkip = false;
                     Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivityForResult(loginIntent, LOGIN_INTENT_REQUEST_CODE);
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "인터넷 연결을 확인하세요", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        loginSkipBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isNetworkConnected()) {
-                    isSkip = true;
-                    checkPermission();
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "인터넷 연결을 확인하세요", Toast.LENGTH_SHORT).show();

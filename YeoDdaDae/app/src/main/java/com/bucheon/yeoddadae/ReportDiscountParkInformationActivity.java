@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,9 +18,8 @@ import com.google.firebase.Timestamp;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.address_info.TMapAddressInfo;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -30,7 +29,7 @@ public class ReportDiscountParkInformationActivity extends AppCompatActivity {
     String documentId;
     HashMap<String, Object> reportInfo;
 
-    Button reportInfoBackBtn;
+    ImageButton reportInfoBackBtn;
     TextView reportInfoIdContentTxt;
     TextView reportInfoStatusContentTxt;
     TextView reportInfoCancelReasonTxt;
@@ -43,7 +42,8 @@ public class ReportDiscountParkInformationActivity extends AppCompatActivity {
     TextView reportInfoWonTxt;
     TextView reportInfoRateContentTxt;
     TextView reportInfoUpTimeContentTxt;
-    Button reportInfoCancelBtn;
+    ImageButton reportInfoCancelBtn;
+    TextView reportInfoCancelTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +64,7 @@ public class ReportDiscountParkInformationActivity extends AppCompatActivity {
         reportInfoRateContentTxt = findViewById(R.id.reportInfoRateContentTxt);
         reportInfoUpTimeContentTxt = findViewById(R.id.reportInfoUpTimeContentTxt);
         reportInfoCancelBtn = findViewById(R.id.reportInfoCancelBtn);
+        reportInfoCancelTxt = findViewById(R.id.reportInfoCancelTxt);
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("id");
@@ -137,12 +138,14 @@ public class ReportDiscountParkInformationActivity extends AppCompatActivity {
                 if ((boolean) reportInfo.get("isApproval")) {
                     reportInfoStatusContentTxt.setText("승인됨");
                     reportInfoCancelBtn.setVisibility(View.GONE);
+                    reportInfoCancelTxt.setVisibility(View.GONE);
                     reportInfoCancelReasonTxt.setVisibility(View.GONE);
                     reportInfoCancelReasonContentTxt.setVisibility(View.GONE);
                 }
                 else if ((boolean) reportInfo.get("isCancelled")) {
                     reportInfoStatusContentTxt.setText("취소됨");
                     reportInfoCancelBtn.setVisibility(View.GONE);
+                    reportInfoCancelTxt.setVisibility(View.GONE);
                     reportInfoCancelReasonTxt.setVisibility(View.VISIBLE);
                     reportInfoCancelReasonContentTxt.setVisibility(View.VISIBLE);
                     reportInfoCancelReasonContentTxt.setText((String) reportInfo.get("cancelReason"));
@@ -150,6 +153,7 @@ public class ReportDiscountParkInformationActivity extends AppCompatActivity {
                 else {
                     reportInfoStatusContentTxt.setText("평가 중");
                     reportInfoCancelBtn.setVisibility(View.VISIBLE);
+                    reportInfoCancelTxt.setVisibility(View.VISIBLE);
                     reportInfoCancelReasonTxt.setVisibility(View.GONE);
                     reportInfoCancelReasonContentTxt.setVisibility(View.GONE);
                 }
@@ -165,7 +169,8 @@ public class ReportDiscountParkInformationActivity extends AppCompatActivity {
                     reportInfoWonTxt.setVisibility(View.GONE);
                 }
                 else {
-                    reportInfoDiscountContentTxt.setText(Long.toString(discount));
+                    String formattedWon = NumberFormat.getNumberInstance(Locale.KOREA).format(discount);
+                    reportInfoDiscountContentTxt.setText(formattedWon);
                     reportInfoWonTxt.setVisibility(View.VISIBLE);
                 }
 

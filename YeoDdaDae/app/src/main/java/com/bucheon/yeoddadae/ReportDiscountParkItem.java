@@ -2,9 +2,6 @@ package com.bucheon.yeoddadae;
 
 import com.google.firebase.Timestamp;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class ReportDiscountParkItem {
     String reporterId;
     String parkName;

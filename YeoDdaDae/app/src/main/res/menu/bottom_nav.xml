@@ -3,7 +3,7 @@
     <item
         android:id="@+id/bt_main"
         android:enabled="true"
-        android:icon="@drawable/mainicon"
+        android:icon="@drawable/main_icon_cut"
         android:title="메인화면" />
     <item
         android:id="@+id/bt_mybook"
@@ -18,7 +18,7 @@
     <item
         android:id="@+id/bt_my_discount_park_report"
         android:enabled="true"
-        android:icon="@drawable/discount_park"
+        android:icon="@drawable/discount_park_icon"
         android:title="내 제보" />
     <item
         android:id="@+id/bt_point"

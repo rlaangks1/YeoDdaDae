@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">YeoDdaDae</string>
+    <string name="app_name">여따대</string>
     <string name="new_start">주차의 새로운 시작</string>
     <string name="already_user">가입된 회원이십니까?</string>
     <string name="login">로그인</string>
@@ -20,7 +20,6 @@
     <string name="find_gas_st">주유소 찾아가기\n Find gas station</string>
     <string name="shared_park">공유주차장 등록\n Shared parking</string>
     <string name="discount_park_report">할인주차장 제보\n Discount park report</string>
-    <string name="microphone">음성을\n 인식해주세요</string>
     <string name="mybooking">나의 예약</string>
     <string name="ticket">정기권구매</string>
     <string name="car_register">주차장등록</string>
@@ -60,12 +59,12 @@
     </string-array>
 
     <string-array name="my_spinner_charge_point_items">
-        <item>1000pt</item>
-        <item>5000pt</item>
-        <item>10000pt</item>
-        <item>30000pt</item>
-        <item>50000pt</item>
-        <item>100000pt</item>
+        <item>1,000pt</item>
+        <item>5,000pt</item>
+        <item>10,000pt</item>
+        <item>30,000pt</item>
+        <item>50,000pt</item>
+        <item>100,000pt</item>
     </string-array>
 
     <string-array name="my_spinner_time_items">

@@ -1,26 +1,18 @@
 package com.bucheon.yeoddadae;
 
-import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
-
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import static android.content.ContentValues.TAG;
 
 import android.app.TimePickerDialog;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -34,8 +26,13 @@ import androidx.fragment.app.Fragment;
 
 import com.google.firebase.Timestamp;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class MyYdPointFragment extends Fragment {
     String loginId;
@@ -84,6 +81,13 @@ public class MyYdPointFragment extends Fragment {
         pointHistoryCustomTimeEndTimeEditTxt = view.findViewById(R.id.pointHistoryCustomTimeEndTimeEditTxt);
         pointHistoryListView = view.findViewById(R.id.pointHistoryListView);
         pointHistoryNoTxt = view.findViewById(R.id.pointHistoryNoTxt);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                getActivity(),
+                R.array.my_spinner_point_history_items,
+                R.layout.my_spinner_2
+        );
+        pointSpinner.setAdapter(adapter);
 
         toChargeYdPointImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override

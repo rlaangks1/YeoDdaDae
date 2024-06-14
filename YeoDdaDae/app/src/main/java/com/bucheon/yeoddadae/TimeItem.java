@@ -2,8 +2,6 @@ package com.bucheon.yeoddadae;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
-import java.time.LocalTime;
-
 public class TimeItem {
     private CalendarDay date;
     private String startTime;

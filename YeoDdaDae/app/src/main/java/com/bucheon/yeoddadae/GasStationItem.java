@@ -1,7 +1,5 @@
 package com.bucheon.yeoddadae;
 
-import android.graphics.Bitmap;
-
 public class GasStationItem {
     private String name;
     private String radius;

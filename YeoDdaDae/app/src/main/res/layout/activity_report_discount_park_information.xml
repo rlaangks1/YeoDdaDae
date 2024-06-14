@@ -7,13 +7,17 @@
     android:layout_height="match_parent"
     tools:context=".ReportDiscountParkInformationActivity">
 
-    <Button
+    <ImageButton
         android:id="@+id/reportInfoBackBtn"
-        android:text="back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:src="@drawable/back_icon"
+        android:scaleType="fitCenter"
+        android:background="@android:color/transparent"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -28,140 +32,173 @@
             <TextView
                 android:id="@+id/reprtInfoIdTxt"
                 android:text="제보 번호"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoIdContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reprtInfoIdTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoStatusTxt"
                 android:text="제보 상태"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/reportInfoIdContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoStatusContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoStatusTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoCancelReasonTxt"
                 android:text="취소 사유"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/reportInfoStatusContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoCancelReasonContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoCancelReasonTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoParkNameTxt"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:text="주차장 이름"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoCancelReasonContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoParkNameContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoParkNameTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoParkAddressTxt"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:text="주차장 주소"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoParkNameContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoParkNewAddressContentTxt"
                 android:textSize="20sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoParkAddressTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoParkOldAddressContentTxt"
                 android:textSize="18sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoParkNewAddressContentTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoConditionTxt"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:text="조건"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoParkOldAddressContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoConditionContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoConditionTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoDiscountTxt"
                 android:text="혜택"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoConditionContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"  />
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoDiscountContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/reportInfoDiscountTxt"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoWonTxt"
                 android:text="원 할인"
-                android:textSize="12sp"
+                android:textSize="15sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@+id/reportInfoDiscountContentTxt"
@@ -171,51 +208,76 @@
 
             <TextView
                 android:id="@+id/reportInfoRateTxt"
-                android:textSize="15sp"
-                android:text="평가 : 정확 / 틀린부분있음 / 완전히틀림"
+                android:textSize="18sp"
+                android:text="평가 (정확 / 틀린부분있음 / 완전히틀림)"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoDiscountContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoRateContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoRateTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoUpTimeTxt"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:text="제보 시각"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoRateContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:id="@+id/reportInfoUpTimeContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoUpTimeTxt"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="10dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
 
-    <Button
+    <ImageButton
         android:id="@+id/reportInfoCancelBtn"
-        android:text="제보취소"
-        android:textSize="20sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:src="@drawable/gradate_cancel_button"
+        android:scaleType="fitCenter"
+        android:background="@android:color/transparent"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"/>
+        android:layout_marginRight="10dp" />
+
+    <TextView
+        android:id="@+id/reportInfoCancelTxt"
+        android:text="제보 취소"
+        android:textSize="25sp"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/reportInfoCancelBtn"
+        app:layout_constraintEnd_toEndOf="@+id/reportInfoCancelBtn"
+        app:layout_constraintStart_toStartOf="@+id/reportInfoCancelBtn"
+        app:layout_constraintTop_toTopOf="@+id/reportInfoCancelBtn" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

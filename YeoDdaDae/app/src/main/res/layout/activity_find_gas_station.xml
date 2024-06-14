@@ -21,6 +21,7 @@
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topConstLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp">
@@ -39,116 +40,242 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/gasStationListView"
-                app:layout_constraintLeft_toLeftOf="parent" >
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="5dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
-                    <Button
-                        android:id="@+id/sortByDistanceBtn"
-                        android:text="거리순"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content" >
 
-                    <Button
-                        android:id="@+id/sortByGasolinePriceBtn"
-                        android:text="휘발유가순"
+                        <ImageButton
+                            android:id="@+id/sortByDistanceBtn"
+                            android:src="@drawable/gradate_button"
+                            android:background="@android:color/transparent"
+                            android:layout_width="100dp"
+                            android:layout_height="40dp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"/>
+
+                        <TextView
+                            android:text="거리순"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="@+id/sortByDistanceBtn"
+                            app:layout_constraintBottom_toBottomOf="@+id/sortByDistanceBtn"
+                            app:layout_constraintLeft_toLeftOf="@+id/sortByDistanceBtn"
+                            app:layout_constraintRight_toRightOf="@+id/sortByDistanceBtn"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp" />
+                        android:layout_marginLeft="5dp">
 
-                    <Button
-                        android:id="@+id/sortByDieselPriceBtn"
-                        android:text="경유가순"
+                        <ImageButton
+                            android:id="@+id/sortByGasolinePriceBtn"
+                            android:src="@drawable/gradate_button"
+                            android:background="@android:color/transparent"
+                            android:layout_width="120dp"
+                            android:layout_height="40dp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent" />
+
+                        <TextView
+                            android:text="휘발유가순"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="@+id/sortByGasolinePriceBtn"
+                            app:layout_constraintBottom_toBottomOf="@+id/sortByGasolinePriceBtn"
+                            app:layout_constraintLeft_toLeftOf="@+id/sortByGasolinePriceBtn"
+                            app:layout_constraintRight_toRightOf="@+id/sortByGasolinePriceBtn"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp" />
+                        android:layout_marginLeft="5dp" >
 
-                    <Button
-                        android:id="@+id/sortByHighGasolinePriceBtn"
-                        android:text="고급휘발유가순"
+                        <ImageButton
+                            android:id="@+id/sortByDieselPriceBtn"
+                            android:src="@drawable/gradate_button"
+                            android:background="@android:color/transparent"
+                            android:layout_width="100dp"
+                            android:layout_height="40dp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent" />
+
+                        <TextView
+                            android:text="경유가순"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="@+id/sortByDieselPriceBtn"
+                            app:layout_constraintBottom_toBottomOf="@+id/sortByDieselPriceBtn"
+                            app:layout_constraintLeft_toLeftOf="@+id/sortByDieselPriceBtn"
+                            app:layout_constraintRight_toRightOf="@+id/sortByDieselPriceBtn"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp" />
+                        android:layout_marginLeft="5dp" >
 
-                    <Button
-                        android:id="@+id/sortByHighDieselPriceBtn"
-                        android:text="고급경유가순"
+                        <ImageButton
+                            android:id="@+id/sortByHighGasolinePriceBtn"
+                            android:src="@drawable/gradate_button"
+                            android:background="@android:color/transparent"
+                            android:layout_width="140dp"
+                            android:layout_height="40dp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent" />
+
+                        <TextView
+                            android:text="고급휘발유가순"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="@+id/sortByHighGasolinePriceBtn"
+                            app:layout_constraintBottom_toBottomOf="@+id/sortByHighGasolinePriceBtn"
+                            app:layout_constraintLeft_toLeftOf="@+id/sortByHighGasolinePriceBtn"
+                            app:layout_constraintRight_toRightOf="@+id/sortByHighGasolinePriceBtn"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp" />
+                        android:layout_marginLeft="5dp" >
+
+                        <ImageButton
+                            android:id="@+id/sortByHighDieselPriceBtn"
+                            android:src="@drawable/gradate_button"
+                            android:background="@android:color/transparent"
+                            android:layout_width="130dp"
+                            android:layout_height="40dp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent" />
+
+                        <TextView
+                            android:text="고급경유가순"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="@+id/sortByHighDieselPriceBtn"
+                            app:layout_constraintBottom_toBottomOf="@+id/sortByHighDieselPriceBtn"
+                            app:layout_constraintLeft_toLeftOf="@+id/sortByHighDieselPriceBtn"
+                            app:layout_constraintRight_toRightOf="@+id/sortByHighDieselPriceBtn"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
                 </LinearLayout>
-            </HorizontalScrollView>
-            <Button
-                android:id="@+id/cancelNaviBtn"
-                android:text="뒤로가기"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/gasStationListView"
-                app:layout_constraintLeft_toLeftOf="@id/gasStationListView"
-                android:visibility="gone"/>
 
-            <Button
-                android:id="@+id/toStartNaviBtn"
-                android:text="네비게이션시작"
-                android:layout_width="wrap_content"
+            </HorizontalScrollView>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/naviConstLayout"
+                android:visibility="gone"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/gasStationListView"
-                app:layout_constraintRight_toRightOf="@id/gasStationListView"
-                android:visibility="gone"/>
+                app:layout_constraintTop_toBottomOf="@+id/gasStationSortHorizontalScrollView"
+                android:layout_marginTop="5dp">
+
+                <ImageButton
+                    android:id="@+id/cancelNaviBtn"
+                    android:background="@drawable/gradate_button"
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
+
+                <TextView
+                    android:text="뒤로가기"
+                    android:textSize="18sp"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@+id/cancelNaviBtn"
+                    app:layout_constraintBottom_toBottomOf="@+id/cancelNaviBtn"
+                    app:layout_constraintLeft_toLeftOf="@+id/cancelNaviBtn"
+                    app:layout_constraintRight_toRightOf="@+id/cancelNaviBtn" />
+
+                <ImageButton
+                    android:id="@+id/toStartNaviBtn"
+                    android:background="@drawable/gradate_button"
+                    android:layout_width="170dp"
+                    android:layout_height="40dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toRightOf="parent" />
+
+                <TextView
+                    android:text="네비게이션 시작"
+                    android:textSize="18sp"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@+id/toStartNaviBtn"
+                    app:layout_constraintBottom_toBottomOf="@+id/toStartNaviBtn"
+                    app:layout_constraintLeft_toLeftOf="@+id/toStartNaviBtn"
+                    app:layout_constraintRight_toRightOf="@+id/toStartNaviBtn" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:layout_gravity="bottom|left" >
 
             <ImageButton
                 android:id="@+id/zoomOutBtn"
-                android:layout_width="55dp"
+                android:src="@drawable/minus_icon"
+                android:scaleType="fitCenter"
+                android:background="@android:color/transparent"
+                android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/minus"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"/>
-
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginBottom="5dp"/>
 
             <ImageButton
                 android:id="@+id/zoomInBtn"
-                android:layout_width="55dp"
+                android:src="@drawable/plus_icon"
+                android:scaleType="fitCenter"
+                android:background="@android:color/transparent"
+                android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/plus"
                 app:layout_constraintBottom_toTopOf="@id/zoomOutBtn"
-                app:layout_constraintLeft_toLeftOf="parent" />
-
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginBottom="5dp"/>
 
             <ImageButton
                 android:id="@+id/gpsBtn"
-                android:layout_width="55dp"
+                android:src="@drawable/gps_icon"
+                android:scaleType="fitCenter"
+                android:background="@android:color/transparent"
+                android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/gps_point"
-                android:layout_marginBottom="5dp"
                 app:layout_constraintBottom_toTopOf="@id/zoomInBtn"
-                app:layout_constraintLeft_toLeftOf="parent" />
-
-
-
-            <ImageButton
-                android:id="@+id/findGasStationSttBtn"
-                android:text="stt"
-                android:layout_width="55dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/find_mic"
-                app:layout_constraintBottom_toTopOf="@+id/gpsBtn"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginBottom="20dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -159,13 +286,26 @@
 
             <ImageButton
                 android:id="@+id/findGasStationBackBtn"
-                android:layout_width="50dp"
-                android:layout_height="40dp"
-                android:src="@drawable/backbtn"
+                android:src="@drawable/back_icon"
+                android:scaleType="fitCenter"
                 android:background="@android:color/transparent"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 android:layout_marginBottom="20dp"
+                android:layout_marginRight="5dp" />
+
+            <ImageButton
+                android:id="@+id/findGasStationSttBtn"
+                android:src="@drawable/stt_icon"
+                android:scaleType="fitCenter"
+                android:background="@android:color/transparent"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:layout_constraintBottom_toTopOf="@+id/findGasStationBackBtn"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginBottom="30dp"
                 android:layout_marginRight="5dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

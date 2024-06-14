@@ -1,6 +1,6 @@
 package com.bucheon.yeoddadae;
 
-import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
+import static android.content.ContentValues.TAG;
 
 import android.Manifest;
 import android.content.ContentValues;
@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -34,6 +34,7 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
     String loginId;
     double nowLat;
     double nowLon;
+    int km;
     TMapGpsManager gpsManager;
     boolean firstInitCalled = false;
     ReportDiscountParkAdapter ra;
@@ -55,6 +56,13 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
         toAddReportBtn = findViewById(R.id.toAddReportBtn);
         anotherReportNoTxt = findViewById(R.id.anotherReportNoTxt);
 
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.my_spinner_distance_items,
+                R.layout.my_spinner
+        );
+        anotherReportDistanceSpinner.setAdapter(adapter);
+
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
     }
@@ -67,36 +75,41 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
     }
 
     public void getReports (int distanceKm, double nowLat, double nowLon) {
+        if (ra != null) {
+            ra.clearItem();
+        }
 
         ra = new ReportDiscountParkAdapter(AnotherReportDiscountParkActivity.this);
-        anotherReportListView.setAdapter(ra);
         FirestoreDatabase fd = new FirestoreDatabase();
-
         fd.loadAnotherReports(distanceKm, nowLat, nowLon, loginId, new OnFirestoreDataLoadedListener() {
             @Override
             public void onDataLoaded(Object data) {
                 ArrayList<HashMap<String, Object>> myReports = (ArrayList<HashMap<String, Object>>) data;
-                if (myReports.size() >= 1 && myReports != null) {
-                    anotherReportNoTxt.setVisibility(View.GONE);
 
-                    for (HashMap<String, Object> oneReport : myReports) {
-                        String reporterId = (String) oneReport.get("reporterId");
-                        String parkName = (String) oneReport.get("parkName");
-                        String condition = (String) oneReport.get("parkCondition");
-                        long discount = (long) oneReport.get("parkDiscount");
-                        long ratePerfectCount = (long) oneReport.get("ratePerfectCount");
-                        long rateMistakeCount = (long) oneReport.get("rateMistakeCount");
-                        long rateWrongCount = (long) oneReport.get("rateWrongCount");
-                        boolean isCancelled = (boolean) oneReport.get("isCancelled");
-                        boolean isApproval = (boolean) oneReport.get("isApproval");
-                        Timestamp upTime = (Timestamp) oneReport.get("upTime");
-                        String poiID = (String) oneReport.get("poiID");
-                        String documentId = (String) oneReport.get("documentId");
-                        ra.addItem(new ReportDiscountParkItem(reporterId, parkName, condition, discount, ratePerfectCount, rateMistakeCount, rateWrongCount, isCancelled, isApproval, upTime, poiID, documentId));
-                    }
+                for (HashMap<String, Object> oneReport : myReports) {
+                    String reporterId = (String) oneReport.get("reporterId");
+                    String parkName = (String) oneReport.get("parkName");
+                    String condition = (String) oneReport.get("parkCondition");
+                    long discount = (long) oneReport.get("parkDiscount");
+                    long ratePerfectCount = (long) oneReport.get("ratePerfectCount");
+                    long rateMistakeCount = (long) oneReport.get("rateMistakeCount");
+                    long rateWrongCount = (long) oneReport.get("rateWrongCount");
+                    boolean isCancelled = (boolean) oneReport.get("isCancelled");
+                    boolean isApproval = (boolean) oneReport.get("isApproval");
+                    Timestamp upTime = (Timestamp) oneReport.get("upTime");
+                    String poiID = (String) oneReport.get("poiID");
+                    String documentId = (String) oneReport.get("documentId");
+
+                    ra.addItem(new ReportDiscountParkItem(reporterId, parkName, condition, discount, ratePerfectCount, rateMistakeCount, rateWrongCount, isCancelled, isApproval, upTime, poiID, documentId));
+                }
+                if (myReports.size() == 0) {
+                    anotherReportListView.setVisibility(View.GONE);
+                    anotherReportNoTxt.setVisibility(View.VISIBLE);
                 }
                 else {
-                    anotherReportNoTxt.setVisibility(View.VISIBLE);
+                    anotherReportListView.setVisibility(View.VISIBLE);
+                    anotherReportNoTxt.setVisibility(View.GONE);
+                    anotherReportListView.setAdapter(ra);
                 }
             }
             @Override
@@ -159,11 +172,8 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
             gpsManager.setMinDistance(1); // m단위
             gpsManager.setProvider(gpsManager.GPS_PROVIDER);
             gpsManager.OpenGps();
-            /* 가상머신 말고 실제 기기로 실내에서 사용 시 필요
             gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
             gpsManager.OpenGps();
-            */
-            firstInitCalled = true;
         }
 
         Log.d(TAG, "현재 Lat : "  + nowLat);
@@ -190,18 +200,17 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
                 if (selectedItem.equals("무제한")) {
-                    getReports(0, nowLat, nowLon);
+                    km = 0;
+                    getReports(km, nowLat, nowLon);
                 }
                 else {
-                    int km = Integer.parseInt(selectedItem.substring(0, 1));
-                    getReports (km, nowLat, nowLon);
+                    km = Integer.parseInt(selectedItem.substring(0, 1));
+                    getReports(km, nowLat, nowLon);
                 }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
 
         anotherReportListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -213,5 +222,7 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
                 startActivity(toRateReportIntent);
             }
         });
+
+        firstInitCalled = true;
     }
 }

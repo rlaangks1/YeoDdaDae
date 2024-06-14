@@ -1,6 +1,6 @@
 package com.bucheon.yeoddadae;
 
-import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
+import static android.content.ContentValues.TAG;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +19,7 @@ import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapTapi;
 import com.skt.Tmap.address_info.TMapAddressInfo;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,7 +36,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
     HashMap<String, Object> shareParkInfo;
     String naviEndPointName;
 
-    Button myShareParkInfoBackBtn;
+    ImageButton myShareParkInfoBackBtn;
     TextView myShareParkInfoIdContentTxt;
     TextView myShareParkInfoStatusContentTxt;
     TextView myShareParkInfoCancelReasonTxt;
@@ -49,9 +50,11 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
     TextView myShareParkInfoShareParkDetailaddressContentTxt;
     TextView myShareParkInfoShareTimeContentTxt;
     TextView myShareParkInfoReservationTimeContentTxt;
-    Button myShareParkNaviBtn;
-    Button myShareParkInfoCancelBtn;
-    Button myShareParkInfoCalculateBtn;
+    ImageButton myShareParkNaviBtn;
+    ImageButton myShareParkInfoCancelBtn;
+    TextView myShareParkInfoCancelTxt;
+    ImageButton myShareParkInfoCalculateBtn;
+    TextView myShareParkInfoCalculateTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +77,9 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
         myShareParkInfoReservationTimeContentTxt = findViewById(R.id.myShareParkInfoReservationTimeContentTxt);
         myShareParkNaviBtn = findViewById(R.id.myShareParkNaviBtn);
         myShareParkInfoCancelBtn = findViewById(R.id.myShareParkInfoCancelBtn);
+        myShareParkInfoCancelTxt = findViewById(R.id.myShareParkInfoCancelTxt);
         myShareParkInfoCalculateBtn = findViewById(R.id.myShareParkInfoCalculateBtn);
+        myShareParkInfoCalculateTxt = findViewById(R.id.myShareParkInfoCalculateTxt);
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("id");
@@ -138,7 +143,9 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                 else {
                     myShareParkInfoHourPerTxt.setVisibility(View.VISIBLE);
                     myShareParkInfoPtTxt.setVisibility(View.VISIBLE);
-                    myShareParkInfoPriceContentTxt.setText(Long.toString((long) shareParkInfo.get("price")));
+                    String formattedYdPoint = NumberFormat.getNumberInstance(Locale.KOREA).format((long) shareParkInfo.get("price"));
+
+                    myShareParkInfoPriceContentTxt.setText(formattedYdPoint);
                 }
 
                 TMapData tMapData = new TMapData();
@@ -248,7 +255,9 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                         if (isCancelled) {
                             myShareParkInfoStatusContentTxt.setText("취소됨");
                             myShareParkInfoCancelBtn.setVisibility(View.GONE);
+                            myShareParkInfoCancelTxt.setVisibility(View.GONE);
                             myShareParkInfoCalculateBtn.setVisibility(View.GONE);
+                            myShareParkInfoCalculateTxt.setVisibility(View.GONE);
                             myShareParkInfoCancelReasonTxt.setVisibility(View.VISIBLE);
                             myShareParkInfoCancelReasonContentTxt.setVisibility(View.VISIBLE);
                             myShareParkInfoCancelReasonContentTxt.setText((String) shareParkInfo.get("cancelReason"));
@@ -293,12 +302,16 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                             if (nowString.compareTo(firstTime) > 0) {
                                 myShareParkInfoStatusContentTxt.setText("승인 실패");
                                 myShareParkInfoCancelBtn.setVisibility(View.GONE);
+                                myShareParkInfoCancelTxt.setVisibility(View.GONE);
                                 myShareParkInfoCalculateBtn.setVisibility(View.GONE);
+                                myShareParkInfoCalculateTxt.setVisibility(View.GONE);
                             }
                             else {
                                 myShareParkInfoStatusContentTxt.setText("승인 대기 중");
                                 myShareParkInfoCancelBtn.setVisibility(View.VISIBLE);
+                                myShareParkInfoCancelTxt.setVisibility(View.VISIBLE);
                                 myShareParkInfoCalculateBtn.setVisibility(View.GONE);
+                                myShareParkInfoCalculateTxt.setVisibility(View.GONE);
                             }
                         }
                         else {
@@ -344,35 +357,47 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                                 if (isThereReservation[0]) {
                                     myShareParkInfoStatusContentTxt.setText("승인됨. 공유 예정. 예약 있음");
                                     myShareParkInfoCancelBtn.setVisibility(View.GONE);
+                                    myShareParkInfoCancelTxt.setVisibility(View.GONE);
                                     myShareParkInfoCalculateBtn.setVisibility(View.GONE);
+                                    myShareParkInfoCalculateTxt.setVisibility(View.GONE);
                                 }
                                 else {
                                     myShareParkInfoStatusContentTxt.setText("승인됨. 공유 예정");
                                     myShareParkInfoCancelBtn.setVisibility(View.VISIBLE);
+                                    myShareParkInfoCancelTxt.setVisibility(View.VISIBLE);
                                     myShareParkInfoCalculateBtn.setVisibility(View.GONE);
+                                    myShareParkInfoCalculateTxt.setVisibility(View.GONE);
                                 }
-                            } else if (nowString.compareTo(endTime) < 0) {
+                            } else if (nowString.compareTo(endTime) <= 0) {
                                 if (isThereReservation[0]) {
                                     myShareParkInfoStatusContentTxt.setText("승인됨. 공유 중. 예약 있음");
                                     myShareParkInfoCancelBtn.setVisibility(View.GONE);
+                                    myShareParkInfoCancelTxt.setVisibility(View.GONE);
                                     myShareParkInfoCalculateBtn.setVisibility(View.GONE);
+                                    myShareParkInfoCalculateTxt.setVisibility(View.GONE);
                                 }
                                 else {
                                     myShareParkInfoStatusContentTxt.setText("승인됨. 공유 중. 예약 없음");
                                     myShareParkInfoCancelBtn.setVisibility(View.VISIBLE);
+                                    myShareParkInfoCancelTxt.setVisibility(View.VISIBLE);
                                     myShareParkInfoCalculateBtn.setVisibility(View.GONE);
+                                    myShareParkInfoCalculateTxt.setVisibility(View.GONE);
                                 }
                             }
                             else {
                                 if(isCalculated) {
                                     myShareParkInfoStatusContentTxt.setText("공유 종료. 정산 완료");
                                     myShareParkInfoCancelBtn.setVisibility(View.GONE);
+                                    myShareParkInfoCancelTxt.setVisibility(View.GONE);
                                     myShareParkInfoCalculateBtn.setVisibility(View.GONE);
+                                    myShareParkInfoCalculateTxt.setVisibility(View.GONE);
                                 }
                                 else {
                                     myShareParkInfoStatusContentTxt.setText("공유 종료. 정산 대기 중");
                                     myShareParkInfoCancelBtn.setVisibility(View.GONE);
+                                    myShareParkInfoCancelTxt.setVisibility(View.GONE);
                                     myShareParkInfoCalculateBtn.setVisibility(View.VISIBLE);
+                                    myShareParkInfoCalculateTxt.setVisibility(View.VISIBLE);
                                 }
                             }
                         }
@@ -405,19 +430,34 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                 myShareParkInfoCancelBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fd2.cancelSharePark(loginId, documentId, "공유자가 취소", new OnFirestoreDataLoadedListener() {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MyShareParkInformationActivity.this);
+                        builder.setTitle("공유 취소 확인");
+                        builder.setMessage("정말 취소하시겠습니까\n(되돌릴 수 없습니다)");
+                        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onDataLoaded(Object data) {
-                                Toast.makeText(getApplicationContext(), "공유 취소되었습니다", Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
+                            public void onClick(DialogInterface dialog, int which) {
+                                fd2.cancelSharePark(loginId, documentId, "공유자가 취소", new OnFirestoreDataLoadedListener() {
+                                    @Override
+                                    public void onDataLoaded(Object data) {
+                                        Toast.makeText(getApplicationContext(), "공유 취소되었습니다", Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    }
 
-                            @Override
-                            public void onDataLoadError(String errorMessage) {
-                                Log.d(TAG, errorMessage);
-                                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                                    @Override
+                                    public void onDataLoadError(String errorMessage) {
+                                        Log.d(TAG, errorMessage);
+                                        Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                             }
                         });
+                        builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
                     }
                 });
 

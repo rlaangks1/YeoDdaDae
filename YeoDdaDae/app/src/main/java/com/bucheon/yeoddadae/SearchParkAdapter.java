@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +17,15 @@ public class SearchParkAdapter extends BaseAdapter {
 
     public void addItem(ParkItem item) {
         items.add(item);
+    }
+
+    public void clearItem() {
+        items.clear();
+        notifyDataSetChanged();
+    }
+
+    public int getSize() {
+        return items.size();
     }
 
     public ParkItem findItem(String parkItemName) {
@@ -43,18 +50,6 @@ public class SearchParkAdapter extends BaseAdapter {
         }
     }
 
-    public void sortByParkPrice () {
-        if (items != null && items.size() > 1) {
-            Collections.sort(items, new Comparator<ParkItem>() {
-                @Override
-                public int compare(ParkItem o1, ParkItem o2) {
-                    // Compare by gasoline price in ascending order
-                    return Long.compare(Long.parseLong(o1.getParkPrice()), Long.parseLong(o2.getParkPrice()));
-                }
-            });
-            notifyDataSetChanged(); // Notify adapter that dataset has changed
-        }
-    }
 
     @Override
     public int getCount() {
@@ -78,7 +73,7 @@ public class SearchParkAdapter extends BaseAdapter {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.park_item, parent, false);
+            convertView = inflater.inflate(R.layout.search_park_item, parent, false);
         }
 
         // 파인드 뷰

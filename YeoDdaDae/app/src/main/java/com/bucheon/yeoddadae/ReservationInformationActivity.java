@@ -1,7 +1,6 @@
 package com.bucheon.yeoddadae;
 
-import static android.graphics.ColorSpace.Model.RGB;
-import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
+import static android.content.ContentValues.TAG;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -10,9 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +20,7 @@ import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapTapi;
 import com.skt.Tmap.address_info.TMapAddressInfo;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,7 +37,7 @@ public class ReservationInformationActivity extends AppCompatActivity {
     HashMap<String, Object> shareParkInfo;
     String naviEndPointName;
 
-    Button reservationInfoBackBtn;
+    ImageButton reservationInfoBackBtn;
     TextView reservationInfoIdContentTxt;
     TextView reservationInfoStatusContentTxt;
     TextView reservationInfoUpTimeContentTxt;
@@ -49,8 +47,10 @@ public class ReservationInformationActivity extends AppCompatActivity {
     TextView reservationInfoShareParkNewAddressContentTxt;
     TextView reservationInfoShareParkOldAddressContentTxt;
     TextView reservationInfoShareParkDetailaddressContentTxt;
-    Button reservationInfoNaviBtn;
-    Button reservationInfoCancelBtn;
+    ImageButton reservationInfoCancelBtn;
+    TextView reservationInfoCancelTxt;
+    ImageButton reservationInfoNaviBtn;
+    TextView reservationInfoNaviTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +67,10 @@ public class ReservationInformationActivity extends AppCompatActivity {
         reservationInfoShareParkNewAddressContentTxt = findViewById(R.id.reservationInfoShareParkNewAddressContentTxt);
         reservationInfoShareParkOldAddressContentTxt = findViewById(R.id.reservationInfoShareParkOldAddressContentTxt);
         reservationInfoShareParkDetailaddressContentTxt = findViewById(R.id.reservationInfoShareParkDetailaddressContentTxt);
-        reservationInfoNaviBtn = findViewById(R.id.reservationInfoNaviBtn);
         reservationInfoCancelBtn = findViewById(R.id.reservationInfoCancelBtn);
+        reservationInfoCancelTxt = findViewById(R.id.reservationInfoCancelTxt);
+        reservationInfoNaviBtn = findViewById(R.id.reservationInfoNaviBtn);
+        reservationInfoNaviTxt = findViewById(R.id.reservationInfoNaviTxt);
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("id");
@@ -190,6 +192,7 @@ public class ReservationInformationActivity extends AppCompatActivity {
                 if (isCancelled) {
                     reservationInfoStatusContentTxt.setText("취소됨");
                     reservationInfoCancelBtn.setVisibility(View.GONE);
+                    reservationInfoCancelTxt.setVisibility(View.GONE);
                 }
                 else {
                     Calendar ca = Calendar.getInstance();
@@ -230,12 +233,15 @@ public class ReservationInformationActivity extends AppCompatActivity {
                     if (nowString.compareTo(firstTime) < 0) {
                         reservationInfoStatusContentTxt.setText("사용 예정");
                         reservationInfoCancelBtn.setVisibility(View.VISIBLE);
+                        reservationInfoCancelTxt.setVisibility(View.VISIBLE);
                     } else if (nowString.compareTo(endTime) < 0) {
                         reservationInfoStatusContentTxt.setText("사용 중");
                         reservationInfoCancelBtn.setVisibility(View.GONE);
+                        reservationInfoCancelTxt.setVisibility(View.GONE);
                     } else {
                         reservationInfoStatusContentTxt.setText("사용 종료");
                         reservationInfoCancelBtn.setVisibility(View.GONE);
+                        reservationInfoCancelTxt.setVisibility(View.GONE);
                     }
                 }
 
@@ -274,7 +280,9 @@ public class ReservationInformationActivity extends AppCompatActivity {
 
                 }
                 else {
-                    reservationInfoPriceContentTxt.setText(((Long) reservationInfo.get("price")).toString());
+                    String formattedYdPoint = NumberFormat.getNumberInstance(Locale.KOREA).format((long) reservationInfo.get("price"));
+
+                    reservationInfoPriceContentTxt.setText(formattedYdPoint);
                     reservationInfoPtTxt.setVisibility(View.VISIBLE);
                 }
 

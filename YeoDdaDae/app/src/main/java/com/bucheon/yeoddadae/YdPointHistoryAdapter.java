@@ -1,28 +1,21 @@
 package com.bucheon.yeoddadae;
 
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.google.firebase.Timestamp;
-import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
 
 public class YdPointHistoryAdapter extends BaseAdapter {
@@ -123,7 +116,7 @@ public class YdPointHistoryAdapter extends BaseAdapter {
 
         String formattedYdPoint = NumberFormat.getNumberInstance(Locale.KOREA).format(item.getPoint());
         if (item.getType().equals("충전") || item.getType().equals("받음") ) {
-            priceTxt.setTextColor(Color.rgb(128, 128 , 255));
+            priceTxt.setTextColor(Color.rgb(64, 64 , 255));
             priceTxt.setText("+" + formattedYdPoint);
 
             if (item.getType().equals("충전")) {
@@ -137,13 +130,13 @@ public class YdPointHistoryAdapter extends BaseAdapter {
             }
         }
         else {
-            priceTxt.setTextColor(Color.rgb(255, 128 , 128));
+            priceTxt.setTextColor(Color.rgb(255, 64 , 64));
             priceTxt.setText("-" + formattedYdPoint);
 
             if (item.getType().equals("환급")) {
                 typeTxt.setText("환급");
                 additionType.setVisibility(View.VISIBLE);
-                additionType.setText(item.getRefundBank() + "\n" + item.getRefundAccountNumber());
+                additionType.setText(item.getRefundBank() + "/" + item.getRefundAccountNumber());
             }
             else if (item.getType().equals("사용")) {
                 typeTxt.setText("사용");

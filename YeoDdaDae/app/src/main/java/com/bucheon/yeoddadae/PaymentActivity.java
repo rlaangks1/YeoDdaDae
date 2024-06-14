@@ -2,44 +2,24 @@ package com.bucheon.yeoddadae;
 
 import static android.content.ContentValues.TAG;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
 import com.google.firebase.firestore.FieldValue;
-import com.prolificinteractive.materialcalendarview.CalendarDay;
-import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
-import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
-import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter;
-import com.prolificinteractive.materialcalendarview.format.TitleFormatter;
-import com.skt.Tmap.TMapData;
-import com.skt.Tmap.address_info.TMapAddressInfo;
 
-import org.threeten.bp.LocalDate;
-
-import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.Locale;
 
 public class PaymentActivity extends AppCompatActivity {
     String payType;
@@ -48,11 +28,14 @@ public class PaymentActivity extends AppCompatActivity {
     HashMap<String, ArrayList<String>> reservationTime;
     int price;
     long ydPoint;
+    int defaultTextColor;
     FirestoreDatabase fd;
 
     ImageButton paymentBackBtn;
     TextView paymentTotalPriceContentTxt;
     TextView paymentYdPointContentTxt;
+    TextView paymentAfterPayPointContentTxt;
+    TextView paymentAfterPayPointPtTxt;
     ImageButton paymentPayBtn;
 
     @Override
@@ -63,6 +46,8 @@ public class PaymentActivity extends AppCompatActivity {
         paymentBackBtn = findViewById(R.id.paymentBackBtn);
         paymentTotalPriceContentTxt = findViewById(R.id.paymentTotalPriceContentTxt);
         paymentYdPointContentTxt = findViewById(R.id.paymentYdPointContentTxt);
+        paymentAfterPayPointContentTxt = findViewById(R.id.paymentAfterPayPointContentTxt);
+        paymentAfterPayPointPtTxt = findViewById(R.id.paymentAfterPayPointPtTxt);
         paymentPayBtn = findViewById(R.id.paymentPayBtn);
 
         Intent inIntent = getIntent();
@@ -76,6 +61,8 @@ public class PaymentActivity extends AppCompatActivity {
             Log.d(TAG, "price값 오류");
             finish();
         }
+
+        defaultTextColor = paymentAfterPayPointContentTxt.getCurrentTextColor();
 
         fd = new FirestoreDatabase();
 
@@ -174,8 +161,33 @@ public class PaymentActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        paymentYdPointContentTxt.setText(Long.toString(ydPoint));
-                        paymentTotalPriceContentTxt.setText(Integer.toString(price));
+                        String formattedYdPoint = NumberFormat.getNumberInstance(Locale.KOREA).format(ydPoint);
+                        String formattedPrice = NumberFormat.getNumberInstance(Locale.KOREA).format(price);
+                        long afterPayYdPoint = ydPoint - price;
+                        String formattedAfterPay = NumberFormat.getNumberInstance(Locale.KOREA).format(afterPayYdPoint);
+
+                        paymentYdPointContentTxt.setText(formattedYdPoint);
+                        paymentTotalPriceContentTxt.setText(formattedPrice);
+                        paymentAfterPayPointContentTxt.setText(formattedAfterPay);
+
+
+
+                        if (afterPayYdPoint < 0) {
+                            int redColor = Color.rgb(255, 64, 64);
+
+                            paymentAfterPayPointContentTxt.setTextColor(redColor);
+                            paymentAfterPayPointPtTxt.setTextColor(redColor);
+                        }
+                        else if (afterPayYdPoint == 0) {
+                            paymentAfterPayPointContentTxt.setTextColor(defaultTextColor);
+                            paymentAfterPayPointPtTxt.setTextColor(defaultTextColor);
+                        }
+                        else if (afterPayYdPoint > 0) {
+                            int blueColor = Color.rgb(64, 64, 255);
+
+                            paymentAfterPayPointContentTxt.setTextColor(blueColor);
+                            paymentAfterPayPointPtTxt.setTextColor(blueColor);
+                        }
                     }
                 });
             }

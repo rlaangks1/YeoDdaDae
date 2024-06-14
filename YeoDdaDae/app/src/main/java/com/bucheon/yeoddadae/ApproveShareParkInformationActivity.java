@@ -1,6 +1,6 @@
 package com.bucheon.yeoddadae;
 
-import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
+import static android.content.ContentValues.TAG;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -9,8 +9,8 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,19 +22,17 @@ import com.skt.Tmap.address_info.TMapAddressInfo;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class ApproveShareParkInformationActivity extends AppCompatActivity {
     String documentId;
     HashMap<String, Object> shareParkInfo;
 
-    Button approveShareParkInfoBackBtn;
+    ImageButton approveShareParkInfoBackBtn;
     TextView approveShareParkInfoIdContentTxt;
     TextView approveShareParkInfoShareParkNewAddressContentTxt;
     TextView approveShareParkInfoShareParkOldAddressContentTxt;
@@ -46,11 +44,11 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
     TextView approveShareParkInfoRelationContentTxt;
     TextView approveShareParkInfoPriceContentTxt;
     TextView approveShareParkInfoHourPerTxt;
-    TextView approveShareParkInfoWonTxt;
+    TextView approveShareParkInfoPtTxt;
     TextView approveShareParkInfoShareTimeContentTxt;
     TextView approveShareParkInfoUpTimeContentTxt;
-    Button approveBtn;
-    Button rejectionBtn;
+    ImageButton approveBtn;
+    ImageButton rejectionBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +67,7 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
         approveShareParkInfoRelationContentTxt = findViewById(R.id.approveShareParkInfoRelationContentTxt);
         approveShareParkInfoPriceContentTxt = findViewById(R.id.approveShareParkInfoPriceContentTxt);
         approveShareParkInfoHourPerTxt = findViewById(R.id.approveShareParkInfoHourPerTxt);
-        approveShareParkInfoWonTxt = findViewById(R.id.approveShareParkInfoWonTxt);
+        approveShareParkInfoPtTxt = findViewById(R.id.approveShareParkInfoPtTxt);
         approveShareParkInfoShareTimeContentTxt = findViewById(R.id.approveShareParkInfoShareTimeContentTxt);
         approveShareParkInfoUpTimeContentTxt = findViewById(R.id.approveShareParkInfoUpTimeContentTxt);
         approveBtn = findViewById(R.id.approveBtn);
@@ -201,7 +199,7 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
                 
                 if ((long) shareParkInfo.get("price") == 0) {
                     approveShareParkInfoHourPerTxt.setVisibility(View.GONE);
-                    approveShareParkInfoWonTxt.setVisibility(View.GONE);
+                    approveShareParkInfoPtTxt.setVisibility(View.GONE);
                     approveShareParkInfoPriceContentTxt.setText("무료");
                 }
                 else {

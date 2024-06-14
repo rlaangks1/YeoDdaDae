@@ -8,14 +8,15 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/pointTopConstLayout"
+        android:background="#c2eaff"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="160dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" >
 
         <ImageButton
             android:id="@+id/toChargeYdPointImgBtn"
-            android:background="@drawable/round_button"
+            android:background="@drawable/gradate_button"
             android:layout_width="0dp"
             android:layout_height="50dp"
             app:layout_constraintTop_toTopOf="parent"
@@ -26,17 +27,17 @@
 
         <ImageView
             android:id="@+id/toChargeYdPointImg"
-            app:srcCompat="@drawable/charge_ydpoint"
+            app:srcCompat="@drawable/charge_icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             app:layout_constraintTop_toTopOf="@+id/toChargeYdPointImgBtn"
             app:layout_constraintBottom_toBottomOf="@+id/toChargeYdPointImgBtn"
             app:layout_constraintLeft_toLeftOf="@+id/toChargeYdPointImgBtn"
-            android:layout_marginLeft="15dp"/>
+            android:layout_marginLeft="10dp"/>
 
         <TextView
             android:text="포인트 충전"
-            android:textSize="15sp"
+            android:textSize="20sp"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:gravity="center"
@@ -45,12 +46,11 @@
             app:layout_constraintTop_toTopOf="@+id/toChargeYdPointImgBtn"
             app:layout_constraintBottom_toBottomOf="@+id/toChargeYdPointImgBtn"
             app:layout_constraintLeft_toRightOf="@+id/toChargeYdPointImg"
-            app:layout_constraintRight_toRightOf="@+id/toChargeYdPointImgBtn"
-            android:layout_marginLeft="5dp" />
+            app:layout_constraintRight_toRightOf="@+id/toChargeYdPointImgBtn" />
 
         <ImageButton
             android:id="@+id/toRefundYdPointImgBtn"
-            android:background="@drawable/round_button"
+            android:background="@drawable/gradate_button"
             android:layout_width="0dp"
             android:layout_height="50dp"
             app:layout_constraintTop_toTopOf="parent"
@@ -62,17 +62,17 @@
 
         <ImageView
             android:id="@+id/toRefundYdPointImg"
-            app:srcCompat="@drawable/refund_ydpoint"
+            app:srcCompat="@drawable/refund_icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             app:layout_constraintTop_toTopOf="@+id/toRefundYdPointImgBtn"
             app:layout_constraintBottom_toBottomOf="@+id/toRefundYdPointImgBtn"
             app:layout_constraintLeft_toLeftOf="@+id/toRefundYdPointImgBtn"
-            android:layout_marginLeft="15dp"/>
+            android:layout_marginLeft="10dp"/>
 
         <TextView
             android:text="포인트 환급"
-            android:textSize="15sp"
+            android:textSize="20sp"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:gravity="center"
@@ -81,8 +81,7 @@
             app:layout_constraintTop_toTopOf="@+id/toRefundYdPointImgBtn"
             app:layout_constraintBottom_toBottomOf="@+id/toRefundYdPointImgBtn"
             app:layout_constraintLeft_toRightOf="@+id/toRefundYdPointImg"
-            app:layout_constraintRight_toRightOf="@+id/toRefundYdPointImgBtn"
-            android:layout_marginLeft="5dp" />
+            app:layout_constraintRight_toRightOf="@+id/toRefundYdPointImgBtn" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/havePointConstLayout"
@@ -97,6 +96,8 @@
                 android:id="@+id/myYdPointTxt"
                 android:text="0"
                 android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -105,6 +106,8 @@
             <TextView
                 android:text="pt"
                 android:textSize="20sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@+id/myYdPointTxt"
@@ -114,15 +117,10 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
-
-
         <Spinner
             android:id="@+id/pointSpinner"
             android:spinnerMode="dropdown"
             android:dropDownWidth="match_parent"
-            android:entries="@array/my_spinner_point_history_items"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintRight_toRightOf="parent"
@@ -134,6 +132,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/pointHistoryCustomTimeConstLayout"
+        android:background="#EBEBEB"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/pointTopConstLayout"
@@ -142,7 +142,9 @@
         <TextView
             android:id="@+id/pointHistoryCustomTimeStartTxt"
             android:text="시작"
-            android:textSize="20sp"
+            android:textSize="20dp"
+            android:textColor="@color/sub"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="@+id/pointHistoryCustomTimeStartDateEditTxt"
@@ -152,7 +154,9 @@
 
         <EditText
             android:id="@+id/pointHistoryCustomTimeStartDateEditTxt"
-            android:textSize="15dp"
+            android:textSize="18dp"
+            android:textColor="@color/sub"
+            android:textStyle="bold"
             android:gravity="center"
             android:focusable="false"
             android:focusableInTouchMode="false"
@@ -167,7 +171,9 @@
 
         <EditText
             android:id="@+id/pointHistoryCustomTimeStartTimeEditTxt"
-            android:textSize="15dp"
+            android:textSize="18dp"
+            android:textColor="@color/sub"
+            android:textStyle="bold"
             android:gravity="center"
             android:focusable="false"
             android:focusableInTouchMode="false"
@@ -182,7 +188,9 @@
         <TextView
             android:id="@+id/pointHistoryCustomTimeEndTxt"
             android:text="끝"
-            android:textSize="20sp"
+            android:textSize="20dp"
+            android:textColor="@color/sub"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="@+id/pointHistoryCustomTimeEndDateEditTxt"
@@ -192,7 +200,9 @@
 
         <EditText
             android:id="@+id/pointHistoryCustomTimeEndDateEditTxt"
-            android:textSize="15dp"
+            android:textSize="18dp"
+            android:textColor="@color/sub"
+            android:textStyle="bold"
             android:gravity="center"
             android:focusable="false"
             android:focusableInTouchMode="false"
@@ -207,7 +217,9 @@
 
         <EditText
             android:id="@+id/pointHistoryCustomTimeEndTimeEditTxt"
-            android:textSize="15dp"
+            android:textSize="18dp"
+            android:textColor="@color/sub"
+            android:textStyle="bold"
             android:gravity="center"
             android:focusable="false"
             android:focusableInTouchMode="false"
@@ -222,6 +234,7 @@
 
     <ListView
         android:id="@+id/pointHistoryListView"
+        android:dividerHeight="5dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/pointHistoryCustomTimeConstLayout"

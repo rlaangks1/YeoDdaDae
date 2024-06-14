@@ -23,8 +23,6 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -37,12 +35,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
 import com.skt.Tmap.TMapCircle;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapGpsManager;
 import com.skt.Tmap.TMapMarkerItem;
-import com.skt.Tmap.TMapMarkerItem2;
 import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapPolyLine;
 import com.skt.Tmap.TMapTapi;
@@ -51,7 +47,6 @@ import com.skt.Tmap.poi_item.TMapPOIItem;
 import com.skt.tmap.engine.navigation.SDKManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class FindGasStationActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback, TMapView.OnClickListenerCallback, SttService.SttCallback {
     private static final int PERMISSION_REQUEST_CODE = 1;
@@ -87,13 +82,14 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     ImageButton gpsBtn;
     ImageButton findGasStationSttBtn;
     HorizontalScrollView gasStationSortHorizontalScrollView;
-    Button sortByDistanceBtn;
-    Button sortByGasolinePriceBtn;
-    Button sortByDieselPriceBtn;
-    Button sortByHighGasolinePriceBtn;
-    Button sortByHighDieselPriceBtn;
-    Button cancelNaviBtn;
-    Button toStartNaviBtn;
+    ImageButton sortByDistanceBtn;
+    ImageButton sortByGasolinePriceBtn;
+    ImageButton sortByDieselPriceBtn;
+    ImageButton sortByHighGasolinePriceBtn;
+    ImageButton sortByHighDieselPriceBtn;
+    ConstraintLayout naviConstLayout;
+    ImageButton cancelNaviBtn;
+    ImageButton toStartNaviBtn;
 
     Bitmap tmapMyLocationIcon;
     Bitmap tmapMarkerIcon;
@@ -118,6 +114,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         sortByDieselPriceBtn = findViewById(R.id.sortByDieselPriceBtn);
         sortByHighGasolinePriceBtn = findViewById(R.id.sortByHighGasolinePriceBtn);
         sortByHighDieselPriceBtn = findViewById(R.id.sortByHighDieselPriceBtn);
+        naviConstLayout = findViewById(R.id.naviConstLayout);
         cancelNaviBtn = findViewById(R.id.cancelNaviBtn);
         toStartNaviBtn = findViewById(R.id.toStartNaviBtn);
 
@@ -194,10 +191,8 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         gpsManager.setMinDistance(1); // m단위
         gpsManager.setProvider(gpsManager.GPS_PROVIDER);
         gpsManager.OpenGps();
-        /* 가상머신 말고 실제 기기로 실내에서 사용 시 필요
         gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
         gpsManager.OpenGps();
-         */
 
         // TMapView 생성 및 보이기
         tMapView = new TMapView(this);
@@ -346,7 +341,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                                     gasStationListView.requestLayout();
 
                                     TextView gasStationOrder = findViewById(R.id.gasStationOrder);
-                                    gasStationOrder.setVisibility(View.GONE);
+                                    gasStationOrder.setVisibility(View.INVISIBLE);
 
                                     TextView gasStationName = findViewById(R.id.gasStationName);
                                     ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) gasStationName.getLayoutParams();
@@ -354,8 +349,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                                     gasStationName.setLayoutParams(params);
 
                                     gasStationSortHorizontalScrollView.setVisibility(View.GONE);
-                                    cancelNaviBtn.setVisibility(View.VISIBLE);
-                                    toStartNaviBtn.setVisibility(View.VISIBLE);
+                                    naviConstLayout.setVisibility(View.VISIBLE);
 
                                     isItemSelected = true;
                                 }
@@ -375,9 +369,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                         isItemSelected = false;
                         tMapView.removeTMapPath();
 
-                        gasStationSortHorizontalScrollView.setVisibility(View.VISIBLE);
-                        cancelNaviBtn.setVisibility(View.GONE);
-                        toStartNaviBtn.setVisibility(View.GONE);
+                        naviConstLayout.setVisibility(View.GONE);
 
                         findGasStation(nowSort);
                     }
@@ -460,54 +452,54 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                         gasStationListView.getLayoutParams().height = (int) px;
                         gasStationListView.requestLayout();
 
-                        int originalBackgroundColor = Color.rgb(128,128,128);
-                        int selectedBackgroundColor = Color.rgb(0,0,255);
-
                         switch (sortBy) {
                             case 1 :
-                                sortByDistanceBtn.setBackgroundColor(selectedBackgroundColor);
-                                sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByHighGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByHighDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
+                                sortByDistanceBtn.setImageResource(R.drawable.gradate_button);
+                                sortByGasolinePriceBtn.setImageResource(R.drawable.disabled_button);
+                                sortByDieselPriceBtn.setImageResource(R.drawable.disabled_button);
+                                sortByHighGasolinePriceBtn.setImageResource(R.drawable.disabled_button);
+                                sortByHighDieselPriceBtn.setImageResource(R.drawable.disabled_button);
                                 gasStationAdapter.sortByDistance();
                                 break;
                             case 2 :
-                                sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByGasolinePriceBtn.setBackgroundColor(selectedBackgroundColor);
-                                sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByHighGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByHighDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
+                                sortByDistanceBtn.setImageResource(R.drawable.disabled_button);
+                                sortByGasolinePriceBtn.setImageResource(R.drawable.gradate_button);
+                                sortByDieselPriceBtn.setImageResource(R.drawable.disabled_button);
+                                sortByHighGasolinePriceBtn.setImageResource(R.drawable.disabled_button);
+                                sortByHighDieselPriceBtn.setImageResource(R.drawable.disabled_button);
                                 gasStationAdapter.sortByGasolinePrice();
                                 break;
                             case 3 :
-                                sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByDieselPriceBtn.setBackgroundColor(selectedBackgroundColor);
-                                sortByHighGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByHighDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
+                                sortByDistanceBtn.setImageResource(R.drawable.disabled_button);
+                                sortByGasolinePriceBtn.setImageResource(R.drawable.disabled_button);
+                                sortByDieselPriceBtn.setImageResource(R.drawable.gradate_button);
+                                sortByHighGasolinePriceBtn.setImageResource(R.drawable.disabled_button);
+                                sortByHighDieselPriceBtn.setImageResource(R.drawable.disabled_button);
                                 gasStationAdapter.sortByDieselPrice();
                                 break;
                             case 4 :
-                                sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByHighGasolinePriceBtn.setBackgroundColor(selectedBackgroundColor);
-                                sortByHighDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
+                                sortByDistanceBtn.setImageResource(R.drawable.disabled_button);
+                                sortByGasolinePriceBtn.setImageResource(R.drawable.disabled_button);
+                                sortByDieselPriceBtn.setImageResource(R.drawable.disabled_button);
+                                sortByHighGasolinePriceBtn.setImageResource(R.drawable.gradate_button);
+                                sortByHighDieselPriceBtn.setImageResource(R.drawable.disabled_button);
                                 gasStationAdapter.sortByHighGasolinePrice();
                                 break;
                             case 5 :
-                                sortByDistanceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByDieselPriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByHighGasolinePriceBtn.setBackgroundColor(originalBackgroundColor);
-                                sortByHighDieselPriceBtn.setBackgroundColor(selectedBackgroundColor);
+                                sortByDistanceBtn.setImageResource(R.drawable.disabled_button);
+                                sortByGasolinePriceBtn.setImageResource(R.drawable.disabled_button);
+                                sortByDieselPriceBtn.setImageResource(R.drawable.disabled_button);
+                                sortByHighGasolinePriceBtn.setImageResource(R.drawable.disabled_button);
+                                sortByHighDieselPriceBtn.setImageResource(R.drawable.gradate_button);
                                 gasStationAdapter.sortByHighDieselPrice();
                                 break;
-
                         }
+
                         gasStationListView.setVisibility(View.VISIBLE);
                         gasStationSortHorizontalScrollView.setVisibility(View.VISIBLE);
+                        naviConstLayout.setVisibility(View.GONE);
+
+                        isItemSelected = false;
                     }
                 });
                 tMapCircle.setCenterPoint( nowPoint );
@@ -564,7 +556,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                             gasStationListView.requestLayout();
 
                             TextView gasStationOrder = findViewById(R.id.gasStationOrder);
-                            gasStationOrder.setVisibility(View.GONE);
+                            gasStationOrder.setVisibility(View.INVISIBLE);
 
                             TextView gasStationName = findViewById(R.id.gasStationName);
                             ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) gasStationName.getLayoutParams();
@@ -572,8 +564,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                             gasStationName.setLayoutParams(params);
 
                             gasStationSortHorizontalScrollView.setVisibility(View.GONE);
-                            cancelNaviBtn.setVisibility(View.VISIBLE);
-                            toStartNaviBtn.setVisibility(View.VISIBLE);
+                            naviConstLayout.setVisibility(View.VISIBLE);
 
                             isItemSelected = true;
                         }
@@ -670,12 +661,12 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                 SttService.SttBinder binder = (SttService.SttBinder) service;
                 sttService = binder.getService();
                 sttService.setSttCallback(sttCallback);
-                Log.d(ExoPlayerLibraryInfo.TAG, "FindGasStationActivity : STT 서비스 연결됨");
+                Log.d(TAG, "FindGasStationActivity : STT 서비스 연결됨");
             }
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
-                Log.d(ExoPlayerLibraryInfo.TAG, "FindGasStationActivity : STT 서비스 연결 해제됨");
+                Log.d(TAG, "FindGasStationActivity : STT 서비스 연결 해제됨");
             }
         };
 
@@ -700,11 +691,21 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     public void onMainCommandReceived(String mainCommand) {
         Log.d(TAG, "FindGasStationActivity에서 받은 명령: " + mainCommand);
         // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:휘발유가순, 4: 경유가순 5: 고급휘발유가순, 6: 고급경유가순
-        if (mainCommand.contains("돌아") || mainCommand.contains("이전") || mainCommand.contains("메인")) {
+        if (mainCommand.contains("메인")) {
             sd.dismiss();
             finish();
         }
-        else if (!isItemSelected && (mainCommand.contains("순") || mainCommand.contains("정렬") || mainCommand.contains("검색") || mainCommand.contains("찾"))) {
+        else if (mainCommand.contains("돌아") || mainCommand.contains("이전")) {
+            if (isItemSelected) {
+                sd.dismiss();
+                cancelNaviBtn.callOnClick();
+            }
+            else {
+                sd.dismiss();
+                finish();
+            }
+        }
+        else if (!isItemSelected && (mainCommand.contains("순") || mainCommand.contains("정렬") || mainCommand.contains("찾"))) {
             sd.dismiss();
             if (mainCommand.contains("고급") && (mainCommand.contains("휘발") || mainCommand.contains("가솔린"))) {
                 findGasStation(4);
@@ -816,7 +817,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                                     gasStationListView.requestLayout();
 
                                     TextView gasStationOrder = findViewById(R.id.gasStationOrder);
-                                    gasStationOrder.setVisibility(View.GONE);
+                                    gasStationOrder.setVisibility(View.INVISIBLE);
 
                                     TextView gasStationName = findViewById(R.id.gasStationName);
                                     ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) gasStationName.getLayoutParams();
@@ -824,8 +825,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                                     gasStationName.setLayoutParams(params);
 
                                     gasStationSortHorizontalScrollView.setVisibility(View.GONE);
-                                    cancelNaviBtn.setVisibility(View.VISIBLE);
-                                    toStartNaviBtn.setVisibility(View.VISIBLE);
+                                    naviConstLayout.setVisibility(View.VISIBLE);
 
                                     isItemSelected = true;
                                 }
@@ -880,8 +880,12 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
             sd.dismiss();
         }
 
-        unbindService(serviceConnection);
-        stopService(serviceIntent);
+        if (serviceConnection != null && serviceIntent != null) {
+            unbindService(serviceConnection);
+            stopService(serviceIntent);
+            serviceConnection = null;
+            serviceIntent = null;
+        }
     }
 
     @Override

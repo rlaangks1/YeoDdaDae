@@ -1,9 +1,5 @@
 package com.bucheon.yeoddadae;
 
-import static android.content.ContentValues.TAG;
-
-import android.util.Log;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -15,6 +11,7 @@ import android.widget.TextView;
 
 import com.google.firebase.Timestamp;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -100,7 +97,8 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
                 conditionAndDiscount += " / 무료";
             }
             else {
-                conditionAndDiscount += " / " + report.getDiscount() + "원 할인";
+                String formattedYdPoint = NumberFormat.getNumberInstance(Locale.KOREA).format(report.getDiscount());
+                conditionAndDiscount += " / " + formattedYdPoint + "원 할인";
             }
             reportDiscountParkConditionAndDiscountTxt.setText(conditionAndDiscount);
 
@@ -149,7 +147,8 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
                 conditionAndDiscount += " / 무료";
             }
             else {
-                conditionAndDiscount += " / " + report.getDiscount() + "원 할인";
+                String formattedYdPoint = NumberFormat.getNumberInstance(Locale.KOREA).format(report.getDiscount());
+                conditionAndDiscount += " / " + formattedYdPoint + "원 할인";
             }
             reportDiscountParkConditionAndDiscountTxt.setText(conditionAndDiscount);
 

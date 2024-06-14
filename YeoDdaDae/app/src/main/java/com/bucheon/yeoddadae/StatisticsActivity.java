@@ -1,16 +1,15 @@
 package com.bucheon.yeoddadae;
 
-import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
+import static android.content.ContentValues.TAG;
 
-import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.DatePicker;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -25,10 +24,6 @@ import com.google.firebase.Timestamp;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -41,7 +36,7 @@ public class StatisticsActivity extends AppCompatActivity {
     String endDate;
     String endTime;
 
-    Button statisticsBackBtn;
+    ImageButton statisticsBackBtn;
     Spinner statisticsTimeSpinner;
     ConstraintLayout statisticsCustomTimeConstLayout;
     EditText statisticsCustomTimeStartDateEditTxt;
@@ -73,6 +68,13 @@ public class StatisticsActivity extends AppCompatActivity {
         statisticsShareParkCountContentTxt = findViewById(R.id.statisticsShareParkCountContentTxt);
         statisticsReservationCountContentTxt = findViewById(R.id.statisticsReservationCountContentTxt);
         statisticsReportParkCountContentTxt = findViewById(R.id.statisticsReportParkCountContentTxt);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.my_spinner_time_items,
+                R.layout.my_spinner
+        );
+        statisticsTimeSpinner.setAdapter(adapter);
 
         statisticsBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -318,8 +320,6 @@ public class StatisticsActivity extends AppCompatActivity {
             NumberFormat numberFormat = NumberFormat.getInstance();
             String registerCount = numberFormat.format(statisticsDatas.get("회원"));
             String totalChargedPoint = numberFormat.format(statisticsDatas.get("충전총포인트"));
-            String totalChargedPrice = numberFormat.format(statisticsDatas.get("충전총액"));
-            String totalChargedRevenue = numberFormat.format(statisticsDatas.get("충전총수익"));
             String chargeCount = numberFormat.format(statisticsDatas.get("충전수"));
             String totalRefundPrice = numberFormat.format(statisticsDatas.get("환급총액"));
             String refundCount = numberFormat.format(statisticsDatas.get("환급수"));
@@ -331,19 +331,37 @@ public class StatisticsActivity extends AppCompatActivity {
             String approvedReportParkCount = numberFormat.format(statisticsDatas.get("승인제보주차장수"));
             String cancelledReportParkCount = numberFormat.format(statisticsDatas.get("취소제보주차장수"));
             String reportParkCount = numberFormat.format(statisticsDatas.get("총제보주차장수"));
+            String totalCommission = numberFormat.format(statisticsDatas.get("총수수료"));
 
+            long a = statisticsDatas.get("총공유주차장수");
+            long b = statisticsDatas.get("승인공유주차장수");
+            long c = statisticsDatas.get("취소공유주차장수");
+            long waitSharePark = a - b - c;
+            String waitShareParkCount = numberFormat.format(waitSharePark);
 
-            statisticsRegisterCountContentTxt.setText(registerCount + "건");
+            long d = statisticsDatas.get("총예약수");
+            long e = statisticsDatas.get("취소예약수");
+            long useReservation = d - e;
+            String useReservationCount = numberFormat.format(useReservation);
+            
+            long f = statisticsDatas.get("총제보주차장수");
+            long g = statisticsDatas.get("승인제보주차장수");
+            long h = statisticsDatas.get("취소제보주차장수");
+            long waitReportPark = f - g - h;
+            String waitReportParkCount = numberFormat.format(waitReportPark);
+            
 
-            statisticsYdPointChargeContentTxt.setText(totalChargedPoint + "pt / " + totalChargedPrice + "원 / " + totalChargedRevenue + "원 / " + chargeCount + "건");
+            statisticsRegisterCountContentTxt.setText(registerCount + " 건");
 
-            statisticsYdPointRefundContentTxt.setText(totalRefundPrice + "원 / " + refundCount + "건");
+            statisticsYdPointChargeContentTxt.setText(chargeCount + " 건\n총 " + totalChargedPoint + "원");
 
-            statisticsShareParkCountContentTxt.setText(approvedShareParkCount + "개 / " + cancelledShareParkCount + "개 / " + shareParkCount + "개");
+            statisticsYdPointRefundContentTxt.setText(refundCount + " 건\n총 " + totalRefundPrice + "원");
+            
+            statisticsShareParkCountContentTxt.setText("총 " + shareParkCount + "건\n승인 : " + approvedShareParkCount + "건, 취소 : " + cancelledShareParkCount + "건, 대기 : " + waitShareParkCount + "건");
 
-            statisticsReservationCountContentTxt.setText(cancelledReservationCount + "건 / " + reservatitonCount + "건");
+            statisticsReservationCountContentTxt.setText("총 " + reservatitonCount + "건\n사용완료/예정 : " + useReservationCount + "건, 취소 : " + cancelledReservationCount + "건\n총 수수료 (수익) : " +  totalCommission + "원");
 
-            statisticsReportParkCountContentTxt.setText(approvedReportParkCount + "개 / " + cancelledReportParkCount + "개 / " + reportParkCount + "개");
+            statisticsReportParkCountContentTxt.setText("총 " + reportParkCount + "건\n승인 : " + approvedReportParkCount + "건, 취소 : " + cancelledReportParkCount + "건, 대기 : " + waitReportParkCount + "건");
         }
     }
 

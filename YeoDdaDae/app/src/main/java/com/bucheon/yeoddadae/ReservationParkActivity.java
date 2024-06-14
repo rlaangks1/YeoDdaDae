@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.firestore.FieldValue;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -28,12 +27,14 @@ import com.skt.Tmap.address_info.TMapAddressInfo;
 import org.threeten.bp.LocalDate;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -50,7 +51,7 @@ public class ReservationParkActivity extends AppCompatActivity {
 
     TimeAdapter ta;
 
-    Button reservationBackBtn;
+    ImageButton reservationBackBtn;
     TextView reservationParkNewAddressContentTxt;
     TextView reservationParkOldAddressContentTxt;
     TextView reservationParkDetailAddressContentTxt;
@@ -64,11 +65,11 @@ public class ReservationParkActivity extends AppCompatActivity {
     TextView reservationWonTxt;
     TextView reservationShareTimeContentTxt;
     TextView reservationedTimeContentTxt;
-    Button resetBtn;
+    ImageButton resetBtn;
     MaterialCalendarView reservationParkDateCalendar;
     ListView reservationParkTimeListView;
     TextView reservationTotalPriceContentTxt;
-    Button reservationBtn;
+    ImageButton reservationBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -540,7 +541,8 @@ public class ReservationParkActivity extends AppCompatActivity {
                         reservationWonTxt.setVisibility(View.GONE);
                     }
                     else {
-                        reservationTotalPriceContentTxt.setText(Integer.toString(totalPrice));
+                        String formattedYdPoint = NumberFormat.getNumberInstance(Locale.KOREA).format(totalPrice);
+                        reservationTotalPriceContentTxt.setText(formattedYdPoint);
                         reservationWonTxt.setVisibility(View.VISIBLE);
                     }
                 }
