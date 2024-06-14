@@ -340,18 +340,35 @@ public class StatisticsActivity extends AppCompatActivity {
             String reportParkCount = numberFormat.format(statisticsDatas.get("총제보주차장수"));
             String totalCommission = numberFormat.format(statisticsDatas.get("총수수료"));
 
+            long a = statisticsDatas.get("총공유주차장수");
+            long b = statisticsDatas.get("승인공유주차장수");
+            long c = statisticsDatas.get("취소공유주차장수");
+            long waitSharePark = a - b - c;
+            String waitShareParkCount = numberFormat.format(waitSharePark);
 
-            statisticsRegisterCountContentTxt.setText(registerCount + "건");
+            long d = statisticsDatas.get("총예약수");
+            long e = statisticsDatas.get("취소예약수");
+            long useReservation = d - e;
+            String useReservationCount = numberFormat.format(useReservation);
+            
+            long f = statisticsDatas.get("총제보주차장수");
+            long g = statisticsDatas.get("승인제보주차장수");
+            long h = statisticsDatas.get("취소제보주차장수");
+            long waitReportPark = f - g - h;
+            String waitReportParkCount = numberFormat.format(waitReportPark);
+            
 
-            statisticsYdPointChargeContentTxt.setText(totalChargedPoint + "pt / " + chargeCount + "건");
+            statisticsRegisterCountContentTxt.setText(registerCount + " 건");
 
-            statisticsYdPointRefundContentTxt.setText(totalRefundPrice + "원 / " + refundCount + "건");
+            statisticsYdPointChargeContentTxt.setText(chargeCount + " 건\n총 " + totalChargedPoint + "원");
 
-            statisticsShareParkCountContentTxt.setText(approvedShareParkCount + "개 / " + cancelledShareParkCount + "개 / " + shareParkCount + "개");
+            statisticsYdPointRefundContentTxt.setText(refundCount + " 건\n총 " + totalRefundPrice + "원");
+            
+            statisticsShareParkCountContentTxt.setText("총 " + shareParkCount + "건\n승인 : " + approvedShareParkCount + "건, 취소 : " + cancelledShareParkCount + "건, 대기 : " + waitShareParkCount + "건");
 
-            statisticsReservationCountContentTxt.setText(cancelledReservationCount + "건 / " + reservatitonCount + "건 / " + totalCommission + "원");
+            statisticsReservationCountContentTxt.setText("총 " + reservatitonCount + "건\n사용완료/예정 : " + useReservationCount + "건, 취소 : " + cancelledReservationCount + "건\n총 수수료 (수익) : " +  totalCommission + "원");
 
-            statisticsReportParkCountContentTxt.setText(approvedReportParkCount + "개 / " + cancelledReportParkCount + "개 / " + reportParkCount + "개");
+            statisticsReportParkCountContentTxt.setText("총 " + reportParkCount + "건\n승인 : " + approvedReportParkCount + "건, 취소 : " + cancelledReportParkCount + "건, 대기 : " + waitReportParkCount + "건");
         }
     }
 

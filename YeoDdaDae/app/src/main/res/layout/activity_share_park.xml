@@ -89,8 +89,8 @@
                 app:layout_constraintTop_toBottomOf="@id/parkDetailAddressTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp" />
 
             <TextView
                 android:id="@+id/sharerNameTxt"
@@ -114,8 +114,8 @@
                 app:layout_constraintTop_toBottomOf="@id/sharerNameTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp" />
 
             <TextView
                 android:id="@+id/sharerPhoneTxt"
@@ -140,8 +140,8 @@
                 app:layout_constraintTop_toBottomOf="@id/sharerPhoneTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp" />
 
             <TextView
                 android:id="@+id/sharerEmailTxt"
@@ -165,8 +165,8 @@
                 app:layout_constraintTop_toBottomOf="@id/sharerEmailTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp" />
 
             <TextView
                 android:id="@+id/sharerRelationTxt"
@@ -190,8 +190,8 @@
                 app:layout_constraintTop_toBottomOf="@id/sharerRelationTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp" />
 
             <TextView
                 android:id="@+id/parkPriceTxt"

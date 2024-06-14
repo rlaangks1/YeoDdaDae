@@ -47,7 +47,7 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
     TextView approveShareParkInfoRelationContentTxt;
     TextView approveShareParkInfoPriceContentTxt;
     TextView approveShareParkInfoHourPerTxt;
-    TextView approveShareParkInfoWonTxt;
+    TextView approveShareParkInfoPtTxt;
     TextView approveShareParkInfoShareTimeContentTxt;
     TextView approveShareParkInfoUpTimeContentTxt;
     ImageButton approveBtn;
@@ -70,7 +70,7 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
         approveShareParkInfoRelationContentTxt = findViewById(R.id.approveShareParkInfoRelationContentTxt);
         approveShareParkInfoPriceContentTxt = findViewById(R.id.approveShareParkInfoPriceContentTxt);
         approveShareParkInfoHourPerTxt = findViewById(R.id.approveShareParkInfoHourPerTxt);
-        approveShareParkInfoWonTxt = findViewById(R.id.approveShareParkInfoWonTxt);
+        approveShareParkInfoPtTxt = findViewById(R.id.approveShareParkInfoPtTxt);
         approveShareParkInfoShareTimeContentTxt = findViewById(R.id.approveShareParkInfoShareTimeContentTxt);
         approveShareParkInfoUpTimeContentTxt = findViewById(R.id.approveShareParkInfoUpTimeContentTxt);
         approveBtn = findViewById(R.id.approveBtn);
@@ -202,7 +202,7 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
                 
                 if ((long) shareParkInfo.get("price") == 0) {
                     approveShareParkInfoHourPerTxt.setVisibility(View.GONE);
-                    approveShareParkInfoWonTxt.setVisibility(View.GONE);
+                    approveShareParkInfoPtTxt.setVisibility(View.GONE);
                     approveShareParkInfoPriceContentTxt.setText("무료");
                 }
                 else {

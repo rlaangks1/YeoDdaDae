@@ -43,6 +43,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
     double nowLat;
     double nowLon;
     TMapPoint nowPoint;
+    TMapGpsManager gpsManager;
 
     ImageButton addReportDiscountParkBackBtn;
     EditText addReportDiscountParkAddressContentEditTxt;
@@ -80,6 +81,16 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
         nowLat = currentLocation.getLatitude();
         nowLon = currentLocation.getLongitude();
         nowPoint = new TMapPoint(nowLat, nowLon);
+
+        gpsManager = new TMapGpsManager(this);
+        gpsManager.setMinTime(500); // ms단위
+        gpsManager.setMinDistance(1); // m단위
+        gpsManager.setProvider(gpsManager.GPS_PROVIDER);
+        gpsManager.OpenGps();
+        /* 가상머신 말고 실제 기기로 실내에서 사용 시 필요
+        gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
+        gpsManager.OpenGps();
+        */
 
         addReportDiscountParkBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
