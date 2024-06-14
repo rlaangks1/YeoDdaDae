@@ -142,6 +142,8 @@
                 android:id="@+id/rateReportWonTxt"
                 android:text="원 할인"
                 android:textSize="15sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@+id/rateReportDiscountContentTxt"
@@ -161,7 +163,7 @@
 
             <TextView
                 android:id="@+id/rateReportUpTimeContentTxt"
-                android:textSize="25sp"
+                android:textSize="22sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
@@ -243,7 +245,7 @@
 
             <TextView
                 android:text="완벽해요"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
@@ -254,7 +256,7 @@
 
             <TextView
                 android:text="틀린 부분이 있어요"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
@@ -265,7 +267,7 @@
 
             <TextView
                 android:text="완전히 틀렸어요"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"

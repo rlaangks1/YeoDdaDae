@@ -32,7 +32,7 @@
             <TextView
                 android:id="@+id/myShareParkInfoIdTxt"
                 android:text="공유 주차장 번호"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
@@ -40,7 +40,9 @@
 
             <TextView
                 android:id="@+id/myShareParkInfoIdContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/myShareParkInfoIdTxt"
@@ -49,7 +51,7 @@
             <TextView
                 android:id="@+id/myShareParkInfoStatusTxt"
                 android:text="공유 주차장 상태"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/myShareParkInfoIdContentTxt"
@@ -58,7 +60,9 @@
 
             <TextView
                 android:id="@+id/myShareParkInfoStatusContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/myShareParkInfoStatusTxt"
@@ -67,7 +71,7 @@
             <TextView
                 android:id="@+id/myShareParkInfoCancelReasonTxt"
                 android:text="취소 사유"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/myShareParkInfoStatusContentTxt"
@@ -76,7 +80,9 @@
 
             <TextView
                 android:id="@+id/myShareParkInfoCancelReasonContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/myShareParkInfoCancelReasonTxt"
@@ -85,7 +91,7 @@
             <TextView
                 android:id="@+id/myShareParkInfoPriceTxt"
                 android:text="주차비"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/myShareParkInfoCancelReasonContentTxt"
@@ -94,16 +100,21 @@
 
             <TextView
                 android:id="@+id/myShareParkInfoPriceContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/myShareParkInfoPriceTxt"
-                app:layout_constraintLeft_toRightOf="@+id/myShareParkInfoHourPerTxt" />
+                app:layout_constraintLeft_toRightOf="@+id/myShareParkInfoHourPerTxt"
+                android:layout_marginLeft="5dp"/>
 
             <TextView
                 android:id="@+id/myShareParkInfoHourPerTxt"
                 android:text="시간 당"
-                android:textSize="12sp"
+                android:textSize="15sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -114,7 +125,9 @@
             <TextView
                 android:id="@+id/myShareParkInfoPtTxt"
                 android:text="pt"
-                android:textSize="12sp"
+                android:textSize="15sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@+id/myShareParkInfoPriceContentTxt"
@@ -124,7 +137,7 @@
 
             <TextView
                 android:id="@+id/myShareParkInfoShareParkAddressTxt"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:text="공유주차장 주소"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -135,6 +148,8 @@
             <TextView
                 android:id="@+id/myShareParkInfoShareParkNewAddressContentTxt"
                 android:textSize="20sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/myShareParkInfoShareParkAddressTxt"
@@ -143,6 +158,8 @@
             <TextView
                 android:id="@+id/myShareParkInfoShareParkOldAddressContentTxt"
                 android:textSize="18sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/myShareParkInfoShareParkNewAddressContentTxt"
@@ -150,7 +167,9 @@
 
             <TextView
                 android:id="@+id/myShareParkInfoShareParkDetailaddressContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/myShareParkInfoShareParkOldAddressContentTxt"
@@ -158,7 +177,7 @@
 
             <TextView
                 android:id="@+id/myShareParkInfoShareTimeTxt"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:text="공유 시간"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -168,7 +187,9 @@
 
             <TextView
                 android:id="@+id/myShareParkInfoShareTimeContentTxt"
-                android:textSize="20sp"
+                android:textSize="22sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/myShareParkInfoShareTimeTxt"
@@ -176,7 +197,7 @@
 
             <TextView
                 android:id="@+id/myShareParkInfoReservationTimeTxt"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:text="예약받은 시간"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -186,7 +207,9 @@
 
             <TextView
                 android:id="@+id/myShareParkInfoReservationTimeContentTxt"
-                android:textSize="20sp"
+                android:textSize="22sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/myShareParkInfoReservationTimeTxt"
@@ -194,7 +217,7 @@
 
             <TextView
                 android:id="@+id/myShareParkInfoUpTimeTxt"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:text="공유 올린 시각"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -204,7 +227,9 @@
 
             <TextView
                 android:id="@+id/myShareParkInfoUpTimeContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/myShareParkInfoUpTimeTxt"
@@ -249,7 +274,7 @@
 
         <ImageButton
             android:id="@+id/myShareParkInfoCancelBtn"
-            android:src="@drawable/gradate_button"
+            android:src="@drawable/gradate_cancel_button"
             android:scaleType="fitCenter"
             android:background="@android:color/transparent"
             android:layout_width="0dp"
@@ -276,7 +301,7 @@
 
         <ImageButton
             android:id="@+id/myShareParkInfoCalculateBtn"
-            android:src="@drawable/gradate_button"
+            android:src="@drawable/gradate_calculate_button"
             android:scaleType="fitCenter"
             android:background="@android:color/transparent"
             android:layout_width="0dp"

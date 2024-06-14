@@ -506,6 +506,9 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
 
                         gasStationListView.setVisibility(View.VISIBLE);
                         gasStationSortHorizontalScrollView.setVisibility(View.VISIBLE);
+                        naviConstLayout.setVisibility(View.GONE);
+
+                        isItemSelected = false;
                     }
                 });
                 tMapCircle.setCenterPoint( nowPoint );

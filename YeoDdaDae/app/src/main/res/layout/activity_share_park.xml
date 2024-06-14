@@ -32,7 +32,7 @@
             <TextView
                 android:id="@+id/parkAddressTxt"
                 android:text="주차장 주소"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="@+id/gpsBtn"
@@ -51,7 +51,7 @@
 
             <TextView
                 android:id="@+id/parkNewAddressContentTxt"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/parkAddressTxt"
@@ -60,7 +60,7 @@
 
             <TextView
                 android:id="@+id/parkOldAddressContentTxt"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/parkNewAddressContentTxt"
@@ -69,7 +69,7 @@
 
             <TextView
                 android:id="@+id/parkDetailAddressTxt"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:text="주차장 상세주소"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -88,12 +88,14 @@
                 android:backgroundTint="@color/sub"
                 app:layout_constraintTop_toBottomOf="@id/parkDetailAddressTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
             <TextView
                 android:id="@+id/sharerNameTxt"
                 android:text="공유자명"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/parkDetailAddressEditTxt"
@@ -111,11 +113,13 @@
                 android:backgroundTint="@color/sub"
                 app:layout_constraintTop_toBottomOf="@id/sharerNameTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
             <TextView
                 android:id="@+id/sharerPhoneTxt"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:text="공유자 전화번호"
                 android:maxLength="11"
                 android:layout_width="wrap_content"
@@ -135,11 +139,13 @@
                 android:backgroundTint="@color/sub"
                 app:layout_constraintTop_toBottomOf="@id/sharerPhoneTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
             <TextView
                 android:id="@+id/sharerEmailTxt"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:text="공유자 이메일"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -158,12 +164,14 @@
                 android:backgroundTint="@color/sub"
                 app:layout_constraintTop_toBottomOf="@id/sharerEmailTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
             <TextView
                 android:id="@+id/sharerRelationTxt"
                 android:text="공유자의 주차장과의 관계"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/sharerEmailEditTxt"
@@ -181,12 +189,14 @@
                 android:backgroundTint="@color/sub"
                 app:layout_constraintTop_toBottomOf="@id/sharerRelationTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
             <TextView
                 android:id="@+id/parkPriceTxt"
                 android:text="주차장 가격"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/sharerRelationEditTxt"
@@ -196,7 +206,8 @@
             <TextView
                 android:id="@+id/pricePerHourTxt"
                 android:text="시간 당 / "
-                android:textSize="12sp"
+                android:textSize="15sp"
+                android:textColor="@color/sub"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/parkPriceEditTxt"
@@ -205,6 +216,7 @@
 
             <EditText
                 android:id="@+id/parkPriceEditTxt"
+                android:hint="0"
                 android:textSize="20sp"
                 android:maxLength="5"
                 android:inputType="number"
@@ -218,7 +230,8 @@
             <TextView
                 android:id="@+id/ptTxt"
                 android:text="pt"
-                android:textSize="12sp"
+                android:textSize="15sp"
+                android:textColor="@color/sub"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/parkPriceEditTxt"
@@ -228,7 +241,8 @@
 
             <TextView
                 android:text="(5%는 수수료입니다)"
-                android:textSize="15sp"
+                android:textSize="18sp"
+                android:textColor="@color/sub"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/parkPriceEditTxt"
@@ -239,7 +253,7 @@
             <TextView
                 android:id="@+id/parkDateTxt"
                 android:text="공유 시간"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/parkPriceEditTxt"

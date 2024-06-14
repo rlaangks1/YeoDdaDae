@@ -89,7 +89,7 @@ public class MyYdPointFragment extends Fragment {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 getActivity(),
                 R.array.my_spinner_point_history_items,
-                R.layout.my_spinner
+                R.layout.my_spinner_2
         );
         pointSpinner.setAdapter(adapter);
 

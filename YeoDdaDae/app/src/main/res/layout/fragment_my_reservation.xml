@@ -8,6 +8,7 @@
 
     <ListView
         android:id="@+id/myReservationListView"
+        android:dividerHeight="5dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"

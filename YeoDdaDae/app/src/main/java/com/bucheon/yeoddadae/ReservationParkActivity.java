@@ -29,12 +29,14 @@ import com.skt.Tmap.address_info.TMapAddressInfo;
 import org.threeten.bp.LocalDate;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -541,7 +543,8 @@ public class ReservationParkActivity extends AppCompatActivity {
                         reservationWonTxt.setVisibility(View.GONE);
                     }
                     else {
-                        reservationTotalPriceContentTxt.setText(Integer.toString(totalPrice));
+                        String formattedYdPoint = NumberFormat.getNumberInstance(Locale.KOREA).format(totalPrice);
+                        reservationTotalPriceContentTxt.setText(formattedYdPoint);
                         reservationWonTxt.setVisibility(View.VISIBLE);
                     }
                 }

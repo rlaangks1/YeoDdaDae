@@ -247,7 +247,7 @@ public class ShareParkAdapter extends BaseAdapter {
                 shareParkPriceTxt.setText("무료");
             }
             else {
-                shareParkPriceTxt.setText("시간 당 " + sharePark.getPrice() + "원");
+                shareParkPriceTxt.setText("시간 당 " + sharePark.getPrice() + "pt");
             }
 
             Timestamp timestamp = sharePark.getUpTime();

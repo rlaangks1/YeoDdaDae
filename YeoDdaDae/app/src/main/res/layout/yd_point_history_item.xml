@@ -7,7 +7,8 @@
     <TextView
         android:id="@+id/priceTxt"
         android:text="+0"
-        android:textSize="20sp"
+        android:textSize="25sp"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -18,18 +19,8 @@
     <TextView
         android:id="@+id/typeTxt"
         android:text="충전"
-        android:textSize="18sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp" />
-
-    <TextView
-        android:id="@+id/additionType"
-        android:text="공유주차장 예약"
-        android:textSize="15sp"
+        android:textSize="20sp"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -38,9 +29,24 @@
         android:layout_marginLeft="10dp"/>
 
     <TextView
+        android:id="@+id/additionType"
+        android:text="공유주차장 예약"
+        android:textSize="18sp"
+        android:textColor="@color/sub"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp" />
+
+    <TextView
         android:id="@+id/upTimeTxt"
         android:text="시각"
         android:textSize="15sp"
+        android:textColor="@color/sub"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

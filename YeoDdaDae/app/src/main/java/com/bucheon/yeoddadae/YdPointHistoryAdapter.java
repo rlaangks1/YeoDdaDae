@@ -143,7 +143,7 @@ public class YdPointHistoryAdapter extends BaseAdapter {
             if (item.getType().equals("환급")) {
                 typeTxt.setText("환급");
                 additionType.setVisibility(View.VISIBLE);
-                additionType.setText(item.getRefundBank() + "\n" + item.getRefundAccountNumber());
+                additionType.setText(item.getRefundBank() + "/" + item.getRefundAccountNumber());
             }
             else if (item.getType().equals("사용")) {
                 typeTxt.setText("사용");

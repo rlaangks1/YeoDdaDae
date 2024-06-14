@@ -19,6 +19,7 @@ import com.google.firebase.Timestamp;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.address_info.TMapAddressInfo;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -171,7 +172,8 @@ public class ReportDiscountParkInformationActivity extends AppCompatActivity {
                     reportInfoWonTxt.setVisibility(View.GONE);
                 }
                 else {
-                    reportInfoDiscountContentTxt.setText(Long.toString(discount));
+                    String formattedWon = NumberFormat.getNumberInstance(Locale.KOREA).format(discount);
+                    reportInfoDiscountContentTxt.setText(formattedWon);
                     reportInfoWonTxt.setVisibility(View.VISIBLE);
                 }
 

@@ -24,6 +24,7 @@ import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapTapi;
 import com.skt.Tmap.address_info.TMapAddressInfo;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -283,7 +284,9 @@ public class ReservationInformationActivity extends AppCompatActivity {
 
                 }
                 else {
-                    reservationInfoPriceContentTxt.setText(((Long) reservationInfo.get("price")).toString());
+                    String formattedYdPoint = NumberFormat.getNumberInstance(Locale.KOREA).format((long) reservationInfo.get("price"));
+
+                    reservationInfoPriceContentTxt.setText(formattedYdPoint);
                     reservationInfoPtTxt.setVisibility(View.VISIBLE);
                 }
 

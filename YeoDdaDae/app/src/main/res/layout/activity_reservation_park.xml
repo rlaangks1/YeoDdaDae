@@ -170,8 +170,8 @@
 
             <TextView
                 android:id="@+id/reservationParkPricePerHour"
-                android:text="시간 당 / "
-                android:textSize="15sp"
+                android:text="시간 당"
+                android:textSize="20sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
@@ -189,12 +189,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationParkPriceTxt"
-                app:layout_constraintLeft_toRightOf="@+id/reservationParkPricePerHour" />
+                app:layout_constraintLeft_toRightOf="@+id/reservationParkPricePerHour"
+                android:layout_marginLeft="5dp" />
 
             <TextView
                 android:id="@+id/reservationParkPtTxt"
                 android:text="pt"
-                android:textSize="15sp"
+                android:textSize="20sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
@@ -309,6 +310,8 @@
                 android:id="@+id/reservationWonTxt"
                 android:text="pt"
                 android:textSize="15sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@+id/reservationTotalPriceContentTxt"

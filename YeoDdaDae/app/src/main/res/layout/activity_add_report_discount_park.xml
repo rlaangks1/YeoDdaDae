@@ -39,7 +39,7 @@
 
             <EditText
                 android:id="@+id/addReportDiscountParkAddressContentEditTxt"
-                android:textSize="18dp"
+                android:textSize="25dp"
                 android:focusable="false"
                 android:backgroundTint="@color/sub"
                 android:layout_width="0dp"
@@ -61,7 +61,7 @@
 
             <EditText
                 android:id="@+id/addReportDiscountParkConditionContentEditTxt"
-                android:textSize="20dp"
+                android:textSize="25dp"
                 android:maxLength="50"
                 android:singleLine="true"
                 android:backgroundTint="@color/sub"
@@ -82,20 +82,10 @@
                 app:layout_constraintTop_toBottomOf="@id/addReportDiscountParkConditionContentEditTxt"
                 app:layout_constraintLeft_toLeftOf="@+id/addReportDiscountParkConditionContentEditTxt" />
 
-            <TextView
-                android:id="@+id/addReportDiscountParkBenefitHintTxt"
-                android:text="(0 = 무료)"
-                android:textSize="15dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@id/addReportDiscountParkBenefitTxt"
-                app:layout_constraintLeft_toRightOf="@+id/addReportDiscountParkBenefitTxt"
-                android:layout_marginLeft="10dp"/>
-
             <EditText
                 android:id="@+id/addReportDiscountParkBenefitContentEditTxt"
                 android:hint="0"
-                android:textSize="20sp"
+                android:textSize="25sp"
                 android:inputType="number"
                 android:maxLength="6"
                 android:singleLine="true"
@@ -114,7 +104,19 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/addReportDiscountParkBenefitContentEditTxt"
                 app:layout_constraintBottom_toBottomOf="@+id/addReportDiscountParkBenefitContentEditTxt"
-                app:layout_constraintLeft_toRightOf="@+id/addReportDiscountParkBenefitContentEditTxt" />
+                app:layout_constraintLeft_toRightOf="@+id/addReportDiscountParkBenefitContentEditTxt"
+                android:layout_marginLeft="5dp"/>
+
+            <TextView
+                android:id="@+id/addReportDiscountParkBenefitHintTxt"
+                android:text="(0 = 무료)"
+                android:textSize="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/addReportDiscountParkBenefitContentEditTxt"
+                app:layout_constraintBottom_toBottomOf="@+id/addReportDiscountParkBenefitContentEditTxt"
+                app:layout_constraintLeft_toRightOf="@+id/addReportDiscountParkBenefitWonTxt"
+                android:layout_marginLeft="5dp"/>
 
             <ImageButton
                 android:id="@+id/reportBtn"

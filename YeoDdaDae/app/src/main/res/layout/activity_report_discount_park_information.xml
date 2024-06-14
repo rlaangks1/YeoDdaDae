@@ -32,7 +32,7 @@
             <TextView
                 android:id="@+id/reprtInfoIdTxt"
                 android:text="제보 번호"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
@@ -40,7 +40,9 @@
 
             <TextView
                 android:id="@+id/reportInfoIdContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reprtInfoIdTxt"
@@ -49,7 +51,7 @@
             <TextView
                 android:id="@+id/reportInfoStatusTxt"
                 android:text="제보 상태"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/reportInfoIdContentTxt"
@@ -58,7 +60,9 @@
 
             <TextView
                 android:id="@+id/reportInfoStatusContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoStatusTxt"
@@ -67,7 +71,7 @@
             <TextView
                 android:id="@+id/reportInfoCancelReasonTxt"
                 android:text="취소 사유"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/reportInfoStatusContentTxt"
@@ -76,7 +80,9 @@
 
             <TextView
                 android:id="@+id/reportInfoCancelReasonContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoCancelReasonTxt"
@@ -84,7 +90,7 @@
 
             <TextView
                 android:id="@+id/reportInfoParkNameTxt"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:text="주차장 이름"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -94,7 +100,9 @@
 
             <TextView
                 android:id="@+id/reportInfoParkNameContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoParkNameTxt"
@@ -102,7 +110,7 @@
 
             <TextView
                 android:id="@+id/reportInfoParkAddressTxt"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:text="주차장 주소"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -113,6 +121,8 @@
             <TextView
                 android:id="@+id/reportInfoParkNewAddressContentTxt"
                 android:textSize="20sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoParkAddressTxt"
@@ -121,6 +131,8 @@
             <TextView
                 android:id="@+id/reportInfoParkOldAddressContentTxt"
                 android:textSize="18sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoParkNewAddressContentTxt"
@@ -128,7 +140,7 @@
 
             <TextView
                 android:id="@+id/reportInfoConditionTxt"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:text="조건"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -138,7 +150,9 @@
 
             <TextView
                 android:id="@+id/reportInfoConditionContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoConditionTxt"
@@ -147,7 +161,7 @@
             <TextView
                 android:id="@+id/reportInfoDiscountTxt"
                 android:text="혜택"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoConditionContentTxt"
@@ -156,7 +170,9 @@
 
             <TextView
                 android:id="@+id/reportInfoDiscountContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/reportInfoDiscountTxt"
@@ -165,7 +181,9 @@
             <TextView
                 android:id="@+id/reportInfoWonTxt"
                 android:text="원 할인"
-                android:textSize="12sp"
+                android:textSize="15sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@+id/reportInfoDiscountContentTxt"
@@ -175,8 +193,8 @@
 
             <TextView
                 android:id="@+id/reportInfoRateTxt"
-                android:textSize="15sp"
-                android:text="평가 : 정확 / 틀린부분있음 / 완전히틀림"
+                android:textSize="18sp"
+                android:text="평가 (정확 / 틀린부분있음 / 완전히틀림)"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoDiscountContentTxt"
@@ -185,7 +203,9 @@
 
             <TextView
                 android:id="@+id/reportInfoRateContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoRateTxt"
@@ -193,7 +213,7 @@
 
             <TextView
                 android:id="@+id/reportInfoUpTimeTxt"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:text="제보 시각"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -203,7 +223,9 @@
 
             <TextView
                 android:id="@+id/reportInfoUpTimeContentTxt"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:textColor="@color/sub"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reportInfoUpTimeTxt"
@@ -215,7 +237,7 @@
 
     <ImageButton
         android:id="@+id/reportInfoCancelBtn"
-        android:src="@drawable/gradate_button"
+        android:src="@drawable/gradate_cancel_button"
         android:scaleType="fitCenter"
         android:background="@android:color/transparent"
         android:layout_width="0dp"
@@ -238,4 +260,5 @@
         app:layout_constraintEnd_toEndOf="@+id/reportInfoCancelBtn"
         app:layout_constraintStart_toStartOf="@+id/reportInfoCancelBtn"
         app:layout_constraintTop_toTopOf="@+id/reportInfoCancelBtn" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

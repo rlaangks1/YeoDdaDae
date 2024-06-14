@@ -3,6 +3,7 @@ package com.bucheon.yeoddadae;
 import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapTapi;
 import com.skt.Tmap.address_info.TMapAddressInfo;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -143,7 +145,9 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                 else {
                     myShareParkInfoHourPerTxt.setVisibility(View.VISIBLE);
                     myShareParkInfoPtTxt.setVisibility(View.VISIBLE);
-                    myShareParkInfoPriceContentTxt.setText(Long.toString((long) shareParkInfo.get("price")));
+                    String formattedYdPoint = NumberFormat.getNumberInstance(Locale.KOREA).format((long) shareParkInfo.get("price"));
+
+                    myShareParkInfoPriceContentTxt.setText(formattedYdPoint);
                 }
 
                 TMapData tMapData = new TMapData();
@@ -428,19 +432,34 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                 myShareParkInfoCancelBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fd2.cancelSharePark(loginId, documentId, "공유자가 취소", new OnFirestoreDataLoadedListener() {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MyShareParkInformationActivity.this);
+                        builder.setTitle("공유 취소 확인");
+                        builder.setMessage("정말 취소하시겠습니까\n(되돌릴 수 없습니다)");
+                        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onDataLoaded(Object data) {
-                                Toast.makeText(getApplicationContext(), "공유 취소되었습니다", Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
+                            public void onClick(DialogInterface dialog, int which) {
+                                fd2.cancelSharePark(loginId, documentId, "공유자가 취소", new OnFirestoreDataLoadedListener() {
+                                    @Override
+                                    public void onDataLoaded(Object data) {
+                                        Toast.makeText(getApplicationContext(), "공유 취소되었습니다", Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    }
 
-                            @Override
-                            public void onDataLoadError(String errorMessage) {
-                                Log.d(TAG, errorMessage);
-                                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                                    @Override
+                                    public void onDataLoadError(String errorMessage) {
+                                        Log.d(TAG, errorMessage);
+                                        Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                             }
                         });
+                        builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
                     }
                 });
 
