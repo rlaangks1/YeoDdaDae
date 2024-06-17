@@ -1156,7 +1156,7 @@ public class FirestoreDatabase {
                                                                     String raterId = (String) documentSnapshot2.get("id");
 
                                                                     int count[] = {1};
-                                                                    receiveYdPoint(raterId, 300, "부정적 평가한 할인주차장 취소", new OnFirestoreDataLoadedListener() {
+                                                                    receiveYdPoint(raterId, 200, "부정적 평가한 할인주차장 취소", new OnFirestoreDataLoadedListener() {
                                                                         @Override
                                                                         public void onDataLoaded(Object data) {
                                                                             if (docCount[0] == count[0]) {
@@ -1224,7 +1224,7 @@ public class FirestoreDatabase {
                                     .document(firestoreDocumentId)
                                     .update("isApproval", true)
                                     .addOnSuccessListener(aVoid -> {
-                                        receiveYdPoint(reporterId, 1500, "할인주차장 제보 승인", new OnFirestoreDataLoadedListener() {
+                                        receiveYdPoint(reporterId, 1000, "할인주차장 제보 승인", new OnFirestoreDataLoadedListener() {
                                             @Override
                                             public void onDataLoaded(Object data) {
                                                 db.collection("rateReport")
@@ -1240,7 +1240,7 @@ public class FirestoreDatabase {
                                                                 String raterId = (String) documentSnapshot.get("id");
 
                                                                 int count[] = {1};
-                                                                receiveYdPoint(raterId, 300, "긍정적 평가한 할인주차장 승인", new OnFirestoreDataLoadedListener() {
+                                                                receiveYdPoint(raterId, 200, "긍정적 평가한 할인주차장 승인", new OnFirestoreDataLoadedListener() {
                                                                     @Override
                                                                     public void onDataLoaded(Object data) {
                                                                         if (documentSize == count[0]) {
@@ -1962,7 +1962,36 @@ public class FirestoreDatabase {
                                                                                 resultHM.put("취소제보주차장수", canceledReportParkCount);
                                                                                 resultHM.put("승인제보주차장수", approvedReportParkCount);
 
-                                                                                listener.onDataLoaded(resultHM);
+                                                                                db.collection("receiveYdPoint")
+                                                                                        .whereGreaterThanOrEqualTo("upTime", startTime)
+                                                                                        .whereLessThanOrEqualTo("upTime", endTime)
+                                                                                        .get()
+                                                                                        .addOnSuccessListener(queryDocumentSnapshots7 -> {
+                                                                                            long receivedApproveReportParkPoint = 0;
+                                                                                            long receivedRatedReportParkPoint = 0;
+
+                                                                                            if (queryDocumentSnapshots7 == null || queryDocumentSnapshots7.size() == 0) {
+                                                                                                resultHM.put("총제보주차장승인지급포인트", 0L);
+                                                                                                resultHM.put("총평가주차장승인지급포인트", 0L);
+                                                                                            }
+                                                                                            else {
+                                                                                                for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots7) {
+                                                                                                    if (((String) documentSnapshot.get("type")).equals("할인주차장 제보 승인")) {
+                                                                                                        receivedApproveReportParkPoint += (long) documentSnapshot.get("receivedYdPoint");
+                                                                                                    }
+                                                                                                    else if (((String) documentSnapshot.get("type")).equals("긍정적 평가한 할인주차장 승인") || ((String) documentSnapshot.get("type")).equals("부정적 평가한 할인주차장 취소")) {
+                                                                                                        receivedRatedReportParkPoint += (long) documentSnapshot.get("receivedYdPoint");
+                                                                                                    }
+                                                                                                }
+                                                                                                resultHM.put("총제보주차장승인지급포인트", receivedApproveReportParkPoint);
+                                                                                                resultHM.put("총평가주차장승인지급포인트", receivedRatedReportParkPoint);
+                                                                                            }
+                                                                                            listener.onDataLoaded(resultHM);
+                                                                                        })
+                                                                                        .addOnFailureListener(e -> {
+                                                                                            Log.d(TAG, "포인트받기찾기 중 오류", e);
+                                                                                            listener.onDataLoadError("포인트받기찾기 중 오류");
+                                                                                        });
                                                                             })
                                                                             .addOnFailureListener(e -> {
                                                                                 Log.d(TAG, "제보주차장찾기 중 오류", e);
