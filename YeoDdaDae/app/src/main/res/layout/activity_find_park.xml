@@ -326,7 +326,6 @@
                 android:id="@+id/searchEdTxt"
                 android:hint="검색..."
                 android:textSize="25sp"
-                android:textColorHint="@color/main"
                 android:backgroundTint="@color/sub"
                 android:maxLength="30"
                 android:singleLine="true"

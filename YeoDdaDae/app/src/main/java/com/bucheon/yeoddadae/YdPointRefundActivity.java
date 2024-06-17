@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -160,7 +161,11 @@ public class YdPointRefundActivity extends AppCompatActivity {
                         }
                     });
 
-                    builder.show();
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(YdPointRefundActivity.this, R.color.sub));
+                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(YdPointRefundActivity.this, R.color.sub));
                 }
             }
         });

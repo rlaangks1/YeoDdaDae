@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.Timestamp;
 import com.skt.Tmap.TMapData;
@@ -158,7 +159,10 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
                     }
                 });
 
-                builder.show();
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(ApproveShareParkInformationActivity.this, R.color.sub));
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(ApproveShareParkInformationActivity.this, R.color.sub));
             }
         });
     }

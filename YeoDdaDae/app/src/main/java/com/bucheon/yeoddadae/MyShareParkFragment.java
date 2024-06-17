@@ -78,34 +78,45 @@ public class MyShareParkFragment extends Fragment {
         spa = new ShareParkAdapter(getActivity());
 
         FirestoreDatabase fd = new FirestoreDatabase();
-        fd.loadMyShareParks(loginId, new OnFirestoreDataLoadedListener() {
+        fd.calculateFreeSharePark(loginId, new OnFirestoreDataLoadedListener() {
             @Override
             public void onDataLoaded(Object data) {
-                ArrayList<HashMap<String, Object>> myShareParks = (ArrayList<HashMap<String, Object>>) data;
+                fd.loadMyShareParks(loginId, new OnFirestoreDataLoadedListener() {
+                    @Override
+                    public void onDataLoaded(Object data) {
+                        ArrayList<HashMap<String, Object>> myShareParks = (ArrayList<HashMap<String, Object>>) data;
 
-                for (HashMap<String, Object> oneSharePark : myShareParks) {
-                    double lat = (double) oneSharePark.get("lat");
-                    double lon = (double) oneSharePark.get("lon");
-                    String parkDetailAddress = (String) oneSharePark.get("parkDetailAddress");
-                    boolean isApproval = (boolean) oneSharePark.get("isApproval");
-                    boolean isCancelled = (boolean) oneSharePark.get("isCancelled");
-                    boolean isCalculated = (boolean) oneSharePark.get("isCalculated");
-                    long price = (long) oneSharePark.get("price");
-                    HashMap<String, ArrayList<String>> time = (HashMap<String, ArrayList<String>>) oneSharePark.get("time");
-                    Timestamp upTime = (Timestamp) oneSharePark.get("upTime");
-                    String documentId = (String) oneSharePark.get("documentId");
+                        for (HashMap<String, Object> oneSharePark : myShareParks) {
+                            double lat = (double) oneSharePark.get("lat");
+                            double lon = (double) oneSharePark.get("lon");
+                            String parkDetailAddress = (String) oneSharePark.get("parkDetailAddress");
+                            boolean isApproval = (boolean) oneSharePark.get("isApproval");
+                            boolean isCancelled = (boolean) oneSharePark.get("isCancelled");
+                            boolean isCalculated = (boolean) oneSharePark.get("isCalculated");
+                            long price = (long) oneSharePark.get("price");
+                            HashMap<String, ArrayList<String>> time = (HashMap<String, ArrayList<String>>) oneSharePark.get("time");
+                            Timestamp upTime = (Timestamp) oneSharePark.get("upTime");
+                            String documentId = (String) oneSharePark.get("documentId");
 
-                    spa.addItem(new ShareParkItem(null, lat, lon, parkDetailAddress, isApproval, isCancelled, isCalculated, price, time, upTime, documentId));
-                }
-                if (myShareParks.size() == 0) {
-                    myShareParkListView.setVisibility(View.GONE);
-                    myShareParkNoTxt.setVisibility(View.VISIBLE);
-                }
-                else {
-                    myShareParkListView.setVisibility(View.VISIBLE);
-                    myShareParkNoTxt.setVisibility(View.GONE);
-                    myShareParkListView.setAdapter(spa);
-                }
+                            spa.addItem(new ShareParkItem(null, lat, lon, parkDetailAddress, isApproval, isCancelled, isCalculated, price, time, upTime, documentId));
+                        }
+                        if (myShareParks.size() == 0) {
+                            myShareParkListView.setVisibility(View.GONE);
+                            myShareParkNoTxt.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            myShareParkListView.setVisibility(View.VISIBLE);
+                            myShareParkNoTxt.setVisibility(View.GONE);
+                            myShareParkListView.setAdapter(spa);
+                        }
+                    }
+
+                    @Override
+                    public void onDataLoadError(String errorMessage) {
+                        Log.d(TAG, errorMessage);
+                        Toast.makeText(getContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
