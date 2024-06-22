@@ -106,6 +106,7 @@ public class LoginActivity extends AppCompatActivity {
                                         }
                                         else {
                                             Toast.makeText(getApplicationContext(), "로그인 실패", Toast.LENGTH_SHORT).show();
+                                            pwTxt.setText("");
                                         }
                                     });
                         }
@@ -119,6 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                             else {
                                 Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
                             }
+                            pwTxt.setText("");
                         }
                     });
                 }

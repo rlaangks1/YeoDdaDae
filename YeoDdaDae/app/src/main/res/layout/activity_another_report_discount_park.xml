@@ -19,12 +19,25 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"/>
 
+    <TextView
+        android:text="제보주차장 평가"
+        android:textSize="25sp"
+        android:textColor="@color/sub"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/anotherReportBackBtn"
+        app:layout_constraintBottom_toBottomOf="@+id/anotherReportBackBtn"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
     <Spinner
         android:id="@+id/anotherReportDistanceSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/anotherReportBackBtn"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
         android:spinnerMode="dropdown"
         android:dropDownWidth="match_parent" />

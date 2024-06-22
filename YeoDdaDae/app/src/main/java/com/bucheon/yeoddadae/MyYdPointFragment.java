@@ -297,8 +297,6 @@ public class MyYdPointFragment extends Fragment {
             Date endDateTime = dateFormat.parse(endDate + endTime);
             endTs = new Timestamp(endDateTime);
 
-
-
             getYpPointHistory();
         }
     }

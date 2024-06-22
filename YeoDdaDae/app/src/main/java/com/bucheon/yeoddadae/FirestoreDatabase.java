@@ -15,9 +15,14 @@ import com.google.firebase.firestore.Transaction;
 import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapPolyLine;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -606,7 +611,7 @@ public class FirestoreDatabase {
     }
 
 
-    public void findSharePark(String id, double nowLat, double nowLon, double radiusKiloMeter, OnFirestoreDataLoadedListener listener) {
+    public void findSharePark(String id, double nowLat, double nowLon, double radiusKiloMeter, String startString, String endString, OnFirestoreDataLoadedListener listener) {
         ArrayList<ParkItem> resultList = new ArrayList<>();
 
         if (id == null || id.equals("")) {
@@ -655,6 +660,27 @@ public class FirestoreDatabase {
                             continue;
                         }
 
+                        if (startString != null && endString != null) {
+                            if (startString.compareTo(endString) >= 0) {
+                                continue;
+                            }
+
+                            ArrayList<String> targetAL = new ArrayList<>();
+
+                            for (String outer : sortedKeys) {
+                                targetAL.add(outer + shareTime.get(outer).get(0));
+                                targetAL.add(outer + shareTime.get(outer).get(1));
+                            }
+
+                            try {
+                                if (!brrrr(startString, endString, arrrr(targetAL))) {
+                                    continue;
+                                }
+                            } catch (ParseException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+
                         double shareParkLat = (double) document.get("lat");
                         double shareParkLon = (double) document.get("lon");
 
@@ -670,8 +696,7 @@ public class FirestoreDatabase {
                     }
                     if (resultList != null && resultList.size() != 0) {
                         Log.d(TAG, "공유주차장 검색 성공. 결과 수 : " + resultList.size());
-                    }
-                    else {
+                    } else {
                         Log.d(TAG, "해당 공유주차장이 없음");
                     }
                     listener.onDataLoaded(resultList);
@@ -680,6 +705,67 @@ public class FirestoreDatabase {
                     Log.d(TAG, "데이터 검색 오류", e);
                     listener.onDataLoadError(e.getMessage());
                 });
+    }
+
+    ArrayList<String> arrrr (ArrayList<String> al) throws ParseException {
+        ArrayList<String> copyAl = al;
+        Collections.sort(copyAl);
+
+        outerLoop:
+        while (true) {
+            for (String item : copyAl) {
+                if (item.endsWith("2400")) {
+                    String cuttedString = item.substring(0, 8);
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+                    Date date = sdf.parse(cuttedString);
+
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(date);
+                    calendar.add(Calendar.DAY_OF_YEAR, 1);
+
+                    Date nextDate = calendar.getTime();
+                    String nextDateStr = sdf.format(nextDate);
+                    String nextDay = nextDateStr + "0000";
+
+                    if (copyAl.contains(nextDay)) {
+                        copyAl.remove(item);
+                        copyAl.remove(nextDay);
+
+                        continue outerLoop;
+                    }
+                }
+            }
+
+            for (String logItem : copyAl) {
+                Log.d(TAG, logItem);
+            }
+
+            return copyAl;
+        }
+    }
+
+    boolean brrrr(String startString, String endSTring, ArrayList<String> al) {
+        boolean result = false;
+        int alSize = (al.size() / 2) - 1;
+
+        for (int i = 0; i <= alSize; i++) {
+            String alStart = al.get(i);
+            String alEnd = al.get(i + 1);
+
+            long startLong = Long.parseLong(startString);
+            long endLong = Long.parseLong(endSTring);
+            long startAlLong = Long.parseLong(alStart);
+            long endAlLong = Long.parseLong(alEnd);
+
+            if (startAlLong <= startLong && endLong <= endAlLong) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
     }
 
     public void loadShareParkInfo (String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {

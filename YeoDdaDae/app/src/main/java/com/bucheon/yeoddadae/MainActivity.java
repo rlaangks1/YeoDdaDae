@@ -2,9 +2,11 @@ package com.bucheon.yeoddadae;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -187,26 +190,47 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
             finish();
         }
         else if (data.equals("비밀번호 변경")) {
-            mAuth.sendPasswordResetEmail(user.getEmail())
-                    .addOnCompleteListener(this, task -> {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), "이메일을 확인하여 비밀번호 변경 후 다시 로그인하세요", Toast.LENGTH_SHORT).show();
-                            loginId = null;
-                            mAuth.signOut();
-                            Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
-                            startActivity(logoutIntent);
-                            finish();
-                        }
-                        else {
-                            Log.d(ContentValues.TAG, "인증 이메일 전송 실패 : " + task.getException().getMessage());
-                            Toast.makeText(getApplicationContext(), "인증 이메일 전송 실패", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("비밀번호 변경 확인");
+            builder.setMessage("정말 비밀번호를 변경하시겠습니까?");
+            builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    resetPassword();
+                }
+            });
+            builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {}
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(MainActivity.this, R.color.sub));
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(MainActivity.this, R.color.sub));
         }
 
         else if (data.equals("stt버튼클릭")) {
             sttService.startListeningForMainCommand();
         }
+    }
+
+    void resetPassword() {
+        mAuth.sendPasswordResetEmail(user.getEmail())
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getApplicationContext(), "이메일을 확인하여 비밀번호 변경 후 다시 로그인하세요", Toast.LENGTH_SHORT).show();
+                        loginId = null;
+                        mAuth.signOut();
+                        Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
+                        startActivity(logoutIntent);
+                        finish();
+                    }
+                    else {
+                        Log.d(ContentValues.TAG, "인증 이메일 전송 실패 : " + task.getException().getMessage());
+                        Toast.makeText(getApplicationContext(), "인증 이메일 전송 실패", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     public void onMainCommandReceived(String mainCommand) {

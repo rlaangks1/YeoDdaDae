@@ -79,6 +79,24 @@ public class CustomDatePickerDialog extends Dialog {
                         }
                     }
                 }
+                else if (context instanceof FindParkActivity) {
+                    FindParkActivity fpa = (FindParkActivity) context;
+
+                    if (startOrEnd == 0) {
+                        try {
+                            fpa.receiveStartDateFromDialog(formattedDate);
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    else if (startOrEnd == 1) {
+                        try {
+                            fpa.receiveEndDateFromDialog(formattedDate);
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
                 else if (context instanceof MainActivity && frag instanceof MyYdPointFragment) {
                     if (startOrEnd == 0) {
                         try {

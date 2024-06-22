@@ -3,6 +3,7 @@ package com.bucheon.yeoddadae;
 import static android.content.ContentValues.TAG;
 
 import android.Manifest;
+import android.app.TimePickerDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,6 +31,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -38,6 +40,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
+import com.google.firebase.Timestamp;
 import com.skt.Tmap.TMapCircle;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapGpsManager;
@@ -49,7 +52,13 @@ import com.skt.Tmap.TMapView;
 import com.skt.Tmap.poi_item.TMapPOIItem;
 import com.skt.tmap.engine.navigation.SDKManager;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FindParkActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback, TMapView.OnClickListenerCallback, SttService.SttCallback {
     String loginId;
@@ -62,6 +71,12 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     int nowSort;
     int nowOnly;
     int clickParkType;
+    String startDate;
+    String startTime;
+    String endDate;
+    String endTime;
+    String startString;
+    String endString;
     AlertDialog loadingAlert;
     // 경복궁
     double lat = 37.578611; // 위도
@@ -94,6 +109,12 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     ConstraintLayout onlyConstLayout;
     ImageButton findParkOnlyReportParkBtn;
     ImageButton findParkOnlyShareParkBtn;
+    ImageButton findParkTimeSetBtn;
+    ConstraintLayout findParkCustomTimeConstLayout;
+    EditText findParkCustomTimeStartDateEditTxt;
+    EditText findParkCustomTimeStartTimeEditTxt;
+    EditText findParkCustomTimeEndDateEditTxt;
+    EditText findParkCustomTimeEndTimeEditTxt;
     HorizontalScrollView parkSortHorizontalScrollView;
     ImageButton sortByDistanceBtn;
     ImageButton sortByParkPriceBtn;
@@ -143,6 +164,12 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         onlyConstLayout = findViewById(R.id.onlyConstLayout);
         findParkOnlyReportParkBtn = findViewById(R.id.findParkOnlyReportParkBtn);
         findParkOnlyShareParkBtn = findViewById(R.id.findParkOnlyShareParkBtn);
+        findParkTimeSetBtn = findViewById(R.id.findParkTimeSetBtn);
+        findParkCustomTimeConstLayout = findViewById(R.id.findParkCustomTimeConstLayout);
+        findParkCustomTimeStartDateEditTxt = findViewById(R.id.findParkCustomTimeStartDateEditTxt);
+        findParkCustomTimeStartTimeEditTxt = findViewById(R.id.findParkCustomTimeStartTimeEditTxt);
+        findParkCustomTimeEndDateEditTxt = findViewById(R.id.findParkCustomTimeEndDateEditTxt);
+        findParkCustomTimeEndTimeEditTxt = findViewById(R.id.findParkCustomTimeEndTimeEditTxt);
         searchStartBtn = findViewById(R.id.searchStartBtn);
         searchConstraintLayout = findViewById(R.id.searchConstraintLayout);
         searchEdTxt = findViewById(R.id.searchEdTxt);
@@ -270,7 +297,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         tMapCircle.setAreaAlpha(25);
         tMapView.addTMapCircle("Circle", tMapCircle);
 
-        findPark(recievedSort);
+        findPark(recievedSort, null, null);
 
         // 버튼 클릭 이벤트 리스너들
         gpsBtn.setOnClickListener(new View.OnClickListener() { // GPS 현재 위치로 맵 중심점 이동
@@ -311,14 +338,14 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         sortByDistanceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findPark(1);
+                findPark(1, null, null);
             }
         });
 
         sortByParkPriceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findPark(2);
+                findPark(2, null, null);
             }
         });
 
@@ -336,7 +363,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                         onlyConstLayout.setVisibility(View.VISIBLE);
                         naviConstLayout.setVisibility(View.GONE);
 
-                        findPark(nowSort);
+                        findPark(nowSort, null, null);
                     }
                 });
             }
@@ -372,6 +399,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        findParkCustomTimeConstLayout.setVisibility(View.GONE);
                         searchConstraintLayout.setVisibility(View.VISIBLE);
                         isSearchLayoutShowing = true;
                     }
@@ -496,7 +524,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     nowOnly = 1;
                 }
                 onlyBtnColorSet();
-                findPark(nowSort);
+                findPark(nowSort, null, null);
             }
         });
 
@@ -510,7 +538,110 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     nowOnly = 2;
                 }
                 onlyBtnColorSet();
-                findPark(nowSort);
+                findPark(nowSort, null, null);
+            }
+        });
+
+        findParkTimeSetBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (findParkCustomTimeConstLayout.getVisibility() == View.VISIBLE) {
+                    findParkCustomTimeConstLayout.setVisibility(View.GONE);
+                }
+                else {
+                    findParkCustomTimeConstLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        findParkCustomTimeStartDateEditTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomDatePickerDialog sdpd = new CustomDatePickerDialog(FindParkActivity.this, null, 0);
+                sdpd.show();
+            }
+        });
+
+        findParkCustomTimeStartTimeEditTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(FindParkActivity.this, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
+                        String timeFormat;
+                        int amPmHour;
+                        if (selectedHour >= 12) {
+                            timeFormat = "오후";
+                            if (selectedHour > 12) {
+                                amPmHour = selectedHour - 12;
+                            } else {
+                                amPmHour = selectedHour;
+                            }
+                        } else {
+                            timeFormat = "오전";
+                            if (selectedHour == 0) {
+                                amPmHour = 12;
+                            } else {
+                                amPmHour = selectedHour;
+                            }
+                        }
+                        String formattedTime = String.format(Locale.getDefault(), "%s %02d:%02d", timeFormat, amPmHour, selectedMinute);
+                        findParkCustomTimeStartTimeEditTxt.setText(formattedTime);
+                        startTime = String.format(Locale.getDefault(), "%02d%02d", selectedHour, selectedMinute);
+                        checkAllCustomTimeSetted();
+                    }
+                }, 0, 0, false); // is24HourView를 false로 설정
+
+                timePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent); // 배경 투명하게 설정
+                timePickerDialog.show();
+            }
+        });
+
+        findParkCustomTimeEndDateEditTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomDatePickerDialog sdpd = new CustomDatePickerDialog(FindParkActivity.this, null, 1);
+                sdpd.show();
+            }
+        });
+
+        findParkCustomTimeEndTimeEditTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(FindParkActivity.this, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
+                        String timeFormat;
+                        int amPmHour;
+                        if (selectedHour >= 12) {
+                            timeFormat = "오후";
+                            if (selectedHour > 12) {
+                                amPmHour = selectedHour - 12;
+                            } else {
+                                amPmHour = selectedHour;
+                            }
+                        } else {
+                            timeFormat = "오전";
+                            if (selectedHour == 0) {
+                                amPmHour = 12;
+                            } else {
+                                amPmHour = selectedHour;
+                            }
+                        }
+                        String formattedTime = String.format(Locale.getDefault(), "%s %02d:%02d", timeFormat, amPmHour, selectedMinute);
+                        findParkCustomTimeEndTimeEditTxt.setText(formattedTime);
+                        if (String.format(Locale.getDefault(), "%02d%02d", selectedHour, selectedMinute).equals("0000")) {
+                            endTime = "2400";
+                        }
+                        else {
+                            endTime = String.format(Locale.getDefault(), "%02d%02d", selectedHour, selectedMinute);
+                        }
+                        checkAllCustomTimeSetted();
+                    }
+                }, 0, 0, false); // is24HourView를 false로 설정
+
+                timePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent); // 배경 투명하게 설정
+                timePickerDialog.show();
             }
         });
 
@@ -589,6 +720,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                     parkSortHorizontalScrollView.setVisibility(View.GONE);
                                     searchStartBtn.setVisibility(View.GONE);
                                     onlyConstLayout.setVisibility(View.GONE);
+                                    findParkCustomTimeConstLayout.setVisibility(View.GONE);
                                     naviConstLayout.setVisibility(View.VISIBLE);
                                     if (clickedPark.getType() == 3) {
                                         reservationFirestoreDocumentId = clickedPark.getFirebaseDocumentId();
@@ -624,7 +756,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                 }
 
                 tMapView.setCenterPoint(clickedPark.getLon(), clickedPark.getLat());
-                findPark(nowSort);
+                findPark(nowSort, null, null);
 
                 if (clickedPark.getType() == 1 || clickedPark.getType() == 2 || clickedPark.getType() == 3 || clickedPark.getType() == 6) {
                     Log.d(TAG, "검색 리스트뷰에서 주차장 아이템 클릭함 : " + clickedPark.getType()  + ", " + clickedPark.getName()
@@ -730,7 +862,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         });
     } // init 끝
 
-    public void findPark(int sortBy) { // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:주차가순)
+    public void findPark(int sortBy, String startString, String endString) { // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:주차가순)
         Log.d (TAG, "findPark 시작");
         loadingStart();
 
@@ -747,7 +879,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     return;
                 }
                 FirestoreDatabase fd = new FirestoreDatabase();
-                fd.findSharePark(loginId, centerPoint.getLatitude(), centerPoint.getLongitude(), 3, new OnFirestoreDataLoadedListener() {
+                fd.findSharePark(loginId, centerPoint.getLatitude(), centerPoint.getLongitude(), 3, startString, endString, new OnFirestoreDataLoadedListener() {
                     @Override
                     public void onDataLoaded(Object data) {
                         ArrayList<ParkItem> shareParkList = (ArrayList<ParkItem>) data;
@@ -755,15 +887,12 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                             @Override
                             public void onDataLoaded(Object data) {
                                 ArrayList<ParkItem> reportParkList = (ArrayList<ParkItem>) data;
-
                                 tMapView.removeAllTMapCircle();
                                 tMapView.removeAllMarkerItem();
                                 parkAdapter = new ParkAdapter();
-
                                 if (nowOnly == 0) {
                                     for (int i = 0; i < arrayList.size(); i++) { // TMAP 검색
                                         TMapPOIItem item = arrayList.get(i);
-
                                         if (item.name.contains("공영")) {
                                             parkAdapter.addItem(new ParkItem(2, item.name, item.radius, item.fee, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
                                         }
@@ -779,7 +908,6 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                         tItem.setPosition(0.5f,1.0f); // 마커의 중심점을 하단, 중앙으로 설정
                                         tMapView.addMarkerItem(item.name, tItem);
                                     }
-
                                     for (ParkItem item : shareParkList) { // Firestore 검색
                                         parkAdapter.addItem(item);
                                         TMapPoint tpoint = new TMapPoint(item.getLat(), item.getLon());
@@ -791,7 +919,6 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                         tItem.setPosition(0.5f,1.0f); // 마커의 중심점을 하단, 중앙으로 설정
                                         tMapView.addMarkerItem(item.getName(), tItem);
                                     }
-
                                     for (ParkItem item : reportParkList) { // Firestore 검색
                                         parkAdapter.addItem(item);
                                         TMapPoint tpoint = new TMapPoint(item.getLat(), item.getLon());
@@ -803,7 +930,6 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                         tItem.setPosition(0.5f,1.0f); // 마커의 중심점을 하단, 중앙으로 설정
                                         tMapView.addMarkerItem(item.getName(), tItem);
                                     }
-
                                     parkAdapter.poiOverReport();
                                 }
                                 else if (nowOnly == 1) {
@@ -832,55 +958,39 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                         tMapView.addMarkerItem(item.getName(), tItem);
                                     }
                                 }
-                                
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         parkListView.setAdapter(parkAdapter);
-
                                         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
                                         float px;
-
                                         switch (parkAdapter.getSize()) {
                                             case 0:
                                                 px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, displayMetrics);
-                                                break;
-                                            case 1:
-                                                px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
-                                                break;
-                                            case 2:
-                                                px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, displayMetrics);
-                                                break;
-                                            default:
-                                                px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, displayMetrics);
+                                                break; case 1: px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
+                                                break; case 2: px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, displayMetrics);
+                                                break; default: px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, displayMetrics);
                                         }
-
                                         parkListView.getLayoutParams().height = (int) px;
                                         parkListView.requestLayout();
-
                                         switch (sortBy) {
                                             case 1 :
                                                 sortByDistanceBtn.setImageResource(R.drawable.gradate_button);
                                                 sortByParkPriceBtn.setImageResource(R.drawable.disabled_button);
                                                 parkAdapter.sortByDistance();
-                                                break;
-                                            case 2 :
-                                                sortByDistanceBtn.setImageResource(R.drawable.disabled_button);
+                                                break; case 2 : sortByDistanceBtn.setImageResource(R.drawable.disabled_button);
                                                 sortByParkPriceBtn.setImageResource(R.drawable.gradate_button);
                                                 parkAdapter.sortByParkPrice();
                                                 break;
                                         }
-
                                         parkListView.setVisibility(View.VISIBLE);
                                         parkSortHorizontalScrollView.setVisibility(View.VISIBLE);
                                         naviConstLayout.setVisibility(View.GONE);
-
                                         isItemSelected = false;
                                     }
                                 });
                                 tMapCircle.setCenterPoint(centerPoint);
                                 tMapView.addTMapCircle("Circle", tMapCircle);
-
                                 TMapMarkerItem centerMarker = new TMapMarkerItem();
                                 centerMarker.setTMapPoint(centerPoint);
                                 centerMarker.setName("centerMarker");
@@ -888,12 +998,9 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                 centerMarker.setPosition(0.5f,0.5f);
                                 centerMarker.setVisible(TMapMarkerItem.VISIBLE);
                                 tMapView.addMarkerItem("centerMarker", centerMarker);
-
                                 nowSort = sortBy;
-
                                 loadingStop();
                             }
-
                             @Override
                             public void onDataLoadError(String errorMessage) {
                                 Log.d(TAG, errorMessage);
@@ -902,7 +1009,6 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                             }
                         });
                     }
-
                     @Override
                     public void onDataLoadError(String errorMessage) {
                         Log.d(TAG, errorMessage);
@@ -912,7 +1018,6 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                 });
             }
         });
-
     }
 
     // TMapView 터치이벤트
@@ -990,6 +1095,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                             parkSortHorizontalScrollView.setVisibility(View.GONE);
                             searchStartBtn.setVisibility(View.GONE);
                             onlyConstLayout.setVisibility(View.GONE);
+                            findParkCustomTimeConstLayout.setVisibility(View.GONE);
                             naviConstLayout.setVisibility(View.VISIBLE);
                             if (clickedPark.getType() == 3) {
                                 reservationFirestoreDocumentId = clickedPark.getFirebaseDocumentId();
@@ -1026,7 +1132,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
 
         if (!firstOnLocationChangeCalled) {
             tMapView.setCenterPoint(lon, lat);
-            findPark(recievedSort);
+            findPark(recievedSort, null, null);
             firstOnLocationChangeCalled = true;
         }
     }
@@ -1124,6 +1230,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     @Override
     public void onMainCommandReceived(String mainCommand) {
         Log.d(TAG, "FindParkActivity에서 받은 명령: " + mainCommand);
+
         // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:주차가순)
         if (mainCommand.contains("메인")) {
             sd.dismiss();
@@ -1166,10 +1273,10 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         else if (!isItemSelected && (mainCommand.contains("순") || mainCommand.contains("정렬") || mainCommand.contains("찾") )) {
             sd.dismiss();
             if (mainCommand.contains("차비") && (mainCommand.contains("요금") || mainCommand.contains("료"))) {
-                findPark(2);
+                findPark(2, null, null);
             }
             else {
-                findPark(1);
+                findPark(1, null, null);
             }
         }
         else if (isItemSelected && (mainCommand.contains("안내") || mainCommand.contains("내비") || mainCommand.contains("시작") || mainCommand.contains("출발"))) {
@@ -1244,7 +1351,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                         }
 
                         tMapView.setCenterPoint(clickedPark.getLon(), clickedPark.getLat());
-                        findPark(nowSort);
+                        findPark(nowSort, null, null);
 
                         if (clickedPark.getType() == 1 || clickedPark.getType() == 2 || clickedPark.getType() == 3 || clickedPark.getType() == 6) {
                             Log.d(TAG, "검색 리스트뷰에서 주차장 아이템 클릭함 : " + clickedPark.getType()  + ", " + clickedPark.getName()
@@ -1418,6 +1525,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                         parkSortHorizontalScrollView.setVisibility(View.GONE);
                                         searchStartBtn.setVisibility(View.GONE);
                                         onlyConstLayout.setVisibility(View.GONE);
+                                        findParkCustomTimeConstLayout.setVisibility(View.GONE);
                                         naviConstLayout.setVisibility(View.VISIBLE);
                                         if (clickedPark.getType() == 3) {
                                             reservationFirestoreDocumentId = clickedPark.getFirebaseDocumentId();
@@ -1500,14 +1608,44 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         if (nowOnly == 0) {
             findParkOnlyReportParkBtn.setImageResource(R.drawable.disabled_button);
             findParkOnlyShareParkBtn.setImageResource(R.drawable.disabled_button);
+            findParkTimeSetBtn.setVisibility(View.GONE);
+            findParkCustomTimeConstLayout.setVisibility(View.GONE);
         }
         else if (nowOnly == 1) {
             findParkOnlyReportParkBtn.setImageResource(R.drawable.gradate_button);
             findParkOnlyShareParkBtn.setImageResource(R.drawable.disabled_button);
+            findParkTimeSetBtn.setVisibility(View.GONE);
+            findParkCustomTimeConstLayout.setVisibility(View.GONE);
         }
         else if (nowOnly == 2) {
             findParkOnlyReportParkBtn.setImageResource(R.drawable.disabled_button);
             findParkOnlyShareParkBtn.setImageResource(R.drawable.gradate_button);
+            findParkTimeSetBtn.setVisibility(View.VISIBLE);
         }
+    }
+
+    void checkAllCustomTimeSetted () {
+        if (startDate != null && !startDate.isEmpty() && startTime != null && !startTime.isEmpty() && endDate != null && !endDate.isEmpty() && endTime != null && !endTime.isEmpty()) {
+
+            startString = startDate + startTime;
+
+            endString = endDate + endTime;
+
+            Log.d(TAG, startString + "    " + endString);
+
+            findPark(nowSort, startString, endString);
+        }
+    }
+
+    void receiveStartDateFromDialog (String s) throws ParseException {
+        this.startDate = s;
+        findParkCustomTimeStartDateEditTxt.setText(s.substring(0, 4) + "년 " + s.substring(4, 6) + "월 " + s.substring(6) + "일");
+        checkAllCustomTimeSetted();
+    }
+
+    void receiveEndDateFromDialog (String s) throws ParseException {
+        this.endDate = s;
+        findParkCustomTimeEndDateEditTxt.setText(s.substring(0, 4) + "년 " + s.substring(4, 6) + "월 " + s.substring(6) + "일");
+        checkAllCustomTimeSetted();
     }
 }
