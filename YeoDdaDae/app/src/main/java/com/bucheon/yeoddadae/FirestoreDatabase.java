@@ -881,17 +881,52 @@ public class FirestoreDatabase {
         db.collection("sharePark")
                 .whereEqualTo("ownerId", id)
                 .whereEqualTo("isCalculated", false)
-                .whereEqualTo("price", 0L)
+                .whereEqualTo("price", 0)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (queryDocumentSnapshots == null || queryDocumentSnapshots.size() == 0) {
+                    long targetCount[] = {0};
+                    long didCount[] = {0};
+
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        Calendar ca = Calendar.getInstance();
+                        int year = ca.get(Calendar.YEAR);
+                        int month = ca.get(Calendar.MONTH) + 1;
+                        int day = ca.get(Calendar.DAY_OF_MONTH);
+                        int hour = ca.get(Calendar.HOUR_OF_DAY);
+                        int minute = ca.get(Calendar.MINUTE);
+                        String nowString = "";
+                        nowString += year;
+                        if (month < 10) {
+                            nowString += "0";
+                        }
+                        nowString += month;
+                        if (day < 10) {
+                            nowString += "0";
+                        }
+                        nowString += day;
+                        if (hour < 10) {
+                            nowString += "0";
+                        }
+                        nowString += hour;
+                        if (minute < 10) {
+                            nowString += "0";
+                        }
+                        nowString += minute;
+
+                        HashMap<String, ArrayList<String>> shareTime = (HashMap<String, ArrayList<String>>) documentSnapshot.get("time");
+                        List<String> sortedKeys = new ArrayList<>(shareTime.keySet());
+                        Collections.sort(sortedKeys);
+                        String endTime = sortedKeys.get(sortedKeys.size() - 1) + shareTime.get(sortedKeys.get(sortedKeys.size() - 1)).get(1);
+
+                        if (nowString.compareTo(endTime) > 0) {
+                            targetCount[0]++;
+                        }
+                    }
+                    if (targetCount[0] == 0) {
                         Log.d(TAG, "정산안된무료주차장없음");
                         listener.onDataLoaded(0);
-                    } else {
-                        int totalDocuments = queryDocumentSnapshots.size();
-                        int processedDocuments[] = {0};
-                        boolean hasCalculableDocument = false;
-
+                    }
+                    else {
                         for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                             Calendar ca = Calendar.getInstance();
                             int year = ca.get(Calendar.YEAR);
@@ -924,31 +959,21 @@ public class FirestoreDatabase {
                             String endTime = sortedKeys.get(sortedKeys.size() - 1) + shareTime.get(sortedKeys.get(sortedKeys.size() - 1)).get(1);
 
                             if (nowString.compareTo(endTime) > 0) {
-                                hasCalculableDocument = true;
                                 db.collection("sharePark")
                                         .document(documentSnapshot.getId())
                                         .update("isCalculated", true)
                                         .addOnSuccessListener(aVoid -> {
-                                            processedDocuments[0]++;
-                                            if (processedDocuments[0] == totalDocuments) {
-                                                listener.onDataLoaded(processedDocuments[0]);
+                                            didCount[0]++;
+                                            if (didCount[0] == targetCount[0]) {
+                                                Log.d(TAG, "자동정산된무료공유주차장수 : " + targetCount[0]);
+                                                listener.onDataLoaded(targetCount[0]);
                                             }
                                         })
                                         .addOnFailureListener(e -> {
                                             Log.d(TAG, "isCalculated true로 변경 실패");
                                             listener.onDataLoadError(e.getMessage());
                                         });
-                            } else {
-                                processedDocuments[0]++;
-                                if (processedDocuments[0] == totalDocuments && !hasCalculableDocument) {
-                                    listener.onDataLoaded(processedDocuments);
-                                }
                             }
-                        }
-
-                        if (!hasCalculableDocument) {
-                            Log.d(TAG, "정산안된무료주차장없음");
-                            listener.onDataLoaded(0);
                         }
                     }
                 })
@@ -1664,7 +1689,7 @@ public class FirestoreDatabase {
                                                                         if (rate[0].equals("mistake")) {
                                                                             db.collection("reportDiscountPark")
                                                                                     .document(firestoreDocumentId)
-                                                                                    .update("rateMisakeCount", rateCount[1] + 1)
+                                                                                    .update("rateMistakeCount", rateCount[1] + 1)
                                                                                     .addOnSuccessListener(aVoid3 -> {
                                                                                         listener.onDataLoaded(null);
                                                                                     })

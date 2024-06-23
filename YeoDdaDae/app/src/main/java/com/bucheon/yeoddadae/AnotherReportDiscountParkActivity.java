@@ -34,7 +34,7 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
     String loginId;
     double nowLat;
     double nowLon;
-    int km;
+    int km = -1;
     TMapGpsManager gpsManager;
     boolean firstInitCalled = false;
     ReportDiscountParkAdapter ra;
@@ -70,6 +70,10 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
     @Override
     protected void onStart() {
         super.onStart();
+
+        if (km != -1 && nowLat != 0 && nowLon != 0) {
+            getReports(km, nowLat, nowLon);
+        }
 
         checkPermission();
     }

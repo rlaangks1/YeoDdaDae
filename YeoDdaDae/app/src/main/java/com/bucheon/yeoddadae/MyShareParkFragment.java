@@ -81,7 +81,8 @@ public class MyShareParkFragment extends Fragment {
         fd.calculateFreeSharePark(loginId, new OnFirestoreDataLoadedListener() {
             @Override
             public void onDataLoaded(Object data) {
-                fd.loadMyShareParks(loginId, new OnFirestoreDataLoadedListener() {
+                FirestoreDatabase fd2 = new FirestoreDatabase();
+                fd2.loadMyShareParks(loginId, new OnFirestoreDataLoadedListener() {
                     @Override
                     public void onDataLoaded(Object data) {
                         ArrayList<HashMap<String, Object>> myShareParks = (ArrayList<HashMap<String, Object>>) data;

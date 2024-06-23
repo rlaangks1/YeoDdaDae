@@ -119,11 +119,34 @@ public class StatisticsActivity extends AppCompatActivity {
                     Calendar calendar = Calendar.getInstance();
                     endTimestamp = new Timestamp(calendar.getTime());
 
-                    calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                    switch (calendar.get(Calendar.DAY_OF_WEEK)) {
+                        case Calendar.SUNDAY:
+                            calendar.add(Calendar.DAY_OF_MONTH, -6);
+                            break;
+                        case Calendar.MONDAY:
+                            break;
+                        case Calendar.TUESDAY:
+                            calendar.add(Calendar.DAY_OF_MONTH, -1);
+                            break;
+                        case Calendar.WEDNESDAY:
+                            calendar.add(Calendar.DAY_OF_MONTH, -2);
+                            break;
+                        case Calendar.THURSDAY:
+                            calendar.add(Calendar.DAY_OF_MONTH, -3);
+                            break;
+                        case Calendar.FRIDAY:
+                            calendar.add(Calendar.DAY_OF_MONTH, -4);
+                            break;
+                        case Calendar.SATURDAY:
+                            calendar.add(Calendar.DAY_OF_MONTH, -5);
+                            break;
+                    }
+
                     calendar.set(Calendar.HOUR_OF_DAY, 0);
                     calendar.set(Calendar.MINUTE, 0);
                     calendar.set(Calendar.SECOND, 0);
                     calendar.set(Calendar.MILLISECOND, 0);
+
                     startTimestamp = new Timestamp(calendar.getTime());
                 }
                 else if (selectedItem.equals("이번 달")) {
