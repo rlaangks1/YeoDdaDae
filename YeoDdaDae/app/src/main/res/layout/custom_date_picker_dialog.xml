@@ -13,6 +13,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:mcv_selectionMode="single"
         app:mcv_firstDayOfWeek="monday"
-        app:mcv_showOtherDates="all" />
+        app:mcv_showOtherDates="all"
+        app:mcv_selectionColor="@color/sub" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

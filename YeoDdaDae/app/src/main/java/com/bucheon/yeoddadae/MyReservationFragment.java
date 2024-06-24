@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MyReservationFragment extends Fragment {
-
     String loginId;
     ReservationAdapter ra;
 
@@ -81,14 +80,23 @@ public class MyReservationFragment extends Fragment {
                     ra.addItem(new ReservationItem(id, isCancelled, shareParkDocumentName, reservationTime, upTime, documentId));
                 }
 
-                if (myReservations.size() == 0) {
-                    myReservationListView.setVisibility(View.GONE);
-                    myReservationNoTxt.setVisibility(View.VISIBLE);
-                }
-                else {
-                    myReservationListView.setVisibility(View.VISIBLE);
-                    myReservationNoTxt.setVisibility(View.GONE);
-                    myReservationListView.setAdapter(ra);
+                MainActivity ma = (MainActivity) getActivity();
+                if (ma != null) {
+                    ma.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            myReservationListView.setAdapter(ra);
+
+                            if (ra.getCount() == 0) {
+                                myReservationListView.setVisibility(View.GONE);
+                                myReservationNoTxt.setVisibility(View.VISIBLE);
+                            }
+                            else {
+                                myReservationListView.setVisibility(View.VISIBLE);
+                                myReservationNoTxt.setVisibility(View.GONE);
+                            }
+                        }
+                    });
                 }
             }
 

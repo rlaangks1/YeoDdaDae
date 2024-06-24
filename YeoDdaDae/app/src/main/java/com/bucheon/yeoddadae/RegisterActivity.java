@@ -80,6 +80,9 @@ public class RegisterActivity extends AppCompatActivity {
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                registerBtn.setEnabled(false);
+                registerBtn.setImageResource(R.drawable.disabled_button);
+
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm != null) {
                     imm.hideSoftInputFromWindow(idTxt.getWindowToken(), 0);
@@ -87,27 +90,39 @@ public class RegisterActivity extends AppCompatActivity {
                     imm.hideSoftInputFromWindow(pwTxt.getWindowToken(), 0);
                 }
 
-                String id = idTxt.getText().toString();
-                String email = emailTxt.getText().toString();
-                String pw = pwTxt.getText().toString();
+                String id = idTxt.getText().toString().trim();
+                String email = emailTxt.getText().toString().trim();
+                String pw = pwTxt.getText().toString().trim();
 
                 if (id.equals("")) {
                     Toast.makeText(getApplicationContext(), "ID를 입력해주세요", Toast.LENGTH_SHORT).show();
+                    registerBtn.setEnabled(true);
+                    registerBtn.setImageResource(R.drawable.gradate_button);
                 }
                 else if (email.equals("")) {
                     Toast.makeText(getApplicationContext(), "이메일을 입력해주세요", Toast.LENGTH_SHORT).show();
+                    registerBtn.setEnabled(true);
+                    registerBtn.setImageResource(R.drawable.gradate_button);
                 }
                 else if (pw.equals("")) {
                     Toast.makeText(getApplicationContext(), "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+                    registerBtn.setEnabled(true);
+                    registerBtn.setImageResource(R.drawable.gradate_button);
                 }
                 else if (id.length() <= 5 || id.length() >= 21) {
                     Toast.makeText(getApplicationContext(), "ID는 6~20자이어야 합니다", Toast.LENGTH_SHORT).show();
+                    registerBtn.setEnabled(true);
+                    registerBtn.setImageResource(R.drawable.gradate_button);
                 }
                 else if (!isValidEmail(email)) {
                     Toast.makeText(getApplicationContext(), "유효하지 않은 이메일 형식입니다", Toast.LENGTH_SHORT).show();
+                    registerBtn.setEnabled(true);
+                    registerBtn.setImageResource(R.drawable.gradate_button);
                 }
                 else if (pw.length() <= 5 || pw.length() >= 21) {
                     Toast.makeText(getApplicationContext(), "비밀번호는 6~20자이어야 합니다", Toast.LENGTH_SHORT).show();
+                    registerBtn.setEnabled(true);
+                    registerBtn.setImageResource(R.drawable.gradate_button);
                 }
                 else{
                     fd.duplicationCheck("account", "id", id, new OnFirestoreDataLoadedListener() {
@@ -118,6 +133,8 @@ public class RegisterActivity extends AppCompatActivity {
                             }
                             else {
                                 Toast.makeText(getApplicationContext(), "이미 존재하는 아이디입니다", Toast.LENGTH_SHORT).show();
+                                registerBtn.setEnabled(true);
+                                registerBtn.setImageResource(R.drawable.gradate_button);
                             }
                         }
 
@@ -125,6 +142,8 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onDataLoadError(String errorMessage) {
                             Log.d(TAG, errorMessage);
                             Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                            registerBtn.setEnabled(true);
+                            registerBtn.setImageResource(R.drawable.gradate_button);
                         }
                     });
                 }
@@ -152,9 +171,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerUser(String id, String email, String pw) {
-        registerBtn.setEnabled(false);
-        registerBtn.setImageResource(R.drawable.disabled_button);
-
         mAuth.createUserWithEmailAndPassword(email, pw)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {

@@ -34,6 +34,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
 import com.skt.Tmap.TMapCircle;
 import com.skt.Tmap.TMapData;
@@ -621,6 +622,8 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                 @Override
                 public void run() {
                     loadingAlert.show();
+                    loadingAlert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(FindGasStationActivity.this, R.color.sub));
+                    loadingAlert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(FindGasStationActivity.this, R.color.sub));
                     getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 }
             });

@@ -98,6 +98,8 @@ public class LoginActivity extends AppCompatActivity {
                                     .addOnCompleteListener(task -> {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(getApplicationContext(), "로그인 성공", Toast.LENGTH_SHORT).show();
+                                            App app = (App) getApplication();
+                                            app.setLoginId(id);
                                             Intent resultIntent = new Intent();
                                             resultIntent.putExtra("loginId", id);
                                             resultIntent.putExtra("isAdmin", isAdmin);
@@ -106,6 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                                         }
                                         else {
                                             Toast.makeText(getApplicationContext(), "로그인 실패", Toast.LENGTH_SHORT).show();
+                                            pwTxt.setText("");
                                         }
                                     });
                         }
@@ -119,6 +122,7 @@ public class LoginActivity extends AppCompatActivity {
                             else {
                                 Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
                             }
+                            pwTxt.setText("");
                         }
                     });
                 }

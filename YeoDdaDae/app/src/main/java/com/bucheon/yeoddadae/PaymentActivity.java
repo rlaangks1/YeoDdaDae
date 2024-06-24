@@ -3,6 +3,7 @@ package com.bucheon.yeoddadae;
 import static android.content.ContentValues.TAG;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.firestore.FieldValue;
 
@@ -78,74 +80,96 @@ public class PaymentActivity extends AppCompatActivity {
         paymentPayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fd = new FirestoreDatabase();
-                fd.payByYdPoint(loginId, price, new OnFirestoreDataLoadedListener() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(PaymentActivity.this);
+                builder.setTitle("결제 확인");
+                builder.setMessage("결제하시겠습니까");
+                builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onDataLoaded(Object data) {
-                        HashMap<String, Object> hm = new HashMap<>();
-                        hm.put("shareParkDocumentName", shareParkDocumentName);
-                        hm.put("id", loginId);
-                        hm.put("time", reservationTime);
-                        hm.put("isCancelled", false);
-                        hm.put("upTime", FieldValue.serverTimestamp());
-                        hm.put("price", price);
-                        fd.insertData("reservation", hm, new OnFirestoreDataLoadedListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        fd = new FirestoreDatabase();
+                        fd.payByYdPoint(loginId, price, new OnFirestoreDataLoadedListener() {
                             @Override
                             public void onDataLoaded(Object data) {
-                                String reservationDocumentId = (String) data;
-
                                 HashMap<String, Object> hm = new HashMap<>();
+                                hm.put("shareParkDocumentName", shareParkDocumentName);
                                 hm.put("id", loginId);
-                                hm.put("type", payType);
-                                hm.put("reservationId", reservationDocumentId);
-                                hm.put("price", price);
+                                hm.put("time", reservationTime);
+                                hm.put("isCancelled", false);
                                 hm.put("upTime", FieldValue.serverTimestamp());
-                                fd.insertData("spendYdPointHistory", hm, new OnFirestoreDataLoadedListener() {
+                                hm.put("price", price);
+                                fd.insertData("reservation", hm, new OnFirestoreDataLoadedListener() {
                                     @Override
                                     public void onDataLoaded(Object data) {
-                                        Toast.makeText(getApplicationContext(), "예약되었습니다", Toast.LENGTH_SHORT).show();
+                                        String reservationDocumentId = (String) data;
 
-                                        Intent returnIntent = new Intent();
-                                        setResult(RESULT_OK, returnIntent);
+                                        HashMap<String, Object> hm = new HashMap<>();
+                                        hm.put("id", loginId);
+                                        hm.put("type", payType);
+                                        hm.put("reservationId", reservationDocumentId);
+                                        hm.put("price", price);
+                                        hm.put("upTime", FieldValue.serverTimestamp());
+                                        fd.insertData("spendYdPointHistory", hm, new OnFirestoreDataLoadedListener() {
+                                            @Override
+                                            public void onDataLoaded(Object data) {
+                                                Toast.makeText(getApplicationContext(), "예약되었습니다", Toast.LENGTH_SHORT).show();
 
-                                        finish();
+                                                Intent returnIntent = new Intent();
+                                                setResult(RESULT_OK, returnIntent);
+
+                                                finish();
+                                            }
+
+                                            @Override
+                                            public void onDataLoadError(String errorMessage) {
+                                                Log.d(TAG, errorMessage);
+                                                Toast.makeText(getApplicationContext(), "소비 문서 추가 중 오류 발생", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                                     }
 
                                     @Override
                                     public void onDataLoadError(String errorMessage) {
                                         Log.d(TAG, errorMessage);
-                                        Toast.makeText(getApplicationContext(), "소비 문서 추가 중 오류 발생", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getApplicationContext(), "예약 문서 추가 중 오류 발생", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }
 
                             @Override
                             public void onDataLoadError(String errorMessage) {
-                                Log.d(TAG, errorMessage);
-                                Toast.makeText(getApplicationContext(), "예약 문서 추가 중 오류 발생", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onDataLoadError(String errorMessage) {
-                        if (errorMessage.equals("포인트가 부족합니다")) {
-                            new AlertDialog.Builder(PaymentActivity.this)
-                                    .setTitle("포인트가 부족합니다")
-                                    .setMessage("충전하시겠습니까?")
-                                    .setPositiveButton("예", (dialog, which) -> {
+                                if (errorMessage.equals("포인트가 부족합니다")) {
+                                    AlertDialog.Builder builder2 = new AlertDialog.Builder(PaymentActivity.this);
+                                    builder2.setTitle("포인트가 부족합니다");
+                                    builder2.setMessage("충전하시겠습니까?");
+                                    builder2.setPositiveButton("예", (dialog, which) -> {
                                         Intent ydPointChargeIntent = new Intent(getApplicationContext(), YdPointChargeActivity.class);
                                         ydPointChargeIntent.putExtra("loginId", loginId);
                                         startActivity(ydPointChargeIntent);
-                                    })
-                                    .setNegativeButton("아니오", (dialog, which) -> dialog.dismiss())
-                                    .show();
-                        } else {
-                            Log.d(TAG, errorMessage);
-                            Toast.makeText(getApplicationContext(), "결제 시도 중 오류 발생", Toast.LENGTH_SHORT).show();
-                        }
+                                    });
+                                    builder2.setNegativeButton("아니오", (dialog, which) -> dialog.dismiss());
+                                    AlertDialog dialog2 = builder2.create();
+                                    dialog2.show();
+
+                                    dialog2.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(PaymentActivity.this, R.color.sub));
+                                    dialog2.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(PaymentActivity.this, R.color.sub));
+                                } else {
+                                    Log.d(TAG, errorMessage);
+                                    Toast.makeText(getApplicationContext(), "결제 시도 중 오류 발생", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
                     }
                 });
+                builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(PaymentActivity.this, R.color.sub));
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(PaymentActivity.this, R.color.sub));
             }
         });
     }
@@ -169,8 +193,6 @@ public class PaymentActivity extends AppCompatActivity {
                         paymentYdPointContentTxt.setText(formattedYdPoint);
                         paymentTotalPriceContentTxt.setText(formattedPrice);
                         paymentAfterPayPointContentTxt.setText(formattedAfterPay);
-
-
 
                         if (afterPayYdPoint < 0) {
                             int redColor = Color.rgb(255, 64, 64);

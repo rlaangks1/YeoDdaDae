@@ -19,6 +19,18 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp" />
 
+    <TextView
+        android:text="제보주차장 승인"
+        android:textSize="25sp"
+        android:textColor="@color/sub"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/approveReportBackBtn"
+        app:layout_constraintBottom_toBottomOf="@+id/approveReportBackBtn"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
     <ListView
         android:id="@+id/approveReportListView"
         android:dividerHeight="5dp"

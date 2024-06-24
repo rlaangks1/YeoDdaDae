@@ -15,9 +15,14 @@ import com.google.firebase.firestore.Transaction;
 import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapPolyLine;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -606,7 +611,7 @@ public class FirestoreDatabase {
     }
 
 
-    public void findSharePark(String id, double nowLat, double nowLon, double radiusKiloMeter, OnFirestoreDataLoadedListener listener) {
+    public void findSharePark(String id, double nowLat, double nowLon, double radiusKiloMeter, String startString, String endString, OnFirestoreDataLoadedListener listener) {
         ArrayList<ParkItem> resultList = new ArrayList<>();
 
         if (id == null || id.equals("")) {
@@ -655,6 +660,27 @@ public class FirestoreDatabase {
                             continue;
                         }
 
+                        if (startString != null && endString != null) {
+                            if (startString.compareTo(endString) >= 0) {
+                                continue;
+                            }
+
+                            ArrayList<String> targetAL = new ArrayList<>();
+
+                            for (String outer : sortedKeys) {
+                                targetAL.add(outer + shareTime.get(outer).get(0));
+                                targetAL.add(outer + shareTime.get(outer).get(1));
+                            }
+
+                            try {
+                                if (!brrrr(startString, endString, arrrr(targetAL))) {
+                                    continue;
+                                }
+                            } catch (ParseException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+
                         double shareParkLat = (double) document.get("lat");
                         double shareParkLon = (double) document.get("lon");
 
@@ -664,14 +690,13 @@ public class FirestoreDatabase {
                         double distance = tpolyline.getDistance() / 1000; // km단위
 
                         if (distance <= radiusKiloMeter) {
-                            String parkName = id + ": " + (String) document.get("parkDetailAddress");
+                            String parkName = (String) document.get("ownerId") + ": " + (String) document.get("parkDetailAddress");
                             resultList.add(new ParkItem(3, parkName, Double.toString(distance), Long.toString((long) document.get("price")), (String) document.get("ownerPhone"), null, -1, Double.toString(shareParkLat), Double.toString(shareParkLon), null, document.getId()));
                         }
                     }
                     if (resultList != null && resultList.size() != 0) {
                         Log.d(TAG, "공유주차장 검색 성공. 결과 수 : " + resultList.size());
-                    }
-                    else {
+                    } else {
                         Log.d(TAG, "해당 공유주차장이 없음");
                     }
                     listener.onDataLoaded(resultList);
@@ -680,6 +705,67 @@ public class FirestoreDatabase {
                     Log.d(TAG, "데이터 검색 오류", e);
                     listener.onDataLoadError(e.getMessage());
                 });
+    }
+
+    ArrayList<String> arrrr (ArrayList<String> al) throws ParseException {
+        ArrayList<String> copyAl = al;
+        Collections.sort(copyAl);
+
+        outerLoop:
+        while (true) {
+            for (String item : copyAl) {
+                if (item.endsWith("2400")) {
+                    String cuttedString = item.substring(0, 8);
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+                    Date date = sdf.parse(cuttedString);
+
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(date);
+                    calendar.add(Calendar.DAY_OF_YEAR, 1);
+
+                    Date nextDate = calendar.getTime();
+                    String nextDateStr = sdf.format(nextDate);
+                    String nextDay = nextDateStr + "0000";
+
+                    if (copyAl.contains(nextDay)) {
+                        copyAl.remove(item);
+                        copyAl.remove(nextDay);
+
+                        continue outerLoop;
+                    }
+                }
+            }
+
+            for (String logItem : copyAl) {
+                Log.d(TAG, logItem);
+            }
+
+            return copyAl;
+        }
+    }
+
+    boolean brrrr(String startString, String endSTring, ArrayList<String> al) {
+        boolean result = false;
+        int alSize = (al.size() / 2) - 1;
+
+        for (int i = 0; i <= alSize; i++) {
+            String alStart = al.get(i);
+            String alEnd = al.get(i + 1);
+
+            long startLong = Long.parseLong(startString);
+            long endLong = Long.parseLong(endSTring);
+            long startAlLong = Long.parseLong(alStart);
+            long endAlLong = Long.parseLong(alEnd);
+
+            if (startAlLong <= startLong && endLong <= endAlLong) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
     }
 
     public void loadShareParkInfo (String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
@@ -787,6 +873,112 @@ public class FirestoreDatabase {
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    void calculateFreeSharePark(String id, OnFirestoreDataLoadedListener listener) {
+        db.collection("sharePark")
+                .whereEqualTo("ownerId", id)
+                .whereEqualTo("isCalculated", false)
+                .whereEqualTo("price", 0)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    long targetCount[] = {0};
+                    long didCount[] = {0};
+
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        Calendar ca = Calendar.getInstance();
+                        int year = ca.get(Calendar.YEAR);
+                        int month = ca.get(Calendar.MONTH) + 1;
+                        int day = ca.get(Calendar.DAY_OF_MONTH);
+                        int hour = ca.get(Calendar.HOUR_OF_DAY);
+                        int minute = ca.get(Calendar.MINUTE);
+                        String nowString = "";
+                        nowString += year;
+                        if (month < 10) {
+                            nowString += "0";
+                        }
+                        nowString += month;
+                        if (day < 10) {
+                            nowString += "0";
+                        }
+                        nowString += day;
+                        if (hour < 10) {
+                            nowString += "0";
+                        }
+                        nowString += hour;
+                        if (minute < 10) {
+                            nowString += "0";
+                        }
+                        nowString += minute;
+
+                        HashMap<String, ArrayList<String>> shareTime = (HashMap<String, ArrayList<String>>) documentSnapshot.get("time");
+                        List<String> sortedKeys = new ArrayList<>(shareTime.keySet());
+                        Collections.sort(sortedKeys);
+                        String endTime = sortedKeys.get(sortedKeys.size() - 1) + shareTime.get(sortedKeys.get(sortedKeys.size() - 1)).get(1);
+
+                        if (nowString.compareTo(endTime) > 0) {
+                            targetCount[0]++;
+                        }
+                    }
+                    if (targetCount[0] == 0) {
+                        Log.d(TAG, "정산안된무료주차장없음");
+                        listener.onDataLoaded(0);
+                    }
+                    else {
+                        for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            Calendar ca = Calendar.getInstance();
+                            int year = ca.get(Calendar.YEAR);
+                            int month = ca.get(Calendar.MONTH) + 1;
+                            int day = ca.get(Calendar.DAY_OF_MONTH);
+                            int hour = ca.get(Calendar.HOUR_OF_DAY);
+                            int minute = ca.get(Calendar.MINUTE);
+                            String nowString = "";
+                            nowString += year;
+                            if (month < 10) {
+                                nowString += "0";
+                            }
+                            nowString += month;
+                            if (day < 10) {
+                                nowString += "0";
+                            }
+                            nowString += day;
+                            if (hour < 10) {
+                                nowString += "0";
+                            }
+                            nowString += hour;
+                            if (minute < 10) {
+                                nowString += "0";
+                            }
+                            nowString += minute;
+
+                            HashMap<String, ArrayList<String>> shareTime = (HashMap<String, ArrayList<String>>) documentSnapshot.get("time");
+                            List<String> sortedKeys = new ArrayList<>(shareTime.keySet());
+                            Collections.sort(sortedKeys);
+                            String endTime = sortedKeys.get(sortedKeys.size() - 1) + shareTime.get(sortedKeys.get(sortedKeys.size() - 1)).get(1);
+
+                            if (nowString.compareTo(endTime) > 0) {
+                                db.collection("sharePark")
+                                        .document(documentSnapshot.getId())
+                                        .update("isCalculated", true)
+                                        .addOnSuccessListener(aVoid -> {
+                                            didCount[0]++;
+                                            if (didCount[0] == targetCount[0]) {
+                                                Log.d(TAG, "자동정산된무료공유주차장수 : " + targetCount[0]);
+                                                listener.onDataLoaded(targetCount[0]);
+                                            }
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.d(TAG, "isCalculated true로 변경 실패");
+                                            listener.onDataLoadError(e.getMessage());
+                                        });
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, e.getMessage());
                     listener.onDataLoadError(e.getMessage());
                 });
     }
@@ -1156,7 +1348,7 @@ public class FirestoreDatabase {
                                                                     String raterId = (String) documentSnapshot2.get("id");
 
                                                                     int count[] = {1};
-                                                                    receiveYdPoint(raterId, 300, "부정적 평가한 할인주차장 취소", new OnFirestoreDataLoadedListener() {
+                                                                    receiveYdPoint(raterId, 200, "부정적 평가한 할인주차장 취소", new OnFirestoreDataLoadedListener() {
                                                                         @Override
                                                                         public void onDataLoaded(Object data) {
                                                                             if (docCount[0] == count[0]) {
@@ -1224,7 +1416,7 @@ public class FirestoreDatabase {
                                     .document(firestoreDocumentId)
                                     .update("isApproval", true)
                                     .addOnSuccessListener(aVoid -> {
-                                        receiveYdPoint(reporterId, 1500, "할인주차장 제보 승인", new OnFirestoreDataLoadedListener() {
+                                        receiveYdPoint(reporterId, 1000, "할인주차장 제보 승인", new OnFirestoreDataLoadedListener() {
                                             @Override
                                             public void onDataLoaded(Object data) {
                                                 db.collection("rateReport")
@@ -1240,7 +1432,7 @@ public class FirestoreDatabase {
                                                                 String raterId = (String) documentSnapshot.get("id");
 
                                                                 int count[] = {1};
-                                                                receiveYdPoint(raterId, 300, "긍정적 평가한 할인주차장 승인", new OnFirestoreDataLoadedListener() {
+                                                                receiveYdPoint(raterId, 200, "긍정적 평가한 할인주차장 승인", new OnFirestoreDataLoadedListener() {
                                                                     @Override
                                                                     public void onDataLoaded(Object data) {
                                                                         if (documentSize == count[0]) {
@@ -1366,39 +1558,49 @@ public class FirestoreDatabase {
     }
 
     public void loadRateCount (String id, String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
-        int[] perfectCount = {0};
-        int[] mistakeCount = {0};
-        int[] wrongCount = {0};
-        int myRate[] = {0};
+        long[] perfectCount = {0};
+        long[] mistakeCount = {0};
+        long[] wrongCount = {0};
+        long[] myRate = {0};
 
-        db.collection("rateReport")
-                .whereEqualTo("reportDocumentID", firestoreDocumentId)
+        db.collection("reportDiscountPark")
+                .document(firestoreDocumentId)
                 .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                        String rate = documentSnapshot.getString("rate");
-                        if (rate.equals("perfect")) {
-                            perfectCount[0]++;
-                            if (((String) documentSnapshot.get("id")).equals(id)) {
-                                myRate[0] = 1;
-                            }
-                        }
-                        else if (rate.equals("mistake")) {
-                            mistakeCount[0]++;
-                            if (((String) documentSnapshot.get("id")).equals(id)) {
-                                myRate[0] = 2;
-                            }
-                        }
-                        else if (rate.equals("wrong")) {
-                            wrongCount[0]++;
-                            if (((String) documentSnapshot.get("id")).equals(id)) {
-                                myRate[0] = 3;
-                            }
-                        }
-                    }
+                .addOnSuccessListener(documentSnapshot -> {
+                    perfectCount[0] = (long) documentSnapshot.get("ratePerfectCount");
+                    mistakeCount[0] = (long) documentSnapshot.get("rateMistakeCount");
+                    wrongCount[0] = (long) documentSnapshot.get("rateWrongCount");
 
-                    int [] result = {perfectCount[0], mistakeCount[0], wrongCount[0], myRate[0]};
-                    listener.onDataLoaded(result);
+                    db.collection("rateReport")
+                            .whereEqualTo("reportDocumentID", firestoreDocumentId)
+                            .get()
+                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                                for (QueryDocumentSnapshot documentSnapshot2 : queryDocumentSnapshots) {
+                                    String rate = documentSnapshot2.getString("rate");
+                                    if (rate.equals("perfect")) {
+                                        if (((String) documentSnapshot2.get("id")).equals(id)) {
+                                            myRate[0] = 1;
+                                        }
+                                    }
+                                    else if (rate.equals("mistake")) {
+                                        if (((String) documentSnapshot2.get("id")).equals(id)) {
+                                            myRate[0] = 2;
+                                        }
+                                    }
+                                    else if (rate.equals("wrong")) {
+                                        if (((String) documentSnapshot2.get("id")).equals(id)) {
+                                            myRate[0] = 3;
+                                        }
+                                    }
+                                }
+
+                                long [] result = {perfectCount[0], mistakeCount[0], wrongCount[0], myRate[0]};
+                                listener.onDataLoaded(result);
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.d(TAG, "데이터 검색 오류", e);
+                                listener.onDataLoadError(e.getMessage());
+                            });
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "데이터 검색 오류", e);
@@ -1497,7 +1699,7 @@ public class FirestoreDatabase {
                                                                         if (rate[0].equals("mistake")) {
                                                                             db.collection("reportDiscountPark")
                                                                                     .document(firestoreDocumentId)
-                                                                                    .update("rateMisakeCount", rateCount[1] + 1)
+                                                                                    .update("rateMistakeCount", rateCount[1] + 1)
                                                                                     .addOnSuccessListener(aVoid3 -> {
                                                                                         listener.onDataLoaded(null);
                                                                                     })
@@ -1962,7 +2164,36 @@ public class FirestoreDatabase {
                                                                                 resultHM.put("취소제보주차장수", canceledReportParkCount);
                                                                                 resultHM.put("승인제보주차장수", approvedReportParkCount);
 
-                                                                                listener.onDataLoaded(resultHM);
+                                                                                db.collection("receiveYdPoint")
+                                                                                        .whereGreaterThanOrEqualTo("upTime", startTime)
+                                                                                        .whereLessThanOrEqualTo("upTime", endTime)
+                                                                                        .get()
+                                                                                        .addOnSuccessListener(queryDocumentSnapshots7 -> {
+                                                                                            long receivedApproveReportParkPoint = 0;
+                                                                                            long receivedRatedReportParkPoint = 0;
+
+                                                                                            if (queryDocumentSnapshots7 == null || queryDocumentSnapshots7.size() == 0) {
+                                                                                                resultHM.put("총제보주차장승인지급포인트", 0L);
+                                                                                                resultHM.put("총평가주차장승인지급포인트", 0L);
+                                                                                            }
+                                                                                            else {
+                                                                                                for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots7) {
+                                                                                                    if (((String) documentSnapshot.get("type")).equals("할인주차장 제보 승인")) {
+                                                                                                        receivedApproveReportParkPoint += (long) documentSnapshot.get("receivedYdPoint");
+                                                                                                    }
+                                                                                                    else if (((String) documentSnapshot.get("type")).equals("긍정적 평가한 할인주차장 승인") || ((String) documentSnapshot.get("type")).equals("부정적 평가한 할인주차장 취소")) {
+                                                                                                        receivedRatedReportParkPoint += (long) documentSnapshot.get("receivedYdPoint");
+                                                                                                    }
+                                                                                                }
+                                                                                                resultHM.put("총제보주차장승인지급포인트", receivedApproveReportParkPoint);
+                                                                                                resultHM.put("총평가주차장승인지급포인트", receivedRatedReportParkPoint);
+                                                                                            }
+                                                                                            listener.onDataLoaded(resultHM);
+                                                                                        })
+                                                                                        .addOnFailureListener(e -> {
+                                                                                            Log.d(TAG, "포인트받기찾기 중 오류", e);
+                                                                                            listener.onDataLoadError("포인트받기찾기 중 오류");
+                                                                                        });
                                                                             })
                                                                             .addOnFailureListener(e -> {
                                                                                 Log.d(TAG, "제보주차장찾기 중 오류", e);

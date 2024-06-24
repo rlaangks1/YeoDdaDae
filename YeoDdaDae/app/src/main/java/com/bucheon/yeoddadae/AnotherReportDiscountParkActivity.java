@@ -34,7 +34,7 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
     String loginId;
     double nowLat;
     double nowLon;
-    int km;
+    int km = -1;
     TMapGpsManager gpsManager;
     boolean firstInitCalled = false;
     ReportDiscountParkAdapter ra;
@@ -71,6 +71,10 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
     protected void onStart() {
         super.onStart();
 
+        if (km != -1 && nowLat != 0 && nowLon != 0) {
+            getReports(km, nowLat, nowLon);
+        }
+
         checkPermission();
     }
 
@@ -78,8 +82,8 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
         if (ra != null) {
             ra.clearItem();
         }
-
         ra = new ReportDiscountParkAdapter(AnotherReportDiscountParkActivity.this);
+
         FirestoreDatabase fd = new FirestoreDatabase();
         fd.loadAnotherReports(distanceKm, nowLat, nowLon, loginId, new OnFirestoreDataLoadedListener() {
             @Override
@@ -102,15 +106,22 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
 
                     ra.addItem(new ReportDiscountParkItem(reporterId, parkName, condition, discount, ratePerfectCount, rateMistakeCount, rateWrongCount, isCancelled, isApproval, upTime, poiID, documentId));
                 }
-                if (myReports.size() == 0) {
-                    anotherReportListView.setVisibility(View.GONE);
-                    anotherReportNoTxt.setVisibility(View.VISIBLE);
-                }
-                else {
-                    anotherReportListView.setVisibility(View.VISIBLE);
-                    anotherReportNoTxt.setVisibility(View.GONE);
-                    anotherReportListView.setAdapter(ra);
-                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        anotherReportListView.setAdapter(ra);
+
+                        if (ra.getCount() == 0) {
+                            anotherReportListView.setVisibility(View.GONE);
+                            anotherReportNoTxt.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            anotherReportListView.setVisibility(View.VISIBLE);
+                            anotherReportNoTxt.setVisibility(View.GONE);
+                        }
+                    }
+                });
             }
             @Override
             public void onDataLoadError(String errorMessage) {

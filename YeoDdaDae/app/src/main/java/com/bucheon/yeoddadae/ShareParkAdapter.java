@@ -182,7 +182,7 @@ public class ShareParkAdapter extends BaseAdapter {
                 }
                 else {
                     shareParkIsCancelledTxt.setText("정산 대기 중");
-                    statusColor = Color.rgb(0, 200, 0);
+                    statusColor = Color.rgb(32, 200, 32);
                     shareParkIsCancelledTxt.setVisibility(View.VISIBLE);
                 }
             }

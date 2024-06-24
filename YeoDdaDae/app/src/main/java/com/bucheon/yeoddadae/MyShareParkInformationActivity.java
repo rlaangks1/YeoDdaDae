@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.Timestamp;
 import com.skt.Tmap.TMapData;
@@ -86,23 +87,35 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
         documentId = inIntent.getStringExtra("documentId");
 
         FirestoreDatabase fd = new FirestoreDatabase();
-        fd.loadShareParkInfo(documentId, new OnFirestoreDataLoadedListener() {
+        fd.calculateFreeSharePark(loginId, new OnFirestoreDataLoadedListener() {
             @Override
             public void onDataLoaded(Object data) {
-                shareParkInfo = (HashMap<String, Object>) data;
-
-                TMapData tMapdata = new TMapData();
-                tMapdata.reverseGeocoding((double) shareParkInfo.get("lat"), (double) shareParkInfo.get("lon"), "A10", new TMapData.reverseGeocodingListenerCallback() {
+                fd.loadShareParkInfo(documentId, new OnFirestoreDataLoadedListener() {
                     @Override
-                    public void onReverseGeocoding(TMapAddressInfo tMapAddressInfo) {
-                        if (tMapAddressInfo != null) {
-                            String [] adrresses = tMapAddressInfo.strFullAddress.split(",");
-                            naviEndPointName = adrresses[2] + " : " + shareParkInfo.get("parkDetailAddress");
-                        }
+                    public void onDataLoaded(Object data) {
+                        shareParkInfo = (HashMap<String, Object>) data;
+
+                        TMapData tMapdata = new TMapData();
+                        tMapdata.reverseGeocoding((double) shareParkInfo.get("lat"), (double) shareParkInfo.get("lon"), "A10", new TMapData.reverseGeocodingListenerCallback() {
+                            @Override
+                            public void onReverseGeocoding(TMapAddressInfo tMapAddressInfo) {
+                                if (tMapAddressInfo != null) {
+                                    String [] adrresses = tMapAddressInfo.strFullAddress.split(",");
+                                    naviEndPointName = adrresses[2] + " : " + shareParkInfo.get("parkDetailAddress");
+                                }
+                            }
+                        });
+
+                        init();
+                    }
+
+                    @Override
+                    public void onDataLoadError(String errorMessage) {
+                        Log.d(TAG, errorMessage);
+                        Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                 });
-
-                init();
             }
 
             @Override
@@ -112,6 +125,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                 finish();
             }
         });
+
 
         myShareParkInfoBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -458,6 +472,9 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                         });
                         AlertDialog dialog = builder.create();
                         dialog.show();
+
+                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(MyShareParkInformationActivity.this, R.color.sub));
+                        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(MyShareParkInformationActivity.this, R.color.sub));
                     }
                 });
 

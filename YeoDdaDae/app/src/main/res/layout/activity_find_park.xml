@@ -231,6 +231,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/tempId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right" >
@@ -310,6 +311,18 @@
                     app:layout_constraintLeft_toLeftOf="@+id/findParkOnlyShareParkBtn"
                     app:layout_constraintRight_toRightOf="@+id/findParkOnlyShareParkBtn" />
 
+                <ImageButton
+                    android:id="@+id/findParkTimeSetBtn"
+                    android:src="@drawable/clock_icon"
+                    android:scaleType="fitCenter"
+                    android:background="@android:color/transparent"
+                    android:visibility="gone"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:layout_constraintBottom_toTopOf="@+id/findParkOnlyShareParkBtn"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginBottom="2dp" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -326,7 +339,6 @@
                 android:id="@+id/searchEdTxt"
                 android:hint="검색..."
                 android:textSize="25sp"
-                android:textColorHint="@color/main"
                 android:backgroundTint="@color/sub"
                 android:maxLength="30"
                 android:singleLine="true"
@@ -383,5 +395,120 @@
                 app:layout_constraintRight_toRightOf="@+id/searchListView" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/findParkCustomTimeConstLayout"
+                android:visibility="gone"
+                android:background="#FFFFFF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" >
+
+                <TextView
+                    android:id="@+id/findParkCustomTimeStartTxt"
+                    android:text="시작"
+                    android:textSize="20dp"
+                    android:textColor="@color/sub"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@+id/findParkCustomTimeStartDateEditTxt"
+                    app:layout_constraintBottom_toBottomOf="@+id/findParkCustomTimeStartDateEditTxt"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:layout_marginLeft="10dp"/>
+
+                <EditText
+                    android:id="@+id/findParkCustomTimeStartDateEditTxt"
+                    android:textSize="16dp"
+                    android:textColor="@color/sub"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/findParkCustomTimeEndDateEditTxt"
+                    app:layout_constraintLeft_toRightOf="@+id/findParkCustomTimeStartTxt"
+                    app:layout_constraintRight_toLeftOf="@+id/findParkCustomTimeStartTimeEditTxt"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp" />
+
+                <EditText
+                    android:id="@+id/findParkCustomTimeStartTimeEditTxt"
+                    android:textSize="16dp"
+                    android:textColor="@color/sub"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@+id/findParkCustomTimeStartDateEditTxt"
+                    app:layout_constraintBottom_toBottomOf="@+id/findParkCustomTimeStartDateEditTxt"
+                    app:layout_constraintLeft_toRightOf="@+id/findParkCustomTimeStartDateEditTxt"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginRight="10dp"/>
+
+                <TextView
+                    android:id="@+id/findParkCustomTimeEndTxt"
+                    android:text="끝"
+                    android:textSize="20dp"
+                    android:textColor="@color/sub"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@+id/findParkCustomTimeEndDateEditTxt"
+                    app:layout_constraintBottom_toBottomOf="@+id/findParkCustomTimeEndDateEditTxt"
+                    app:layout_constraintLeft_toLeftOf="@+id/findParkCustomTimeStartTxt"
+                    app:layout_constraintRight_toRightOf="@+id/findParkCustomTimeStartTxt" />
+
+                <EditText
+                    android:id="@+id/findParkCustomTimeEndDateEditTxt"
+                    android:textSize="16dp"
+                    android:textColor="@color/sub"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/findParkCustomTimeStartDateEditTxt"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="@+id/findParkCustomTimeStartDateEditTxt"
+                    app:layout_constraintRight_toRightOf="@+id/findParkCustomTimeStartDateEditTxt"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp" />
+
+                <EditText
+                    android:id="@+id/findParkCustomTimeEndTimeEditTxt"
+                    android:textSize="16dp"
+                    android:textColor="@color/sub"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@+id/findParkCustomTimeEndDateEditTxt"
+                    app:layout_constraintBottom_toBottomOf="@+id/findParkCustomTimeEndDateEditTxt"
+                    app:layout_constraintLeft_toLeftOf="@+id/findParkCustomTimeStartTimeEditTxt"
+                    app:layout_constraintRight_toRightOf="@+id/findParkCustomTimeStartTimeEditTxt" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </FrameLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

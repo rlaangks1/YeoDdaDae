@@ -1,6 +1,8 @@
 package com.bucheon.yeoddadae;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -73,21 +76,24 @@ public class AdminMainActivity extends AppCompatActivity {
                     finish();
                 }
                 else if (item.getItemId() == R.id.nav_change_password) {
-                    mAuth.sendPasswordResetEmail(user.getEmail())
-                            .addOnCompleteListener(task -> {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(getApplicationContext(), "이메일을 확인하여 비밀번호 변경 후 다시 로그인하세요", Toast.LENGTH_SHORT).show();
-                                    loginId = null;
-                                    mAuth.signOut();
-                                    Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
-                                    startActivity(logoutIntent);
-                                    finish();
-                                }
-                                else {
-                                    Log.d(ContentValues.TAG, "인증 이메일 전송 실패 : " + task.getException().getMessage());
-                                    Toast.makeText(getApplicationContext(), "인증 이메일 전송 실패", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                    AlertDialog.Builder builder = new AlertDialog.Builder(AdminMainActivity.this);
+                    builder.setTitle("비밀번호 변경 확인");
+                    builder.setMessage("정말 비밀번호를 변경하시겠습니까?");
+                    builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            resetPassword();
+                        }
+                    });
+                    builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {}
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(AdminMainActivity.this, R.color.sub));
+                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(AdminMainActivity.this, R.color.sub));
                 }
                 return false;
             }
@@ -116,5 +122,25 @@ public class AdminMainActivity extends AppCompatActivity {
                 startActivity(statisticsIntent);
             }
         });
+    }
+
+    void resetPassword() {
+        mAuth.sendPasswordResetEmail(user.getEmail())
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getApplicationContext(), "이메일을 확인하여 비밀번호 변경 후 다시 로그인하세요", Toast.LENGTH_SHORT).show();
+                        App app = (App) getApplication();
+                        app.setLoginId(null);
+                        loginId = null;
+                        mAuth.signOut();
+                        Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);
+                        startActivity(logoutIntent);
+                        finish();
+                    }
+                    else {
+                        Log.d(ContentValues.TAG, "인증 이메일 전송 실패 : " + task.getException().getMessage());
+                        Toast.makeText(getApplicationContext(), "인증 이메일 전송 실패", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

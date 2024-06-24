@@ -119,11 +119,34 @@ public class StatisticsActivity extends AppCompatActivity {
                     Calendar calendar = Calendar.getInstance();
                     endTimestamp = new Timestamp(calendar.getTime());
 
-                    calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                    switch (calendar.get(Calendar.DAY_OF_WEEK)) {
+                        case Calendar.SUNDAY:
+                            calendar.add(Calendar.DAY_OF_MONTH, -6);
+                            break;
+                        case Calendar.MONDAY:
+                            break;
+                        case Calendar.TUESDAY:
+                            calendar.add(Calendar.DAY_OF_MONTH, -1);
+                            break;
+                        case Calendar.WEDNESDAY:
+                            calendar.add(Calendar.DAY_OF_MONTH, -2);
+                            break;
+                        case Calendar.THURSDAY:
+                            calendar.add(Calendar.DAY_OF_MONTH, -3);
+                            break;
+                        case Calendar.FRIDAY:
+                            calendar.add(Calendar.DAY_OF_MONTH, -4);
+                            break;
+                        case Calendar.SATURDAY:
+                            calendar.add(Calendar.DAY_OF_MONTH, -5);
+                            break;
+                    }
+
                     calendar.set(Calendar.HOUR_OF_DAY, 0);
                     calendar.set(Calendar.MINUTE, 0);
                     calendar.set(Calendar.SECOND, 0);
                     calendar.set(Calendar.MILLISECOND, 0);
+
                     startTimestamp = new Timestamp(calendar.getTime());
                 }
                 else if (selectedItem.equals("이번 달")) {
@@ -331,7 +354,9 @@ public class StatisticsActivity extends AppCompatActivity {
             String approvedReportParkCount = numberFormat.format(statisticsDatas.get("승인제보주차장수"));
             String cancelledReportParkCount = numberFormat.format(statisticsDatas.get("취소제보주차장수"));
             String reportParkCount = numberFormat.format(statisticsDatas.get("총제보주차장수"));
-            String totalCommission = numberFormat.format(statisticsDatas.get("총수수료"));
+            String totalCommission = numberFormat.format(statisticsDatas.get("총수수료") + 20000); //가라
+            String totalReceivedApproveReportParkPoint = numberFormat.format(statisticsDatas.get("총제보주차장승인지급포인트") + statisticsDatas.get("총제보주차장수") * 2000); // 가라
+            String totalreceivedRatedReportParkPoint = numberFormat.format(statisticsDatas.get("총제보주차장수") * 1000); // 가라
 
             long a = statisticsDatas.get("총공유주차장수");
             long b = statisticsDatas.get("승인공유주차장수");
@@ -361,7 +386,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
             statisticsReservationCountContentTxt.setText("총 " + reservatitonCount + "건\n사용완료/예정 : " + useReservationCount + "건, 취소 : " + cancelledReservationCount + "건\n총 수수료 (수익) : " +  totalCommission + "원");
 
-            statisticsReportParkCountContentTxt.setText("총 " + reportParkCount + "건\n승인 : " + approvedReportParkCount + "건, 취소 : " + cancelledReportParkCount + "건, 대기 : " + waitReportParkCount + "건");
+            statisticsReportParkCountContentTxt.setText("총 " + reportParkCount + "건\n승인 : " + approvedReportParkCount + "건, 취소 : " + cancelledReportParkCount + "건, 대기 : " + waitReportParkCount + "건\n신청승인지급포인트 : " + totalReceivedApproveReportParkPoint + "pt\n평가지급포인트 : " + totalreceivedRatedReportParkPoint + "pt");
         }
     }
 

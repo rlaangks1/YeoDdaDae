@@ -19,12 +19,25 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp" />
 
+    <TextView
+        android:text="결제"
+        android:textSize="25sp"
+        android:textColor="@color/sub"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/paymentBackBtn"
+        app:layout_constraintBottom_toBottomOf="@+id/paymentBackBtn"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
     <ScrollView
         android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/paymentPayBtn"
-        app:layout_constraintTop_toBottomOf="@+id/paymentBackBtn">
+        app:layout_constraintTop_toBottomOf="@+id/paymentBackBtn"
+        android:layout_marginTop="10dp" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

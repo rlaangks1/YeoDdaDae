@@ -19,12 +19,25 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp" />
 
+    <TextView
+        android:text="여따대포인트 충전"
+        android:textSize="25sp"
+        android:textColor="@color/sub"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/chargeBackBtn"
+        app:layout_constraintBottom_toBottomOf="@+id/chargeBackBtn"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/chargeBtn"
-        app:layout_constraintTop_toBottomOf="@+id/chargeBackBtn">
+        app:layout_constraintTop_toBottomOf="@+id/chargeBackBtn"
+        android:layout_marginTop="10dp" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

@@ -11,6 +11,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 
 public class SearchParkAdapter extends BaseAdapter {
     ArrayList<ParkItem> items = new ArrayList<ParkItem>();
@@ -24,10 +25,6 @@ public class SearchParkAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public int getSize() {
-        return items.size();
-    }
-
     public ParkItem findItem(String parkItemName) {
         for (ParkItem item : items) {
             if (item.getName().equals(parkItemName)) {
@@ -37,19 +34,14 @@ public class SearchParkAdapter extends BaseAdapter {
         return null; // 못 찾은 경우 null 반환
     }
 
-    public void sortByDistance () {
-        if (items != null && items.size() > 1) {
-            Collections.sort(items, new Comparator<ParkItem>() {
-                @Override
-                public int compare(ParkItem o1, ParkItem o2) {
-                    // Compare by star rate in descending order
-                    return Double.compare(Double.parseDouble(o1.getRadius()), Double.parseDouble(o2.getRadius()));
-                }
-            });
-            notifyDataSetChanged(); // Notify adapter that dataset has changed
+    public void duplicationRemove() {
+        if (items != null && !items.isEmpty()) {
+            HashSet<ParkItem> uniqueItemsSet = new HashSet<>(items);
+            items.clear();
+            items.addAll(uniqueItemsSet);
         }
+        notifyDataSetChanged();
     }
-
 
     @Override
     public int getCount() {

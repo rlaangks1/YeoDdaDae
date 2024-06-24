@@ -61,7 +61,6 @@ public class ApproveShareParkActivity extends AppCompatActivity {
         }
         spa = new ShareParkAdapter(ApproveShareParkActivity.this);
 
-
         FirestoreDatabase fd = new FirestoreDatabase();
         fd.loadUnapprovedShareParks(new OnFirestoreDataLoadedListener() {
             @Override
@@ -83,15 +82,22 @@ public class ApproveShareParkActivity extends AppCompatActivity {
 
                     spa.addItem(new ShareParkItem(ownerId, lat, lon, parkDetailAddress, isApproval, isCancelled, isCalculated, price, time, upTime, documentId));
                 }
-                if (myShareParks.size() == 0) {
-                    approveShareParkListView.setVisibility(View.GONE);
-                    approveShareParkNoTxt.setVisibility(View.VISIBLE);
-                }
-                else {
-                    approveShareParkListView.setVisibility(View.VISIBLE);
-                    approveShareParkNoTxt.setVisibility(View.GONE);
-                    approveShareParkListView.setAdapter(spa);
-                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        approveShareParkListView.setAdapter(spa);
+
+                        if (spa.getCount() == 0) {
+                            approveShareParkListView.setVisibility(View.GONE);
+                            approveShareParkNoTxt.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            approveShareParkListView.setVisibility(View.VISIBLE);
+                            approveShareParkNoTxt.setVisibility(View.GONE);
+                        }
+                    }
+                });
             }
 
             @Override
