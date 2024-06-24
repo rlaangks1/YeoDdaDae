@@ -101,15 +101,26 @@ public class MyShareParkFragment extends Fragment {
 
                             spa.addItem(new ShareParkItem(null, lat, lon, parkDetailAddress, isApproval, isCancelled, isCalculated, price, time, upTime, documentId));
                         }
-                        if (myShareParks.size() == 0) {
-                            myShareParkListView.setVisibility(View.GONE);
-                            myShareParkNoTxt.setVisibility(View.VISIBLE);
+
+                        MainActivity ma = (MainActivity) getActivity();
+                        if (ma != null) {
+                            ma.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    myShareParkListView.setAdapter(spa);
+
+                                    if (spa.getCount() == 0) {
+                                        myShareParkListView.setVisibility(View.GONE);
+                                        myShareParkNoTxt.setVisibility(View.VISIBLE);
+                                    }
+                                    else {
+                                        myShareParkListView.setVisibility(View.VISIBLE);
+                                        myShareParkNoTxt.setVisibility(View.GONE);
+                                    }
+                                }
+                            });
                         }
-                        else {
-                            myShareParkListView.setVisibility(View.VISIBLE);
-                            myShareParkNoTxt.setVisibility(View.GONE);
-                            myShareParkListView.setAdapter(spa);
-                        }
+
                     }
 
                     @Override

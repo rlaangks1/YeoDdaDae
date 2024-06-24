@@ -311,9 +311,6 @@ public class MyYdPointFragment extends Fragment {
 
                 ypha = new YdPointHistoryAdapter();
 
-                pointHistoryListView.setVisibility(View.VISIBLE);
-                pointHistoryNoTxt.setVisibility(View.GONE);
-
                 ArrayList<ArrayList<HashMap<String, Object>>> result = (ArrayList<ArrayList<HashMap<String, Object>>>) data;
                 ArrayList<HashMap<String, Object>> charge = result.get(0);
                 ArrayList<HashMap<String, Object>> refund = result.get(1);
@@ -332,7 +329,9 @@ public class MyYdPointFragment extends Fragment {
                     }
                 }
                 for (HashMap<String, Object> hm : receive) {
-                    ypha.addItem(new YdPointHistoryItem("받음", (long) hm.get("receivedYdPoint"), null, null, null, null, (String) hm.get("type"), (Timestamp) hm.get("upTime"), (String) hm.get("documentId")));
+                    if ((long) hm.get("receivedYdPoint") != 0) {
+                        ypha.addItem(new YdPointHistoryItem("받음", (long) hm.get("receivedYdPoint"), null, null, null, null, (String) hm.get("type"), (Timestamp) hm.get("upTime"), (String) hm.get("documentId")));
+                    }
                 }
 
                 if (spinnerStatus == 3) {
@@ -347,11 +346,23 @@ public class MyYdPointFragment extends Fragment {
 
                 ypha.sortByUpTime();
 
-                pointHistoryListView.setAdapter(ypha);
+                MainActivity ma = (MainActivity) getActivity();
+                if (ma != null) {
+                    ma.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            pointHistoryListView.setAdapter(ypha);
 
-                if (ypha.getCount() == 0) {
-                    pointHistoryListView.setVisibility(View.GONE);
-                    pointHistoryNoTxt.setVisibility(View.VISIBLE);
+                            if (ypha.getCount() == 0) {
+                                pointHistoryListView.setVisibility(View.GONE);
+                                pointHistoryNoTxt.setVisibility(View.VISIBLE);
+                            }
+                            else {
+                                pointHistoryListView.setVisibility(View.VISIBLE);
+                                pointHistoryNoTxt.setVisibility(View.GONE);
+                            }
+                        }
+                    });
                 }
             }
 

@@ -183,6 +183,8 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
     @Override
     public void onDataPassed(String data) { // Fragment에서 메시지 받기
         if (data.equals("로그아웃")) {
+            App app = (App) getApplication();
+            app.setLoginId(null);
             loginId = null;
             mAuth.signOut();
             Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);

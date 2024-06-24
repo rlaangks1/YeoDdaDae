@@ -108,41 +108,36 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
             }
         });
 
-        searchContentEditTxt.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    searchBtn.callOnClick();
-                }
-
-                return false;
-            }
-        });
-
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                searchBtn.setEnabled(false);
                 if (!searchContentEditTxt.getText().toString().equals("")) {
-
-                    if (spa != null) {
-                        spa.clearItem();
-                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (spa != null) {
+                                spa.clearItem();
+                            }
+                            spa = new SearchParkAdapter();
+                        }
+                    });
 
                     TMapData tMapData = new TMapData();
                     tMapData.findAllPOI(searchContentEditTxt.getText().toString(), new TMapData.FindAllPOIListenerCallback() {
                         @Override
                         public void onFindAllPOI(ArrayList<TMapPOIItem> arrayList) {
+                            if (spa != null) {
+                                spa.clearItem();
+                            }
                             spa = new SearchParkAdapter();
 
-                            if (arrayList != null && !arrayList.isEmpty()) {
-                                for (int i = 0; i < arrayList.size(); i++) {
-                                    TMapPOIItem item = arrayList.get(i);
-
+                            if (arrayList != null) {
+                                for (TMapPOIItem item : arrayList) {
                                     TMapPolyLine tpolyline = new TMapPolyLine();
                                     tpolyline.addLinePoint(nowPoint);
                                     tpolyline.addLinePoint(new TMapPoint(Double.parseDouble(item.frontLat), Double.parseDouble(item.frontLon)));
                                     double distance = tpolyline.getDistance() / 1000; // km단위
-
                                     if (item.firstNo.equals("0") && item.secondNo.equals("0")) {
                                         spa.addItem(new ParkItem(4, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
                                     }
@@ -160,46 +155,48 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                                         }
                                     }
                                 }
-
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
+                                        spa.duplicationRemove();
                                         searchResultListView.setAdapter(spa);
-                                    }
-                                });
 
-                                if (spa.getSize() == 0) {
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
+                                        if (spa.getCount() == 0) {
                                             searchResultListView.setVisibility(View.GONE);
                                             searchNoTxt.setVisibility(View.VISIBLE);
                                         }
-                                    });
-                                }
-                                else {
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            searchResultListView.setAdapter(spa);
+                                        else {
                                             searchResultListView.setVisibility(View.VISIBLE);
                                             searchNoTxt.setVisibility(View.GONE);
                                         }
-                                    });
-                                }
+                                        searchBtn.setEnabled(true);
+                                    }
+                                });
                             }
                             else {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         searchResultListView.setAdapter(spa);
-                                        searchResultListView.setVisibility(View.GONE);
-                                        searchNoTxt.setVisibility(View.VISIBLE);
+
+                                        if (spa.getCount() == 0) {
+                                            searchResultListView.setVisibility(View.GONE);
+                                            searchNoTxt.setVisibility(View.VISIBLE);
+                                        }
+                                        else {
+                                            searchResultListView.setVisibility(View.VISIBLE);
+                                            searchNoTxt.setVisibility(View.GONE);
+                                        }
+                                        searchBtn.setEnabled(true);
                                     }
                                 });
                             }
+
                         }
                     });
+                }
+                else {
+                    searchBtn.setEnabled(true);
                 }
             }
         });

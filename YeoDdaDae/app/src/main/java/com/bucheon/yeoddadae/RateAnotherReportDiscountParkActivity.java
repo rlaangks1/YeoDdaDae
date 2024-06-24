@@ -151,14 +151,14 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
         fd.loadRateCount(loginId, documentId, new OnFirestoreDataLoadedListener() {
             @Override
             public void onDataLoaded(Object data) {
-                int[] rates = (int[]) data;
+                long[] rates = (long[]) data;
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        perfectTxt.setText(Integer.toString(rates[0]));
-                        mistakeTxt.setText(Integer.toString(rates[1]));
-                        wrongTxt.setText(Integer.toString(rates[2]));
+                        perfectTxt.setText(Long.toString(rates[0]));
+                        mistakeTxt.setText(Long.toString(rates[1]));
+                        wrongTxt.setText(Long.toString(rates[2]));
 
                         rateReportPerfectBtn.setImageResource(R.drawable.disabled_button);
                         rateReportMistakeBtn.setImageResource(R.drawable.disabled_button);
@@ -215,6 +215,7 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
                     String dateString = sdf.format(date);
                     rateReportUpTimeContentTxt.setText(dateString);
                 }
+
 
                 TMapData tMapdata = new TMapData();
                 tMapdata.reverseGeocoding((double) reportInfo.get("poiLat"), (double) reportInfo.get("poiLon"), "A10", new TMapData.reverseGeocodingListenerCallback() {

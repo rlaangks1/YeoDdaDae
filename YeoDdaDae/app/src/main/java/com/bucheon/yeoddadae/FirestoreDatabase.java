@@ -690,7 +690,7 @@ public class FirestoreDatabase {
                         double distance = tpolyline.getDistance() / 1000; // km단위
 
                         if (distance <= radiusKiloMeter) {
-                            String parkName = id + ": " + (String) document.get("parkDetailAddress");
+                            String parkName = (String) document.get("ownerId") + ": " + (String) document.get("parkDetailAddress");
                             resultList.add(new ParkItem(3, parkName, Double.toString(distance), Long.toString((long) document.get("price")), (String) document.get("ownerPhone"), null, -1, Double.toString(shareParkLat), Double.toString(shareParkLon), null, document.getId()));
                         }
                     }
@@ -1558,39 +1558,49 @@ public class FirestoreDatabase {
     }
 
     public void loadRateCount (String id, String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
-        int[] perfectCount = {0};
-        int[] mistakeCount = {0};
-        int[] wrongCount = {0};
-        int myRate[] = {0};
+        long[] perfectCount = {0};
+        long[] mistakeCount = {0};
+        long[] wrongCount = {0};
+        long[] myRate = {0};
 
-        db.collection("rateReport")
-                .whereEqualTo("reportDocumentID", firestoreDocumentId)
+        db.collection("reportDiscountPark")
+                .document(firestoreDocumentId)
                 .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                        String rate = documentSnapshot.getString("rate");
-                        if (rate.equals("perfect")) {
-                            perfectCount[0]++;
-                            if (((String) documentSnapshot.get("id")).equals(id)) {
-                                myRate[0] = 1;
-                            }
-                        }
-                        else if (rate.equals("mistake")) {
-                            mistakeCount[0]++;
-                            if (((String) documentSnapshot.get("id")).equals(id)) {
-                                myRate[0] = 2;
-                            }
-                        }
-                        else if (rate.equals("wrong")) {
-                            wrongCount[0]++;
-                            if (((String) documentSnapshot.get("id")).equals(id)) {
-                                myRate[0] = 3;
-                            }
-                        }
-                    }
+                .addOnSuccessListener(documentSnapshot -> {
+                    perfectCount[0] = (long) documentSnapshot.get("ratePerfectCount");
+                    mistakeCount[0] = (long) documentSnapshot.get("rateMistakeCount");
+                    wrongCount[0] = (long) documentSnapshot.get("rateWrongCount");
 
-                    int [] result = {perfectCount[0], mistakeCount[0], wrongCount[0], myRate[0]};
-                    listener.onDataLoaded(result);
+                    db.collection("rateReport")
+                            .whereEqualTo("reportDocumentID", firestoreDocumentId)
+                            .get()
+                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                                for (QueryDocumentSnapshot documentSnapshot2 : queryDocumentSnapshots) {
+                                    String rate = documentSnapshot2.getString("rate");
+                                    if (rate.equals("perfect")) {
+                                        if (((String) documentSnapshot2.get("id")).equals(id)) {
+                                            myRate[0] = 1;
+                                        }
+                                    }
+                                    else if (rate.equals("mistake")) {
+                                        if (((String) documentSnapshot2.get("id")).equals(id)) {
+                                            myRate[0] = 2;
+                                        }
+                                    }
+                                    else if (rate.equals("wrong")) {
+                                        if (((String) documentSnapshot2.get("id")).equals(id)) {
+                                            myRate[0] = 3;
+                                        }
+                                    }
+                                }
+
+                                long [] result = {perfectCount[0], mistakeCount[0], wrongCount[0], myRate[0]};
+                                listener.onDataLoaded(result);
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.d(TAG, "데이터 검색 오류", e);
+                                listener.onDataLoadError(e.getMessage());
+                            });
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "데이터 검색 오류", e);

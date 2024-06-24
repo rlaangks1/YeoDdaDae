@@ -407,30 +407,23 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             }
         });
 
-        searchEdTxt.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    searchBtn.callOnClick();
-                }
-
-                return false;
-            }
-        });
-
         searchBtn.setOnClickListener(new View.OnClickListener() { // 검색 시작
             @Override
             public void onClick(View v) {
+                searchBtn.setEnabled(true);
                 if (!searchEdTxt.getText().toString().equals("")) {
-
                     if (spa != null) {
                         spa.clearItem();
                     }
+                    spa = new SearchParkAdapter();
 
                     tMapData = new TMapData();
                     tMapData.findAllPOI(searchEdTxt.getText().toString(), new TMapData.FindAllPOIListenerCallback() {
                         @Override
                         public void onFindAllPOI(ArrayList<TMapPOIItem> arrayList) {
+                            if (spa != null) {
+                                spa.clearItem();
+                            }
                             spa = new SearchParkAdapter();
 
                             if (arrayList != null) {
@@ -463,16 +456,18 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
+                                        spa.duplicationRemove();
                                         searchListView.setAdapter(spa);
                                     }
                                 });
 
-                                if (spa.getSize() == 0) {
+                                if (spa.getCount() == 0) {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             searchListView.setVisibility(View.GONE);
                                             searchNoTxt.setVisibility(View.VISIBLE);
+                                            searchBtn.setEnabled(true);
                                         }
                                     });
                                 }
@@ -482,6 +477,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                         public void run() {
                                             searchListView.setVisibility(View.VISIBLE);
                                             searchNoTxt.setVisibility(View.GONE);
+                                            searchBtn.setEnabled(true);
                                         }
                                     });
                                 }
@@ -493,11 +489,15 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                         searchListView.setAdapter(spa);
                                         searchListView.setVisibility(View.GONE);
                                         searchNoTxt.setVisibility(View.VISIBLE);
+                                        searchBtn.setEnabled(true);
                                     }
                                 });
                             }
                         }
                     });
+                }
+                else {
+                    searchBtn.setEnabled(true);
                 }
             }
         });
@@ -992,6 +992,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                         parkListView.setVisibility(View.VISIBLE);
                                         parkSortHorizontalScrollView.setVisibility(View.VISIBLE);
                                         naviConstLayout.setVisibility(View.GONE);
+                                        searchStartBtn.setVisibility(View.VISIBLE);
                                         isItemSelected = false;
                                     }
                                 });
@@ -1346,7 +1347,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             Log.d (TAG, "number 는 " + number);
             if (number != 0) {
                 if (isSearchLayoutShowing) {
-                    if (spa != null &&  0 < spa.getSize() && 0 < number && number <= spa.getSize()) {
+                    if (spa != null &&  0 < spa.getCount() && 0 < number && number <= spa.getCount()) {
                         sd.dismiss();
 
                         ParkItem clickedPark = (ParkItem) spa.getItem(number - 1);

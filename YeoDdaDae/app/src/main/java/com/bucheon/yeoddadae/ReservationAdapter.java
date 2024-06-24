@@ -95,6 +95,8 @@ public class ReservationAdapter extends BaseAdapter {
         TextView reservationIsCancelledTxt = convertView.findViewById(R.id.reservationIsCancelledTxt);
         TextView upTimeTxt = convertView.findViewById(R.id.upTimeTxt);
 
+        shareParkInfoTxt.setText("로드 중...");
+
         FirestoreDatabase fd = new FirestoreDatabase();
         // 뷰 내용
         fd.loadShareParkInfo(reservation.getShareParkDocumentName(), new OnFirestoreDataLoadedListener() {
@@ -118,6 +120,7 @@ public class ReservationAdapter extends BaseAdapter {
                                 @Override
                                 public void run() {
                                     shareParkInfoTxt.setText(address);
+
                                 }
                             });
                         }

@@ -73,7 +73,6 @@ public class MyReportDiscountParkFragment extends Fragment {
 
         if (ra != null) {
             ra.clearItem();
-
         }
         ra = new ReportDiscountParkAdapter(getActivity());
 
@@ -99,14 +98,24 @@ public class MyReportDiscountParkFragment extends Fragment {
 
                     ra.addItem(new ReportDiscountParkItem(reporterId, parkName, condition, discount, ratePerfectCount, rateMistakeCount, rateWrongCount, isCancelled, isApproval, upTime, poiID, documentId));
                 }
-                if (myReports.size() == 0) {
-                    myReportListView.setVisibility(View.GONE);
-                    myReportNoTxt.setVisibility(View.VISIBLE);
-                }
-                else {
-                    myReportListView.setVisibility(View.VISIBLE);
-                    myReportNoTxt.setVisibility(View.GONE);
-                    myReportListView.setAdapter(ra);
+
+                MainActivity ma = (MainActivity) getActivity();
+                if (ma != null) {
+                    ma.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            myReportListView.setAdapter(ra);
+
+                            if (ra.getCount() == 0) {
+                                myReportListView.setVisibility(View.GONE);
+                                myReportNoTxt.setVisibility(View.VISIBLE);
+                            }
+                            else {
+                                myReportListView.setVisibility(View.VISIBLE);
+                                myReportNoTxt.setVisibility(View.GONE);
+                            }
+                        }
+                    });
                 }
             }
 

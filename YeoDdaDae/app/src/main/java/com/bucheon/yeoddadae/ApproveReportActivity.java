@@ -61,7 +61,6 @@ public class ApproveReportActivity extends AppCompatActivity {
         }
         rdpa = new ReportDiscountParkAdapter(ApproveReportActivity.this);
 
-
         FirestoreDatabase fd = new FirestoreDatabase();
         fd.loadUnapprovedReports(new OnFirestoreDataLoadedListener() {
             @Override
@@ -84,15 +83,22 @@ public class ApproveReportActivity extends AppCompatActivity {
 
                     rdpa.addItem(new ReportDiscountParkItem(reporterId, parkName, parkCondition, parkDiscount, ratePerfectCount, rateMistakeCount, rateWrongCount, isCancelled, isApproval, upTime, poiID, documentId));
                 }
-                if (unapprovedReports.size() == 0) {
-                    approveReportListView.setVisibility(View.GONE);
-                    approveReportNoTxt.setVisibility(View.VISIBLE);
-                }
-                else {
-                    approveReportListView.setVisibility(View.VISIBLE);
-                    approveReportNoTxt.setVisibility(View.GONE);
-                    approveReportListView.setAdapter(rdpa);
-                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        approveReportListView.setAdapter(rdpa);
+
+                        if (rdpa.getCount() == 0) {
+                            approveReportListView.setVisibility(View.GONE);
+                            approveReportNoTxt.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            approveReportListView.setVisibility(View.VISIBLE);
+                            approveReportNoTxt.setVisibility(View.GONE);
+                        }
+                    }
+                });
             }
 
             @Override

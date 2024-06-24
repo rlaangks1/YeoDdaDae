@@ -1,5 +1,7 @@
 package com.bucheon.yeoddadae;
 
+import androidx.annotation.Nullable;
+
 public class ParkItem {
     private int type; // 1:일반, 2:공영, 3:공유, 4:주소, 5:장소, 6: 제보주차장
     private String name;
@@ -68,5 +70,17 @@ public class ParkItem {
 
     public String getFirebaseDocumentId() {
         return firestoreDocumentId;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        ParkItem target = (ParkItem) obj;
+
+        if (this.name.equals(target.getName()) && this.lat == target.getLat() && this.lon == target.getLon() && this.poiId.equals(target.getPoiId()) && this.firestoreDocumentId.equals(target.getFirebaseDocumentId())) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

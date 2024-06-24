@@ -129,6 +129,8 @@ public class AdminMainActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(getApplicationContext(), "이메일을 확인하여 비밀번호 변경 후 다시 로그인하세요", Toast.LENGTH_SHORT).show();
+                        App app = (App) getApplication();
+                        app.setLoginId(null);
                         loginId = null;
                         mAuth.signOut();
                         Intent logoutIntent = new Intent(getApplicationContext(), StartActivity.class);

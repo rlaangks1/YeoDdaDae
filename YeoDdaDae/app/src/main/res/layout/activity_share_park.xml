@@ -154,7 +154,7 @@
                 android:id="@+id/sharerPhoneEditTxt"
                 android:textSize="20sp"
                 android:textColor="@color/sub"
-                android:maxLength="12"
+                android:maxLength="11"
                 android:inputType="phone"
                 android:singleLine="true"
                 android:layout_width="0dp"

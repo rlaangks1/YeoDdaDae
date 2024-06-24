@@ -10,6 +10,7 @@ import com.skt.Tmap.TMapTapi;
 public class App extends Application {
 
     boolean apiKeyCertified;
+    String loginId;
 
     @Override
     public void onCreate() {
@@ -34,5 +35,13 @@ public class App extends Application {
 
     public boolean isApiKeyCertified() {
         return apiKeyCertified;
+    }
+
+    public String getLoginId() {
+        return loginId;
+    }
+
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
     }
 }
