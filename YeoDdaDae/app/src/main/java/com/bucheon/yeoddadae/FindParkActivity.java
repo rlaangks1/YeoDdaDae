@@ -427,13 +427,12 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                         spa.clearItem();
                     }
 
-                    spa = new SearchParkAdapter();
-
                     tMapData = new TMapData();
-
                     tMapData.findAllPOI(searchEdTxt.getText().toString(), new TMapData.FindAllPOIListenerCallback() {
                         @Override
                         public void onFindAllPOI(ArrayList<TMapPOIItem> arrayList) {
+                            spa = new SearchParkAdapter();
+
                             if (arrayList != null) {
                                 for (int i = 0; i < arrayList.size(); i++) {
                                     TMapPOIItem item = arrayList.get(i);
@@ -461,6 +460,13 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                     }
                                 }
 
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        searchListView.setAdapter(spa);
+                                    }
+                                });
+
                                 if (spa.getSize() == 0) {
                                     runOnUiThread(new Runnable() {
                                         @Override
@@ -474,7 +480,6 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            searchListView.setAdapter(spa);
                                             searchListView.setVisibility(View.VISIBLE);
                                             searchNoTxt.setVisibility(View.GONE);
                                         }
@@ -485,6 +490,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
+                                        searchListView.setAdapter(spa);
                                         searchListView.setVisibility(View.GONE);
                                         searchNoTxt.setVisibility(View.VISIBLE);
                                     }
@@ -862,7 +868,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         });
     } // init 끝
 
-    public void findPark(int sortBy, String startString, String endString) { // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:주차가순)
+    public void findPark(int sortBy, String startString2, String endString2) { // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:주차가순)
         Log.d (TAG, "findPark 시작");
         loadingStart();
 
@@ -879,7 +885,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     return;
                 }
                 FirestoreDatabase fd = new FirestoreDatabase();
-                fd.findSharePark(loginId, centerPoint.getLatitude(), centerPoint.getLongitude(), 3, startString, endString, new OnFirestoreDataLoadedListener() {
+                fd.findSharePark(loginId, centerPoint.getLatitude(), centerPoint.getLongitude(), 3, startString2, endString2, new OnFirestoreDataLoadedListener() {
                     @Override
                     public void onDataLoaded(Object data) {
                         ArrayList<ParkItem> shareParkList = (ArrayList<ParkItem>) data;
@@ -999,6 +1005,11 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                 centerMarker.setVisible(TMapMarkerItem.VISIBLE);
                                 tMapView.addMarkerItem("centerMarker", centerMarker);
                                 nowSort = sortBy;
+
+                                if (startString2 == null || endString2 == null) {
+                                    clearCustomTimeConstLayout();
+                                }
+
                                 loadingStop();
                             }
                             @Override
@@ -1647,5 +1658,20 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         this.endDate = s;
         findParkCustomTimeEndDateEditTxt.setText(s.substring(0, 4) + "년 " + s.substring(4, 6) + "월 " + s.substring(6) + "일");
         checkAllCustomTimeSetted();
+    }
+
+    void clearCustomTimeConstLayout() {
+        startDate = null;
+        startTime = null;
+        endDate = null;
+        endTime = null;
+
+        startString = null;
+        endString = null;
+
+        findParkCustomTimeStartDateEditTxt.setText("");
+        findParkCustomTimeStartTimeEditTxt.setText("");
+        findParkCustomTimeEndDateEditTxt.setText("");
+        findParkCustomTimeEndTimeEditTxt.setText("");
     }
 }

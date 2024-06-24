@@ -128,14 +128,13 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                         spa.clearItem();
                     }
 
-                    spa = new SearchParkAdapter();
-
                     TMapData tMapData = new TMapData();
-
                     tMapData.findAllPOI(searchContentEditTxt.getText().toString(), new TMapData.FindAllPOIListenerCallback() {
                         @Override
                         public void onFindAllPOI(ArrayList<TMapPOIItem> arrayList) {
-                            if (arrayList != null) {
+                            spa = new SearchParkAdapter();
+
+                            if (arrayList != null && !arrayList.isEmpty()) {
                                 for (int i = 0; i < arrayList.size(); i++) {
                                     TMapPOIItem item = arrayList.get(i);
 
@@ -162,6 +161,13 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                                     }
                                 }
 
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        searchResultListView.setAdapter(spa);
+                                    }
+                                });
+
                                 if (spa.getSize() == 0) {
                                     runOnUiThread(new Runnable() {
                                         @Override
@@ -186,6 +192,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
+                                        searchResultListView.setAdapter(spa);
                                         searchResultListView.setVisibility(View.GONE);
                                         searchNoTxt.setVisibility(View.VISIBLE);
                                     }
