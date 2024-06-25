@@ -354,9 +354,9 @@ public class StatisticsActivity extends AppCompatActivity {
             String approvedReportParkCount = numberFormat.format(statisticsDatas.get("승인제보주차장수"));
             String cancelledReportParkCount = numberFormat.format(statisticsDatas.get("취소제보주차장수"));
             String reportParkCount = numberFormat.format(statisticsDatas.get("총제보주차장수"));
-            String totalCommission = numberFormat.format(statisticsDatas.get("총수수료") + 20000); //가라
-            String totalReceivedApproveReportParkPoint = numberFormat.format(statisticsDatas.get("총제보주차장승인지급포인트") + statisticsDatas.get("총제보주차장수") * 2000); // 가라
-            String totalreceivedRatedReportParkPoint = numberFormat.format(statisticsDatas.get("총제보주차장수") * 1000); // 가라
+            String totalCommission = numberFormat.format(statisticsDatas.get("총수수료"));
+            String totalReceivedApproveReportParkPoint = numberFormat.format(statisticsDatas.get("총제보주차장승인지급포인트"));
+            String totalreceivedRatedReportParkPoint = numberFormat.format(statisticsDatas.get("총평가주차장승인지급포인트"));
 
             long a = statisticsDatas.get("총공유주차장수");
             long b = statisticsDatas.get("승인공유주차장수");
