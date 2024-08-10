@@ -161,58 +161,56 @@ public class ShareParkActivity extends AppCompatActivity {
         registrationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String parkDetailAddress = parkDetailAddressEditTxt.getText().toString();
-                String ownerName = sharerNameEditTxt.getText().toString();
-                String ownerPhone = sharerPhoneEditTxt.getText().toString();
-                String ownerEmail = sharerEmailEditTxt.getText().toString();
-                String ownerParkingRelation = sharerRelationEditTxt.getText().toString();
+                String parkDetailAddress = trimAndReplaceNewlines(parkDetailAddressEditTxt);
+                String ownerName = trimAndReplaceNewlines(sharerNameEditTxt);
+                String ownerPhone = trimAndReplaceNewlines(sharerPhoneEditTxt);
+                String ownerEmail = trimAndReplaceNewlines(sharerEmailEditTxt);
+                String ownerParkingRelation = trimAndReplaceNewlines(sharerRelationEditTxt);
+                String priceText = trimAndReplaceNewlines(parkPriceEditTxt);
+
                 int price;
 
                 if (lat == 0 || lon == 0) {
                     Toast.makeText(getApplicationContext(), "GPS로 주소를 찾으세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                if (parkDetailAddress.equals("")) {
+                else if (parkDetailAddress.equals("")) {
                     Toast.makeText(getApplicationContext(), "상세주소를 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                if (ownerName.equals("")) {
+                else if (ownerName.equals("")) {
                     Toast.makeText(getApplicationContext(), "공유자명을 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                if (ownerPhone.equals("")) {
+                else if (ownerPhone.equals("")) {
                     Toast.makeText(getApplicationContext(), "전화번호를 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
-                } else if (!isValidPhoneNumber(ownerPhone)) {
+                }
+                else if (!isValidPhoneNumber(ownerPhone)) {
                     Toast.makeText(getApplicationContext(), "유효하지 않은 전화번호입니다", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                if (ownerEmail.equals("")) {
+                else if (ownerEmail.equals("")) {
                     Toast.makeText(getApplicationContext(), "이메일을 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
-                } else if (!isValidEmail(ownerEmail)) {
+                }
+                else if (!isValidEmail(ownerEmail)) {
                     Toast.makeText(getApplicationContext(), "유효하지 않은 이메일 형식입니다", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                if (ownerParkingRelation.equals("")) {
+                else if (ownerParkingRelation.equals("")) {
                     Toast.makeText(getApplicationContext(), "주차장과의 관계를 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                String priceText = parkPriceEditTxt.getText().toString();
-                if (priceText.equals("")) {
+                else if (priceText.equals("")) {
                     Toast.makeText(getApplicationContext(), "가격을 설정하세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 try {
                     price = Integer.parseInt(priceText);
-                } catch (NumberFormatException e) {
+                }
+                catch (NumberFormatException e) {
                     Toast.makeText(getApplicationContext(), "가격을 숫자로 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -384,5 +382,9 @@ public class ShareParkActivity extends AppCompatActivity {
                 });
             }
         }
+    }
+
+    String trimAndReplaceNewlines(EditText et) {
+        return et.getText().toString().trim().replaceAll("\\n", " ");
     }
 }

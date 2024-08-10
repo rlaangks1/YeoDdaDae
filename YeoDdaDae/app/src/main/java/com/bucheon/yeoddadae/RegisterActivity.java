@@ -90,9 +90,9 @@ public class RegisterActivity extends AppCompatActivity {
                     imm.hideSoftInputFromWindow(pwTxt.getWindowToken(), 0);
                 }
 
-                String id = idTxt.getText().toString().trim();
-                String email = emailTxt.getText().toString().trim();
-                String pw = pwTxt.getText().toString().trim();
+                String id = trimAndReplaceNewlines(idTxt);
+                String email = trimAndReplaceNewlines(emailTxt);
+                String pw = trimAndReplaceNewlines(pwTxt);
 
                 if (id.equals("")) {
                     Toast.makeText(getApplicationContext(), "ID를 입력해주세요", Toast.LENGTH_SHORT).show();
@@ -106,6 +106,21 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 else if (pw.equals("")) {
                     Toast.makeText(getApplicationContext(), "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+                    registerBtn.setEnabled(true);
+                    registerBtn.setImageResource(R.drawable.gradate_button);
+                }
+                else if (id.contains(" ")) {
+                    Toast.makeText(getApplicationContext(), "ID는 공백을 포함할 수 없습니다", Toast.LENGTH_SHORT).show();
+                    registerBtn.setEnabled(true);
+                    registerBtn.setImageResource(R.drawable.gradate_button);
+                }
+                else if (email.contains(" ")) {
+                    Toast.makeText(getApplicationContext(), "이메일은 공백을 포함할 수 없습니다", Toast.LENGTH_SHORT).show();
+                    registerBtn.setEnabled(true);
+                    registerBtn.setImageResource(R.drawable.gradate_button);
+                }
+                else if (pw.contains(" ")) {
+                    Toast.makeText(getApplicationContext(), "비밀번호는 공백을 포함할 수 없습니다", Toast.LENGTH_SHORT).show();
                     registerBtn.setEnabled(true);
                     registerBtn.setImageResource(R.drawable.gradate_button);
                 }
@@ -269,5 +284,9 @@ public class RegisterActivity extends AppCompatActivity {
             }
         };
         handler.post(runnable);
+    }
+
+    String trimAndReplaceNewlines(EditText et) {
+        return et.getText().toString().trim().replaceAll("\\n", " ");
     }
 }

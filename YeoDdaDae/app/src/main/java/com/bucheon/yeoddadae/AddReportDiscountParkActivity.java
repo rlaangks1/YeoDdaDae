@@ -86,8 +86,8 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
         gpsManager.setMinDistance(1); // m단위
         gpsManager.setProvider(gpsManager.GPS_PROVIDER);
         gpsManager.OpenGps();
-        gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
-        gpsManager.OpenGps();
+        // gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
+        // gpsManager.OpenGps();
 
         addReportDiscountParkBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -244,9 +244,10 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
         reportBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String parkName = addReportDiscountParkAddressContentEditTxt.getText().toString();
-                String condition = addReportDiscountParkConditionContentEditTxt.getText().toString();
-                String discount = addReportDiscountParkBenefitContentEditTxt.getText().toString();
+                String parkName = trimAndReplaceNewlines(addReportDiscountParkAddressContentEditTxt);
+                String condition = trimAndReplaceNewlines(addReportDiscountParkConditionContentEditTxt);
+                String discount = trimAndReplaceNewlines(addReportDiscountParkBenefitContentEditTxt);
+
                 int discountInt;
 
                 if (poiId == null || poiLat == 0 || poiLon == 0 || parkName.equals("")) {
@@ -315,5 +316,9 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
         Log.d(ContentValues.TAG, "onLocationChange 호출됨 : lon(위도) = " + nowLon);
 
         nowPoint = new TMapPoint(nowLat, nowLon);
+    }
+
+    String trimAndReplaceNewlines(EditText et) {
+        return et.getText().toString().trim().replaceAll("\\n", " ");
     }
 }

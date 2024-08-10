@@ -67,14 +67,20 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     imm.hideSoftInputFromWindow(changePasswordEmailTxt.getWindowToken(), 0);
                 }
 
-                String id = changePasswordIdTxt.getText().toString();
-                String email = changePasswordEmailTxt.getText().toString();
+                String id = trimAndReplaceNewlines(changePasswordIdTxt);
+                String email = trimAndReplaceNewlines(changePasswordEmailTxt);
 
                 if (id.equals("")) {
                     Toast.makeText(getApplicationContext(), "ID를 입력해주세요", Toast.LENGTH_SHORT).show();
                 }
                 else if (email.equals("")) {
                     Toast.makeText(getApplicationContext(), "이메일을 입력해주세요", Toast.LENGTH_SHORT).show();
+                }
+                else if (id.contains(" ")) {
+                    Toast.makeText(getApplicationContext(), "ID는 공백을 포함할 수 없습니다", Toast.LENGTH_SHORT).show();
+                }
+                else if (email.contains(" ")) {
+                    Toast.makeText(getApplicationContext(), "이메일은 공백을 포함할 수 없습니다", Toast.LENGTH_SHORT).show();
                 }
                 else if (id.length() <= 5 || id.length() >= 21) {
                     Toast.makeText(getApplicationContext(), "ID는 6~20자 입니다", Toast.LENGTH_SHORT).show();
@@ -124,5 +130,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
+    }
+
+    String trimAndReplaceNewlines(EditText et) {
+        return et.getText().toString().trim().replaceAll("\\n", " ");
     }
 }

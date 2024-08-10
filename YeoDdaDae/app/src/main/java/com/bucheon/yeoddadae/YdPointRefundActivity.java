@@ -73,12 +73,13 @@ public class YdPointRefundActivity extends AppCompatActivity {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (refundTargetPointContentEditTxt.getText().toString() == null
-                        || refundTargetPointContentEditTxt.getText().toString().equals("")) {
+                String refundWonString = trimAndReplaceNewlines(refundTargetPointContentEditTxt);
+
+                if (refundWonString == null || refundWonString.isEmpty()) {
                     refundWonTxt.setText("(0 원)");
                 }
                 else {
-                    long won = Long.parseLong(refundTargetPointContentEditTxt.getText().toString());
+                    long won = Long.parseLong(trimAndReplaceNewlines(refundTargetPointContentEditTxt));
                     String formattedWon = NumberFormat.getNumberInstance(Locale.KOREA).format(won);
                     refundWonTxt.setText("(" +  formattedWon+ " 원)");
 
@@ -110,9 +111,9 @@ public class YdPointRefundActivity extends AppCompatActivity {
         refundBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String targetPoint = refundTargetPointContentEditTxt.getText().toString();
-                String bank = refundBankContentEditTxt.getText().toString();
-                String accountNumber = refundAccountNumberContentEditTxt.getText().toString();
+                String targetPoint = trimAndReplaceNewlines(refundTargetPointContentEditTxt);
+                String bank = trimAndReplaceNewlines(refundBankContentEditTxt);
+                String accountNumber = trimAndReplaceNewlines(refundAccountNumberContentEditTxt);
 
                 if (targetPoint.equals("")) {
                     Toast.makeText(getApplicationContext(), "환급할 금액을 입력해주세요", Toast.LENGTH_SHORT).show();
@@ -132,7 +133,7 @@ public class YdPointRefundActivity extends AppCompatActivity {
                     builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            refundPoint = Integer.parseInt(refundTargetPointContentEditTxt.getText().toString());
+                            refundPoint = Integer.parseInt(trimAndReplaceNewlines(refundTargetPointContentEditTxt));
 
                             fd.refundYdPoint(loginId, refundPoint, bank, accountNumber, new OnFirestoreDataLoadedListener() {
                                 @Override
@@ -195,5 +196,9 @@ public class YdPointRefundActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    String trimAndReplaceNewlines(EditText et) {
+        return et.getText().toString().trim().replaceAll("\\n", " ");
     }
 }

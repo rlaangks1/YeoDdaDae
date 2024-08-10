@@ -70,14 +70,20 @@ public class LoginActivity extends AppCompatActivity {
                     imm.hideSoftInputFromWindow(pwTxt.getWindowToken(), 0);
                 }
 
-                String id = idTxt.getText().toString();
-                String pw = pwTxt.getText().toString();
+                String id = trimAndReplaceNewlines(idTxt);
+                String pw = trimAndReplaceNewlines(pwTxt);
 
                 if (id.equals("")) {
                     Toast.makeText(getApplicationContext(), "ID를 입력해주세요", Toast.LENGTH_SHORT).show();
                 }
                 else if (pw.equals("")) {
                     Toast.makeText(getApplicationContext(), "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+                }
+                else if (id.contains(" ")) {
+                    Toast.makeText(getApplicationContext(), "ID는 공백을 포함할 수 없습니다", Toast.LENGTH_SHORT).show();
+                }
+                else if (pw.contains(" ")) {
+                    Toast.makeText(getApplicationContext(), "비밀번호는 공백을 포함할 수 없습니다", Toast.LENGTH_SHORT).show();
                 }
                 else if (id.length() <= 5 || id.length() >= 21) {
                     Toast.makeText(getApplicationContext(), "ID는 6~20자 입니다", Toast.LENGTH_SHORT).show();
@@ -144,5 +150,9 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(changePwIntent);
             }
         });
+    }
+
+    String trimAndReplaceNewlines(EditText et) {
+        return et.getText().toString().trim().replaceAll("\\n", " ");
     }
 }
