@@ -99,7 +99,7 @@ public class ReservationParkActivity extends AppCompatActivity {
         Intent inIntent = getIntent();
         reservationFirestoreDocumentId = inIntent.getStringExtra("fireStoreDocumentId");
         loginId = inIntent.getStringExtra("loginId");
-        if (loginId == null || loginId.equals("")) {
+        if (loginId == null || loginId.isEmpty()) {
             Log.d(TAG, "loginId가 전달되지 않음 (오류)");
             finish();
         }
@@ -294,7 +294,7 @@ public class ReservationParkActivity extends AppCompatActivity {
 
                 }
                 final String reservationsText;
-                if (!tempString.equals("")) {
+                if (!tempString.isEmpty()) {
                     reservationsText = tempString.substring(0, tempString.length() - 1);
                 }
                 else {
@@ -304,7 +304,7 @@ public class ReservationParkActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (reservationsText.equals("")) {
+                        if (reservationsText.isEmpty()) {
                             reservationedTimeContentTxt.setText("없음");
                         }
                         else {

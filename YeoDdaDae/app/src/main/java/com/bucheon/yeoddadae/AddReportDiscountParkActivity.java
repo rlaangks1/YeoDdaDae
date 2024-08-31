@@ -130,7 +130,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                 isSearching = true;
                 searchBtn.setEnabled(false);
 
-                if (!searchContentEditTxt.getText().toString().equals("")) {
+                if (!replaceNewlinesAndTrim(searchContentEditTxt).isEmpty()) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -271,17 +271,17 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
 
                 int discountInt;
 
-                if (poiId == null || poiLat == 0 || poiLon == 0 || parkName.equals("")) {
+                if (poiId == null || poiLat == 0 || poiLon == 0 || parkName.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "위치를 찾으세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (condition.equals("")) {
+                if (condition.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "조건을 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (discount.equals("")) {
+                if (discount.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "혜택을 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
                 }

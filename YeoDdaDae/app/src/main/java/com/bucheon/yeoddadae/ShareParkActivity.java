@@ -174,15 +174,15 @@ public class ShareParkActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "GPS로 주소를 찾으세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                else if (parkDetailAddress.equals("")) {
+                else if (parkDetailAddress.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "상세주소를 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                else if (ownerName.equals("")) {
+                else if (ownerName.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "공유자명을 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                else if (ownerPhone.equals("")) {
+                else if (ownerPhone.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "전화번호를 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -190,7 +190,7 @@ public class ShareParkActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "유효하지 않은 전화번호입니다", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                else if (ownerEmail.equals("")) {
+                else if (ownerEmail.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "이메일을 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -198,11 +198,11 @@ public class ShareParkActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "유효하지 않은 이메일 형식입니다", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                else if (ownerParkingRelation.equals("")) {
+                else if (ownerParkingRelation.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "주차장과의 관계를 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                else if (priceText.equals("")) {
+                else if (priceText.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "가격을 설정하세요", Toast.LENGTH_SHORT).show();
                     return;
                 }

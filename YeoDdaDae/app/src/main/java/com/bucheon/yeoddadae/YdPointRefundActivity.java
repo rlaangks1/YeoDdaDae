@@ -115,13 +115,13 @@ public class YdPointRefundActivity extends AppCompatActivity {
                 String bank = replaceNewlinesAndTrim(refundBankContentEditTxt);
                 String accountNumber = replaceNewlinesAndTrim(refundAccountNumberContentEditTxt);
 
-                if (targetPoint.equals("")) {
+                if (targetPoint.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "환급할 금액을 입력해주세요", Toast.LENGTH_SHORT).show();
                 }
-                else if (bank.equals("")) {
+                else if (bank.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "환급할 계좌의 은행을 입력해주세요", Toast.LENGTH_SHORT).show();
                 }
-                else if (accountNumber.equals("")) {
+                else if (accountNumber.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "환급할 계좌번호를 입력해주세요", Toast.LENGTH_SHORT).show();
                 }
                 else if (accountNumber.length() < 10 || accountNumber.length() > 14) {

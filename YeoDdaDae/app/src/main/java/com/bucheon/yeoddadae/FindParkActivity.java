@@ -204,7 +204,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             Log.d(TAG, "sttSort가 0임 (오류)");
             finish();
         }
-        if (loginId == null || loginId.equals("")) {
+        if (loginId == null || loginId.isEmpty()) {
             Log.d(TAG, "loginId가 전달되지 않음 (오류)");
             finish();
         }

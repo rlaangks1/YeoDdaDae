@@ -252,7 +252,7 @@ public class MyYdPointFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 YdPointHistoryItem selectedItem = (YdPointHistoryItem) ypha.getItem(position);
 
-                if (selectedItem.getReservationId() != null && !selectedItem.getReservationId().equals("")) {
+                if (selectedItem.getReservationId() != null && !selectedItem.getReservationId().isEmpty()) {
                     Intent toReservationInformationIntent = new Intent(getActivity(), ReservationInformationActivity.class);
                     toReservationInformationIntent.putExtra("id", loginId);
                     toReservationInformationIntent.putExtra("documentId", selectedItem.reservationId);

@@ -136,7 +136,7 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
                 builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String cancelReason = input.getText().toString();
+                        String cancelReason = replaceNewlinesAndTrim(input);
                         fd.cancelSharePark((String) shareParkInfo.get("ownerId"), documentId, cancelReason, new OnFirestoreDataLoadedListener() {
                             @Override
                             public void onDataLoaded(Object data) {
@@ -227,7 +227,7 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
                     textBuilder.append(year + "년 " + month + "월 " + day + "일 " + startTimeString + "부터 " + endTimeString + "까지\n");
                 }
                 String shareTimeString = "";
-                if (!textBuilder.toString().equals("")) {
+                if (!textBuilder.toString().isEmpty()) {
                     shareTimeString = textBuilder.toString().substring(0, textBuilder.length() - 1);
                 }
                 approveShareParkInfoShareTimeContentTxt.setText(shareTimeString);
@@ -241,5 +241,9 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    String replaceNewlinesAndTrim(EditText et) {
+        return et.getText().toString().replaceAll("\\n", " ").trim();
     }
 }

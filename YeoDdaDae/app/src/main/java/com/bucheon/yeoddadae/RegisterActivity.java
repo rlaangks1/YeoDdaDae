@@ -101,19 +101,19 @@ public class RegisterActivity extends AppCompatActivity {
                 String email = replaceNewlinesAndTrim(emailTxt);
                 String pw = replaceNewlinesAndTrim(pwTxt);
 
-                if (id.equals("")) {
+                if (id.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "ID를 입력해주세요", Toast.LENGTH_SHORT).show();
                     registerBtn.setEnabled(true);
                     registerBtn.setImageResource(R.drawable.gradate_button);
                     isRegistering = false;
                 }
-                else if (email.equals("")) {
+                else if (email.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "이메일을 입력해주세요", Toast.LENGTH_SHORT).show();
                     registerBtn.setEnabled(true);
                     registerBtn.setImageResource(R.drawable.gradate_button);
                     isRegistering = false;
                 }
-                else if (pw.equals("")) {
+                else if (pw.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
                     registerBtn.setEnabled(true);
                     registerBtn.setImageResource(R.drawable.gradate_button);

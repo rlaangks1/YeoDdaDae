@@ -198,7 +198,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                     textBuilder.append(year + "년 " + month + "월 " + day + "일 " + startTimeString + "부터 " + endTimeString + "까지\n");
                 }
                 String shareTimeString = "";
-                if (!textBuilder.toString().equals("")) {
+                if (!textBuilder.toString().isEmpty()) {
                     shareTimeString = textBuilder.toString().substring(0, textBuilder.length() - 1);
                 }
 
@@ -240,7 +240,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                         }
 
                         final String reservationsText;
-                        if (!tempString.equals("")) {
+                        if (!tempString.isEmpty()) {
                             reservationsText = tempString.substring(0, tempString.length() - 1);
                         }
                         else {
@@ -255,7 +255,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (reservationsText.equals("")) {
+                                if (reservationsText.isEmpty()) {
                                     isThereReservation[0] = false;
                                     myShareParkInfoReservationTimeContentTxt.setText("없음");
                                 }

@@ -122,7 +122,7 @@ public class ApproveReportInformationActivity extends AppCompatActivity {
                 builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String cancelReason = input.getText().toString();
+                        String cancelReason = replaceNewlinesAndTrim(input);
                         fd.cancelReport((String) reportInfo.get("reporterId"), documentId, cancelReason, new OnFirestoreDataLoadedListener() {
                             @Override
                             public void onDataLoaded(Object data) {
@@ -201,5 +201,9 @@ public class ApproveReportInformationActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    String replaceNewlinesAndTrim(EditText et) {
+        return et.getText().toString().replaceAll("\\n", " ").trim();
     }
 }

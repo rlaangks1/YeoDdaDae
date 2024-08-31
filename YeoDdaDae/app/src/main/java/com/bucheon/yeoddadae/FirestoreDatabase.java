@@ -614,7 +614,7 @@ public class FirestoreDatabase {
     public void findSharePark(String id, double nowLat, double nowLon, double radiusKiloMeter, String startString, String endString, OnFirestoreDataLoadedListener listener) {
         ArrayList<ParkItem> resultList = new ArrayList<>();
 
-        if (id == null || id.equals("")) {
+        if (id == null || id.isEmpty()) {
             Log.d(TAG, "아이디가 null이거나 빈 문자열임");
             return;
         }
