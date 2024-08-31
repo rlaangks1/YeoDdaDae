@@ -70,8 +70,8 @@ public class LoginActivity extends AppCompatActivity {
                     imm.hideSoftInputFromWindow(pwTxt.getWindowToken(), 0);
                 }
 
-                String id = trimAndReplaceNewlines(idTxt);
-                String pw = trimAndReplaceNewlines(pwTxt);
+                String id = replaceNewlinesAndTrim(idTxt);
+                String pw = replaceNewlinesAndTrim(pwTxt);
 
                 if (id.equals("")) {
                     Toast.makeText(getApplicationContext(), "ID를 입력해주세요", Toast.LENGTH_SHORT).show();
@@ -152,7 +152,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    String trimAndReplaceNewlines(EditText et) {
-        return et.getText().toString().trim().replaceAll("\\n", " ");
+    String replaceNewlinesAndTrim(EditText et) {
+        return et.getText().toString().replaceAll("\\n", " ").trim();
     }
 }

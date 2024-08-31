@@ -67,8 +67,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     imm.hideSoftInputFromWindow(changePasswordEmailTxt.getWindowToken(), 0);
                 }
 
-                String id = trimAndReplaceNewlines(changePasswordIdTxt);
-                String email = trimAndReplaceNewlines(changePasswordEmailTxt);
+                String id = replaceNewlinesAndTrim(changePasswordIdTxt);
+                String email = replaceNewlinesAndTrim(changePasswordEmailTxt);
 
                 if (id.equals("")) {
                     Toast.makeText(getApplicationContext(), "ID를 입력해주세요", Toast.LENGTH_SHORT).show();
@@ -132,7 +132,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         return matcher.matches();
     }
 
-    String trimAndReplaceNewlines(EditText et) {
-        return et.getText().toString().trim().replaceAll("\\n", " ");
+    String replaceNewlinesAndTrim(EditText et) {
+        return et.getText().toString().replaceAll("\\n", " ").trim();
     }
 }

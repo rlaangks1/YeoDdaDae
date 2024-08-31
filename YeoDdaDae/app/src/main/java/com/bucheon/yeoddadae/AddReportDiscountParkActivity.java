@@ -41,6 +41,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
     SearchParkAdapter spa;
     double nowLat;
     double nowLon;
+    boolean isSearching = false;
     TMapPoint nowPoint;
     TMapGpsManager gpsManager;
 
@@ -108,10 +109,27 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
             }
         });
 
+        searchContentEditTxt.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    searchBtn.callOnClick();
+                }
+
+                return false;
+            }
+        });
+
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (isSearching) {
+                    return;
+                }
+
+                isSearching = true;
                 searchBtn.setEnabled(false);
+
                 if (!searchContentEditTxt.getText().toString().equals("")) {
                     runOnUiThread(new Runnable() {
                         @Override
@@ -124,7 +142,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                     });
 
                     TMapData tMapData = new TMapData();
-                    tMapData.findAllPOI(searchContentEditTxt.getText().toString(), new TMapData.FindAllPOIListenerCallback() {
+                    tMapData.findAllPOI(replaceNewlinesAndTrim(searchContentEditTxt), new TMapData.FindAllPOIListenerCallback() {
                         @Override
                         public void onFindAllPOI(ArrayList<TMapPOIItem> arrayList) {
                             if (spa != null) {
@@ -170,6 +188,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                                             searchNoTxt.setVisibility(View.GONE);
                                         }
                                         searchBtn.setEnabled(true);
+                                        isSearching = false;
                                     }
                                 });
                             }
@@ -188,6 +207,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                                             searchNoTxt.setVisibility(View.GONE);
                                         }
                                         searchBtn.setEnabled(true);
+                                        isSearching = false;
                                     }
                                 });
                             }
@@ -197,6 +217,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                 }
                 else {
                     searchBtn.setEnabled(true);
+                    isSearching = false;
                 }
             }
         });
@@ -244,9 +265,9 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
         reportBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String parkName = trimAndReplaceNewlines(addReportDiscountParkAddressContentEditTxt);
-                String condition = trimAndReplaceNewlines(addReportDiscountParkConditionContentEditTxt);
-                String discount = trimAndReplaceNewlines(addReportDiscountParkBenefitContentEditTxt);
+                String parkName = replaceNewlinesAndTrim(addReportDiscountParkAddressContentEditTxt);
+                String condition = replaceNewlinesAndTrim(addReportDiscountParkConditionContentEditTxt);
+                String discount = replaceNewlinesAndTrim(addReportDiscountParkBenefitContentEditTxt);
 
                 int discountInt;
 
@@ -318,7 +339,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
         nowPoint = new TMapPoint(nowLat, nowLon);
     }
 
-    String trimAndReplaceNewlines(EditText et) {
-        return et.getText().toString().trim().replaceAll("\\n", " ");
+    String replaceNewlinesAndTrim(EditText et) {
+        return et.getText().toString().replaceAll("\\n", " ").trim();
     }
 }

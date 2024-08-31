@@ -161,12 +161,12 @@ public class ShareParkActivity extends AppCompatActivity {
         registrationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String parkDetailAddress = trimAndReplaceNewlines(parkDetailAddressEditTxt);
-                String ownerName = trimAndReplaceNewlines(sharerNameEditTxt);
-                String ownerPhone = trimAndReplaceNewlines(sharerPhoneEditTxt);
-                String ownerEmail = trimAndReplaceNewlines(sharerEmailEditTxt);
-                String ownerParkingRelation = trimAndReplaceNewlines(sharerRelationEditTxt);
-                String priceText = trimAndReplaceNewlines(parkPriceEditTxt);
+                String parkDetailAddress = replaceNewlinesAndTrim(parkDetailAddressEditTxt);
+                String ownerName = replaceNewlinesAndTrim(sharerNameEditTxt);
+                String ownerPhone = replaceNewlinesAndTrim(sharerPhoneEditTxt);
+                String ownerEmail = replaceNewlinesAndTrim(sharerEmailEditTxt);
+                String ownerParkingRelation = replaceNewlinesAndTrim(sharerRelationEditTxt);
+                String priceText = replaceNewlinesAndTrim(parkPriceEditTxt);
 
                 int price;
 
@@ -384,7 +384,7 @@ public class ShareParkActivity extends AppCompatActivity {
         }
     }
 
-    String trimAndReplaceNewlines(EditText et) {
-        return et.getText().toString().trim().replaceAll("\\n", " ");
+    String replaceNewlinesAndTrim(EditText et) {
+        return et.getText().toString().replaceAll("\\n", " ").trim();
     }
 }

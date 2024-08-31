@@ -85,6 +85,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     TMapPoint naviEndPoint;
     String naviEndPointName;
     String reservationFirestoreDocumentId;
+    boolean isSearching = false;
     TMapGpsManager gpsManager;
     TMapView tMapView;
     TMapCircle tMapCircle;
@@ -410,18 +411,35 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             }
         });
 
+        searchEdTxt.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    searchBtn.callOnClick();
+                }
+
+                return false;
+            }
+        });
+
         searchBtn.setOnClickListener(new View.OnClickListener() { // 검색 시작
             @Override
             public void onClick(View v) {
+                if (isSearching) {
+                    return;
+                }
+
+                isSearching = true;
                 searchBtn.setEnabled(true);
-                if (!trimAndReplaceNewlines(searchEdTxt).isEmpty()) {
+
+                if (!replaceNewlinesAndTrim(searchEdTxt).isEmpty()) {
                     if (spa != null) {
                         spa.clearItem();
                     }
                     spa = new SearchParkAdapter();
 
                     tMapData = new TMapData();
-                    tMapData.findAllPOI(trimAndReplaceNewlines(searchEdTxt), new TMapData.FindAllPOIListenerCallback() {
+                    tMapData.findAllPOI(replaceNewlinesAndTrim(searchEdTxt), new TMapData.FindAllPOIListenerCallback() {
                         @Override
                         public void onFindAllPOI(ArrayList<TMapPOIItem> arrayList) {
                             if (spa != null) {
@@ -471,6 +489,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                             searchListView.setVisibility(View.GONE);
                                             searchNoTxt.setVisibility(View.VISIBLE);
                                             searchBtn.setEnabled(true);
+                                            isSearching = false;
                                         }
                                     });
                                 }
@@ -481,6 +500,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                             searchListView.setVisibility(View.VISIBLE);
                                             searchNoTxt.setVisibility(View.GONE);
                                             searchBtn.setEnabled(true);
+                                            isSearching = false;
                                         }
                                     });
                                 }
@@ -493,6 +513,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                         searchListView.setVisibility(View.GONE);
                                         searchNoTxt.setVisibility(View.VISIBLE);
                                         searchBtn.setEnabled(true);
+                                        isSearching = false;
                                     }
                                 });
                             }
@@ -501,6 +522,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                 }
                 else {
                     searchBtn.setEnabled(true);
+                    isSearching = false;
                 }
             }
         });
@@ -1343,7 +1365,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         findParkCustomTimeEndTimeEditTxt.setText("");
     }
 
-    String trimAndReplaceNewlines(EditText et) {
-        return et.getText().toString().trim().replaceAll("\\n", " ");
+    String replaceNewlinesAndTrim(EditText et) {
+        return et.getText().toString().replaceAll("\\n", " ").trim();
     }
 }
