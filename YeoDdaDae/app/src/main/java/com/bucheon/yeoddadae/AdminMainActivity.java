@@ -1,5 +1,7 @@
 package com.bucheon.yeoddadae;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -22,13 +24,17 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.text.DecimalFormat;
+
 public class AdminMainActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     FirebaseUser user;
     String loginId;
 
     ImageButton toApproveShareParkBtn;
+    TextView toApproveShareParkNotificationTxt;
     ImageButton toApproveReportBtn;
+    TextView toApproveReportNotificationTxt;
     ImageButton toStatisticsBtn;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -40,7 +46,9 @@ public class AdminMainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin_main);
 
         toApproveShareParkBtn = findViewById(R.id.toApproveShareParkBtn);
+        toApproveShareParkNotificationTxt = findViewById(R.id.toApproveShareParkNotificationTxt);
         toApproveReportBtn = findViewById(R.id.toApproveReportBtn);
+        toApproveReportNotificationTxt = findViewById(R.id.toApproveReportNotificationTxt);
         toStatisticsBtn = findViewById(R.id.toStatisticsBtn);
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
@@ -120,6 +128,52 @@ public class AdminMainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent statisticsIntent = new Intent(getApplicationContext(), StatisticsActivity.class);
                 startActivity(statisticsIntent);
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        FirestoreDatabase fd = new FirestoreDatabase();
+
+        fd.loadAdminNotification(loginId, new OnFirestoreDataLoadedListener() {
+            @Override
+            public void onDataLoaded(Object data) {
+                int [] result = (int[]) data;
+
+                int approveShareParkNotification = result[0];
+                int approveReportNotification = result[1];
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        DecimalFormat formatter = new DecimalFormat("#,###");
+
+                        if (approveShareParkNotification == 0) {
+                            toApproveShareParkNotificationTxt.setVisibility(View.GONE);
+                        }
+                        else {
+                            toApproveShareParkNotificationTxt.setText(formatter.format(approveShareParkNotification));
+                            toApproveShareParkNotificationTxt.setVisibility(View.VISIBLE);
+                        }
+
+                        if (approveReportNotification == 0) {
+                            toApproveReportNotificationTxt.setVisibility(View.GONE);
+                        }
+                        else {
+                            toApproveReportNotificationTxt.setText(formatter.format(approveReportNotification));
+                            toApproveReportNotificationTxt.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onDataLoadError(String errorMessage) {
+                Log.d(TAG, errorMessage);
+                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
             }
         });
     }
