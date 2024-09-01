@@ -144,49 +144,34 @@ public class ReservationParkActivity extends AppCompatActivity {
                         }
                     }
                 });
-                String originalPhoneString = (String) hm.get("ownerPhone");
-                String newPhoneString = "";
-                if (originalPhoneString != null) {
-                    if (originalPhoneString.length() == 10) {
-                        newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 6) + "-" + originalPhoneString.substring(6);
-                    }
-                    else if (originalPhoneString.length() == 11) {
-                        newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 7) + "-" + originalPhoneString.substring(7);
-                    }
-                    else {
-                        newPhoneString = originalPhoneString;
-                    }
-                }
-                String finalNewPhoneString = newPhoneString;
 
                 int number = ((Long) hm.get("price")).intValue();
-                String newPriceString;
-                if (number == 0) {
-                    newPriceString = "무료";
-                }
-                else {
-                    DecimalFormat formatter = new DecimalFormat("#,###");
-                    pricePerHour = number;
-                    newPriceString = formatter.format(number);
-                }
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         reservationParkDetailAddressContentTxt.setText((String) hm.get("parkDetailAddress"));
                         reservationSharerNameContentTxt.setText((String) hm.get("ownerName"));
-                        reservationSharerPhoneContentTxt.setText(finalNewPhoneString);
+                        reservationSharerPhoneContentTxt.setText((String) hm.get("ownerPhone"));
                         reservationSharerEmailContentTxt.setText((String) hm.get("ownerEmail"));
                         reservationSharerRelationContentTxt.setText((String) hm.get("ownerParkingRelation"));
-                        reservationPriceContentTxt.setText(newPriceString);
+
+                        String newPriceString;
                         if (number == 0) {
                             reservationParkPricePerHour.setVisibility(View.GONE);
                             reservationParkPtTxt.setVisibility(View.GONE);
+                            reservationPriceContentTxt.setText("무료");
                         }
                         else {
                             reservationParkPricePerHour.setVisibility(View.VISIBLE);
                             reservationParkPtTxt.setVisibility(View.VISIBLE);
+
+                            DecimalFormat formatter = new DecimalFormat("#,###");
+                            pricePerHour = number;
+                            reservationPriceContentTxt.setText(formatter.format(number));
                         }
+
+
                     }
                 });
 
@@ -199,9 +184,9 @@ public class ReservationParkActivity extends AppCompatActivity {
                 for (String key : keys) {
                     ArrayList<String> values = shareTime.get(key);
 
-                    int year = Integer.parseInt(key.substring(0, 4));
-                    int month = Integer.parseInt(key.substring(4, 6));
-                    int day = Integer.parseInt(key.substring(6));
+                    String year = key.substring(0, 4);
+                    String month = key.substring(4, 6);
+                    String day = key.substring(6);
 
                     String startTimeString = values.get(0).substring(0,2) + ":" + values.get(0).substring(2);
                     String endTimeString = values.get(1).substring(0,2) + ":" + values.get(1).substring(2);
@@ -214,7 +199,6 @@ public class ReservationParkActivity extends AppCompatActivity {
                         reservationShareTimeContentTxt.setText(textBuilder.toString());
                     }
                 });
-
 
                 HashSet<CalendarDay> enabledDays = new HashSet<>();
                 for (String key : shareTime.keySet()) {
@@ -276,9 +260,9 @@ public class ReservationParkActivity extends AppCompatActivity {
                     for (String key : keys) {
                         ArrayList<String> values = shareTime.get(key);
 
-                        int year = Integer.parseInt(key.substring(0, 4));
-                        int month = Integer.parseInt(key.substring(4, 6));
-                        int day = Integer.parseInt(key.substring(6));
+                        String year = key.substring(0, 4);
+                        String month = key.substring(4, 6);
+                        String day = key.substring(6);
 
                         String startTimeString = values.get(0).substring(0, 2) + ":" + values.get(0).substring(2);
                         String endTimeString = values.get(1).substring(0, 2) + ":" + values.get(1).substring(2);

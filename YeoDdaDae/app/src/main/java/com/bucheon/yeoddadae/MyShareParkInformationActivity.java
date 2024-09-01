@@ -188,9 +188,9 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                 for (String key : keys) {
                     ArrayList<String> values = shareTime.get(key);
 
-                    int year = Integer.parseInt(key.substring(0, 4));
-                    int month = Integer.parseInt(key.substring(4, 6));
-                    int day = Integer.parseInt(key.substring(6));
+                    String year = key.substring(0, 4);
+                    String month = key.substring(4, 6);
+                    String day = key.substring(6);
 
                     String startTimeString = values.get(0).substring(0,2) + ":" + values.get(0).substring(2);
                     String endTimeString = values.get(1).substring(0,2) + ":" + values.get(1).substring(2);
@@ -221,9 +221,9 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                             for (String key : keys) {
                                 ArrayList<String> values = shareTime.get(key);
 
-                                int year = Integer.parseInt(key.substring(0, 4));
-                                int month = Integer.parseInt(key.substring(4, 6));
-                                int day = Integer.parseInt(key.substring(6));
+                                String year = key.substring(0, 4);
+                                String month = key.substring(4, 6);
+                                String day = key.substring(6);
 
                                 String startTimeString = values.get(0).substring(0, 2) + ":" + values.get(0).substring(2);
                                 String endTimeString = values.get(1).substring(0, 2) + ":" + values.get(1).substring(2);
