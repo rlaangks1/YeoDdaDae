@@ -21,6 +21,7 @@ import com.google.firebase.Timestamp;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.address_info.TMapAddressInfo;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -136,7 +137,7 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
                 builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String cancelReason = input.getText().toString();
+                        String cancelReason = replaceNewlinesAndTrim(input);
                         fd.cancelSharePark((String) shareParkInfo.get("ownerId"), documentId, cancelReason, new OnFirestoreDataLoadedListener() {
                             @Override
                             public void onDataLoaded(Object data) {
@@ -207,7 +208,11 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
                     approveShareParkInfoPriceContentTxt.setText("무료");
                 }
                 else {
-                    approveShareParkInfoPriceContentTxt.setText(Long.toString((long) shareParkInfo.get("price")));
+                    approveShareParkInfoHourPerTxt.setVisibility(View.VISIBLE);
+                    approveShareParkInfoPtTxt.setVisibility(View.VISIBLE);
+                    String formattedYdPoint = NumberFormat.getNumberInstance(Locale.KOREA).format((long) shareParkInfo.get("price"));
+
+                    approveShareParkInfoPriceContentTxt.setText(formattedYdPoint);
                 }
 
                 HashMap<String, ArrayList<String>> shareTime = (HashMap<String, ArrayList<String>>) shareParkInfo.get("time");
@@ -217,9 +222,9 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
                 for (String key : keys) {
                     ArrayList<String> values = shareTime.get(key);
 
-                    int year = Integer.parseInt(key.substring(0, 4));
-                    int month = Integer.parseInt(key.substring(4, 6));
-                    int day = Integer.parseInt(key.substring(6));
+                    String year = key.substring(0, 4);
+                    String month = key.substring(4, 6);
+                    String day = key.substring(6);
 
                     String startTimeString = values.get(0).substring(0,2) + ":" + values.get(0).substring(2);
                     String endTimeString = values.get(1).substring(0,2) + ":" + values.get(1).substring(2);
@@ -227,7 +232,7 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
                     textBuilder.append(year + "년 " + month + "월 " + day + "일 " + startTimeString + "부터 " + endTimeString + "까지\n");
                 }
                 String shareTimeString = "";
-                if (!textBuilder.toString().equals("")) {
+                if (!textBuilder.toString().isEmpty()) {
                     shareTimeString = textBuilder.toString().substring(0, textBuilder.length() - 1);
                 }
                 approveShareParkInfoShareTimeContentTxt.setText(shareTimeString);
@@ -241,5 +246,9 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    String replaceNewlinesAndTrim(EditText et) {
+        return et.getText().toString().replaceAll("\\n", " ").trim();
     }
 }

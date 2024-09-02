@@ -273,7 +273,7 @@ public class ReservationInformationActivity extends AppCompatActivity {
 
                     reservationTimeString += year + "년 " + month + "월 " + day + "일 " + startTimeHour + ":" + startTimeMinute + "부터 " + endTimeHour + ":" + endTimeMinute + "까지\n";
                 }
-                if (!reservationTimeString.equals("")) {
+                if (!reservationTimeString.isEmpty()) {
                     reservationTimeString = reservationTimeString.substring(0, reservationTimeString.length() - 1);
                 }
                 reservationInfoTimeContentTxt.setText(reservationTimeString);

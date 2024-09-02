@@ -183,6 +183,14 @@ public class TimeAdapter extends BaseAdapter {
         EditText startTime = convertView.findViewById(R.id.startTime);
         EditText endTime = convertView.findViewById(R.id.endTime);
 
+        String mothString = "";
+        if (1 <= cd.getMonth() && cd.getMonth() <= 9) {
+            mothString += "0" + cd.getMonth();
+        }
+        else {
+            mothString += cd.getMonth();
+        }
+
         String dayString = "";
         if (1 <= cd.getDay() && cd.getDay() <= 9) {
             dayString += "0" + cd.getDay();
@@ -191,7 +199,7 @@ public class TimeAdapter extends BaseAdapter {
             dayString += cd.getDay();
         }
 
-        textViewDate.setText (cd.getYear() + "년 " + cd.getMonth() + "월 " + dayString + "일");
+        textViewDate.setText (cd.getYear() + "년 " + mothString + "월 " + dayString + "일");
 
         startTime.setOnClickListener(new View.OnClickListener() {
             @Override

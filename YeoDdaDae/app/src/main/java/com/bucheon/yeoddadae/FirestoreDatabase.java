@@ -614,7 +614,7 @@ public class FirestoreDatabase {
     public void findSharePark(String id, double nowLat, double nowLon, double radiusKiloMeter, String startString, String endString, OnFirestoreDataLoadedListener listener) {
         ArrayList<ParkItem> resultList = new ArrayList<>();
 
-        if (id == null || id.equals("")) {
+        if (id == null || id.isEmpty()) {
             Log.d(TAG, "아이디가 null이거나 빈 문자열임");
             return;
         }
@@ -2223,6 +2223,52 @@ public class FirestoreDatabase {
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "회원찾기 중 오류", e);
                     listener.onDataLoadError("회원찾기 중 오류");
+                });
+    }
+
+    public void loadAdminNotification(String id, OnFirestoreDataLoadedListener listener) {
+        db.collection("account")
+                .whereEqualTo("id", id)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots1 -> {
+                    if ((boolean) queryDocumentSnapshots1.getDocuments().get(0).get("isAdmin")) {
+                        int [] approveShareParkNotification = {0};
+                        int [] approveReportNotification = {0};
+
+                        db.collection("sharePark")
+                                .whereEqualTo("isApproval", false)
+                                .whereEqualTo("isCancelled", false)
+                                .get()
+                                .addOnSuccessListener(queryDocumentSnapshots2 -> {
+                                    approveShareParkNotification[0] = queryDocumentSnapshots2.size();
+
+                                    db.collection("reportDiscountPark")
+                                            .whereEqualTo("isApproval", false)
+                                            .whereEqualTo("isCancelled", false)
+                                            .get()
+                                            .addOnSuccessListener(queryDocumentSnapshots3 -> {
+                                                approveReportNotification[0] = queryDocumentSnapshots3.size();
+
+                                                listener.onDataLoaded(new int[] {approveShareParkNotification[0], approveReportNotification[0]});
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Log.d(TAG, "미승인 제보주차장 찾기 중 오류", e);
+                                                listener.onDataLoadError(e.getMessage());
+                                            });
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.d(TAG, "미승인 공유주차장 찾기 중 오류", e);
+                                    listener.onDataLoadError(e.getMessage());
+                                });
+                    }
+                    else {
+                        Log.d(TAG, "관리자가 아님");
+                        listener.onDataLoadError("관리자가 아님");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "로그인 중 오류", e);
+                    listener.onDataLoadError(e.getMessage());
                 });
     }
 

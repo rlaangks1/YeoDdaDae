@@ -122,8 +122,8 @@ public class GpsCertificationActivity extends AppCompatActivity implements TMapG
         gpsManager.setMinDistance(1); // m단위
         gpsManager.setProvider(gpsManager.GPS_PROVIDER);
         gpsManager.OpenGps();
-        gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
-        gpsManager.OpenGps();
+        // gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
+        // gpsManager.OpenGps();
 
         tMapView = new TMapView(this);
         LinearLayout linearLayoutTmap = (LinearLayout)findViewById(R.id.linearLayoutTmap);

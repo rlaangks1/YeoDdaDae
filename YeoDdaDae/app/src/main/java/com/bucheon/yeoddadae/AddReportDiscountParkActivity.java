@@ -41,6 +41,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
     SearchParkAdapter spa;
     double nowLat;
     double nowLon;
+    boolean isSearching = false;
     TMapPoint nowPoint;
     TMapGpsManager gpsManager;
 
@@ -86,8 +87,8 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
         gpsManager.setMinDistance(1); // m단위
         gpsManager.setProvider(gpsManager.GPS_PROVIDER);
         gpsManager.OpenGps();
-        gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
-        gpsManager.OpenGps();
+        // gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
+        // gpsManager.OpenGps();
 
         addReportDiscountParkBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,11 +109,28 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
             }
         });
 
+        searchContentEditTxt.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    searchBtn.callOnClick();
+                }
+
+                return false;
+            }
+        });
+
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (isSearching) {
+                    return;
+                }
+
+                isSearching = true;
                 searchBtn.setEnabled(false);
-                if (!searchContentEditTxt.getText().toString().equals("")) {
+
+                if (!replaceNewlinesAndTrim(searchContentEditTxt).isEmpty()) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -124,7 +142,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                     });
 
                     TMapData tMapData = new TMapData();
-                    tMapData.findAllPOI(searchContentEditTxt.getText().toString(), new TMapData.FindAllPOIListenerCallback() {
+                    tMapData.findAllPOI(replaceNewlinesAndTrim(searchContentEditTxt), new TMapData.FindAllPOIListenerCallback() {
                         @Override
                         public void onFindAllPOI(ArrayList<TMapPOIItem> arrayList) {
                             if (spa != null) {
@@ -170,6 +188,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                                             searchNoTxt.setVisibility(View.GONE);
                                         }
                                         searchBtn.setEnabled(true);
+                                        isSearching = false;
                                     }
                                 });
                             }
@@ -188,6 +207,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                                             searchNoTxt.setVisibility(View.GONE);
                                         }
                                         searchBtn.setEnabled(true);
+                                        isSearching = false;
                                     }
                                 });
                             }
@@ -197,6 +217,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                 }
                 else {
                     searchBtn.setEnabled(true);
+                    isSearching = false;
                 }
             }
         });
@@ -244,22 +265,23 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
         reportBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String parkName = addReportDiscountParkAddressContentEditTxt.getText().toString();
-                String condition = addReportDiscountParkConditionContentEditTxt.getText().toString();
-                String discount = addReportDiscountParkBenefitContentEditTxt.getText().toString();
+                String parkName = replaceNewlinesAndTrim(addReportDiscountParkAddressContentEditTxt);
+                String condition = replaceNewlinesAndTrim(addReportDiscountParkConditionContentEditTxt);
+                String discount = replaceNewlinesAndTrim(addReportDiscountParkBenefitContentEditTxt);
+
                 int discountInt;
 
-                if (poiId == null || poiLat == 0 || poiLon == 0 || parkName.equals("")) {
+                if (poiId == null || poiLat == 0 || poiLon == 0 || parkName.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "위치를 찾으세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (condition.equals("")) {
+                if (condition.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "조건을 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (discount.equals("")) {
+                if (discount.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "혜택을 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -315,5 +337,9 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
         Log.d(ContentValues.TAG, "onLocationChange 호출됨 : lon(위도) = " + nowLon);
 
         nowPoint = new TMapPoint(nowLat, nowLon);
+    }
+
+    String replaceNewlinesAndTrim(EditText et) {
+        return et.getText().toString().replaceAll("\\n", " ").trim();
     }
 }

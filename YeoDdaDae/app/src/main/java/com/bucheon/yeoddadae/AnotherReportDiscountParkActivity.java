@@ -183,8 +183,8 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
             gpsManager.setMinDistance(1); // m단위
             gpsManager.setProvider(gpsManager.GPS_PROVIDER);
             gpsManager.OpenGps();
-            gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
-            gpsManager.OpenGps();
+            // gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
+            // gpsManager.OpenGps();
         }
 
         Log.d(TAG, "현재 Lat : "  + nowLat);

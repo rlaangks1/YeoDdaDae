@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
+    boolean isLogining = false;
     FirebaseAuth mAuth;
 
     ImageButton backBtn;
@@ -64,26 +65,44 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
+                if (isLogining) {
+                    return;
+                }
+
+                isLogining = true;
+
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm != null) {
                     imm.hideSoftInputFromWindow(idTxt.getWindowToken(), 0);
                     imm.hideSoftInputFromWindow(pwTxt.getWindowToken(), 0);
                 }
 
-                String id = idTxt.getText().toString();
-                String pw = pwTxt.getText().toString();
+                String id = replaceNewlinesAndTrim(idTxt);
+                String pw = replaceNewlinesAndTrim(pwTxt);
 
-                if (id.equals("")) {
+                if (id.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "ID를 입력해주세요", Toast.LENGTH_SHORT).show();
+                    isLogining = false;
                 }
-                else if (pw.equals("")) {
+                else if (pw.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+                    isLogining = false;
+                }
+                else if (id.contains(" ")) {
+                    Toast.makeText(getApplicationContext(), "ID는 공백을 포함할 수 없습니다", Toast.LENGTH_SHORT).show();
+                    isLogining = false;
+                }
+                else if (pw.contains(" ")) {
+                    Toast.makeText(getApplicationContext(), "비밀번호는 공백을 포함할 수 없습니다", Toast.LENGTH_SHORT).show();
+                    isLogining = false;
                 }
                 else if (id.length() <= 5 || id.length() >= 21) {
                     Toast.makeText(getApplicationContext(), "ID는 6~20자 입니다", Toast.LENGTH_SHORT).show();
+                    isLogining = false;
                 }
                 else if (pw.length() <= 5 || pw.length() >= 21) {
                     Toast.makeText(getApplicationContext(), "비밀번호는 6~20자 입니다", Toast.LENGTH_SHORT).show();
+                    isLogining = false;
                 }
                 else {
                     FirestoreDatabase fd = new FirestoreDatabase();
@@ -104,10 +123,12 @@ public class LoginActivity extends AppCompatActivity {
                                             resultIntent.putExtra("loginId", id);
                                             resultIntent.putExtra("isAdmin", isAdmin);
                                             setResult(RESULT_OK, resultIntent);
+                                            isLogining = false;
                                             finish();
                                         }
                                         else {
                                             Toast.makeText(getApplicationContext(), "로그인 실패", Toast.LENGTH_SHORT).show();
+                                            isLogining = false;
                                             pwTxt.setText("");
                                         }
                                     });
@@ -123,6 +144,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
                             }
                             pwTxt.setText("");
+                            isLogining = false;
                         }
                     });
                 }
@@ -144,5 +166,9 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(changePwIntent);
             }
         });
+    }
+
+    String replaceNewlinesAndTrim(EditText et) {
+        return et.getText().toString().replaceAll("\\n", " ").trim();
     }
 }

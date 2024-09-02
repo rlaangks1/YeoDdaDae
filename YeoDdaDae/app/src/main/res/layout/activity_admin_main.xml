@@ -92,6 +92,21 @@
             app:layout_constraintBottom_toBottomOf="@+id/toApproveShareParkBtn"
             app:layout_constraintRight_toRightOf="@+id/toApproveShareParkTxt" />
 
+        <TextView
+            android:id="@+id/toApproveShareParkNotificationTxt"
+            android:text="0"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/gradate_notification"
+            app:layout_constraintTop_toTopOf="@+id/toApproveShareParkTxt"
+            app:layout_constraintBottom_toBottomOf="@+id/toApproveShareParkTxt"
+            app:layout_constraintRight_toLeftOf="@+id/toApproveShareParkTxt" />
+
         <ImageButton
             android:id="@+id/toApproveReportBtn"
             android:layout_width="0dp"
@@ -138,6 +153,21 @@
             app:layout_constraintBottom_toBottomOf="@+id/toApproveReportBtn"
             app:layout_constraintRight_toRightOf="@+id/toApproveReportTxt" />
 
+        <TextView
+            android:id="@+id/toApproveReportNotificationTxt"
+            android:text="0"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/gradate_notification"
+            app:layout_constraintTop_toTopOf="@+id/toApproveReportTxt"
+            app:layout_constraintBottom_toBottomOf="@+id/toApproveReportTxt"
+            app:layout_constraintRight_toLeftOf="@+id/toApproveReportTxt" />
+
         <ImageButton
             android:id="@+id/toStatisticsBtn"
             android:layout_width="0dp"
@@ -183,7 +213,6 @@
             android:textStyle="bold|italic"
             app:layout_constraintBottom_toBottomOf="@+id/toStatisticsBtn"
             app:layout_constraintRight_toRightOf="@+id/toStatisticsTxt" />
-        />
 
         <TextView
             android:layout_width="wrap_content"

@@ -32,6 +32,7 @@ public class RegisterActivity extends AppCompatActivity {
     FirebaseUser user;
     Handler handler;
     boolean isRegisterSuccessed = false;
+    boolean isRegistering = false;
 
     ImageButton backBtn;
     EditText idTxt;
@@ -80,6 +81,12 @@ public class RegisterActivity extends AppCompatActivity {
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (isRegistering) {
+                    return;
+                }
+
+                isRegistering = true;
                 registerBtn.setEnabled(false);
                 registerBtn.setImageResource(R.drawable.disabled_button);
 
@@ -90,39 +97,63 @@ public class RegisterActivity extends AppCompatActivity {
                     imm.hideSoftInputFromWindow(pwTxt.getWindowToken(), 0);
                 }
 
-                String id = idTxt.getText().toString().trim();
-                String email = emailTxt.getText().toString().trim();
-                String pw = pwTxt.getText().toString().trim();
+                String id = replaceNewlinesAndTrim(idTxt);
+                String email = replaceNewlinesAndTrim(emailTxt);
+                String pw = replaceNewlinesAndTrim(pwTxt);
 
-                if (id.equals("")) {
+                if (id.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "ID를 입력해주세요", Toast.LENGTH_SHORT).show();
                     registerBtn.setEnabled(true);
                     registerBtn.setImageResource(R.drawable.gradate_button);
+                    isRegistering = false;
                 }
-                else if (email.equals("")) {
+                else if (email.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "이메일을 입력해주세요", Toast.LENGTH_SHORT).show();
                     registerBtn.setEnabled(true);
                     registerBtn.setImageResource(R.drawable.gradate_button);
+                    isRegistering = false;
                 }
-                else if (pw.equals("")) {
+                else if (pw.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
                     registerBtn.setEnabled(true);
                     registerBtn.setImageResource(R.drawable.gradate_button);
+                    isRegistering = false;
+                }
+                else if (id.contains(" ")) {
+                    Toast.makeText(getApplicationContext(), "ID는 공백을 포함할 수 없습니다", Toast.LENGTH_SHORT).show();
+                    registerBtn.setEnabled(true);
+                    registerBtn.setImageResource(R.drawable.gradate_button);
+                    isRegistering = false;
+                }
+                else if (email.contains(" ")) {
+                    Toast.makeText(getApplicationContext(), "이메일은 공백을 포함할 수 없습니다", Toast.LENGTH_SHORT).show();
+                    registerBtn.setEnabled(true);
+                    registerBtn.setImageResource(R.drawable.gradate_button);
+                    isRegistering = false;
+                }
+                else if (pw.contains(" ")) {
+                    Toast.makeText(getApplicationContext(), "비밀번호는 공백을 포함할 수 없습니다", Toast.LENGTH_SHORT).show();
+                    registerBtn.setEnabled(true);
+                    registerBtn.setImageResource(R.drawable.gradate_button);
+                    isRegistering = false;
                 }
                 else if (id.length() <= 5 || id.length() >= 21) {
                     Toast.makeText(getApplicationContext(), "ID는 6~20자이어야 합니다", Toast.LENGTH_SHORT).show();
                     registerBtn.setEnabled(true);
                     registerBtn.setImageResource(R.drawable.gradate_button);
+                    isRegistering = false;
                 }
                 else if (!isValidEmail(email)) {
                     Toast.makeText(getApplicationContext(), "유효하지 않은 이메일 형식입니다", Toast.LENGTH_SHORT).show();
                     registerBtn.setEnabled(true);
                     registerBtn.setImageResource(R.drawable.gradate_button);
+                    isRegistering = false;
                 }
                 else if (pw.length() <= 5 || pw.length() >= 21) {
                     Toast.makeText(getApplicationContext(), "비밀번호는 6~20자이어야 합니다", Toast.LENGTH_SHORT).show();
                     registerBtn.setEnabled(true);
                     registerBtn.setImageResource(R.drawable.gradate_button);
+                    isRegistering = false;
                 }
                 else{
                     fd.duplicationCheck("account", "id", id, new OnFirestoreDataLoadedListener() {
@@ -135,6 +166,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), "이미 존재하는 아이디입니다", Toast.LENGTH_SHORT).show();
                                 registerBtn.setEnabled(true);
                                 registerBtn.setImageResource(R.drawable.gradate_button);
+                                isRegistering = false;
                             }
                         }
 
@@ -144,6 +176,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
                             registerBtn.setEnabled(true);
                             registerBtn.setImageResource(R.drawable.gradate_button);
+                            isRegistering = false;
                         }
                     });
                 }
@@ -269,5 +302,9 @@ public class RegisterActivity extends AppCompatActivity {
             }
         };
         handler.post(runnable);
+    }
+
+    String replaceNewlinesAndTrim(EditText et) {
+        return et.getText().toString().replaceAll("\\n", " ").trim();
     }
 }

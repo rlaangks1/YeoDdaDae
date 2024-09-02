@@ -188,9 +188,9 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                 for (String key : keys) {
                     ArrayList<String> values = shareTime.get(key);
 
-                    int year = Integer.parseInt(key.substring(0, 4));
-                    int month = Integer.parseInt(key.substring(4, 6));
-                    int day = Integer.parseInt(key.substring(6));
+                    String year = key.substring(0, 4);
+                    String month = key.substring(4, 6);
+                    String day = key.substring(6);
 
                     String startTimeString = values.get(0).substring(0,2) + ":" + values.get(0).substring(2);
                     String endTimeString = values.get(1).substring(0,2) + ":" + values.get(1).substring(2);
@@ -198,7 +198,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                     textBuilder.append(year + "년 " + month + "월 " + day + "일 " + startTimeString + "부터 " + endTimeString + "까지\n");
                 }
                 String shareTimeString = "";
-                if (!textBuilder.toString().equals("")) {
+                if (!textBuilder.toString().isEmpty()) {
                     shareTimeString = textBuilder.toString().substring(0, textBuilder.length() - 1);
                 }
 
@@ -221,9 +221,9 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                             for (String key : keys) {
                                 ArrayList<String> values = shareTime.get(key);
 
-                                int year = Integer.parseInt(key.substring(0, 4));
-                                int month = Integer.parseInt(key.substring(4, 6));
-                                int day = Integer.parseInt(key.substring(6));
+                                String year = key.substring(0, 4);
+                                String month = key.substring(4, 6);
+                                String day = key.substring(6);
 
                                 String startTimeString = values.get(0).substring(0, 2) + ":" + values.get(0).substring(2);
                                 String endTimeString = values.get(1).substring(0, 2) + ":" + values.get(1).substring(2);
@@ -240,7 +240,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                         }
 
                         final String reservationsText;
-                        if (!tempString.equals("")) {
+                        if (!tempString.isEmpty()) {
                             reservationsText = tempString.substring(0, tempString.length() - 1);
                         }
                         else {
@@ -255,7 +255,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (reservationsText.equals("")) {
+                                if (reservationsText.isEmpty()) {
                                     isThereReservation[0] = false;
                                     myShareParkInfoReservationTimeContentTxt.setText("없음");
                                 }

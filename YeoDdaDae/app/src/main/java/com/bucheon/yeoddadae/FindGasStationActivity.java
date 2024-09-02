@@ -67,6 +67,9 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     TMapView tMapView;
     TMapCircle tMapCircle;
     TMapData tMapData;
+    TMapMarkerItem tempMarker;
+    GasStationItem tempGasStation;
+    TMapPoint scrollSavedPoint;
     TMapMarkerItem selectedMarker;
     GasStationAdapter gasStationAdapter;
 
@@ -192,8 +195,8 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         gpsManager.setMinDistance(1); // m단위
         gpsManager.setProvider(gpsManager.GPS_PROVIDER);
         gpsManager.OpenGps();
-        gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
-        gpsManager.OpenGps();
+        // gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
+        // gpsManager.OpenGps();
 
         // TMapView 생성 및 보이기
         tMapView = new TMapView(this);
@@ -297,66 +300,13 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         gasStationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (!isItemSelected) {
-                    // 클릭한 GasStationItem을 가져옴
-                    GasStationItem clickedGasStation = (GasStationItem) parent.getItemAtPosition(position);
+                if (!isItemSelected) { // 클릭한 GasStationItem을 가져옴
+                    GasStationItem targetGasStation = (GasStationItem) parent.getItemAtPosition(position);
+                    TMapMarkerItem targetMarker = tMapView.getMarkerItemFromID(targetGasStation.getName());
 
-                    Log.d(TAG, "리스트뷰에서 주유소 아이템 클릭함 : " + clickedGasStation.getName() + ", " + clickedGasStation.getRadius() + ", " + clickedGasStation.getGasolinePrice()
-                            + ", " +  clickedGasStation.getDieselPrice() + ", " +  clickedGasStation.getPhone()
-                            + ", " + clickedGasStation.getLat()+ ", " + clickedGasStation.getLon());
-
-                    // gasStationListView에 clickedGasStation만 있도록
-                    GasStationAdapter tempGasStationAdapter = new GasStationAdapter();
-                    tempGasStationAdapter.addItem(clickedGasStation);
-                    gasStationListView.setAdapter(tempGasStationAdapter);
-
-                    // 도착점 설정
-                    naviEndPoint = new TMapPoint (clickedGasStation.getLat(), clickedGasStation.getLon());
-                    naviEndPointName = clickedGasStation.getName();
-
-                    // 길 찾기 및 선 표시
-                    TMapData tmapdata = new TMapData();
-                    tmapdata.findPathData(nowPoint, naviEndPoint, new TMapData.FindPathDataListenerCallback() {
-                        @Override
-                        public void onFindPathData(TMapPolyLine polyLine) {
-                            if (selectedMarker != null) {
-                                selectedMarker.setIcon(tmapMarkerIcon);
-                            }
-
-                            tMapView.setTMapPathIcon(tmapStartMarkerIcon, null);
-                            TMapMarkerItem endMarker = tMapView.getMarkerItemFromID(clickedGasStation.getName());
-                            endMarker.setIcon(tmapSelectedMarkerIcon);
-
-                            selectedMarker = endMarker;
-
-                            tMapView.addTMapPath(polyLine);
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    tMapView.setCenterPoint(selectedMarker.longitude, selectedMarker.latitude);
-
-                                    DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-                                    float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
-                                    gasStationListView.getLayoutParams().height = (int) px;
-                                    gasStationListView.requestLayout();
-
-                                    TextView gasStationOrder = findViewById(R.id.gasStationOrder);
-                                    gasStationOrder.setVisibility(View.INVISIBLE);
-
-                                    TextView gasStationName = findViewById(R.id.gasStationName);
-                                    ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) gasStationName.getLayoutParams();
-                                    params.leftToLeft = R.id.gasStationItemConstraintLayout;
-                                    gasStationName.setLayoutParams(params);
-
-                                    gasStationSortHorizontalScrollView.setVisibility(View.GONE);
-                                    naviConstLayout.setVisibility(View.VISIBLE);
-
-                                    isItemSelected = true;
-                                }
-                            });
-                        }
-                    });
+                    if (targetGasStation != null && targetMarker != null) {
+                        gasStationSelect(targetMarker, targetGasStation);
+                    }
                 }
             }
         });
@@ -397,7 +347,89 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         gasStationSortHorizontalScrollView.setVisibility(View.VISIBLE);
     }
 
-    public void findGasStation(int sortBy) { // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:휘발유가순, 4: 경유가순 5: 고급휘발유가순, 6: 고급경유가순
+    @Override
+    public boolean onPressEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
+        if (arrayList.size() > 0) { // TMapMarkerItem이 클릭됬다면
+            tempMarker = arrayList.get(0); // endMarker = 클릭한 TMapMarkerItem
+            tempGasStation = gasStationAdapter.findItem(tempMarker.getName());
+            scrollSavedPoint = tMapView.getCenterPoint();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onPressUpEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
+        if (arrayList.size() > 0) {
+            TMapMarkerItem targetMarker = arrayList.get(0); // endMarker = 클릭한 TMapMarkerItem
+            GasStationItem targetGasStation = gasStationAdapter.findItem(targetMarker.getName());
+
+            if (scrollSavedPoint.equals(tMapView.getCenterPoint()) && targetMarker == tempMarker && targetGasStation == tempGasStation && targetGasStation != null && targetMarker != null) {
+                gasStationSelect(targetMarker, targetGasStation);
+            }
+        }
+
+        tempMarker = null;
+        tempGasStation = null;
+        scrollSavedPoint = null;
+
+        return false;
+    }
+
+    void gasStationSelect(TMapMarkerItem targetMarker, GasStationItem targetGasStation) {
+        // gasStationListView에 targetGasStation만 있도록
+        GasStationAdapter tempGasStationAdapter = new GasStationAdapter();
+        tempGasStationAdapter.addItem(targetGasStation);
+        gasStationListView.setAdapter(tempGasStationAdapter);
+
+        // 도착점 설정
+        naviEndPoint = new TMapPoint(targetGasStation.getLat(), targetGasStation.getLon());
+        naviEndPointName = targetGasStation.getName();
+
+        // 길 찾기 및 선 표시
+        TMapData tmapdata = new TMapData();
+        tmapdata.findPathData(nowPoint, naviEndPoint, new TMapData.FindPathDataListenerCallback() {
+            @Override
+            public void onFindPathData(TMapPolyLine polyLine) {
+                if (selectedMarker != null) {
+                    selectedMarker.setIcon(tmapMarkerIcon);
+                }
+
+                tMapView.setTMapPathIcon(tmapStartMarkerIcon, null);
+                targetMarker.setIcon(tmapSelectedMarkerIcon);
+
+                selectedMarker = targetMarker;
+
+                tMapView.addTMapPath(polyLine);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tMapView.setCenterPoint(selectedMarker.longitude, selectedMarker.latitude);
+
+                        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
+                        gasStationListView.getLayoutParams().height = (int) px;
+                        gasStationListView.requestLayout();
+
+                        TextView gasStationOrder = findViewById(R.id.gasStationOrder);
+                        gasStationOrder.setVisibility(View.INVISIBLE);
+
+                        TextView gasStationName = findViewById(R.id.gasStationName);
+                        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) gasStationName.getLayoutParams();
+                        params.leftToLeft = R.id.gasStationItemConstraintLayout;
+                        gasStationName.setLayoutParams(params);
+
+                        gasStationSortHorizontalScrollView.setVisibility(View.GONE);
+                        naviConstLayout.setVisibility(View.VISIBLE);
+
+                        isItemSelected = true;
+                    }
+                });
+            }
+        });
+    }
+
+    void findGasStation(int sortBy) { // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:휘발유가순, 4: 경유가순 5: 고급휘발유가순, 6: 고급경유가순
         Log.d (TAG, "findGasStation 시작");
 
         loadingStart();
@@ -511,74 +543,6 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                 loadingStop();
             }
         });
-    }
-
-    // TMapView 터치이벤트
-    @Override
-    public boolean onPressEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
-        if (arrayList.size() > 0) { // TMapMarkerItem이 클릭됬다면
-            TMapMarkerItem endMarker = arrayList.get(0); // endMarker = 클릭한 TMapMarkerItem
-
-            GasStationItem clickedGasStation = gasStationAdapter.findItem(endMarker.getName());
-            naviEndPoint = endMarker.getTMapPoint();
-            naviEndPointName = clickedGasStation.getName();
-            TMapData tmapdata = new TMapData();
-
-            Log.d(TAG, "TMapView에서 주유소 마커 클릭함 : " + endMarker.getName() + ", " + naviEndPoint.getLatitude() + ", " + naviEndPoint.getLongitude());
-
-            // gasStationListView에 clickedGasStation만 있도록
-            GasStationAdapter tempGasStationAdapter = new GasStationAdapter();
-            tempGasStationAdapter.addItem(clickedGasStation);
-            gasStationListView.setAdapter(tempGasStationAdapter);
-
-            // 길 찾기 및 선 표시
-            tmapdata.findPathData(nowPoint, naviEndPoint, new TMapData.FindPathDataListenerCallback() {
-                @Override
-                public void onFindPathData(TMapPolyLine polyLine) {
-                    if (selectedMarker != null) {
-                        selectedMarker.setIcon(tmapMarkerIcon);
-                    }
-
-                    tMapView.setTMapPathIcon(tmapStartMarkerIcon, null);
-                    endMarker.setIcon(tmapSelectedMarkerIcon);
-
-                    selectedMarker = endMarker;
-
-                    tMapView.addTMapPath(polyLine);
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            tMapView.setCenterPoint(selectedMarker.longitude, selectedMarker.latitude);
-
-                            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-                            float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
-                            gasStationListView.getLayoutParams().height = (int) px;
-                            gasStationListView.requestLayout();
-
-                            TextView gasStationOrder = findViewById(R.id.gasStationOrder);
-                            gasStationOrder.setVisibility(View.INVISIBLE);
-
-                            TextView gasStationName = findViewById(R.id.gasStationName);
-                            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) gasStationName.getLayoutParams();
-                            params.leftToLeft = R.id.gasStationItemConstraintLayout;
-                            gasStationName.setLayoutParams(params);
-
-                            gasStationSortHorizontalScrollView.setVisibility(View.GONE);
-                            naviConstLayout.setVisibility(View.VISIBLE);
-
-                            isItemSelected = true;
-                        }
-                    });
-                }
-            });
-        }
-        return false;
-    }
-
-    @Override
-    public boolean onPressUpEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
-        return false;
     }
 
     @Override
@@ -784,57 +748,12 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                 if (gasStationAdapter != null &&  0 < gasStationAdapter.getSize() && 0 < number && number <= gasStationAdapter.getSize()) {
                     sd.dismiss();
 
-                    GasStationItem clickedGasStation = (GasStationItem) gasStationAdapter.getItem(number - 1);
+                    GasStationItem targetGasStation = (GasStationItem) gasStationAdapter.getItem(number - 1);
+                    TMapMarkerItem targetMarker = tMapView.getMarkerItemFromID(targetGasStation.getName());
 
-                    GasStationAdapter tempGasStationAdapter = new GasStationAdapter();
-                    tempGasStationAdapter.addItem(clickedGasStation);
-                    gasStationListView.setAdapter(tempGasStationAdapter);
-
-                    naviEndPoint = new TMapPoint (clickedGasStation.getLat(), clickedGasStation.getLon());
-                    naviEndPointName = clickedGasStation.getName();
-
-                    TMapData tmapdata = new TMapData();
-                    tmapdata.findPathData(nowPoint, naviEndPoint, new TMapData.FindPathDataListenerCallback() {
-                        @Override
-                        public void onFindPathData(TMapPolyLine polyLine) {
-                            if (selectedMarker != null) {
-                                selectedMarker.setIcon(tmapMarkerIcon);
-                            }
-
-                            tMapView.setTMapPathIcon(tmapStartMarkerIcon, null);
-                            TMapMarkerItem endMarker = tMapView.getMarkerItemFromID(clickedGasStation.getName());
-                            endMarker.setIcon(tmapSelectedMarkerIcon);
-
-                            selectedMarker = endMarker;
-
-                            tMapView.addTMapPath(polyLine);
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    tMapView.setCenterPoint(selectedMarker.longitude, selectedMarker.latitude);
-
-                                    DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-                                    float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
-                                    gasStationListView.getLayoutParams().height = (int) px;
-                                    gasStationListView.requestLayout();
-
-                                    TextView gasStationOrder = findViewById(R.id.gasStationOrder);
-                                    gasStationOrder.setVisibility(View.INVISIBLE);
-
-                                    TextView gasStationName = findViewById(R.id.gasStationName);
-                                    ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) gasStationName.getLayoutParams();
-                                    params.leftToLeft = R.id.gasStationItemConstraintLayout;
-                                    gasStationName.setLayoutParams(params);
-
-                                    gasStationSortHorizontalScrollView.setVisibility(View.GONE);
-                                    naviConstLayout.setVisibility(View.VISIBLE);
-
-                                    isItemSelected = true;
-                                }
-                            });
-                        }
-                    });
+                    if (targetGasStation != null && targetMarker != null) {
+                        gasStationSelect(targetMarker, targetGasStation);
+                    }
                 }
                 else {
                     sd.changeToInactivateIcon();
