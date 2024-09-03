@@ -2,6 +2,7 @@ package com.bucheon.yeoddadae;
 
 import static android.content.ContentValues.TAG;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.ContentValues;
@@ -12,7 +13,9 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,13 +24,19 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.badge.BadgeUtils;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FieldValue;
 
 public class MainActivity extends AppCompatActivity implements FragmentToActivityListener, SttService.SttCallback {
     FirebaseAuth mAuth;
     FirebaseUser user;
+    FirestoreDatabase fd;
     boolean apiKeyCertified;
     String loginId;
 
@@ -104,6 +113,17 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
                 }
 
                 if (selectedFragment != null) {
+                    if (selectedFragment instanceof MyReservationFragment) {
+
+                    }
+                    else if (selectedFragment instanceof MyShareParkFragment) {
+
+                    }
+                    else if (selectedFragment instanceof MyReportDiscountParkFragment) {
+
+                    }
+
+
                     getSupportFragmentManager().beginTransaction()
                             .replace(containerViewId, selectedFragment)
                             .commit();
@@ -330,6 +350,19 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
                 }
             }
         });
+    }
+
+    public void showBottomNavigationViewBadge(int index, int showCount) {
+        int menuItemId = bottomNavView.getMenu().getItem(index).getItemId(); // 인덱스에 해당하는 메뉴 아이템의 ID 가져오기
+
+        BadgeDrawable badge = bottomNavView.getOrCreateBadge(menuItemId);
+
+        if (showCount > 0) {
+            badge.setVisible(true);
+            badge.setNumber(showCount); // 뱃지에 표시할 숫자 설정
+        } else {
+            badge.setVisible(false); // showCount가 0이면 뱃지를 숨김
+        }
     }
 
     @Override

@@ -233,6 +233,9 @@ public class FirestoreDatabase {
         newAccount.put("isAdmin", false);
         newAccount.put("ydPoint", 0);
         newAccount.put("registerTime", FieldValue.serverTimestamp());
+        newAccount.put("recentSawMyReservationTime", FieldValue.serverTimestamp());
+        newAccount.put("recentSawMyShareParkTime", FieldValue.serverTimestamp());
+        newAccount.put("recentSawMyReportParkTime", FieldValue.serverTimestamp());
 
         db.collection("account").document(uid).set(newAccount)
                 .addOnSuccessListener(aVoid -> {
@@ -2270,6 +2273,40 @@ public class FirestoreDatabase {
                     Log.d(TAG, "로그인 중 오류", e);
                     listener.onDataLoadError(e.getMessage());
                 });
+    }
+
+    public void updateRecentSawMyReservationTime (String userId, OnFirestoreDataLoadedListener listener) {
+        db.collection("account")
+                .whereEqualTo("id", userId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.size() == 1) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+
+                        document.getReference()
+                                .update("recentSawMyReservationTime", FieldValue.serverTimestamp())
+                                .addOnSuccessListener(aVoid -> {
+                                    listener.onDataLoaded(true);
+                                })
+                                .addOnFailureListener(e -> {
+
+                                });
+                    }
+                    else {
+
+                    }
+                })
+                .addOnFailureListener(e -> {
+
+                });
+    }
+
+    public void updateRecentSawMyShareParkTime (String userId, OnFirestoreDataLoadedListener listener) {
+
+    }
+
+    public void updateRecentSawMyReportParkTime (String userId, OnFirestoreDataLoadedListener listener) {
+
     }
 
     /*
