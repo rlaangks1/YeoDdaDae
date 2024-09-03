@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
         App app = (App) getApplication();
         apiKeyCertified = app.isApiKeyCertified();
 
+        fd = new FirestoreDatabase();
+
         initSttService();
 
         if (savedInstanceState != null) { // 저장된 상태가 있는 경우 프래그먼트를 복원
@@ -91,38 +93,52 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
                     .commit();
         }
 
+        getNotification();
+
         bottomNavView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment selectedFragment = null;
                 int itemId = item.getItemId();
+                String see = "";
+
                 if (itemId == R.id.bt_main) {
                     selectedFragment = new MainFragment(apiKeyCertified, loginId);
                 }
                 else if (itemId == R.id.bt_mybook) {
                     selectedFragment = new MyReservationFragment(loginId);
+                    see = "recentSawMyReservationTime";
                 }
                 else if (itemId == R.id.bt_my_shared_park) {
                     selectedFragment = new MyShareParkFragment(loginId);
+                    see = "recentSawMyShareParkTime";
                 }
                 else if (itemId == R.id.bt_my_discount_park_report) {
                     selectedFragment = new MyReportDiscountParkFragment(loginId);
+                    see = "recentSawMyReportParkTime";
                 }
                 else if (itemId == R.id.bt_point) {
                     selectedFragment = new MyYdPointFragment(loginId);
                 }
 
                 if (selectedFragment != null) {
-                    if (selectedFragment instanceof MyReservationFragment) {
 
+                    if (!see.isEmpty()) {
+                        fd.updateRecentSawTime(loginId, see, new OnFirestoreDataLoadedListener() {
+                            @Override
+                            public void onDataLoaded(Object data) {
+                                getNotification();
+                            }
+
+                            @Override
+                            public void onDataLoadError(String errorMessage) {
+
+                            }
+                        });
                     }
-                    else if (selectedFragment instanceof MyShareParkFragment) {
-
+                    else {
+                        getNotification();
                     }
-                    else if (selectedFragment instanceof MyReportDiscountParkFragment) {
-
-                    }
-
 
                     getSupportFragmentManager().beginTransaction()
                             .replace(containerViewId, selectedFragment)
@@ -152,6 +168,10 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
         super.onRestart();
 
         initSttService();
+
+        fd = new FirestoreDatabase();
+
+        getNotification();
     }
 
     void initSttService() {
@@ -352,17 +372,40 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
         });
     }
 
-    public void showBottomNavigationViewBadge(int index, int showCount) {
-        int menuItemId = bottomNavView.getMenu().getItem(index).getItemId(); // 인덱스에 해당하는 메뉴 아이템의 ID 가져오기
+    public void showBottomNavigationViewBadge(int count1, int count2, int count3) {
+        int[] count = {count1, count2, count3};
 
-        BadgeDrawable badge = bottomNavView.getOrCreateBadge(menuItemId);
+        for (int i = 1; i < 4; i++) {
+            int menuItemId = bottomNavView.getMenu().getItem(i).getItemId(); // 인덱스에 해당하는 메뉴 아이템의 ID 가져오기
 
-        if (showCount > 0) {
-            badge.setVisible(true);
-            badge.setNumber(showCount); // 뱃지에 표시할 숫자 설정
-        } else {
-            badge.setVisible(false); // showCount가 0이면 뱃지를 숨김
+            BadgeDrawable badge = bottomNavView.getOrCreateBadge(menuItemId);
+
+            if (count[i - 1] > 0) {
+                badge.setVisible(true);
+                badge.setNumber(count[i - 1]); // 뱃지에 표시할 숫자 설정
+            } else {
+                badge.setVisible(false); // showCount가 0이면 뱃지를 숨김
+            }
         }
+    }
+
+    public void getNotification() {
+        fd.loadNotification(loginId, new OnFirestoreDataLoadedListener() {
+            @Override
+            public void onDataLoaded(Object data) {
+                int temp[] = (int[]) data;
+
+                Log.d(TAG, "알림 수(예약,공유,제보) : " + temp[0] + ", " + temp[1] + ", " + temp[2]);
+
+                showBottomNavigationViewBadge(temp[0], temp[1], temp[2]);
+            }
+
+            @Override
+            public void onDataLoadError(String errorMessage) {
+                Log.d(TAG, errorMessage);
+                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
