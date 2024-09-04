@@ -132,7 +132,8 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
 
                             @Override
                             public void onDataLoadError(String errorMessage) {
-
+                                Log.d(TAG, errorMessage);
+                                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -168,8 +169,6 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
         super.onRestart();
 
         initSttService();
-
-        fd = new FirestoreDatabase();
 
         getNotification();
     }
@@ -379,6 +378,7 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
             int menuItemId = bottomNavView.getMenu().getItem(i).getItemId(); // 인덱스에 해당하는 메뉴 아이템의 ID 가져오기
 
             BadgeDrawable badge = bottomNavView.getOrCreateBadge(menuItemId);
+            badge.setTextAppearance(R.style.CustomBadgeTextAppearance);
 
             if (count[i - 1] > 0) {
                 badge.setVisible(true);
@@ -390,6 +390,8 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
     }
 
     public void getNotification() {
+        fd = new FirestoreDatabase();
+
         fd.loadNotification(loginId, new OnFirestoreDataLoadedListener() {
             @Override
             public void onDataLoaded(Object data) {

@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class FirestoreDatabase {
@@ -2297,6 +2298,7 @@ public class FirestoreDatabase {
                         document.getReference()
                                 .update(kind, FieldValue.serverTimestamp())
                                 .addOnSuccessListener(aVoid -> {
+                                    Log.d(TAG, "최근 내 " + kind + " 본 시간 최신화 성공");
                                     listener.onDataLoaded(true);
                                 })
                                 .addOnFailureListener(e -> {
@@ -2321,9 +2323,9 @@ public class FirestoreDatabase {
         Calendar calendar = Calendar.getInstance();
         Timestamp now = new Timestamp(calendar.getTime());
 
-        Timestamp recentSawMyReservationTime [] = {now};
-        Timestamp recentSawMyShareParkTime [] = recentSawMyReservationTime;
-        Timestamp recentSawMyReportParkTime [] = recentSawMyReservationTime;
+        Timestamp recentSawMyReservationTime [] = {null};
+        Timestamp recentSawMyShareParkTime [] = {null};
+        Timestamp recentSawMyReportParkTime [] = {null};
 
         db.collection("account")
                 .whereEqualTo("id", userId)
@@ -2335,6 +2337,12 @@ public class FirestoreDatabase {
                         recentSawMyReservationTime[0] = (Timestamp) user.get("recentSawMyReservationTime");
                         recentSawMyShareParkTime[0] = (Timestamp) user.get("recentSawMyShareParkTime");
                         recentSawMyReportParkTime[0] = (Timestamp) user.get("recentSawMyReportParkTime");
+
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초 SSS", Locale.KOREA);
+                        Log.d(TAG, "현재시각 : " + sdf.format(now.toDate()));
+                        Log.d(TAG, "내예약최근에본시각 : " + sdf.format(recentSawMyReservationTime[0].toDate()));
+                        Log.d(TAG, "내공유최근에본시각 : " + sdf.format(recentSawMyShareParkTime[0].toDate()));
+                        Log.d(TAG, "내제보최근에본시각 : " + sdf.format(recentSawMyReportParkTime[0].toDate()));
 
                         db.collection("reservation")
                                 .whereEqualTo("id", userId)
@@ -2427,11 +2435,7 @@ public class FirestoreDatabase {
                                                         .whereLessThanOrEqualTo("ratedTime", now)
                                                         .get()
                                                         .addOnSuccessListener(queryDocumentSnapshots4 -> {
-                                                            int report = 0;
-
-                                                            for (DocumentSnapshot reportPark : queryDocumentSnapshots4) {
-                                                                report++;
-                                                            }
+                                                            int report = queryDocumentSnapshots4.size();
 
                                                             result[2] = report;
 
