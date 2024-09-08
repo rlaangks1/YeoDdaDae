@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape>
-            <gradient
-                android:startColor="#ff9100"
-                android:endColor="#d9e80e"
-                android:angle="0"/> <!-- 그라데이션 각도 설정 -->
-            <corners android:radius="64dp"/> <!-- 모서리 둥글기 설정 -->
-        </shape>
-    </item>
-</layer-list>
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <solid android:color="#b3261e" />
+    <size android:width="24dp" android:height="24dp" />
+    <corners android:radius="18dp" />
+
+</shape>
