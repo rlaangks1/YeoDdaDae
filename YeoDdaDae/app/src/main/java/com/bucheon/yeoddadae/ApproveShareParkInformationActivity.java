@@ -11,13 +11,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.address_info.TMapAddressInfo;
 
@@ -51,6 +56,7 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
     TextView approveShareParkInfoUpTimeContentTxt;
     ImageButton approveBtn;
     ImageButton rejectionBtn;
+    ImageView approveShareParkInfoImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +80,12 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
         approveShareParkInfoUpTimeContentTxt = findViewById(R.id.approveShareParkInfoUpTimeContentTxt);
         approveBtn = findViewById(R.id.approveBtn);
         rejectionBtn = findViewById(R.id.rejectionBtn);
+        approveShareParkInfoImageView = findViewById(R.id.approveShareParkInfoImageView);
 
         Intent inIntent = getIntent();
         documentId = inIntent.getStringExtra("documentId");
+        
+        loadImageFromFirestore();
 
         FirestoreDatabase fd = new FirestoreDatabase();
         fd.loadShareParkInfo(documentId, new OnFirestoreDataLoadedListener() {
@@ -168,6 +177,32 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
         });
     }
 
+    private void loadImageFromFirestore() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("sharePark").document(documentId);
+
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    String imageUrl = document.getString("imageUrl");
+                    if (imageUrl != null && !imageUrl.isEmpty()) {
+                        // 이미지 URL이 존재하면 이미지 표시
+                        Glide.with(this)
+                                .load(imageUrl)
+                                .into(approveShareParkInfoImageView);
+                    } else {
+                        Toast.makeText(ApproveShareParkInformationActivity.this, "이미지 URL이 없습니다", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(ApproveShareParkInformationActivity.this, "문서가 존재하지 않습니다", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(ApproveShareParkInformationActivity.this, "데이터를 가져오는 데 실패했습니다: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    
     void init() {
         runOnUiThread(new Runnable() {
             @Override

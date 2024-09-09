@@ -9,13 +9,20 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapTapi;
 import com.skt.Tmap.address_info.TMapAddressInfo;
@@ -56,6 +63,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
     TextView myShareParkInfoCancelTxt;
     ImageButton myShareParkInfoCalculateBtn;
     TextView myShareParkInfoCalculateTxt;
+    ImageView myShareParkInfoImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,10 +89,13 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
         myShareParkInfoCancelTxt = findViewById(R.id.myShareParkInfoCancelTxt);
         myShareParkInfoCalculateBtn = findViewById(R.id.myShareParkInfoCalculateBtn);
         myShareParkInfoCalculateTxt = findViewById(R.id.myShareParkInfoCalculateTxt);
+        myShareParkInfoImageView = findViewById(R.id.myShareParkInfoImageView);
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("id");
         documentId = inIntent.getStringExtra("documentId");
+
+        loadImageFromFirestore();
 
         FirestoreDatabase fd = new FirestoreDatabase();
         fd.calculateFreeSharePark(loginId, new OnFirestoreDataLoadedListener() {
@@ -126,11 +137,37 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
             }
         });
 
-
         myShareParkInfoBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+    }
+
+    private void loadImageFromFirestore() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("sharePark").document(documentId);
+
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    String imageUrl = document.getString("imageUrl");
+                    if (imageUrl != null && !imageUrl.isEmpty()) {
+                        // 이미지 URL이 존재하면 이미지 표시
+                        Glide.with(this)
+                                .load(imageUrl)
+                                .into(myShareParkInfoImageView);
+                    } else {
+                        Toast.makeText(MyShareParkInformationActivity.this, "이미지 URL이 없습니다", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(MyShareParkInformationActivity.this, "문서가 존재하지 않습니다", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(MyShareParkInformationActivity.this, "데이터를 가져오는 데 실패했습니다: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

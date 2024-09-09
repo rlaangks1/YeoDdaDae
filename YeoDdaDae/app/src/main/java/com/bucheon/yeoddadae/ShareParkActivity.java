@@ -3,12 +3,14 @@ package com.bucheon.yeoddadae;
 import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,7 +18,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -34,7 +41,12 @@ import java.util.regex.Pattern;
 
 public class ShareParkActivity extends AppCompatActivity {
     final int gpsIntentRequestCode = 1;
+    private static final int PICK_IMAGE_REQUEST = 2;
     String loginId;
+
+    private StorageReference mStorageRef;
+    private Uri imageUri;
+
 
     double lat = 0;
     double lon = 0;
@@ -55,6 +67,61 @@ public class ShareParkActivity extends AppCompatActivity {
     MaterialCalendarView parkDateCalendar;
     ListView parkTimeListView;
     ImageButton registrationBtn;
+    ImageButton addPictureBtn;
+    ImageView selectedImageView;
+
+    private void uploadImageAndRegister(HashMap<String, Object> hm) {
+        // 이미지 URI가 null이 아닌지 확인
+        if (imageUri != null) {
+            // Firebase Storage에 이미지 업로드
+            StorageReference fileRef = mStorageRef.child(System.currentTimeMillis() + ".jpg");
+
+            fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // 업로드 성공 시 처리
+                    fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            // 업로드된 이미지의 URL을 가져옴
+                            String imageUrl = uri.toString();
+                            // 이미지 URL을 HashMap에 추가
+                            hm.put("imageUrl", imageUrl);
+
+                            // Firestore에 데이터 등록
+                            registerUser(hm);
+                        }
+                    });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    // 업로드 실패 시 처리
+                    Toast.makeText(ShareParkActivity.this, "이미지 업로드 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(this, "이미지를 선택하세요", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void registerUser(HashMap<String, Object> hm) {
+        FirestoreDatabase fd = new FirestoreDatabase();
+        fd.insertData("sharePark", hm, new OnFirestoreDataLoadedListener() {
+            @Override
+            public void onDataLoaded(Object data) {
+                Toast.makeText(getApplicationContext(), "공유주차장 등록 신청되었습니다", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void onDataLoadError(String errorMessage) {
+                Log.d(TAG, errorMessage);
+                Toast.makeText(getApplicationContext(), "공유주차장 등록 신청 중 오류 발생", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,12 +142,25 @@ public class ShareParkActivity extends AppCompatActivity {
         parkDateCalendar = findViewById(R.id.parkDateCalendar);
         parkTimeListView = findViewById(R.id.parkTimeListView);
         registrationBtn = findViewById(R.id.registrationBtn);
+        addPictureBtn = findViewById(R.id.addPictureBtn);
+        selectedImageView = findViewById(R.id.selectedImageView);
+        mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
+
+        parkDateCalendar.addDecorator(new BoldTextDecorator());
+
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
 
         ta = new TimeAdapter();
         parkTimeListView.setAdapter(ta);
+
+        addPictureBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openImageChooser();
+            }
+        });
 
         gpsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,23 +322,18 @@ public class ShareParkActivity extends AppCompatActivity {
                 hm.put("cancelReason", null);
                 hm.put("isCalculated", false);
 
-                FirestoreDatabase fd = new FirestoreDatabase();
-                fd.insertData("sharePark", hm, new OnFirestoreDataLoadedListener() {
-                    @Override
-                    public void onDataLoaded(Object data) {
-                        Toast.makeText(getApplicationContext(), "공유주차장 등록 신청되었습니다", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-
-                    @Override
-                    public void onDataLoadError(String errorMessage) {
-                        Log.d(TAG, errorMessage);
-                        Toast.makeText(getApplicationContext(), "공유주차장 등록 신청 중 오류 발생", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                uploadImageAndRegister(hm);
             }
         });
     }
+
+    private void openImageChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");  // 이미지만 선택 가능
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "사진을 선택하세요"), PICK_IMAGE_REQUEST);
+    }
+
 
     private boolean isValidPhoneNumber(String phoneNumber) {
         String regex = "^010[0-9]{8}$"; // 010으로 시작하고, 그 뒤에 8자리 숫자가 온다는 정규식
@@ -357,6 +432,11 @@ public class ShareParkActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            selectedImageView.setImageURI(imageUri); // 선택한 이미지를 ImageView에 표시
+        }
 
         if (requestCode == gpsIntentRequestCode) {
             if (resultCode == RESULT_OK) {
