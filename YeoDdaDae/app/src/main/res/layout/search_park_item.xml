@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/parkOrder"
         android:text="0"
-        android:textSize="25dp"
+        android:textSize="25sp"
         android:textColor="#1FB4F1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
     <TextView
         android:id="@+id/parkName"
         android:text="주차장명"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:textColor="#1FB4F1"
         android:maxLines="1"
         android:ellipsize="end"
@@ -38,7 +38,7 @@
     <TextView
         android:id="@+id/parkPhone"
         android:text="000-0000-0000"
-        android:textSize="15dp"
+        android:textSize="15sp"
         android:textColor="#1FB4F1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
     <TextView
         android:id="@+id/parkDistance"
         android:text="0km"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:textColor="#1FB4F1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
     <TextView
         android:id="@+id/parkType"
         android:text="주차장종류"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:textColor="#1FB4F1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
     <TextView
         android:id="@+id/parkConditionAndDiscount"
         android:text="조건/혜택"
-        android:textSize="12dp"
+        android:textSize="12sp"
         android:textColor="#1FB4F1"
         android:maxLines="1"
         android:ellipsize="end"
@@ -88,7 +88,7 @@
     <TextView
         android:id="@+id/parkPrice"
         android:text="주차비"
-        android:textSize="15dp"
+        android:textSize="15sp"
         android:textColor="#1FB4F1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

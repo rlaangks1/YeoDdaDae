@@ -2,6 +2,7 @@ package com.bucheon.yeoddadae;
 
 import static android.content.ContentValues.TAG;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.ContentValues;
@@ -12,7 +13,9 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,13 +24,19 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.badge.BadgeUtils;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FieldValue;
 
 public class MainActivity extends AppCompatActivity implements FragmentToActivityListener, SttService.SttCallback {
     FirebaseAuth mAuth;
     FirebaseUser user;
+    FirestoreDatabase fd;
     boolean apiKeyCertified;
     String loginId;
 
@@ -57,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
         App app = (App) getApplication();
         apiKeyCertified = app.isApiKeyCertified();
 
+        fd = new FirestoreDatabase();
+
         initSttService();
 
         if (savedInstanceState != null) { // 저장된 상태가 있는 경우 프래그먼트를 복원
@@ -82,28 +93,54 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
                     .commit();
         }
 
+        getNotification();
+
         bottomNavView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment selectedFragment = null;
                 int itemId = item.getItemId();
+                String see = "";
+
                 if (itemId == R.id.bt_main) {
                     selectedFragment = new MainFragment(apiKeyCertified, loginId);
                 }
                 else if (itemId == R.id.bt_mybook) {
                     selectedFragment = new MyReservationFragment(loginId);
+                    see = "recentSawMyReservationTime";
                 }
                 else if (itemId == R.id.bt_my_shared_park) {
                     selectedFragment = new MyShareParkFragment(loginId);
+                    see = "recentSawMyShareParkTime";
                 }
                 else if (itemId == R.id.bt_my_discount_park_report) {
                     selectedFragment = new MyReportDiscountParkFragment(loginId);
+                    see = "recentSawMyReportParkTime";
                 }
                 else if (itemId == R.id.bt_point) {
                     selectedFragment = new MyYdPointFragment(loginId);
                 }
 
                 if (selectedFragment != null) {
+
+                    if (!see.isEmpty()) {
+                        fd.updateRecentSawTime(loginId, see, new OnFirestoreDataLoadedListener() {
+                            @Override
+                            public void onDataLoaded(Object data) {
+                                getNotification();
+                            }
+
+                            @Override
+                            public void onDataLoadError(String errorMessage) {
+                                Log.d(TAG, errorMessage);
+                                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                    else {
+                        getNotification();
+                    }
+
                     getSupportFragmentManager().beginTransaction()
                             .replace(containerViewId, selectedFragment)
                             .commit();
@@ -132,6 +169,8 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
         super.onRestart();
 
         initSttService();
+
+        getNotification();
     }
 
     void initSttService() {
@@ -328,6 +367,45 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
                     sd.changeToInactivateIcon();
                     sd.setSttStatusTxt("음성 인식 타임 아웃\n'가까운 주유소 찾아줘'와 같이 말씀해보세요");
                 }
+            }
+        });
+    }
+
+    public void showBottomNavigationViewBadge(int count1, int count2, int count3) {
+        int[] count = {count1, count2, count3};
+
+        for (int i = 1; i < 4; i++) {
+            int menuItemId = bottomNavView.getMenu().getItem(i).getItemId(); // 인덱스에 해당하는 메뉴 아이템의 ID 가져오기
+
+            BadgeDrawable badge = bottomNavView.getOrCreateBadge(menuItemId);
+            badge.setTextAppearance(R.style.CustomBadgeTextAppearance);
+
+            if (count[i - 1] > 0) {
+                badge.setVisible(true);
+                badge.setNumber(count[i - 1]); // 뱃지에 표시할 숫자 설정
+            } else {
+                badge.setVisible(false); // showCount가 0이면 뱃지를 숨김
+            }
+        }
+    }
+
+    public void getNotification() {
+        fd = new FirestoreDatabase();
+
+        fd.loadNotification(loginId, new OnFirestoreDataLoadedListener() {
+            @Override
+            public void onDataLoaded(Object data) {
+                int temp[] = (int[]) data;
+
+                Log.d(TAG, "알림 수(예약,공유,제보) : " + temp[0] + ", " + temp[1] + ", " + temp[2]);
+
+                showBottomNavigationViewBadge(temp[0], temp[1], temp[2]);
+            }
+
+            @Override
+            public void onDataLoadError(String errorMessage) {
+                Log.d(TAG, errorMessage);
+                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -183,4 +183,9 @@
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">#FFFFFF</item>
     </style>
+
+    <!-- 뱃지 커스터마이징 -->
+    <style name="CustomBadgeTextAppearance" parent="TextAppearance.MaterialComponents.Badge">
+        <item name="android:textSize">12sp</item>
+    </style>
 </resources>

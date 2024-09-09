@@ -417,7 +417,7 @@
                 <TextView
                     android:id="@+id/findParkCustomTimeStartTxt"
                     android:text="시작"
-                    android:textSize="20dp"
+                    android:textSize="20sp"
                     android:textColor="@color/sub"
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
@@ -429,7 +429,7 @@
 
                 <EditText
                     android:id="@+id/findParkCustomTimeStartDateEditTxt"
-                    android:textSize="16dp"
+                    android:textSize="16sp"
                     android:textColor="@color/sub"
                     android:textStyle="bold"
                     android:gravity="center"
@@ -446,7 +446,7 @@
 
                 <EditText
                     android:id="@+id/findParkCustomTimeStartTimeEditTxt"
-                    android:textSize="16dp"
+                    android:textSize="16sp"
                     android:textColor="@color/sub"
                     android:textStyle="bold"
                     android:gravity="center"
@@ -463,7 +463,7 @@
                 <TextView
                     android:id="@+id/findParkCustomTimeEndTxt"
                     android:text="끝"
-                    android:textSize="20dp"
+                    android:textSize="20sp"
                     android:textColor="@color/sub"
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
@@ -475,7 +475,7 @@
 
                 <EditText
                     android:id="@+id/findParkCustomTimeEndDateEditTxt"
-                    android:textSize="16dp"
+                    android:textSize="16sp"
                     android:textColor="@color/sub"
                     android:textStyle="bold"
                     android:gravity="center"
@@ -492,7 +492,7 @@
 
                 <EditText
                     android:id="@+id/findParkCustomTimeEndTimeEditTxt"
-                    android:textSize="16dp"
+                    android:textSize="16sp"
                     android:textColor="@color/sub"
                     android:textStyle="bold"
                     android:gravity="center"

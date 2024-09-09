@@ -42,7 +42,7 @@
             <TextView
                 android:id="@+id/addReportDiscountParkAddressTxt"
                 android:text="위치"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/addReportDiscountParkBackBtn"
@@ -52,7 +52,7 @@
 
             <EditText
                 android:id="@+id/addReportDiscountParkAddressContentEditTxt"
-                android:textSize="25dp"
+                android:textSize="25sp"
                 android:textColor="@color/sub"
                 android:focusable="false"
                 android:backgroundTint="@color/sub"
@@ -67,7 +67,7 @@
             <TextView
                 android:id="@+id/addReportDiscountParkConditionTxt"
                 android:text="조건"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/addReportDiscountParkAddressContentEditTxt"
@@ -75,7 +75,7 @@
 
             <EditText
                 android:id="@+id/addReportDiscountParkConditionContentEditTxt"
-                android:textSize="25dp"
+                android:textSize="25sp"
                 android:textColor="@color/sub"
                 android:maxLength="50"
                 android:singleLine="true"
@@ -91,7 +91,7 @@
             <TextView
                 android:id="@+id/addReportDiscountParkBenefitTxt"
                 android:text="혜택"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/addReportDiscountParkConditionContentEditTxt"
@@ -116,7 +116,7 @@
                 android:id="@+id/addReportDiscountParkBenefitWonTxt"
                 android:text="원 할인"
                 android:textColor="@color/sub"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/addReportDiscountParkBenefitContentEditTxt"
@@ -127,7 +127,7 @@
             <TextView
                 android:id="@+id/addReportDiscountParkBenefitHintTxt"
                 android:text="(0 = 무료)"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:textColor="@color/sub"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

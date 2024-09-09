@@ -13,6 +13,7 @@ import com.google.firebase.Timestamp;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.address_info.TMapAddressInfo;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -234,7 +235,10 @@ public class ShareParkAdapter extends BaseAdapter {
                 shareParkPriceTxt.setText("무료");
             }
             else {
-                shareParkPriceTxt.setText("시간 당 " + sharePark.getPrice() + "pt");
+                DecimalFormat formatter = new DecimalFormat("#,###");
+                String formattedPriceString = formatter.format(sharePark.getPrice());
+
+                shareParkPriceTxt.setText("시간 당 " + formattedPriceString + "pt");
             }
 
             Timestamp timestamp = sharePark.getUpTime();
@@ -303,7 +307,10 @@ public class ShareParkAdapter extends BaseAdapter {
                 approveShareParkPriceTxt.setText("무료");
             }
             else {
-                approveShareParkPriceTxt.setText("시간 당 " + sharePark.getPrice() + "원");
+                DecimalFormat formatter = new DecimalFormat("#,###");
+                String formattedPrice = formatter.format(sharePark.getPrice());
+
+                approveShareParkPriceTxt.setText("시간 당 " + formattedPrice + "pt");
             }
 
             Timestamp timestamp = sharePark.getUpTime();
