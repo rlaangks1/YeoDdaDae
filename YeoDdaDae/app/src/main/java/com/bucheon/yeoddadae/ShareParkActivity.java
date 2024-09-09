@@ -40,16 +40,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ShareParkActivity extends AppCompatActivity {
-    final int gpsIntentRequestCode = 1;
-    private static final int PICK_IMAGE_REQUEST = 2;
+    final int GPS_INTENT_REQUEST_CODE = 1;
+    final int PICK_IMAGE_REQUEST_CODE = 2;
     String loginId;
-
-    private StorageReference mStorageRef;
-    private Uri imageUri;
-
-
     double lat = 0;
     double lon = 0;
+
+    StorageReference mStorageRef;
+    Uri imageUri;
 
     TimeAdapter ta;
 
@@ -62,66 +60,13 @@ public class ShareParkActivity extends AppCompatActivity {
     EditText sharerPhoneEditTxt;
     EditText sharerEmailEditTxt;
     EditText sharerRelationEditTxt;
+    ImageButton openImageBtn;
+    ImageView selectedImageView;
     EditText parkPriceEditTxt;
     ImageButton resetBtn;
     MaterialCalendarView parkDateCalendar;
     ListView parkTimeListView;
     ImageButton registrationBtn;
-    ImageButton addPictureBtn;
-    ImageView selectedImageView;
-
-    private void uploadImageAndRegister(HashMap<String, Object> hm) {
-        // 이미지 URI가 null이 아닌지 확인
-        if (imageUri != null) {
-            // Firebase Storage에 이미지 업로드
-            StorageReference fileRef = mStorageRef.child(System.currentTimeMillis() + ".jpg");
-
-            fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // 업로드 성공 시 처리
-                    fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            // 업로드된 이미지의 URL을 가져옴
-                            String imageUrl = uri.toString();
-                            // 이미지 URL을 HashMap에 추가
-                            hm.put("imageUrl", imageUrl);
-
-                            // Firestore에 데이터 등록
-                            registerUser(hm);
-                        }
-                    });
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    // 업로드 실패 시 처리
-                    Toast.makeText(ShareParkActivity.this, "이미지 업로드 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else {
-            Toast.makeText(this, "이미지를 선택하세요", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void registerUser(HashMap<String, Object> hm) {
-        FirestoreDatabase fd = new FirestoreDatabase();
-        fd.insertData("sharePark", hm, new OnFirestoreDataLoadedListener() {
-            @Override
-            public void onDataLoaded(Object data) {
-                Toast.makeText(getApplicationContext(), "공유주차장 등록 신청되었습니다", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-
-            @Override
-            public void onDataLoadError(String errorMessage) {
-                Log.d(TAG, errorMessage);
-                Toast.makeText(getApplicationContext(), "공유주차장 등록 신청 중 오류 발생", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,36 +82,34 @@ public class ShareParkActivity extends AppCompatActivity {
         sharerPhoneEditTxt = findViewById(R.id.sharerPhoneEditTxt);
         sharerEmailEditTxt = findViewById(R.id.sharerEmailEditTxt);
         sharerRelationEditTxt = findViewById(R.id.sharerRelationEditTxt);
+        openImageBtn = findViewById(R.id.openImageBtn);
+        selectedImageView = findViewById(R.id.selectedImageView);
         parkPriceEditTxt = findViewById(R.id.parkPriceEditTxt);
         resetBtn = findViewById(R.id.resetBtn);
         parkDateCalendar = findViewById(R.id.parkDateCalendar);
         parkTimeListView = findViewById(R.id.parkTimeListView);
         registrationBtn = findViewById(R.id.registrationBtn);
-        addPictureBtn = findViewById(R.id.addPictureBtn);
-        selectedImageView = findViewById(R.id.selectedImageView);
-        mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
-
-        parkDateCalendar.addDecorator(new BoldTextDecorator());
-
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
 
+        mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
+
         ta = new TimeAdapter();
         parkTimeListView.setAdapter(ta);
-
-        addPictureBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openImageChooser();
-            }
-        });
 
         gpsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent gpsIntent = new Intent(getApplicationContext(), GpsCertificationActivity.class);
-                startActivityForResult(gpsIntent, gpsIntentRequestCode);
+                startActivityForResult(gpsIntent, GPS_INTENT_REQUEST_CODE);
+            }
+        });
+
+        openImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openImageChooser();
             }
         });
 
@@ -331,9 +274,57 @@ public class ShareParkActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");  // 이미지만 선택 가능
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "사진을 선택하세요"), PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, "사진을 선택하세요"), PICK_IMAGE_REQUEST_CODE);
     }
 
+    private void uploadImageAndRegister(HashMap<String, Object> hm) {
+        if (imageUri != null) {
+            StorageReference fileRef = mStorageRef.child(System.currentTimeMillis() + ".jpg");
+            
+            fileRef.putFile(imageUri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    String imageUrl = uri.toString();
+                                    hm.put("imageUrl", imageUrl);
+
+                                    registerUser(hm);
+                                }
+                            });
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG, e.toString());
+                            Toast.makeText(getApplicationContext(), "이미지 업로드 중 오류 발생", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+        else {
+            Toast.makeText(this, "이미지를 선택하세요", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void registerUser(HashMap<String, Object> hm) {
+        FirestoreDatabase fd = new FirestoreDatabase();
+        fd.insertData("sharePark", hm, new OnFirestoreDataLoadedListener() {
+            @Override
+            public void onDataLoaded(Object data) {
+                Toast.makeText(getApplicationContext(), "공유주차장 등록 신청되었습니다", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void onDataLoadError(String errorMessage) {
+                Log.d(TAG, errorMessage);
+                Toast.makeText(getApplicationContext(), "공유주차장 등록 신청 중 오류 발생", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     private boolean isValidPhoneNumber(String phoneNumber) {
         String regex = "^010[0-9]{8}$"; // 010으로 시작하고, 그 뒤에 8자리 숫자가 온다는 정규식
@@ -433,12 +424,7 @@ public class ShareParkActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            imageUri = data.getData();
-            selectedImageView.setImageURI(imageUri); // 선택한 이미지를 ImageView에 표시
-        }
-
-        if (requestCode == gpsIntentRequestCode) {
+        if (requestCode == GPS_INTENT_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 lat = data.getDoubleExtra("lat", 0);
                 lon = data.getDoubleExtra("lon", 0);
@@ -460,6 +446,12 @@ public class ShareParkActivity extends AppCompatActivity {
                         }
                     }
                 });
+            }
+        }
+        else if (requestCode == PICK_IMAGE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK && data != null && data.getData() != null) {
+                imageUri = data.getData();
+                selectedImageView.setImageURI(imageUri); // 선택한 이미지를 ImageView에 표시
             }
         }
     }

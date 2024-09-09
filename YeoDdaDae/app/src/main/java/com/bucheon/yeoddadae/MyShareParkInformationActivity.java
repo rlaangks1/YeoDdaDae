@@ -56,6 +56,8 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
     TextView myShareParkInfoShareParkNewAddressContentTxt;
     TextView myShareParkInfoShareParkOldAddressContentTxt;
     TextView myShareParkInfoShareParkDetailaddressContentTxt;
+    TextView myShareParkInfoImageTxt;
+    ImageView myShareParkInfoImageImageView;
     TextView myShareParkInfoShareTimeContentTxt;
     TextView myShareParkInfoReservationTimeContentTxt;
     ImageButton myShareParkNaviBtn;
@@ -63,7 +65,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
     TextView myShareParkInfoCancelTxt;
     ImageButton myShareParkInfoCalculateBtn;
     TextView myShareParkInfoCalculateTxt;
-    ImageView myShareParkInfoImageView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,8 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
         myShareParkInfoShareParkNewAddressContentTxt = findViewById(R.id.myShareParkInfoShareParkNewAddressContentTxt);
         myShareParkInfoShareParkOldAddressContentTxt = findViewById(R.id.myShareParkInfoShareParkOldAddressContentTxt);
         myShareParkInfoShareParkDetailaddressContentTxt = findViewById(R.id.myShareParkInfoShareParkDetailaddressContentTxt);
+        myShareParkInfoImageTxt = findViewById(R.id.myShareParkInfoImageTxt);
+        myShareParkInfoImageImageView = findViewById(R.id.myShareParkInfoImageImageView);
         myShareParkInfoShareTimeContentTxt = findViewById(R.id.myShareParkInfoShareTimeContentTxt);
         myShareParkInfoReservationTimeContentTxt = findViewById(R.id.myShareParkInfoReservationTimeContentTxt);
         myShareParkNaviBtn = findViewById(R.id.myShareParkNaviBtn);
@@ -89,7 +93,6 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
         myShareParkInfoCancelTxt = findViewById(R.id.myShareParkInfoCancelTxt);
         myShareParkInfoCalculateBtn = findViewById(R.id.myShareParkInfoCalculateBtn);
         myShareParkInfoCalculateTxt = findViewById(R.id.myShareParkInfoCalculateTxt);
-        myShareParkInfoImageView = findViewById(R.id.myShareParkInfoImageView);
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("id");
@@ -156,10 +159,9 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                 if (document.exists()) {
                     String imageUrl = document.getString("imageUrl");
                     if (imageUrl != null && !imageUrl.isEmpty()) {
-                        // 이미지 URL이 존재하면 이미지 표시
                         Glide.with(this)
                                 .load(imageUrl)
-                                .into(myShareParkInfoImageView);
+                                .into(myShareParkInfoImageImageView);
                     } else {
                         Toast.makeText(MyShareParkInformationActivity.this, "이미지 URL이 없습니다", Toast.LENGTH_SHORT).show();
                     }

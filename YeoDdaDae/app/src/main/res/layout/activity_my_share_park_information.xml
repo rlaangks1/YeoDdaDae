@@ -200,16 +200,28 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginLeft="10dp" />
 
+            <TextView
+                android:id="@+id/myShareParkInfoImageTxt"
+                android:text="첨부 이미지"
+                android:textSize="18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/myShareParkInfoShareParkDetailaddressContentTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp" />
+
             <ImageView
-                android:id="@+id/myShareParkInfoImageView"
+                android:id="@+id/myShareParkInfoImageImageView"
+                android:scaleType="fitXY"
                 android:layout_width="0dp"
                 android:layout_height="200dp"
-                android:layout_marginTop="20dp"
-                android:contentDescription="Selected Image"
-                android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/myShareParkInfoShareParkDetailaddressContentTxt" />
+                app:layout_constraintTop_toBottomOf="@+id/myShareParkInfoImageTxt"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
             <TextView
                 android:id="@+id/myShareParkInfoShareTimeTxt"
@@ -217,7 +229,7 @@
                 android:text="공유 시간"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/myShareParkInfoImageView"
+                app:layout_constraintTop_toBottomOf="@id/myShareParkInfoImageImageView"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp" />

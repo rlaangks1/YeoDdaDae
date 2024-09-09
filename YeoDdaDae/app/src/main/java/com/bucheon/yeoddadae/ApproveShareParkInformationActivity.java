@@ -49,6 +49,8 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
     TextView approveShareParkInfoPhoneContentTxt;
     TextView approveShareParkInfoEmailContentTxt;
     TextView approveShareParkInfoRelationContentTxt;
+    TextView approveShareParkInfoImageTxt;
+    ImageView approveShareParkInfoImageView;
     TextView approveShareParkInfoPriceContentTxt;
     TextView approveShareParkInfoHourPerTxt;
     TextView approveShareParkInfoPtTxt;
@@ -56,7 +58,7 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
     TextView approveShareParkInfoUpTimeContentTxt;
     ImageButton approveBtn;
     ImageButton rejectionBtn;
-    ImageView approveShareParkInfoImageView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,8 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
         approveShareParkInfoPhoneContentTxt = findViewById(R.id.approveShareParkInfoPhoneContentTxt);
         approveShareParkInfoEmailContentTxt = findViewById(R.id.approveShareParkInfoEmailContentTxt);
         approveShareParkInfoRelationContentTxt = findViewById(R.id.approveShareParkInfoRelationContentTxt);
+        approveShareParkInfoImageTxt = findViewById(R.id.approveShareParkInfoImageTxt);
+        approveShareParkInfoImageView = findViewById(R.id.approveShareParkInfoImageView);
         approveShareParkInfoPriceContentTxt = findViewById(R.id.approveShareParkInfoPriceContentTxt);
         approveShareParkInfoHourPerTxt = findViewById(R.id.approveShareParkInfoHourPerTxt);
         approveShareParkInfoPtTxt = findViewById(R.id.approveShareParkInfoPtTxt);
@@ -80,7 +84,6 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
         approveShareParkInfoUpTimeContentTxt = findViewById(R.id.approveShareParkInfoUpTimeContentTxt);
         approveBtn = findViewById(R.id.approveBtn);
         rejectionBtn = findViewById(R.id.rejectionBtn);
-        approveShareParkInfoImageView = findViewById(R.id.approveShareParkInfoImageView);
 
         Intent inIntent = getIntent();
         documentId = inIntent.getStringExtra("documentId");
