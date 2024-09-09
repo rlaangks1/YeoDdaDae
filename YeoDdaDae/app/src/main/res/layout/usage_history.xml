@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="0dp">
+
+    <ImageButton
+        android:id="@+id/recordBackBtn"
+        android:src="@drawable/back_icon"
+        android:scaleType="fitCenter"
+        android:background="@drawable/bg_widget_transparent_left"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"/>
+
+    <TextView
+        android:id="@+id/myrecord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="주차장 및 주유소 사용기록"
+        android:textColor="@color/sub"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/parking_record_button"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:background="@drawable/gradate_button"
+        android:onClick="onParkingRecordButtonClick"
+        android:padding="65dp"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="@+id/myrecord"
+        app:layout_constraintTop_toBottomOf="@+id/myrecord" />
+
+    <TextView
+        android:id="@+id/parking_record_buttonTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="주차장"
+        android:textSize="17dp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/parking_record_button"
+        app:layout_constraintEnd_toEndOf="@+id/parking_record_button"
+        app:layout_constraintStart_toStartOf="@+id/parking_record_button"
+        app:layout_constraintTop_toTopOf="@+id/parking_record_button" />
+
+    <ImageButton
+        android:id="@+id/gasstation_record_button"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:background="@drawable/gradate_button"
+        android:onClick="onGasStationRecordButtonClick"
+        android:padding="65dp"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/myrecord"
+        app:layout_constraintTop_toBottomOf="@+id/myrecord" />
+
+    <TextView
+        android:id="@+id/gasstation_record_buttonTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="주유소"
+        android:textSize="17dp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/gasstation_record_button"
+        app:layout_constraintEnd_toEndOf="@+id/gasstation_record_button"
+        app:layout_constraintStart_toStartOf="@+id/gasstation_record_button"
+        app:layout_constraintTop_toTopOf="@+id/gasstation_record_button" />
+
+    <ListView
+        android:id="@+id/myrecordListView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:dividerHeight="5dp"
+        android:layout_marginTop="55dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myrecord" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
