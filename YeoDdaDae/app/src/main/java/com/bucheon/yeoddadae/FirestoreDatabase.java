@@ -1365,6 +1365,7 @@ public class FirestoreDatabase {
                                                                                 count[0]++;
                                                                             }
                                                                         }
+
                                                                         @Override
                                                                         public void onDataLoadError(String errorMessage) {
                                                                             Log.d(TAG, errorMessage);
