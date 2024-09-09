@@ -24,7 +24,7 @@
         <TextView
             android:id="@+id/newparking"
             android:text="@string/new_start"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textColor="@color/sub"
             android:textStyle="bold"
             android:layout_width="wrap_content"

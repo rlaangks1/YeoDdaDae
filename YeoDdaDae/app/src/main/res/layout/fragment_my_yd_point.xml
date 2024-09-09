@@ -142,7 +142,7 @@
         <TextView
             android:id="@+id/pointHistoryCustomTimeStartTxt"
             android:text="시작"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textColor="@color/sub"
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -154,7 +154,7 @@
 
         <EditText
             android:id="@+id/pointHistoryCustomTimeStartDateEditTxt"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textColor="@color/sub"
             android:textStyle="bold"
             android:gravity="center"
@@ -171,7 +171,7 @@
 
         <EditText
             android:id="@+id/pointHistoryCustomTimeStartTimeEditTxt"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textColor="@color/sub"
             android:textStyle="bold"
             android:gravity="center"
@@ -188,7 +188,7 @@
         <TextView
             android:id="@+id/pointHistoryCustomTimeEndTxt"
             android:text="끝"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textColor="@color/sub"
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -200,7 +200,7 @@
 
         <EditText
             android:id="@+id/pointHistoryCustomTimeEndDateEditTxt"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textColor="@color/sub"
             android:textStyle="bold"
             android:gravity="center"
@@ -217,7 +217,7 @@
 
         <EditText
             android:id="@+id/pointHistoryCustomTimeEndTimeEditTxt"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textColor="@color/sub"
             android:textStyle="bold"
             android:gravity="center"

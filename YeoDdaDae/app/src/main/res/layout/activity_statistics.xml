@@ -67,7 +67,7 @@
 
         <EditText
             android:id="@+id/statisticsCustomTimeStartDateEditTxt"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textColor="@color/sub"
             android:textStyle="bold"
             android:gravity="center"
@@ -84,7 +84,7 @@
 
         <EditText
             android:id="@+id/statisticsCustomTimeStartTimeEditTxt"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textColor="@color/sub"
             android:textStyle="bold"
             android:gravity="center"
@@ -113,7 +113,7 @@
 
         <EditText
             android:id="@+id/statisticsCustomTimeEndDateEditTxt"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textColor="@color/sub"
             android:textStyle="bold"
             android:gravity="center"
@@ -130,7 +130,7 @@
 
         <EditText
             android:id="@+id/statisticsCustomTimeEndTimeEditTxt"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textColor="@color/sub"
             android:textStyle="bold"
             android:gravity="center"

@@ -19,7 +19,7 @@
 
     <TextView
         android:text="@string/new_start"
-        android:textSize="25dp"
+        android:textSize="25sp"
         android:textColor="@color/sub"
         android:textStyle="bold"
         android:layout_width="wrap_content"

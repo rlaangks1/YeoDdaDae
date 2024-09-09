@@ -228,36 +228,27 @@ public class StatisticsActivity extends AppCompatActivity {
         statisticsCustomTimeStartTimeEditTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int initHour = 0;
+                int initMinute = 0;
+
+                if (startTime != null) {
+                    initHour = Integer.parseInt(startTime.substring(0, 2));
+                    initMinute = Integer.parseInt(startTime.substring(2, 4));
+                }
                 TimePickerDialog timePickerDialog = new TimePickerDialog(StatisticsActivity.this, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
-                        String timeFormat;
-                        int amPmHour;
-                        if (selectedHour >= 12) {
-                            timeFormat = "오후";
-                            if (selectedHour > 12) {
-                                amPmHour = selectedHour - 12;
-                            } else {
-                                amPmHour = selectedHour;
-                            }
-                        } else {
-                            timeFormat = "오전";
-                            if (selectedHour == 0) {
-                                amPmHour = 12;
-                            } else {
-                                amPmHour = selectedHour;
-                            }
-                        }
-                        String formattedTime = String.format(Locale.getDefault(), "%s %02d:%02d", timeFormat, amPmHour, selectedMinute);
+                        String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute);
                         statisticsCustomTimeStartTimeEditTxt.setText(formattedTime);
-                        startTime = String.format(Locale.getDefault(), "%02d%02d", selectedHour, selectedMinute);
+                        startTime = String.format(Locale.KOREA, "%02d%02d", selectedHour, selectedMinute);
                         try {
                             customDateInit();
-                        } catch (ParseException e) {
+                        }
+                        catch (ParseException e) {
                             throw new RuntimeException(e);
                         }
                     }
-                }, 0, 0, false); // is24HourView를 false로 설정
+                }, initHour, initMinute, true);
 
                 timePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent); // 배경 투명하게 설정
                 timePickerDialog.show();
@@ -275,36 +266,32 @@ public class StatisticsActivity extends AppCompatActivity {
         statisticsCustomTimeEndTimeEditTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int initHour = 0;
+                int initMinute = 0;
+
+                if (endTime != null) {
+                    initHour = Integer.parseInt(endTime.substring(0, 2));
+                    initMinute = Integer.parseInt(endTime.substring(2, 4));
+                }
                 TimePickerDialog timePickerDialog = new TimePickerDialog(StatisticsActivity.this, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
-                        String timeFormat;
-                        int amPmHour;
-                        if (selectedHour >= 12) {
-                            timeFormat = "오후";
-                            if (selectedHour > 12) {
-                                amPmHour = selectedHour - 12;
-                            } else {
-                                amPmHour = selectedHour;
-                            }
-                        } else {
-                            timeFormat = "오전";
-                            if (selectedHour == 0) {
-                                amPmHour = 12;
-                            } else {
-                                amPmHour = selectedHour;
-                            }
+                        if (selectedHour == 0 && selectedMinute == 0) {
+                            statisticsCustomTimeEndTimeEditTxt.setText("24:00");
                         }
-                        String formattedTime = String.format(Locale.getDefault(), "%s %02d:%02d", timeFormat, amPmHour, selectedMinute);
-                        statisticsCustomTimeEndTimeEditTxt.setText(formattedTime);
-                        endTime = String.format(Locale.getDefault(), "%02d%02d", selectedHour, selectedMinute);
+                        else {
+                            String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute);
+                            statisticsCustomTimeEndTimeEditTxt.setText(formattedTime);
+                        }
+                        endTime = String.format(Locale.KOREA, "%02d%02d", selectedHour, selectedMinute);
                         try {
                             customDateInit();
-                        } catch (ParseException e) {
+                        }
+                        catch (ParseException e) {
                             throw new RuntimeException(e);
                         }
                     }
-                }, 0, 0, false); // is24HourView를 false로 설정
+                }, initHour, initMinute, true);
 
                 timePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent); // 배경 투명하게 설정
                 timePickerDialog.show();

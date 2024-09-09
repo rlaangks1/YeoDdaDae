@@ -29,7 +29,7 @@
             android:layout_marginLeft="5dp"
             android:text="@string/new_start"
             android:textColor="@color/sub"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mainicon" />

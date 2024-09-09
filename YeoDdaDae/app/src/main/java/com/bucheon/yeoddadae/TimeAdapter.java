@@ -1,7 +1,10 @@
 package com.bucheon.yeoddadae;
 
+import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
+
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -210,28 +213,12 @@ public class TimeAdapter extends BaseAdapter {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(context, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
-                        String timeFormat;
-                        int amPmHour;
-                        if (selectedHour >= 12) {
-                            timeFormat = "오후";
-                            if (selectedHour > 12) {
-                                amPmHour = selectedHour - 12;
-                            } else {
-                                amPmHour = selectedHour;
-                            }
-                        }
-                        else {
-                            timeFormat = "오전";
-                            if (selectedHour == 0) {
-                                amPmHour = 12;
-                            } else {
-                                amPmHour = selectedHour;
-                            }
-                        }
-                        String formattedTime = String.format(Locale.getDefault(), "%s %02d:%02d", timeFormat, amPmHour, selectedMinute);
+                        String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute);
                         startTime.setText(formattedTime);
-                        String timeString = String.format(Locale.getDefault(), "%02d%02d", selectedHour, selectedMinute);
+
+                        String timeString = String.format(Locale.KOREA, "%02d%02d", selectedHour, selectedMinute);
                         time.setStartTime(timeString);
+
                         hour[0] = Integer.parseInt(time.getStartTime().substring(0, 2));
                         minute[0] = Integer.parseInt(time.getStartTime().substring(2, 4));
 
@@ -239,7 +226,7 @@ public class TimeAdapter extends BaseAdapter {
                             mActivity.calculatePrice();
                         }
                     }
-                }, hour[0], minute[0], false); // is24HourView를 false로 설정
+                }, hour[0], minute[0], true);
 
 
                 timePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent); // 배경 투명하게 설정
@@ -253,30 +240,23 @@ public class TimeAdapter extends BaseAdapter {
                 int[] hour = {Integer.parseInt(time.getEndTime().substring(0, 2))};
                 int[] minute = {Integer.parseInt(time.getEndTime().substring(2, 4))};
 
+                if (hour[0] == 24 && minute[0] == 0) {
+                    hour[0] = 0;
+                }
+
                 TimePickerDialog timePickerDialog = new TimePickerDialog(context, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
-                        String timeFormat;
-                        int amPmHour;
-                        if (selectedHour >= 12) {
-                            timeFormat = "오후";
-                            if (selectedHour > 12) {
-                                amPmHour = selectedHour - 12;
-                            } else {
-                                amPmHour = selectedHour;
-                            }
-                        } else {
-                            timeFormat = "오전";
-                            if (selectedHour == 0) {
-                                amPmHour = 12;
-                            } else {
-                                amPmHour = selectedHour;
-                            }
+                        if (selectedHour == 0 && selectedMinute == 0) {
+                            endTime.setText("24:00");
                         }
-                        String formattedTime = String.format(Locale.getDefault(), "%s %02d:%02d", timeFormat, amPmHour, selectedMinute);
-                        endTime.setText(formattedTime);
-                        String timeString = String.format(Locale.getDefault(), "%02d%02d", selectedHour, selectedMinute);
+                        else {
+                            String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute);
+                            endTime.setText(formattedTime);
+                        }
+                        String timeString = String.format(Locale.KOREA, "%02d%02d", selectedHour, selectedMinute);
                         time.setEndTime(timeString);
+
                         hour[0] = Integer.parseInt(time.getStartTime().substring(0, 2));
                         minute[0] = Integer.parseInt(time.getStartTime().substring(2, 4));
 
@@ -284,7 +264,7 @@ public class TimeAdapter extends BaseAdapter {
                             mActivity.calculatePrice();
                         }
                     }
-                }, hour[0], minute[0], false); // is24HourView를 false로 설정
+                }, hour[0], minute[0], true);
 
                 timePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent); // 배경 투명하게 설정
                 timePickerDialog.show();

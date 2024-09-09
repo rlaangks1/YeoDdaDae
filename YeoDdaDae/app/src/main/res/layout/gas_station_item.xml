@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/gasStationOrder"
         android:text="0"
-        android:textSize="25dp"
+        android:textSize="25sp"
         android:textColor="#FFFFFF"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
     <TextView
         android:id="@+id/gasStationName"
         android:text="주유소명"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:textColor="#FFFFFF"
         android:maxLines="1"
         android:ellipsize="end"
@@ -38,7 +38,7 @@
     <TextView
         android:id="@+id/gasStationPhone"
         android:text="000-0000-0000"
-        android:textSize="15dp"
+        android:textSize="15sp"
         android:textColor="#FFFFFF"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
     <TextView
         android:id="@+id/gasStationDistance"
         android:text="0km"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:textColor="#FFFFFF"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
     <TextView
         android:id="@+id/gasStationBrand"
         android:text="브랜드"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:textColor="#FFFFFF"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
     <TextView
         android:id="@+id/gasStationOilPrice"
         android:text="유가"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:textColor="#FFFFFF"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

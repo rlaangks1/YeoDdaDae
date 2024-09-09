@@ -7,7 +7,7 @@
     <TextView
         android:id="@+id/textViewDate"
         android:text="날짜"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textColor="@color/sub"
         android:textStyle="bold"
         android:layout_width="wrap_content"
@@ -19,8 +19,8 @@
 
     <EditText
         android:id="@+id/startTime"
-        android:text="오전 12:00"
-        android:textSize="18dp"
+        android:text="00:00"
+        android:textSize="18sp"
         android:textColor="@color/sub"
         android:textStyle="bold"
         android:gravity="center"
@@ -36,8 +36,8 @@
 
     <EditText
         android:id="@+id/endTime"
-        android:text="오전 12:00"
-        android:textSize="18dp"
+        android:text="24:00"
+        android:textSize="18sp"
         android:textColor="@color/sub"
         android:textStyle="bold"
         android:gravity="center"
