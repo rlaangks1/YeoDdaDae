@@ -41,6 +41,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FieldValue;
 import com.skt.Tmap.TMapCircle;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapGpsManager;
@@ -56,6 +57,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -96,6 +98,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     TMapMarkerItem selectedMarker;
     ParkAdapter parkAdapter;
     SearchParkAdapter spa;
+    FirestoreDatabase fd;
 
     Intent serviceIntent;
     SttService sttService;
@@ -433,6 +436,8 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                 searchBtn.setEnabled(true);
 
                 if (!replaceNewlinesAndTrim(searchEdTxt).isEmpty()) {
+                    // here
+
                     if (spa != null) {
                         spa.clearItem();
                     }
@@ -835,7 +840,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     loadingStop();
                     return;
                 }
-                FirestoreDatabase fd = new FirestoreDatabase();
+                fd = new FirestoreDatabase();
                 fd.findSharePark(loginId, centerPoint.getLatitude(), centerPoint.getLongitude(), 3, startString2, endString2, new OnFirestoreDataLoadedListener() {
                     @Override
                     public void onDataLoaded(Object data) {

@@ -2467,6 +2467,45 @@ public class FirestoreDatabase {
                 });
     }
 
+    public void insertSearchKeyword(String userId, String keyword, OnFirestoreDataLoadedListener listener) {
+        db.collection("searchHistory")
+                .whereEqualTo("id", userId)
+                .whereEqualTo("keyword", keyword)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots == null || queryDocumentSnapshots.size() == 0) {
+                        HashMap<String, Object> hm = new HashMap<>();
+                        hm.put("id", userId);
+                        hm.put("keyword", keyword);
+                        hm.put("upTime", FieldValue.serverTimestamp());
+
+                        insertData("searchHistory", hm, new OnFirestoreDataLoadedListener() {
+                            @Override
+                            public void onDataLoaded(Object data) {
+                                listener.onDataLoaded(true);
+                            }
+
+                            @Override
+                            public void onDataLoadError(String errorMessage) {
+                                Log.d(TAG, errorMessage);
+                                listener.onDataLoadError("검색어 새로 삽입 중 오류");
+                            }
+                        });
+                    }
+                    else if (queryDocumentSnapshots.size() == 1) {
+                        // here
+                    }
+                    else {
+                        Log.d(TAG, "데이터가 여러 개임");
+                        listener.onDataLoadError("데이터가 여러 개임");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "검색 기록 찾기 중 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
     /*
     public void my (OnFirestoreDataLoadedListener listener) {
         Log.d (TAG, "my 호출됨");
