@@ -138,7 +138,7 @@ public class YdPointChargeActivity extends AppCompatActivity {
                     dialog.show();
 
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(YdPointChargeActivity.this, R.color.sub));
-                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(YdPointChargeActivity.this, R.color.sub));
+                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(YdPointChargeActivity.this, R.color.disable));
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "포인트를 설정해주세요", Toast.LENGTH_SHORT).show();

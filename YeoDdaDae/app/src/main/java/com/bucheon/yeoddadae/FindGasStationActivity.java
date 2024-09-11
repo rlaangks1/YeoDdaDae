@@ -586,8 +586,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                 @Override
                 public void run() {
                     loadingAlert.show();
-                    loadingAlert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(FindGasStationActivity.this, R.color.sub));
-                    loadingAlert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(FindGasStationActivity.this, R.color.sub));
+                    loadingAlert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(FindGasStationActivity.this, R.color.disable));
                     getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 }
             });

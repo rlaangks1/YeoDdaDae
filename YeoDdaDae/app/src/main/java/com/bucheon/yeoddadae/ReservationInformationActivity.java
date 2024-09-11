@@ -180,7 +180,7 @@ public class ReservationInformationActivity extends AppCompatActivity {
                 dialog.show();
 
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(ReservationInformationActivity.this, R.color.sub));
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(ReservationInformationActivity.this, R.color.sub));
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(ReservationInformationActivity.this, R.color.disable));
             }
         });
     }

@@ -3,33 +3,55 @@ package com.bucheon.yeoddadae;
 import com.google.firebase.Timestamp;
 
 public class UsageHistoryItem {
-    //private String searchQuery; // 검색어
-    //private long timestamp; // 검색 시간이 저장된 타임스탬프
-    private int type;
-    private String starts;
-    private String ends;
-    private Timestamp times;
+    String type;
+    double startLat;
+    double startLon;
+    String poiId;
+    String poiName;
+    double endLat;
+    double endLon;
+    Timestamp upTime;
 
-
-    public UsageHistoryItem(int type, String starts, String ends, Timestamp times) {
-        //this.searchQuery = searchQuery;
-        //this.timestamp = timestamp;
-        this.type=type;
-        this.starts=starts;
-        this.ends=ends;
-        this.times=times;
-
+    public UsageHistoryItem(String type, double startLat, double startLon, String poiId, String poiName, double endLat, double endLon, Timestamp upTime) {
+        this.type = type;
+        this.startLat = startLat;
+        this.startLon = startLon;
+        this.poiId = poiId;
+        this.poiName = poiName;
+        this.endLat = endLat;
+        this.endLon = endLon;
+        this.upTime = upTime;
     }
 
-    public int getType() {
+    public String getType() {
         return type;
     }
-    public String getStarts() {
-        return starts;
-    }
-    public String getEnds() {
-        return ends;
-    }
-    public Timestamp getFormattedTimestamp() {return times;}
 
+    public double getStartLat() {
+        return startLat;
+    }
+
+    public double getStartLon() {
+        return startLon;
+    }
+
+    public String getPoiId() {
+        return poiId;
+    }
+
+    public String getPoiName() {
+        return poiName;
+    }
+
+    public double getEndLat() {
+        return endLat;
+    }
+
+    public double getEndLon() {
+        return endLon;
+    }
+
+    public Timestamp getUpTime() {
+        return upTime;
+    }
 }

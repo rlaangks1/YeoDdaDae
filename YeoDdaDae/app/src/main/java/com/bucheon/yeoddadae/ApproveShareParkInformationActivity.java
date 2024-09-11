@@ -175,7 +175,7 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
                 AlertDialog dialog = builder.create();
                 dialog.show();
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(ApproveShareParkInformationActivity.this, R.color.sub));
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(ApproveShareParkInformationActivity.this, R.color.sub));
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(ApproveShareParkInformationActivity.this, R.color.disable));
             }
         });
     }

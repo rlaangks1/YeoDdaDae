@@ -151,7 +151,7 @@ public class PaymentActivity extends AppCompatActivity {
                                     dialog2.show();
 
                                     dialog2.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(PaymentActivity.this, R.color.sub));
-                                    dialog2.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(PaymentActivity.this, R.color.sub));
+                                    dialog2.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(PaymentActivity.this, R.color.disable));
                                 } else {
                                     Log.d(TAG, errorMessage);
                                     Toast.makeText(getApplicationContext(), "결제 시도 중 오류 발생", Toast.LENGTH_SHORT).show();
@@ -169,7 +169,7 @@ public class PaymentActivity extends AppCompatActivity {
                 dialog.show();
 
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(PaymentActivity.this, R.color.sub));
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(PaymentActivity.this, R.color.sub));
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(PaymentActivity.this, R.color.disable));
             }
         });
     }

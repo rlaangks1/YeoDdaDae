@@ -166,7 +166,7 @@ public class YdPointRefundActivity extends AppCompatActivity {
                     dialog.show();
 
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(YdPointRefundActivity.this, R.color.sub));
-                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(YdPointRefundActivity.this, R.color.sub));
+                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(YdPointRefundActivity.this, R.color.disable));
                 }
             }
         });

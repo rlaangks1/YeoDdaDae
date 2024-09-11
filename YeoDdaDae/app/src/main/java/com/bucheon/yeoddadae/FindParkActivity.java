@@ -1030,7 +1030,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                 @Override
                 public void run() {
                     loadingAlert.show();
-                    loadingAlert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(FindParkActivity.this, R.color.sub));
+                    loadingAlert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(FindParkActivity.this, R.color.disable));
                     getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 }
             });

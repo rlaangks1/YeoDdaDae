@@ -128,7 +128,7 @@ public class ReportDiscountParkInformationActivity extends AppCompatActivity {
                 dialog.show();
 
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(ReportDiscountParkInformationActivity.this, R.color.sub));
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(ReportDiscountParkInformationActivity.this, R.color.sub));
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(ReportDiscountParkInformationActivity.this, R.color.disable));
             }
         });
     }

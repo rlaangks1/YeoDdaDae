@@ -7,27 +7,62 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.google.firebase.Timestamp;
+import com.skt.Tmap.TMapData;
+import com.skt.Tmap.address_info.TMapAddressInfo;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class UsageHistoryAdapter extends BaseAdapter {
+    private ArrayList<UsageHistoryItem> items  = new ArrayList<>();
 
-    private Context context;
-    private ArrayList<UsageHistoryItem> usageHistoryList;
+    public void addItem(UsageHistoryItem item) {
+        items.add(item);
+        notifyDataSetChanged();
+    }
 
-    // 생성자
-    public UsageHistoryAdapter(Context context, ArrayList<UsageHistoryItem> usageHistoryList) {
-        this.context = context;
-        this.usageHistoryList = usageHistoryList;
+    public void clearItem () {
+        items.clear();
+        notifyDataSetChanged();
+    }
+
+    public void onlyPark() {
+        ArrayList<UsageHistoryItem> removeItems = new ArrayList<>();
+
+        for (UsageHistoryItem item : items) {
+            if (!item.getType().equals("일반주차장") && !item.getType().equals("공유주차장") && !item.getType().equals("제보주차장")) {
+                removeItems.add(item);
+            }
+        }
+        items.removeAll(removeItems);
+
+        notifyDataSetChanged();
+    }
+
+    public void onlyGas() {
+        ArrayList<UsageHistoryItem> removeItems = new ArrayList<>();
+
+        for (UsageHistoryItem item : items) {
+            if (!item.getType().equals("주유소")) {
+                removeItems.add(item);
+            }
+        }
+        items.removeAll(removeItems);
+
+        notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return usageHistoryList.size();
+        return items.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return usageHistoryList.get(position);
+        return items.get(position);
     }
 
     @Override
@@ -37,39 +72,56 @@ public class UsageHistoryAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
+        Context context = parent.getContext();
+        UsageHistoryItem history = items.get(position);
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.activity_usage_history_item, parent, false);
-
-            viewHolder = new ViewHolder();
-            viewHolder.typeText = convertView.findViewById(R.id.typeText);
-            viewHolder.startText = convertView.findViewById(R.id.startText);
-            viewHolder.endText = convertView.findViewById(R.id.endText);
-            viewHolder.timeText = convertView.findViewById(R.id.timeText);
-
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.usage_history_item, parent, false);
         }
 
-        // 현재 아이템 가져오기
-        UsageHistoryItem currentItem = (UsageHistoryItem) getItem(position);
+        TextView typeText = convertView.findViewById(R.id.typeText);
+        TextView startText = convertView.findViewById(R.id.startText);
+        TextView endText = convertView.findViewById(R.id.endText);
+        TextView timeText = convertView.findViewById(R.id.timeText);
 
-        // 아이템 데이터 설정
-        viewHolder.typeText.setText(currentItem.getType() == 1 ? "주차장" : "주유소");
-        viewHolder.startText.setText("출발지: " + currentItem.getStarts());
-        viewHolder.endText.setText("도착지: " + currentItem.getEnds());
-        viewHolder.timeText.setText("시간: " + currentItem.getFormattedTimestamp());
+        typeText.setText(history.getType());
+
+        TMapData tMapdata = new TMapData();
+        tMapdata.reverseGeocoding(history.getStartLat(), history.getStartLon(), "A10", new TMapData.reverseGeocodingListenerCallback() {
+            @Override
+            public void onReverseGeocoding(TMapAddressInfo tMapAddressInfo) {
+                if (tMapAddressInfo != null) {
+                    String[] adrresses = tMapAddressInfo.strFullAddress.split(",");
+                    String address = adrresses[2];
+                    startText.setText(address);
+                }
+            }
+        });
+
+        if (history.getPoiName() != null && !history.getPoiName().isEmpty()) {
+            endText.setText(history.getPoiName());
+        }
+        else {
+            tMapdata = new TMapData();
+            tMapdata.reverseGeocoding(history.getEndLat(), history.getEndLon(), "A10", new TMapData.reverseGeocodingListenerCallback() {
+                @Override
+                public void onReverseGeocoding(TMapAddressInfo tMapAddressInfo) {
+                    if (tMapAddressInfo != null) {
+                        String[] adrresses = tMapAddressInfo.strFullAddress.split(",");
+                        String address = adrresses[2];
+                        endText.setText(address);
+                    }
+                }
+            });
+        }
+
+        Timestamp timestamp = history.getUpTime();
+        Date date = timestamp.toDate();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
+        String dateString = sdf.format(date);
+        timeText.setText(dateString);
 
         return convertView;
-    }
-
-    // ViewHolder 패턴 사용으로 성능 최적화
-    private static class ViewHolder {
-        TextView typeText;
-        TextView startText;
-        TextView endText;
-        TextView timeText;
     }
 }

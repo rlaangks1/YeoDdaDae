@@ -104,7 +104,7 @@ public class AdminMainActivity extends AppCompatActivity {
                     dialog.show();
 
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(AdminMainActivity.this, R.color.sub));
-                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(AdminMainActivity.this, R.color.sub));
+                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(AdminMainActivity.this, R.color.disable));
                 }
                 return false;
             }

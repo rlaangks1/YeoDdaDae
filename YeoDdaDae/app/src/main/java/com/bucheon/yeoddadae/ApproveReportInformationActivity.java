@@ -149,7 +149,7 @@ public class ApproveReportInformationActivity extends AppCompatActivity {
                 dialog.show();
 
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(ApproveReportInformationActivity.this, R.color.sub));
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(ApproveReportInformationActivity.this, R.color.sub));
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(ApproveReportInformationActivity.this, R.color.disable));
             }
         });
     }

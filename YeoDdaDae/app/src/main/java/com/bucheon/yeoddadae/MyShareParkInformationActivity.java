@@ -513,7 +513,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                         dialog.show();
 
                         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(MyShareParkInformationActivity.this, R.color.sub));
-                        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(MyShareParkInformationActivity.this, R.color.sub));
+                        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(MyShareParkInformationActivity.this, R.color.disable));
                     }
                 });
 

@@ -248,14 +248,13 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
             dialog.show();
 
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(MainActivity.this, R.color.sub));
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(MainActivity.this, R.color.sub));
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(MainActivity.this, R.color.disable));
         }
-
-        else if (data.equals("사용기록 및 즐겨찾기")) {
-            Intent myrecordIntent = new Intent(getApplicationContext(), UsageHistoryActivity.class);
-            startActivity(myrecordIntent);
+        else if (data.equals("사용 기록")) {
+            Intent usageHistoryIntent = new Intent(getApplicationContext(), UsageHistoryActivity.class);
+            usageHistoryIntent.putExtra("id", loginId);
+            startActivity(usageHistoryIntent);
         }
-
         else if (data.equals("stt버튼클릭")) {
             sttService.startListeningForMainCommand();
         }

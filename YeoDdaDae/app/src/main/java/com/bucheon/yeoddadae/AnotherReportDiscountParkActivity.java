@@ -37,7 +37,7 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
     int km = -1;
     TMapGpsManager gpsManager;
     boolean firstInitCalled = false;
-    ReportDiscountParkAdapter ra;
+    ReportDiscountParkAdapter rdpa;
 
     ImageButton anotherReportBackBtn;
     Spinner anotherReportDistanceSpinner;
@@ -79,10 +79,10 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
     }
 
     public void getReports (int distanceKm, double nowLat, double nowLon) {
-        if (ra != null) {
-            ra.clearItem();
+        if (rdpa != null) {
+            rdpa.clearItem();
         }
-        ra = new ReportDiscountParkAdapter(AnotherReportDiscountParkActivity.this);
+        rdpa = new ReportDiscountParkAdapter(AnotherReportDiscountParkActivity.this);
 
         FirestoreDatabase fd = new FirestoreDatabase();
         fd.loadAnotherReports(distanceKm, nowLat, nowLon, loginId, new OnFirestoreDataLoadedListener() {
@@ -104,15 +104,15 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
                     String poiID = (String) oneReport.get("poiID");
                     String documentId = (String) oneReport.get("documentId");
 
-                    ra.addItem(new ReportDiscountParkItem(reporterId, parkName, condition, discount, ratePerfectCount, rateMistakeCount, rateWrongCount, isCancelled, isApproval, upTime, poiID, documentId));
+                    rdpa.addItem(new ReportDiscountParkItem(reporterId, parkName, condition, discount, ratePerfectCount, rateMistakeCount, rateWrongCount, isCancelled, isApproval, upTime, poiID, documentId));
                 }
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        anotherReportListView.setAdapter(ra);
+                        anotherReportListView.setAdapter(rdpa);
 
-                        if (ra.getCount() == 0) {
+                        if (rdpa.getCount() == 0) {
                             anotherReportListView.setVisibility(View.GONE);
                             anotherReportNoTxt.setVisibility(View.VISIBLE);
                         }
@@ -229,7 +229,7 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent toRateReportIntent = new Intent(getApplicationContext(), RateAnotherReportDiscountParkActivity.class);
                 toRateReportIntent.putExtra("id", loginId);
-                toRateReportIntent.putExtra("documentId", ((ReportDiscountParkItem) ra.getItem(position)).getDocumentId());
+                toRateReportIntent.putExtra("documentId", ((ReportDiscountParkItem) rdpa.getItem(position)).getDocumentId());
                 startActivity(toRateReportIntent);
             }
         });

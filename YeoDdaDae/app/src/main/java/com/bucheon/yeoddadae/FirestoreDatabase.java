@@ -2467,6 +2467,33 @@ public class FirestoreDatabase {
                 });
     }
 
+    public void selectRoutes (String userId, OnFirestoreDataLoadedListener listener) {
+        db.collection("routeHistory")
+                .whereEqualTo("id", userId)
+                .orderBy("upTime", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    ArrayList<HashMap<String, Object>> resultArrayList = new ArrayList<>();
+
+                    Log.d(TAG, "sss       " + queryDocumentSnapshots.size());
+
+                    for (DocumentSnapshot history : queryDocumentSnapshots) {
+                        HashMap<String, Object> data = new HashMap<>(history.getData());
+                        data.put("documentId", history.getId());
+                        resultArrayList.add(data);
+                    }
+
+                    Log.d(TAG, "ㅇㅇㅇ       " + resultArrayList.size());
+
+                    listener.onDataLoaded(resultArrayList);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "길찾기 기록 찾기 중 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+
     /*
     public void my (OnFirestoreDataLoadedListener listener) {
         Log.d (TAG, "my 호출됨");

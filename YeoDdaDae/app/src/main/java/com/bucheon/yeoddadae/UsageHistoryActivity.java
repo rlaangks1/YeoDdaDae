@@ -1,12 +1,18 @@
 package com.bucheon.yeoddadae;
 
+import static android.content.ContentValues.TAG;
+
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,88 +20,112 @@ import com.google.firebase.Timestamp;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class UsageHistoryActivity extends AppCompatActivity {
+    String loginId;
+    UsageHistoryAdapter uha;
 
-    private ImageButton backBtn;
-    private ListView listView;
-    private Spinner typeFilterSpinner;
-    private UsageHistoryAdapter adapter;
-    private ArrayList<UsageHistoryItem> usageHistoryList;
-    private ArrayList<UsageHistoryItem> filteredList;
+    ImageButton usageHistoryBackBtn;
+    Spinner usageHistoryParkOrGasSpinner;
+    ListView usageHistoryListView;
+    TextView usageHistoryNoTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_usage_history); // usage_history 레이아웃
+        setContentView(R.layout.activity_usage_history);
 
-        backBtn = findViewById(R.id.recordBackBtn);
-        listView = findViewById(R.id.usageHistoryListView); // 리스트뷰 ID 연결
-        typeFilterSpinner = findViewById(R.id.typeFilterSpinner); // 스피너 ID 연결
+        usageHistoryBackBtn = findViewById(R.id.usageHistoryBackBtn);
+        usageHistoryParkOrGasSpinner = findViewById(R.id.usageHistoryParkOrGasSpinner);
+        usageHistoryListView = findViewById(R.id.usageHistoryListView);
+        usageHistoryNoTxt = findViewById(R.id.usageHistoryNoTxt);
 
-        // 임시 데이터 초기화
-        int[] type = {1, 2, 1, 1, 2}; // 1: 주차장, 2: 주유소
-        String[] starts = {"가", "나", "다", "라", "마"}; // 출발지
-        String[] ends = {"바", "사", "아", "자", "차"}; // 도착지
-        Timestamp[] times = {new Timestamp(new Date()), new Timestamp(new Date()), new Timestamp(new Date()), new Timestamp(new Date()), new Timestamp(new Date())};
+        Intent inIntent = getIntent();
+        loginId = inIntent.getStringExtra("id");
 
-        // 리스트에 데이터 추가
-        usageHistoryList = new ArrayList<>();
-        for (int i = 0; i < type.length; i++) {
-            usageHistoryList.add(new UsageHistoryItem(type[i], starts[i], ends[i], times[i]));
-        }
-
-        filteredList = new ArrayList<>(usageHistoryList); // 기본적으로 모든 데이터를 보여줌
-
-        // 어댑터 설정
-        adapter = new UsageHistoryAdapter(this, filteredList);
-        listView.setAdapter(adapter);
-
-        // 스피너에 (전체, 주차장, 주유소) 옵션 추가
-        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.my_spinner_usage_history, android.R.layout.simple_spinner_item);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        typeFilterSpinner.setAdapter(spinnerAdapter);
-
-        // 스피너에서 항목 선택 시 필터링 동작
-        typeFilterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                filterList(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // 아무것도 선택되지 않았을 때 기본 리스트 표시
-                filteredList.clear();
-                filteredList.addAll(usageHistoryList);
-                adapter.notifyDataSetChanged();
-            }
-        });
-
-        // 뒤로가기 버튼 클릭 시 액티비티 종료
-        backBtn.setOnClickListener(new View.OnClickListener() {
+        usageHistoryBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.my_spinner_usage_history,
+                R.layout.my_spinner
+        );
+        usageHistoryParkOrGasSpinner.setAdapter(adapter);
+
+        usageHistoryParkOrGasSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedItem = parent.getItemAtPosition(position).toString();
+
+                getHistory(selectedItem);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
-    // 선택된 필터에 따라 리스트를 필터링하는 메서드
-    private void filterList(int filterType) {
-        filteredList.clear();
-        if (filterType == 0) { // 전체
-            filteredList.addAll(usageHistoryList);
-        } else {
-            for (UsageHistoryItem item : usageHistoryList) {
-                if (filterType == 1 && item.getType() == 1) { // 주차장
-                    filteredList.add(item);
-                } else if (filterType == 2 && item.getType() == 2) { // 주유소
-                    filteredList.add(item);
-                }
-            }
+    public void getHistory (String type){
+        if (uha != null) {
+            uha.clearItem();
         }
-        adapter.notifyDataSetChanged();
+        uha = new UsageHistoryAdapter();
+
+        FirestoreDatabase fd = new FirestoreDatabase();
+        fd.selectRoutes(loginId, new OnFirestoreDataLoadedListener() {
+            @Override
+            public void onDataLoaded(Object data) {
+                ArrayList<HashMap<String, Object>> myHistories = (ArrayList<HashMap<String, Object>>) data;
+
+                for (HashMap<String, Object> myHistory : myHistories) {
+                    String type = (String) myHistory.get("type");
+                    double startLat = (double) myHistory.get("startLat");
+                    double startLon = (double) myHistory.get("startLon");
+                    String poiId = (String) myHistory.get("poiId");
+                    String poiName = (String) myHistory.get("poiName");
+                    double endLat = (double) myHistory.get("endLat");
+                    double endLon = (double) myHistory.get("endLon");
+                    Timestamp upTime = (Timestamp) myHistory.get("upTime");
+
+                    uha.addItem(new UsageHistoryItem(type, startLat, startLon, poiId, poiName, endLat, endLon, upTime));
+                }
+
+                if (type.equals("주차장")) {
+                    uha.onlyPark();
+                }
+                else if (type.equals("주유소")) {
+                    uha.onlyGas();
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        usageHistoryListView.setAdapter(uha);
+
+                        if (uha.getCount() == 0) {
+                            usageHistoryListView.setVisibility(View.GONE);
+                            usageHistoryNoTxt.setVisibility(View.VISIBLE);
+                        } else {
+                            usageHistoryListView.setVisibility(View.VISIBLE);
+                            usageHistoryNoTxt.setVisibility(View.GONE);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onDataLoadError(String errorMessage) {
+                Log.d(TAG, errorMessage);
+                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
     }
 }
