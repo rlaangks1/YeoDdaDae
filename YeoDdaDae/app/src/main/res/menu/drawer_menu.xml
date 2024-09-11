@@ -8,4 +8,9 @@
         android:id="@+id/nav_change_password"
         android:icon="@drawable/password"
         android:title="비밀번호 변경" />
+
+    <item
+        android:id="@+id/nav_record_and_favorites"
+        android:icon="@drawable/favorite"
+        android:title="사용기록 및 즐겨찾기" />
 </menu>
