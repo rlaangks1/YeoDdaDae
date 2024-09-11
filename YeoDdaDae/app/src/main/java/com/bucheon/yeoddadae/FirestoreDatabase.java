@@ -2547,14 +2547,17 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void insertRoute (String userId, String type, double nowLat, double nowLon, String poiId, double endLat, double endLon, OnFirestoreDataLoadedListener listener) {
+    public void insertRoute (String userId, String type, double nowLat, double nowLon, String poiId, String poiName, double endLat, double endLon, OnFirestoreDataLoadedListener listener) {
         HashMap<String, Object> hm = new HashMap<>();
         hm.put("id", userId);
         hm.put("type", type);
-        hm.put("nowLat", nowLat);
-        hm.put("nowLon", nowLon);
+        hm.put("startLat", nowLat);
+        hm.put("startLon", nowLon);
         if (poiId != null && !poiId.isEmpty()) {
             hm.put("poiId", poiId);
+        }
+        if (poiName != null && !poiName.isEmpty()) {
+            hm.put("poiName", poiName);
         }
         hm.put("endLat", endLat);
         hm.put("endLon", endLon);
