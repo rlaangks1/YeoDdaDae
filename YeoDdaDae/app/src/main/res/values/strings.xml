@@ -75,6 +75,12 @@
         <item>직접 설정</item>
     </string-array>
 
+    <string-array name="my_spinner_usage_history">
+        <item>전체</item>
+        <item>주차장</item>
+        <item>주유소</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
