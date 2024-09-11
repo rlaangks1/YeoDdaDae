@@ -84,6 +84,9 @@ public class MainFragment extends Fragment {
                 else if (item.getItemId() == R.id.nav_change_password) {
                     dataPasser.onDataPassed("비밀번호 변경");
                 }
+                else if (item.getItemId() == R.id.nav_record_and_favorites) {
+                    dataPasser.onDataPassed("사용기록 및 즐겨찾기");
+                }
                 return false;
             }
         });
