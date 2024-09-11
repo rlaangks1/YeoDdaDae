@@ -436,7 +436,18 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                 searchBtn.setEnabled(true);
 
                 if (!replaceNewlinesAndTrim(searchEdTxt).isEmpty()) {
-                    // here
+                    fd.insertOrUpdateSearchKeyword(loginId, replaceNewlinesAndTrim(searchEdTxt), new OnFirestoreDataLoadedListener() {
+                        @Override
+                        public void onDataLoaded(Object data) {
+                            // here
+                        }
+
+                        @Override
+                        public void onDataLoadError(String errorMessage) {
+                            Log.d(TAG, errorMessage);
+                            Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
                     if (spa != null) {
                         spa.clearItem();

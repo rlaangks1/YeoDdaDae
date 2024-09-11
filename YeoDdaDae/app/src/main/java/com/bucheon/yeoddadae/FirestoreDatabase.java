@@ -3,6 +3,7 @@ package com.bucheon.yeoddadae;
 import static android.content.ContentValues.TAG;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -2467,16 +2468,16 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void insertSearchKeyword(String userId, String keyword, OnFirestoreDataLoadedListener listener) {
+    public void insertOrUpdateSearchKeyword(String userId, String newKeyword, OnFirestoreDataLoadedListener listener) {
         db.collection("searchHistory")
                 .whereEqualTo("id", userId)
-                .whereEqualTo("keyword", keyword)
+                .whereEqualTo("keyword", newKeyword)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (queryDocumentSnapshots == null || queryDocumentSnapshots.size() == 0) {
                         HashMap<String, Object> hm = new HashMap<>();
                         hm.put("id", userId);
-                        hm.put("keyword", keyword);
+                        hm.put("keyword", newKeyword);
                         hm.put("upTime", FieldValue.serverTimestamp());
 
                         insertData("searchHistory", hm, new OnFirestoreDataLoadedListener() {
@@ -2493,7 +2494,18 @@ public class FirestoreDatabase {
                         });
                     }
                     else if (queryDocumentSnapshots.size() == 1) {
-                        // here
+                        String documentId = queryDocumentSnapshots.getDocuments().get(0).getId();
+                        
+                        db.collection("searchHistory")
+                                .document(documentId)
+                                .update("upTime", FieldValue.serverTimestamp())
+                                .addOnSuccessListener(aVoid -> {
+                                    listener.onDataLoaded(true);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.d(TAG, "검색어 시각 수정 중 오류", e);
+                                    listener.onDataLoadError("검색어 시각 수정 중 오류");
+                                });
                     }
                     else {
                         Log.d(TAG, "데이터가 여러 개임");
@@ -2504,6 +2516,62 @@ public class FirestoreDatabase {
                     Log.d(TAG, "검색 기록 찾기 중 오류", e);
                     listener.onDataLoadError(e.getMessage());
                 });
+    }
+
+    public void deleteSearchKeyword(String userId, String targetKeyword, OnFirestoreDataLoadedListener listener) {
+        db.collection("searchHistory")
+                .whereEqualTo("id", userId)
+                .whereEqualTo("keyword", targetKeyword)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() == 1) {
+                        db.collection("searchHistory")
+                                .document(queryDocumentSnapshots.getDocuments().get(0).getId())
+                                .delete()
+                                .addOnSuccessListener(aVoid -> {
+                                    listener.onDataLoaded(true);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.d(TAG, "검색어 삭제 중 오류", e);
+                                    listener.onDataLoadError("검색어 삭제 중 오류");
+                                });
+                    }
+                    else {
+                        Log.d(TAG, "데이터가 여러 개임");
+                        listener.onDataLoadError("데이터가 여러 개임");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "검색어 찾기 중 오류", e);
+                    listener.onDataLoadError("검색어 찾기 중 오류");
+                });
+    }
+
+    public void insertRoute (String userId, String type, double nowLat, double nowLon, String poiId, double endLat, double endLon, OnFirestoreDataLoadedListener listener) {
+        HashMap<String, Object> hm = new HashMap<>();
+        hm.put("id", userId);
+        hm.put("type", type);
+        hm.put("nowLat", nowLat);
+        hm.put("nowLon", nowLon);
+        if (poiId != null && !poiId.isEmpty()) {
+            hm.put("poiId", poiId);
+        }
+        hm.put("endLat", endLat);
+        hm.put("endLon", endLon);
+        hm.put("upTime", FieldValue.serverTimestamp());
+
+        insertData("routeHistory", hm, new OnFirestoreDataLoadedListener() {
+            @Override
+            public void onDataLoaded(Object data) {
+                listener.onDataLoaded(true);
+            }
+
+            @Override
+            public void onDataLoadError(String errorMessage) {
+                Log.d(TAG, errorMessage);
+                listener.onDataLoadError(errorMessage);
+            }
+        });
     }
 
     /*
