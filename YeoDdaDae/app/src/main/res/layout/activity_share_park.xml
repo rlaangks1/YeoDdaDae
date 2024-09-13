@@ -348,6 +348,7 @@
                 app:mcv_firstDayOfWeek="monday"
                 app:mcv_showOtherDates="all"
                 app:mcv_selectionColor="@color/sub"
+                app:mcv_dateTextAppearance="@style/CustomCalendarTextAppearance"
                 android:layout_marginTop="5dp"/>
 
             <ListView

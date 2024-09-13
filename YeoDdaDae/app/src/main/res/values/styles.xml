@@ -184,6 +184,11 @@
         <item name="android:textColor">#FFFFFF</item>
     </style>
 
+    <!-- 캘린더 커스터마이징 -->
+    <style name="CustomCalendarTextAppearance" parent="TextAppearance.MaterialCalendarWidget.Date">
+        <item name="android:textColor">@color/my_date_text_color</item>
+    </style>
+
     <!-- 뱃지 커스터마이징 -->
     <style name="CustomBadgeTextAppearance" parent="TextAppearance.MaterialComponents.Badge">
         <item name="android:textSize">12sp</item>
