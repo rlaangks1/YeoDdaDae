@@ -11,8 +11,9 @@ public class GasStationItem {
     private String brand;
     private double lat;
     private double lon;
+    private String poiId;
 
-    public GasStationItem(String name, String radius, String gasolinePrice, String dieselPrice, String highGasolinePrice, String highDieselPrice, String phone, String brand, String lat, String lon) {
+    public GasStationItem(String name, String radius, String gasolinePrice, String dieselPrice, String highGasolinePrice, String highDieselPrice, String phone, String brand, String lat, String lon, String poiId) {
         this.name = name;
         this.radius = radius;
         this.gasolinePrice = gasolinePrice;
@@ -23,6 +24,7 @@ public class GasStationItem {
         this.brand = brand;
         this.lat = Double.parseDouble(lat);
         this.lon = Double.parseDouble(lon);
+        this.poiId = poiId;
     }
 
     public String getName() {
@@ -56,5 +58,9 @@ public class GasStationItem {
 
     public double getLon() {
         return lon;
+    }
+
+    public String getPoiId() {
+        return poiId;
     }
 }

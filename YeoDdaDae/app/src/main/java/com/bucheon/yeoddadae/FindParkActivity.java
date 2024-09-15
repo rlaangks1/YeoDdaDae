@@ -85,7 +85,9 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     double lon = 126.977222; // 경도
     TMapPoint nowPoint = new TMapPoint(lat, lon);
     TMapPoint naviEndPoint;
+    int naviEndPointType;
     String naviEndPointName;
+    String naviEndPointPoiId;
     String reservationFirestoreDocumentId;
     boolean isSearching = false;
     TMapGpsManager gpsManager;
@@ -199,10 +201,10 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
 
         loadingStart(); // 로딩 시작
 
-        // 메인액티비티에서 정렬기준 받기
+        // 메인액티비티에서 정렬기준과 아이디 받기
         Intent inIntent = getIntent();
-        recievedSort = inIntent.getIntExtra("SortBy", 0);
         loginId = inIntent.getStringExtra("loginId");
+        recievedSort = inIntent.getIntExtra("SortBy", 0);
         if (recievedSort == 0) {
             Log.d(TAG, "sttSort가 0임 (오류)");
             finish();
@@ -363,6 +365,11 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     @Override
                     public void run() {
                         isItemSelected = false;
+                        naviEndPoint = null;
+                        naviEndPointType = 0;
+                        naviEndPointName = null;
+                        naviEndPointPoiId = null;
+
                         tMapView.removeTMapPath();
 
                         parkSortHorizontalScrollView.setVisibility(View.VISIBLE);
@@ -379,6 +386,33 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         toStartNaviBtn.setOnClickListener(new View.OnClickListener() { // 네비게이션 시작
             @Override
             public void onClick(View v) {
+                String typeString = "";
+                
+                if (naviEndPointType == 1) {
+                    typeString = "일반주차장";
+                }
+                else if (naviEndPointType == 2) {
+                    typeString = "공영주차장";
+                }
+                else if (naviEndPointType == 3) {
+                    typeString = "공유주차장";
+                }
+                else if (naviEndPointType == 6) {
+                    typeString = "제보주차장";
+                }
+                
+                fd.insertRoute(loginId, typeString, lat, lon, naviEndPointPoiId, naviEndPointName, naviEndPoint.getLatitude(), naviEndPoint.getLongitude(), new OnFirestoreDataLoadedListener() {
+                            @Override
+                            public void onDataLoaded(Object data) {}
+
+                            @Override
+                            public void onDataLoadError(String errorMessage) {
+                                Log.d(TAG, errorMessage);
+                                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                );
+                
                 TMapTapi tt = new TMapTapi(FindParkActivity.this);
                 boolean isTmapApp = tt.isTmapApplicationInstalled();
                 if (isTmapApp) {
@@ -740,7 +774,9 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
 
         // 도착점 설정
         naviEndPoint = new TMapPoint(targetPark.getLat(), targetPark.getLon());
+        naviEndPointType = targetPark.getType();
         naviEndPointName = targetPark.getName();
+        naviEndPointPoiId = targetPark.getPoiId();
 
         // 길 찾기 및 선 표시
         TMapData tmapdata = new TMapData();
@@ -966,9 +1002,15 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                         parkSortHorizontalScrollView.setVisibility(View.VISIBLE);
                                         naviConstLayout.setVisibility(View.GONE);
                                         searchStartBtn.setVisibility(View.VISIBLE);
-                                        isItemSelected = false;
                                     }
                                 });
+
+                                isItemSelected = false;
+                                naviEndPoint = null;
+                                naviEndPointType = 0;
+                                naviEndPointName = null;
+                                naviEndPointPoiId = null;
+
                                 tMapCircle.setCenterPoint(centerPoint);
                                 tMapView.addTMapCircle("Circle", tMapCircle);
                                 TMapMarkerItem centerMarker = new TMapMarkerItem();
@@ -1167,14 +1209,8 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         }
         else if (isItemSelected && (mainCommand.contains("안내") || mainCommand.contains("내비") || mainCommand.contains("시작") || mainCommand.contains("출발"))) {
             sd.dismiss();
-            TMapTapi tt = new TMapTapi(FindParkActivity.this);
-            boolean isTmapApp = tt.isTmapApplicationInstalled();
-            if (isTmapApp) {
-                tt.invokeRoute(naviEndPointName, (float) naviEndPoint.getLongitude(), (float) naviEndPoint.getLatitude());
-            }
-            else {
-                Toast.makeText(getApplicationContext(), "TMAP이 설치되어 있지 않습니다", Toast.LENGTH_SHORT).show();
-            }
+
+            toStartNaviBtn.callOnClick();
         }
         else {
             int number = 0;
@@ -1237,7 +1273,6 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
 
                         ParkItem targetPark = (ParkItem) parkAdapter.getItem(number - 1);
                         TMapMarkerItem targetMarker = tMapView.getMarkerItemFromID(targetPark.getName());
-
 
                         if (targetMarker != null && targetPark != null) {
                             parkSelect(targetMarker, targetPark);
