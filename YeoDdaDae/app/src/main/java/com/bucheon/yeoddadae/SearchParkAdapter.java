@@ -5,28 +5,50 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.firebase.Timestamp;
+
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 
 public class SearchParkAdapter extends BaseAdapter {
-    ArrayList<ParkItem> items = new ArrayList<ParkItem>();
+    ArrayList<SearchHistoryItem> historyItems = new ArrayList<>();
+    ArrayList<ParkItem> parkItems = new ArrayList<ParkItem>();
+    OnHistoryDeleteListener onHistoryDeleteListener;
 
-    public void addItem(ParkItem item) {
-        items.add(item);
+    public void addPark(ParkItem item) {
+        parkItems.add(item);
     }
 
-    public void clearItem() {
-        items.clear();
+    public void clearPark() {
+        parkItems.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addHistory(SearchHistoryItem item) {
+        historyItems.add(item);
+    }
+
+    public void deleteHistory(int i) {
+        historyItems.remove(i);
+        notifyDataSetChanged();
+    }
+
+    public void clearHistory() {
+        historyItems.clear();
         notifyDataSetChanged();
     }
 
     public ParkItem findItem(String parkItemName) {
-        for (ParkItem item : items) {
+        for (ParkItem item : parkItems) {
             if (item.getName().equals(parkItemName)) {
                 return item;
             }
@@ -35,22 +57,30 @@ public class SearchParkAdapter extends BaseAdapter {
     }
 
     public void duplicationRemove() {
-        if (items != null && !items.isEmpty()) {
-            HashSet<ParkItem> uniqueItemsSet = new HashSet<>(items);
-            items.clear();
-            items.addAll(uniqueItemsSet);
+        if (parkItems != null && !parkItems.isEmpty()) {
+            HashSet<ParkItem> uniqueItemsSet = new HashSet<>(parkItems);
+            parkItems.clear();
+            parkItems.addAll(uniqueItemsSet);
         }
         notifyDataSetChanged();
     }
 
+    public void setOnHistoryDeleteListener(OnHistoryDeleteListener listener) {
+        this.onHistoryDeleteListener = listener;
+    }
+
     @Override
     public int getCount() {
-        return items.size();
+        return historyItems.size() + parkItems.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return items.get(position);
+        if (position < historyItems.size()) {
+            return historyItems.get(position);
+        } else {
+            return parkItems.get(position - historyItems.size());
+        }
     }
 
     @Override
@@ -61,9 +91,46 @@ public class SearchParkAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Context context = parent.getContext();
-        ParkItem park = items.get(position);
 
-        if (convertView == null) {
+        if (position < historyItems.size()) { // HistoryItem을 먼저 처리
+            SearchHistoryItem historyItem = historyItems.get(position);
+
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.search_history_item, parent, false);
+            }
+
+            TextView historyName = convertView.findViewById(R.id.historyName);
+            TextView historyTime = convertView.findViewById(R.id.historyTime);
+            ImageButton historyDeleteBtn = convertView.findViewById(R.id.historyDeleteBtn);
+
+            historyName.setText(historyItem.getKeyword());
+
+            Timestamp timestamp = historyItem.getUpTime();
+            if (timestamp != null) {
+                Date date = timestamp.toDate();
+                SimpleDateFormat sdf = new SimpleDateFormat("yy.MM.dd", Locale.KOREA);
+                String dateString = sdf.format(date);
+                historyTime.setText(dateString);
+            }
+
+            historyDeleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onHistoryDeleteListener != null) {
+                        onHistoryDeleteListener.onHistoryDelete(historyItem, position);
+                    }
+                }
+            });
+
+            return convertView;
+        }
+
+        // ParkItem을 처리
+        int parkPosition = position - historyItems.size();
+        ParkItem park = parkItems.get(parkPosition);
+
+        if (convertView == null || convertView.getTag() instanceof SearchHistoryItem) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.search_park_item, parent, false);
         }
@@ -104,41 +171,36 @@ public class SearchParkAdapter extends BaseAdapter {
                 parkType.setText("뭐냐고");
         }
 
-        parkOrder.setText (Integer.toString(position + 1));
+        parkOrder.setText(Integer.toString(parkPosition + 1));
         parkName.setText(park.getName());
 
         // 숫자 포맷 지정 (세 번째 자리에서 반올림)
         DecimalFormat formatter = new DecimalFormat("#.##");
-        // 소수로 파싱 후, 포맷 적용하여 새로운 문자열 생성
         double number = Double.parseDouble(park.getRadius());
         String formattedDistanceString = formatter.format(number);
         parkDistance.setText(formattedDistanceString + "km");
 
         String parkPriceValue = park.getParkPrice();
-        if (parkPriceValue != null && !parkPriceValue.equals("null") ) {
+        if (parkPriceValue != null && !parkPriceValue.equals("null")) {
             if (Integer.parseInt(parkPriceValue) == 0) {
                 parkPrice.setText("무료");
-            }
-            else {
+            } else {
                 formatter = new DecimalFormat("#,###");
                 number = Double.parseDouble(parkPriceValue);
                 String formattedPriceString = formatter.format(number);
                 parkPrice.setText("시간 당 " + formattedPriceString + "원");
             }
-        }
-        else {
+        } else {
             parkPrice.setText("");
         }
 
         if (park.getCondition() != null && park.getDiscount() != -1) {
             if (park.getDiscount() == 0) {
                 parkConditionAndDiscount.setText(park.getCondition() + "/무료");
-            }
-            else {
+            } else {
                 parkConditionAndDiscount.setText(park.getCondition() + "/" + park.getDiscount() + "원 할인");
             }
-        }
-        else {
+        } else {
             parkConditionAndDiscount.setText("");
         }
 
@@ -147,11 +209,9 @@ public class SearchParkAdapter extends BaseAdapter {
         if (originalPhoneString != null) {
             if (originalPhoneString.length() == 10) {
                 newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 6) + "-" + originalPhoneString.substring(6);
-            }
-            else if (originalPhoneString.length() == 11) {
+            } else if (originalPhoneString.length() == 11) {
                 newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 7) + "-" + originalPhoneString.substring(7);
-            }
-            else {
+            } else {
                 newPhoneString = originalPhoneString;
             }
         }
@@ -160,3 +220,4 @@ public class SearchParkAdapter extends BaseAdapter {
         return convertView;
     }
 }
+

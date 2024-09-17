@@ -135,7 +135,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                         @Override
                         public void run() {
                             if (spa != null) {
-                                spa.clearItem();
+                                spa.clearPark();
                             }
                             spa = new SearchParkAdapter();
                         }
@@ -146,7 +146,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                         @Override
                         public void onFindAllPOI(ArrayList<TMapPOIItem> arrayList) {
                             if (spa != null) {
-                                spa.clearItem();
+                                spa.clearPark();
                             }
                             spa = new SearchParkAdapter();
 
@@ -157,19 +157,19 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                                     tpolyline.addLinePoint(new TMapPoint(Double.parseDouble(item.frontLat), Double.parseDouble(item.frontLon)));
                                     double distance = tpolyline.getDistance() / 1000; // km단위
                                     if (item.firstNo.equals("0") && item.secondNo.equals("0")) {
-                                        spa.addItem(new ParkItem(4, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                        spa.addPark(new ParkItem(4, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
                                     }
                                     else {
                                         if (item.name.contains("주차")) {
                                             if (item.name.contains("공영")) {
-                                                spa.addItem(new ParkItem(2, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                                spa.addPark(new ParkItem(2, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
                                             }
                                             else {
-                                                spa.addItem(new ParkItem(1, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                                spa.addPark(new ParkItem(1, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
                                             }
                                         }
                                         else {
-                                            spa.addItem(new ParkItem(5, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                            spa.addPark(new ParkItem(5, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
                                         }
                                     }
                                 }

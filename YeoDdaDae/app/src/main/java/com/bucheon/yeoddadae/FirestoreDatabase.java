@@ -2547,6 +2547,26 @@ public class FirestoreDatabase {
                 });
     }
 
+    public void selectSearchKeywords(String userId, OnFirestoreDataLoadedListener listener) {
+        ArrayList<SearchHistoryItem> resultArrayList = new ArrayList<>();
+
+        db.collection("searchHistory")
+                .whereEqualTo("id", userId)
+                .orderBy("upTime", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        resultArrayList.add(new SearchHistoryItem((String) document.get("keyword"), (Timestamp) document.get("upTime")));
+                    }
+
+                    listener.onDataLoaded(resultArrayList);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "검색어 찾기 중 오류", e);
+                    listener.onDataLoadError("검색어 찾기 중 오류");
+                });
+    }
+
     public void insertRoute (String userId, String type, double nowLat, double nowLon, String poiId, String poiName, double endLat, double endLon, OnFirestoreDataLoadedListener listener) {
         HashMap<String, Object> hm = new HashMap<>();
         hm.put("id", userId);
