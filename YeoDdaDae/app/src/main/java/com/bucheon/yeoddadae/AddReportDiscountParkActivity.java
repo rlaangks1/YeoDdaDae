@@ -38,7 +38,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
     double poiLat;
     double poiLon;
     String poiPhone;
-    SearchParkAdapter spa;
+    SearchParkAdapter spa = new SearchParkAdapter();;
     double nowLat;
     double nowLon;
     boolean isSearching = false;
@@ -131,25 +131,15 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                 searchBtn.setEnabled(false);
 
                 if (!replaceNewlinesAndTrim(searchContentEditTxt).isEmpty()) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (spa != null) {
-                                spa.clearPark();
-                            }
-                            spa = new SearchParkAdapter();
-                        }
-                    });
+                    if (spa != null) {
+                        spa.clearPark();
+                        spa.clearHistory();
+                    }
 
                     TMapData tMapData = new TMapData();
                     tMapData.findAllPOI(replaceNewlinesAndTrim(searchContentEditTxt), new TMapData.FindAllPOIListenerCallback() {
                         @Override
                         public void onFindAllPOI(ArrayList<TMapPOIItem> arrayList) {
-                            if (spa != null) {
-                                spa.clearPark();
-                            }
-                            spa = new SearchParkAdapter();
-
                             if (arrayList != null) {
                                 for (TMapPOIItem item : arrayList) {
                                     TMapPolyLine tpolyline = new TMapPolyLine();

@@ -490,13 +490,8 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     });
 
                     if (spa != null) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                spa.clearPark();
-                                spa.clearHistory();
-                            }
-                        });
+                        spa.clearPark();
+                        spa.clearHistory();
                     }
 
                     tMapData = new TMapData();
@@ -753,6 +748,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     SearchHistoryItem targetSearchHistory = (SearchHistoryItem) target;
 
                     searchEdTxt.setText(targetSearchHistory.getKeyword());
+                    searchEdTxt.setSelection(searchEdTxt.getText().toString().length());
 
                     searchBtn.callOnClick();
                 }
@@ -1096,13 +1092,8 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     }
 
     void getSearchHistory () {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                spa.clearPark();
-                spa.clearHistory();
-            }
-        });
+        spa.clearPark();
+        spa.clearHistory();
 
         fd.selectSearchKeywords(loginId, new OnFirestoreDataLoadedListener() {
             @Override
