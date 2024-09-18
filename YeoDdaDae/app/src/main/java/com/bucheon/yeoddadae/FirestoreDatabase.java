@@ -2605,15 +2605,11 @@ public class FirestoreDatabase {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     ArrayList<HashMap<String, Object>> resultArrayList = new ArrayList<>();
 
-                    Log.d(TAG, "sss       " + queryDocumentSnapshots.size());
-
                     for (DocumentSnapshot history : queryDocumentSnapshots) {
                         HashMap<String, Object> data = new HashMap<>(history.getData());
                         data.put("documentId", history.getId());
                         resultArrayList.add(data);
                     }
-
-                    Log.d(TAG, "ㅇㅇㅇ       " + resultArrayList.size());
 
                     listener.onDataLoaded(resultArrayList);
                 })

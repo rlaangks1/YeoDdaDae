@@ -94,7 +94,12 @@ public class UsageHistoryAdapter extends BaseAdapter {
                 if (tMapAddressInfo != null) {
                     String[] adrresses = tMapAddressInfo.strFullAddress.split(",");
                     String address = adrresses[2];
-                    startText.setText(address);
+                    startText.post(new Runnable() { // UI 업데이트를 메인 스레드에서 실행
+                        @Override
+                        public void run() {
+                            startText.setText(address);
+                        }
+                    });
                 }
             }
         });
