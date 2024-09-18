@@ -117,6 +117,7 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 if (apiKeyCertified) {
                     Intent findGasStationIntent = new Intent(getActivity().getApplicationContext(), FindGasStationActivity.class);
+                    findGasStationIntent.putExtra("loginId", loginId);
                     findGasStationIntent.putExtra("SortBy", 1);
                     startActivity(findGasStationIntent);
                 } else {

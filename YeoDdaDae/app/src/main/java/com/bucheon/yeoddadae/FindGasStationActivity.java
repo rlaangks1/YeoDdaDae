@@ -50,6 +50,7 @@ import com.skt.tmap.engine.navigation.SDKManager;
 import java.util.ArrayList;
 
 public class FindGasStationActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback, TMapView.OnClickListenerCallback, SttService.SttCallback {
+    String loginId;
     private static final int PERMISSION_REQUEST_CODE = 1;
     boolean firstOnLocationChangeCalled = false; // onLocationChange가 처음 불림 여부
     boolean isItemSelected = false;
@@ -63,6 +64,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     TMapPoint nowPoint = new TMapPoint(lat, lon);
     TMapPoint naviEndPoint;
     String naviEndPointName;
+    String naviEndPointPoiId;
     TMapGpsManager gpsManager;
     TMapView tMapView;
     TMapCircle tMapCircle;
@@ -72,6 +74,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     TMapPoint scrollSavedPoint;
     TMapMarkerItem selectedMarker;
     GasStationAdapter gasStationAdapter;
+    FirestoreDatabase fd;
 
     Intent serviceIntent;
     SttService sttService;
@@ -130,8 +133,9 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
 
         loadingStart(); // 로딩 시작
 
-        // 메인액티비티에서 정렬기준 받기
+        // 메인액티비티에서 정렬기준과 아이디 받기
         Intent inIntent = getIntent();
+        loginId = inIntent.getStringExtra("loginId");
         recievedSort = inIntent.getIntExtra("SortBy", 0);
         if (recievedSort == 0) {
             Log.d(TAG, "sttSort가 0임 (오류)");
@@ -318,6 +322,11 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                     @Override
                     public void run() {
                         isItemSelected = false;
+
+                        naviEndPoint = null;
+                        naviEndPointName = null;
+                        naviEndPointPoiId = null;
+
                         tMapView.removeTMapPath();
 
                         naviConstLayout.setVisibility(View.GONE);
@@ -331,6 +340,19 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         toStartNaviBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                fd = new FirestoreDatabase();
+
+                fd.insertRoute(loginId, "주유소", lat, lon, naviEndPointPoiId, naviEndPointName, naviEndPoint.getLatitude(), naviEndPoint.getLongitude(), new OnFirestoreDataLoadedListener() {
+                    @Override
+                    public void onDataLoaded(Object data) {}
+
+                    @Override
+                    public void onDataLoadError(String errorMessage) {
+                        Log.d(TAG, errorMessage);
+                        Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
                 TMapTapi tt = new TMapTapi(FindGasStationActivity.this);
                 boolean isTmapApp = tt.isTmapApplicationInstalled();
                 if (isTmapApp) {
@@ -384,6 +406,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         // 도착점 설정
         naviEndPoint = new TMapPoint(targetGasStation.getLat(), targetGasStation.getLon());
         naviEndPointName = targetGasStation.getName();
+        naviEndPointPoiId = targetGasStation.getPoiId();
 
         // 길 찾기 및 선 표시
         TMapData tmapdata = new TMapData();
@@ -421,10 +444,10 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
 
                         gasStationSortHorizontalScrollView.setVisibility(View.GONE);
                         naviConstLayout.setVisibility(View.VISIBLE);
-
-                        isItemSelected = true;
                     }
                 });
+
+                isItemSelected = true;
             }
         });
     }
@@ -449,7 +472,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                 for (int i = 0; i < arrayList.size(); i++) {
                     TMapPOIItem item = arrayList.get(i);
 
-                    gasStationAdapter.addItem(new GasStationItem(item.name, item.radius, item.hhPrice, item.ggPrice, item.highHhPrice, item.highGgPrice, item.telNo, item.stId, item.frontLat, item.frontLon));
+                    gasStationAdapter.addItem(new GasStationItem(item.name, item.radius, item.hhPrice, item.ggPrice, item.highHhPrice, item.highGgPrice, item.telNo, item.stId, item.frontLat, item.frontLon, item.getPOIID()));
                     TMapPoint tpoint = new TMapPoint(Double.parseDouble(item.frontLat), Double.parseDouble(item.frontLon));
                     TMapMarkerItem tItem = new TMapMarkerItem();
                     tItem.setTMapPoint(tpoint);
@@ -531,10 +554,15 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                         gasStationListView.setVisibility(View.VISIBLE);
                         gasStationSortHorizontalScrollView.setVisibility(View.VISIBLE);
                         naviConstLayout.setVisibility(View.GONE);
-
-                        isItemSelected = false;
                     }
                 });
+
+                isItemSelected = false;
+
+                naviEndPoint = null;
+                naviEndPointName = null;
+                naviEndPointPoiId = null;
+
                 tMapCircle.setCenterPoint( nowPoint );
                 tMapView.addTMapCircle("Circle", tMapCircle);
 
@@ -691,14 +719,8 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         }
         else if (isItemSelected && (mainCommand.contains("안내") || mainCommand.contains("내비") || mainCommand.contains("시작") || mainCommand.contains("출발"))) {
             sd.dismiss();
-            TMapTapi tt = new TMapTapi(FindGasStationActivity.this);
-            boolean isTmapApp = tt.isTmapApplicationInstalled();
-            if (isTmapApp) {
-                tt.invokeRoute(naviEndPointName, (float) naviEndPoint.getLongitude(), (float) naviEndPoint.getLatitude());
-            }
-            else {
-                Toast.makeText(getApplicationContext(), "TMAP이 설치되어 있지 않습니다", Toast.LENGTH_SHORT).show();
-            }
+
+            toStartNaviBtn.callOnClick();
         }
         else {
             int number = 0;

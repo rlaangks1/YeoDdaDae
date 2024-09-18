@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 선택된 날짜 -->
+    <item
+        android:state_checked="true"
+        android:color="#FFFFFF" />
+
+    <!-- 누르고있는 날짜 -->
+    <item
+        android:state_pressed="true"
+        android:color="#0000FF" />
+
+    <!-- 비활성화 날짜 -->
+    <item
+        android:state_enabled="false"
+        android:color="#CCCCCC" />
+
+    <!-- 활성화 날짜 -->
+    <item
+        android:color="#000000"/>
+</selector>

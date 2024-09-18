@@ -310,6 +310,7 @@
                 app:mcv_selectionMode="multiple"
                 app:mcv_firstDayOfWeek="monday"
                 app:mcv_showOtherDates="all"
+                app:mcv_dateTextAppearance="@style/CustomCalendarTextAppearance"
                 app:mcv_selectionColor="@color/sub"
                 android:layout_marginTop="5dp"/>
 
