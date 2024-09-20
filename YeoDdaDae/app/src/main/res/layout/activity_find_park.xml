@@ -358,13 +358,13 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@+id/searchTxtClearBtn"
-                    android:layout_marginRight="10dp" />
+                    android:layout_marginRight="5dp" />
 
                 <ImageButton
                     android:id="@+id/searchTxtClearBtn"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/cancel_icon"
+                    android:src="@drawable/cancel_icon_2"
                     android:visibility="gone"
                     android:layout_width="25dp"
                     android:layout_height="25dp"

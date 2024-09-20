@@ -44,7 +44,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
     double poiLat;
     double poiLon;
     String poiPhone;
-    SearchParkAdapter spa = new SearchParkAdapter();;
+    SearchParkAdapter spa = new SearchParkAdapter();
     double nowLat;
     double nowLon;
     boolean isSearching = false;
