@@ -594,6 +594,10 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     public void loadingStart() {
         Log.d(TAG, "로딩 시작");
 
+        if (loadingAlert != null && loadingAlert.isShowing()) {
+            return; // 이미 보여지고 있다면 함수 종료
+        }
+
         if (!isLoadingFirstCalled) { // 로딩 AlertDialog 지정
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("로딩 중").setCancelable(false).setNegativeButton("액티비티 종료", new DialogInterface.OnClickListener() {
@@ -603,10 +607,6 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
             });
             loadingAlert = builder.create();
             isLoadingFirstCalled = true;
-        }
-
-        if (loadingAlert != null && loadingAlert.isShowing()) {
-            return; // 이미 보여지고 있다면 함수 종료
         }
 
         if (!isFinishing()) {

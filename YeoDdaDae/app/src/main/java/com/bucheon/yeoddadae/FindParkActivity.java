@@ -137,6 +137,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     ImageButton searchStartBtn;
     ConstraintLayout searchConstraintLayout;
     EditText searchEdTxt;
+    ImageButton searchTxtClearBtn;
     ImageButton searchBtn;
     ImageButton searchBackBtn;
     ListView searchListView;
@@ -185,6 +186,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         searchStartBtn = findViewById(R.id.searchStartBtn);
         searchConstraintLayout = findViewById(R.id.searchConstraintLayout);
         searchEdTxt = findViewById(R.id.searchEdTxt);
+        searchTxtClearBtn = findViewById(R.id.searchTxtClearBtn);
         searchBtn = findViewById(R.id.searchBtn);
         searchBackBtn = findViewById(R.id.searchBackBtn);
         searchListView = findViewById(R.id.searchListView);
@@ -467,6 +469,15 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             }
         });
 
+        searchTxtClearBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!searchEdTxt.getText().toString().isEmpty()) {
+                    searchEdTxt.setText("");
+                }
+            }
+        });
+
         searchBtn.setOnClickListener(new View.OnClickListener() { // 검색 시작
             @Override
             public void onClick(View v) {
@@ -476,6 +487,8 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
 
                 isSearching = true;
                 searchBtn.setEnabled(true);
+
+                loadingStart();
 
                 if (!replaceNewlinesAndTrim(searchEdTxt).isEmpty()) {
                     fd.insertOrUpdateSearchKeyword(loginId, replaceNewlinesAndTrim(searchEdTxt), new OnFirestoreDataLoadedListener() {
@@ -541,6 +554,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                             searchNoTxt.setVisibility(View.VISIBLE);
                                             searchBtn.setEnabled(true);
                                             isSearching = false;
+                                            loadingStop();
                                         }
                                     });
                                 }
@@ -552,6 +566,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                             searchNoTxt.setVisibility(View.GONE);
                                             searchBtn.setEnabled(true);
                                             isSearching = false;
+                                            loadingStop();
                                         }
                                     });
                                 }
@@ -565,6 +580,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                         searchNoTxt.setVisibility(View.VISIBLE);
                                         searchBtn.setEnabled(true);
                                         isSearching = false;
+                                        loadingStop();
                                     }
                                 });
                             }
@@ -574,6 +590,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                 else {
                     searchBtn.setEnabled(true);
                     isSearching = false;
+                    loadingStop();
                 }
             }
         });
@@ -734,7 +751,11 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             @Override
             public void afterTextChanged(Editable s) {
                 if (searchEdTxt.getText().toString().isEmpty()) {
+                    searchTxtClearBtn.setVisibility(View.GONE);
                     getSearchHistory();
+                }
+                else {
+                    searchTxtClearBtn.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -1092,6 +1113,8 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     }
 
     void getSearchHistory () {
+        loadingStart();
+
         spa.clearPark();
         spa.clearHistory();
 
@@ -1103,11 +1126,21 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                 for (SearchHistoryItem item : result) {
                     spa.addHistory(item);
                 }
-                searchListView.setAdapter(spa);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        searchListView.setVisibility(View.VISIBLE);
+                        searchNoTxt.setVisibility(View.GONE);
+                        searchListView.setAdapter(spa);
+                    }
+                });
+
+                loadingStop();
             }
 
             @Override
             public void onDataLoadError(String errorMessage) {
+                loadingStop();
                 Log.d(TAG, errorMessage);
                 Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
             }
@@ -1135,6 +1168,10 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     public void loadingStart() {
         Log.d(TAG, "로딩 시작");
 
+        if (loadingAlert != null && loadingAlert.isShowing()) {
+            return; // 이미 보여지고 있다면 함수 종료
+        }
+
         if (!isLoadingFirstCalled) { // 로딩 AlertDialog 지정
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("로딩 중").setCancelable(false).setNegativeButton("액티비티 종료", new DialogInterface.OnClickListener() {
@@ -1144,10 +1181,6 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             });
             loadingAlert = builder.create();
             isLoadingFirstCalled = true;
-        }
-
-        if (loadingAlert != null && loadingAlert.isShowing()) {
-            return; // 이미 보여지고 있다면 함수 종료
         }
 
         if (!isFinishing()) {
