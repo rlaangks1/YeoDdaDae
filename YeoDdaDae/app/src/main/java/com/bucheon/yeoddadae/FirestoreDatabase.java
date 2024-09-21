@@ -2615,6 +2615,26 @@ public class FirestoreDatabase {
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "길찾기 기록 찾기 중 오류", e);
+                    listener.onDataLoadError("길찾기 기록 찾기 중 오류");
+                });
+    }
+
+    public void selectUsers (OnFirestoreDataLoadedListener listener) {
+        ArrayList<UserItem> result = new ArrayList<>();
+
+        db.collection("account")
+                .whereNotEqualTo("isAdmin", true)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        result.add(new UserItem((String) document.get("id"), (String) document.get("email"), (long) document.get("ydPoint"), (Timestamp) document.get("registerTime")));
+                    }
+
+                    listener.onDataLoaded(result);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "사용자들 찾기 중 오류", e);
+                    listener.onDataLoadError("사용자들 찾기 중 오류");
                 });
     }
 

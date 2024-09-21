@@ -39,6 +39,7 @@ public class AdminMainActivity extends AppCompatActivity {
     ImageButton toApproveReportBtn;
     TextView toApproveReportNotificationTxt;
     ImageButton toStatisticsBtn;
+    ImageButton toUserManagementBtn;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ImageButton menubarBtn;
@@ -53,6 +54,7 @@ public class AdminMainActivity extends AppCompatActivity {
         toApproveReportBtn = findViewById(R.id.toApproveReportBtn);
         toApproveReportNotificationTxt = findViewById(R.id.toApproveReportNotificationTxt);
         toStatisticsBtn = findViewById(R.id.toStatisticsBtn);
+        toUserManagementBtn = findViewById(R.id.toUserManagementBtn);
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
         menubarBtn = findViewById(R.id.menubarBtn);
@@ -131,6 +133,14 @@ public class AdminMainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent statisticsIntent = new Intent(getApplicationContext(), StatisticsActivity.class);
                 startActivity(statisticsIntent);
+            }
+        });
+
+        toUserManagementBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent userManagementIntent = new Intent(getApplicationContext(), UserManagementActivity.class);
+                startActivity(userManagementIntent);
             }
         });
     }
