@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -233,7 +234,9 @@ public class FirestoreDatabase {
         newAccount.put("id", id);
         newAccount.put("email", email);
         newAccount.put("isAdmin", false);
+        newAccount.put("status", "정상");
         newAccount.put("ydPoint", 0);
+        newAccount.put("pauseLimit", null);
         newAccount.put("registerTime", FieldValue.serverTimestamp());
         newAccount.put("recentSawMyReservationTime", FieldValue.serverTimestamp());
         newAccount.put("recentSawMyShareParkTime", FieldValue.serverTimestamp());
@@ -254,13 +257,58 @@ public class FirestoreDatabase {
                 .whereEqualTo("id", id)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (queryDocumentSnapshots.size() == 1) {
+                    if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() == 1) {
                         DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
-                        String email = (String) document.get("email");
-                        String isAdmin = Boolean.toString((boolean) document.get("isAdmin"));
-                        String result[] = {email, isAdmin};
 
-                        listener.onDataLoaded(result);
+                        String status = (String) document.get("status");
+
+                        if (status.equals("정상")) {
+                            String email = (String) document.get("email");
+                            String isAdmin = Boolean.toString((boolean) document.get("isAdmin"));
+                            String result[] = {email, isAdmin};
+
+                            listener.onDataLoaded(result);
+                        }
+                        else if (status.equals("사용 정지")) {
+                            Timestamp pauseLimit = (Timestamp) document.get("pauseLimit");
+
+                            if (pauseLimit != null) {
+                                if (pauseLimit.compareTo(Timestamp.now()) <= 0) {
+                                    resumeUser(id, new OnFirestoreDataLoadedListener() {
+                                        @Override
+                                        public void onDataLoaded(Object data) {
+                                            String email = (String) document.get("email");
+                                            String isAdmin = Boolean.toString((boolean) document.get("isAdmin"));
+                                            String result[] = {email, isAdmin};
+
+                                            listener.onDataLoaded(result);
+                                        }
+
+                                        @Override
+                                        public void onDataLoadError(String errorMessage) {
+                                            Log.d(TAG, "사용 정지 해제 중 " + errorMessage);
+                                            listener.onDataLoadError(errorMessage);
+                                        }
+                                    });
+                                }
+                                else {
+                                    Date date = pauseLimit.toDate();
+                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
+                                    String pauseLimitString = sdf.format(date);
+
+                                    listener.onDataLoadError("사용 정지 : " + pauseLimitString);
+                                }
+                            }
+                            else {
+                                listener.onDataLoadError("정지 기한이 null");
+                            }
+                        }
+                        else if (status.equals("강제 탈퇴")) {
+                            listener.onDataLoadError("강제 탈퇴");
+                        }
+                        else if (status.equals("직접 탈퇴")) {
+                            listener.onDataLoadError("직접 탈퇴");
+                        }
                     }
                     else if (queryDocumentSnapshots.size() == 0 || queryDocumentSnapshots == null) {
                         listener.onDataLoadError("계정이 없음");
@@ -270,7 +318,8 @@ public class FirestoreDatabase {
                     }
                 })
                 .addOnFailureListener(e -> {
-
+                    Log.d(TAG, "계정 찾기 중 오류", e);
+                    listener.onDataLoadError("계정 찾기 중 오류" + e.getMessage());
                 });
     }
 
@@ -2537,8 +2586,8 @@ public class FirestoreDatabase {
                                 });
                     }
                     else {
-                        Log.d(TAG, "데이터가 여러 개임");
-                        listener.onDataLoadError("데이터가 여러 개임");
+                        Log.d(TAG, "데이터가 없거나 여러 개임");
+                        listener.onDataLoadError("데이터가 없거나 여러 개임");
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -2624,6 +2673,7 @@ public class FirestoreDatabase {
 
         db.collection("account")
                 .whereNotEqualTo("isAdmin", true)
+                .whereIn("status", Arrays.asList("정상", "사용 정지"))
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (DocumentSnapshot document : queryDocumentSnapshots) {
@@ -2635,6 +2685,176 @@ public class FirestoreDatabase {
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "사용자들 찾기 중 오류", e);
                     listener.onDataLoadError("사용자들 찾기 중 오류");
+                });
+    }
+
+    public void loadStatusOfUser(String userId, OnFirestoreDataLoadedListener listener) {
+        db.collection("account")
+                .whereEqualTo("id", userId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() == 1) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+
+                        if (((String) document.get("status")).equals("사용 정지")) {
+                            Timestamp pauseLimit = (Timestamp) document.get("pauseLimit");
+
+                            if (pauseLimit != null) {
+                                HashMap<String, Object> hm = new HashMap<>();
+                                hm.put("status", "사용 정지");
+                                hm.put("pauseLimit", pauseLimit);
+
+                                listener.onDataLoaded(hm);
+                            }
+                            else {
+                                Log.d(TAG, "pauseLimit이 null임");
+                                listener.onDataLoadError("pauseLimit이 null임");
+                            }
+                        }
+                        else {
+                            listener.onDataLoaded(document.get("status"));
+                        }
+                    }
+                    else {
+                        Log.d(TAG, "데이터가 없거나 여러 개임");
+                        listener.onDataLoadError("데이터가 없거나 여러 개임");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "사용자 상태 불러오기 중 오류", e);
+                    listener.onDataLoadError("사용자 상태 불러오기 중 오류");
+                });
+    }
+
+    public void resumeUser (String userId, OnFirestoreDataLoadedListener listener) {
+        db.collection("account")
+                .whereEqualTo("id", userId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() == 1) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+
+                        if (((String) document.get("status")).equals("사용 정지")) {
+                            db.collection("account")
+                                    .document(document.getId())
+                                    .update("status", "정상", "pauseLimit", null)
+                                    .addOnSuccessListener(aVoid -> {
+                                        listener.onDataLoaded(true);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.d(TAG, "사용 재개 중 오류", e);
+                                        listener.onDataLoadError("사용 재개 중 오류");
+                                    });
+                        }
+                        else {
+                            Log.d(TAG, "정지된 사용자가 아님");
+                            listener.onDataLoadError("정지된 사용자가 아님");
+                        }
+                    }
+                    else {
+                        Log.d(TAG, "데이터가 없거나 여러 개임");
+                        listener.onDataLoadError("데이터가 없거나 여러 개임");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "사용자 상태 불러오기 중 오류", e);
+                    listener.onDataLoadError("사용자 상태 불러오기 중 오류");
+                });
+    }
+
+    public void pauseUser (String userId, Timestamp pauseLimit, OnFirestoreDataLoadedListener listener) {
+        db.collection("account")
+                .whereEqualTo("id", userId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() == 1) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+
+                        if (((String) document.get("status")).equals("정상")) {
+                            db.collection("account")
+                                    .document(document.getId())
+                                    .update("status", "사용 정지", "pauseLimit", pauseLimit)
+                                    .addOnSuccessListener(aVoid -> {
+                                        listener.onDataLoaded(true);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.d(TAG, "사용 정지 중 오류", e);
+                                        listener.onDataLoadError("사용 정지 중 오류");
+                                    });
+                        }
+                        else {
+                            Log.d(TAG, "정상 사용자가 아님");
+                            listener.onDataLoadError("정상 사용자가 아님");
+                        }
+                    }
+                    else {
+                        Log.d(TAG, "데이터가 없거나 여러 개임");
+                        listener.onDataLoadError("데이터가 없거나 여러 개임");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "사용자 상태 불러오기 중 오류", e);
+                    listener.onDataLoadError("사용자 상태 불러오기 중 오류");
+                });
+    }
+
+    public void forceWithdrawalUser (String userId, OnFirestoreDataLoadedListener listener) {
+        db.collection("account")
+                .whereEqualTo("id", userId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() == 1) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+
+                        db.collection("account")
+                                .document(document.getId())
+                                .update("status", "강제 탈퇴", "pauseLimit", null)
+                                .addOnSuccessListener(aVoid -> {
+                                    listener.onDataLoaded(true);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.d(TAG, "강제 탈퇴 중 오류", e);
+                                    listener.onDataLoadError("강제 탈퇴 중 오류");
+                                });
+                    }
+                    else {
+                        Log.d(TAG, "데이터가 없거나 여러 개임");
+                        listener.onDataLoadError("데이터가 없거나 여러 개임");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "사용자 상태 불러오기 중 오류", e);
+                    listener.onDataLoadError("사용자 상태 불러오기 중 오류");
+                });
+    }
+
+    public void withdrawalUser (String userId, OnFirestoreDataLoadedListener listener) {
+        db.collection("account")
+                .whereEqualTo("id", userId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() == 1) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+
+                        db.collection("account")
+                                .document(document.getId())
+                                .update("status", "직접 탈퇴", "pauseLimit", null)
+                                .addOnSuccessListener(aVoid -> {
+                                    listener.onDataLoaded(true);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.d(TAG, "직접 탈퇴 중 오류", e);
+                                    listener.onDataLoadError("직접 탈퇴 중 오류");
+                                });
+                    }
+                    else {
+                        Log.d(TAG, "데이터가 없거나 여러 개임");
+                        listener.onDataLoadError("데이터가 없거나 여러 개임");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "사용자 상태 불러오기 중 오류", e);
+                    listener.onDataLoadError("사용자 상태 불러오기 중 오류");
                 });
     }
 

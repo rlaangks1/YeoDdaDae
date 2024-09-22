@@ -255,6 +255,39 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
             usageHistoryIntent.putExtra("id", loginId);
             startActivity(usageHistoryIntent);
         }
+        else if (data.equals("회원 탈퇴")) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("회원 탈퇴 확인");
+            builder.setMessage("정말 탈퇴 하시겠습니까");
+            builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    fd.withdrawalUser(loginId, new OnFirestoreDataLoadedListener() {
+                        @Override
+                        public void onDataLoaded(Object data) {
+                            Toast.makeText(getApplicationContext(), "회원 탈퇴 되었습니다", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+
+                        @Override
+                        public void onDataLoadError(String errorMessage) {
+                            Log.d(TAG, errorMessage);
+                            Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+            builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(MainActivity.this, R.color.sub));
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(MainActivity.this, R.color.disable));
+        }
         else if (data.equals("stt버튼클릭")) {
             sttService.startListeningForMainCommand();
         }

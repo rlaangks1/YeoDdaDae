@@ -50,6 +50,7 @@
         <activity android:name=".ApproveReportInformationActivity"/>
         <activity android:name=".StatisticsActivity"/>
         <activity android:name=".UserManagementActivity"/>
+        <activity android:name=".UserManagementInformationActivity"/>
         <service
             android:name=".SttService"
             android:enabled="true"

@@ -113,6 +113,11 @@ public class CustomDatePickerDialog extends Dialog {
                         }
                     }
                 }
+                else if (context instanceof UserManagementInformationActivity) {
+                    UserManagementInformationActivity umia = (UserManagementInformationActivity) context;
+
+                    umia.receiveDateFromDialog(formattedDate);
+                }
 
                 dismiss();
             }

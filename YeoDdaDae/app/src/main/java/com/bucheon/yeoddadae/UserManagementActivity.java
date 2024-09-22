@@ -2,6 +2,7 @@ package com.bucheon.yeoddadae;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -113,7 +114,17 @@ public class UserManagementActivity extends AppCompatActivity {
         userManagementListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // here
+                UserItem clickedItem = (UserItem) ua.getItem(position);
+
+                Intent toUserManagementInformationIntent = new Intent(getApplicationContext(), UserManagementInformationActivity.class);
+
+                toUserManagementInformationIntent.putExtra("id", clickedItem.getId());
+                toUserManagementInformationIntent.putExtra("email", clickedItem.getEmail());
+                toUserManagementInformationIntent.putExtra("ydPoint", clickedItem.getYdPoint());
+                toUserManagementInformationIntent.putExtra("registerTimeSec", clickedItem.getRegisterTime().getSeconds());
+                toUserManagementInformationIntent.putExtra("registerTimeNanoSec", clickedItem.getRegisterTime().getNanoseconds());
+
+                startActivity(toUserManagementInformationIntent);
             }
         });
     }
