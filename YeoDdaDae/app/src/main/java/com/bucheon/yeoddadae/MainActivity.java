@@ -250,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(MainActivity.this, R.color.sub));
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(MainActivity.this, R.color.disable));
         }
-        else if (data.equals("사용 기록")) {
+        else if (data.equals("길찾기 기록")) {
             Intent usageHistoryIntent = new Intent(getApplicationContext(), UsageHistoryActivity.class);
             usageHistoryIntent.putExtra("id", loginId);
             startActivity(usageHistoryIntent);

@@ -83,7 +83,7 @@
             android:layout_marginRight="20dp"/>
 
         <TextView
-            android:text="전국 주차장 찾아가기"
+            android:text="전국 주차장 찾아가기 "
             android:textAppearance="@style/find_parkin_sub"
             android:textStyle="bold|italic"
             android:layout_width="wrap_content"
@@ -130,7 +130,7 @@
             android:layout_marginRight="20dp"/>
 
         <TextView
-            android:text="내 주변 주유소 찾아가기"
+            android:text="내 주변 주유소 찾아가기 "
             android:textAppearance="@style/find_gas_st_sub"
             android:textStyle="bold|italic"
             android:layout_width="wrap_content"
@@ -177,7 +177,7 @@
             android:layout_marginRight="20dp"/>
 
         <TextView
-            android:text="무료/할인주차장 제보 평가하기"
+            android:text="무료/할인주차장 제보 평가하기 "
             android:textAppearance="@style/discount_park_report_sub"
             android:textStyle="bold|italic"
             android:layout_width="wrap_content"
