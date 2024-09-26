@@ -24,13 +24,13 @@ import java.util.HashMap;
 import java.util.Locale;
 
 public class ReservationAdapter extends BaseAdapter {
-    ArrayList<ReservationItem> firstItems = new ArrayList<ReservationItem>();
-    ArrayList<ReservationItem> secondItems = new ArrayList<ReservationItem>();
-    ArrayList<ReservationItem> savedFirstItems = new ArrayList<ReservationItem>();
-    ArrayList<ReservationItem> savedSecondItems = new ArrayList<ReservationItem>();
+    ArrayList<ReservationItem> firstItems = new ArrayList<>();
+    ArrayList<ReservationItem> secondItems = new ArrayList<>();
+    ArrayList<ReservationItem> savedFirstItems = new ArrayList<>();
+    ArrayList<ReservationItem> savedSecondItems = new ArrayList<>();
     Activity activity;
+    LayoutInflater inflater;
     boolean isItemsSaved = false;
-    final LayoutInflater inflater;
 
     public ReservationAdapter (Activity activity) {
         this.activity = activity;
@@ -113,37 +113,44 @@ public class ReservationAdapter extends BaseAdapter {
     public int getCount() {
         int count = firstItems.size() + secondItems.size();
         if (!firstItems.isEmpty()) {
-            count ++; // For enable_item.xml
+            count += 1; // For enable_item.xml
         }
         if (!secondItems.isEmpty()) {
-            count ++; // For disable_item.xml
+            count += 1; // For disable_item.xml
         }
         return count;
     }
 
     @Override
     public Object getItem(int position) {
+        // Adjust for the enable item
         if (position == 0 && !firstItems.isEmpty()) {
-            return null; // enable_item.xml
+            return null; // This is the enable_item, we return null since it doesn't have an item.
         }
-        else if (secondItems.size() > 0 && (position == firstItems.size() + 1 || firstItems.isEmpty() && position == 0)) {
-            return null; // disable_item.xml
-        }
-        return getReservationItem(position);
-    }
 
-    ReservationItem getReservationItem(int position) {
-        if (firstItems.isEmpty()) {
-            return secondItems.get(position - 1);
-        }
-        else if (secondItems.isEmpty()) {
-            return firstItems.get(position - 1);
-        }
-        else if (position > 0 && position < firstItems.size() + 1) {
-            return firstItems.get(position - 1); // Account for enable_item.xml
+        // Adjust for the disable item
+        else if (!secondItems.isEmpty() && (!firstItems.isEmpty() && position == firstItems.size() + 1 ||  (firstItems.isEmpty() && position == 0))) {
+            return null; // This is the disable_item, we return null since it doesn't have an item.
         }
         else {
-            return secondItems.get(position - firstItems.size() - 2); // Account for both enable_item.xml and disable_item.xml
+            ReservationItem reservation;
+
+            if (firstItems.isEmpty()) {
+                reservation = secondItems.get(position - 1);
+            }
+            else if (secondItems.isEmpty()) {
+                reservation = firstItems.get(position - 1);
+            }
+            else {
+                if (position > 0 && position < firstItems.size() + 1) {
+                    reservation = firstItems.get(position - 1); // Account for the enable_item.xml
+                }
+                else {
+                    reservation = secondItems.get(position - firstItems.size() - 2); // Account for both enable_item.xml and disable_item.xml
+                }
+            }
+
+            return  reservation;
         }
     }
 
@@ -157,20 +164,18 @@ public class ReservationAdapter extends BaseAdapter {
             return -2; // ID for the disable item
         }
         else {
-            if (firstItems.size() == 0) {
+            if (firstItems.isEmpty()) {
                 return secondItems.get(position - 1).getId().hashCode();
             }
-            else if (secondItems.size() == 0) {
+            else if (secondItems.isEmpty()) {
                 return firstItems.get(position - 1).getId().hashCode();
             }
             else {
-                ReservationItem item = getReservationItem(position);
-
-                if (item != null) {
-                    return item.getId().hashCode();
+                if (position > 0 && position < firstItems.size() + 1) {
+                    return firstItems.get(position - 1).getId().hashCode(); // Account for the enable_item.xml
                 }
                 else {
-                    return 0;
+                    return secondItems.get(position - firstItems.size() - 2).getId().hashCode(); // Account for both enable_item.xml and disable_item.xml
                 }
             }
         }
@@ -178,16 +183,35 @@ public class ReservationAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (firstItems.size() > 0 && position == 0) {
-            return inflater.inflate(R.layout.enable_item, parent, false);
+        if (!firstItems.isEmpty() && position == 0) { // enable_item.xml
+            convertView = inflater.inflate(R.layout.enable_item, parent, false);
+            convertView.setEnabled(false);
+            return convertView;
         }
-        else if (secondItems.size() > 0 && (position == firstItems.size() + 1 || firstItems.isEmpty() && position == 0)) {
-            return inflater.inflate(R.layout.disable_item, parent, false);
+        else if (!secondItems.isEmpty() && (!firstItems.isEmpty() && position == firstItems.size() + 1 ||  (firstItems.isEmpty() && position == 0))) { // disable_item.xml
+            convertView = inflater.inflate(R.layout.disable_item, parent, false);
+            convertView.setEnabled(false);
+            return convertView;
         }
         else { // 예약 항목 뷰
             convertView = inflater.inflate(R.layout.reservation_item, parent, false);
 
-            ReservationItem reservation = getReservationItem(position);
+            ReservationItem reservation;
+
+            if (firstItems.isEmpty()) {
+                reservation = secondItems.get(position - 1);
+            }
+            else if (secondItems.isEmpty()) {
+                reservation = firstItems.get(position - 1);
+            }
+            else {
+                if (position > 0 && position < firstItems.size() + 1) {
+                    reservation = firstItems.get(position - 1); // Account for the enable_item.xml
+                }
+                else {
+                    reservation = secondItems.get(position - firstItems.size() - 2); // Account for both enable_item.xml and disable_item.xml
+                }
+            }
 
             // 파인드 뷰
             TextView shareParkInfoTxt = convertView.findViewById(R.id.shareParkInfoTxt);
