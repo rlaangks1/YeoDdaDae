@@ -4,6 +4,7 @@ import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -156,7 +157,6 @@ public class ReservationAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        // Handle the header items (enable_item and disable_item)
         if (position == 0 && !firstItems.isEmpty()) {
             return -1; // ID for the enable item
         }
@@ -197,7 +197,6 @@ public class ReservationAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.reservation_item, parent, false);
 
             ReservationItem reservation;
-
             if (firstItems.isEmpty()) {
                 reservation = secondItems.get(position - 1);
             }
@@ -263,7 +262,23 @@ public class ReservationAdapter extends BaseAdapter {
                 }
             });
 
-            reservationIsCancelledTxt.setText(reservation.getStatus());
+            String status = reservation.getStatus();
+            reservationIsCancelledTxt.setText(status);
+
+            switch(status) {
+                case "취소됨" :
+                    reservationIsCancelledTxt.setTextColor(Color.rgb(255, 0 ,0));
+                    break;
+                case "사용 예정" :
+                    reservationIsCancelledTxt.setTextColor(Color.rgb(0, 0 ,255));
+                    break;
+                case "사용 중" :
+                    reservationIsCancelledTxt.setTextColor(Color.rgb(0, 255 ,0));
+                    break;
+                case "사용 종료" :
+                    reservationIsCancelledTxt.setTextColor(Color.rgb(96, 96 ,96));
+                    break;
+            }
 
             HashMap<String, ArrayList<String>> hm = reservation.getReservationTime();
             ArrayList<String> keys = new ArrayList<>(hm.keySet());
@@ -288,10 +303,12 @@ public class ReservationAdapter extends BaseAdapter {
             reservationTimeTxt.setText(reservationTimeString);
 
             Timestamp timestamp = reservation.getUpTime();
-            Date date = timestamp.toDate();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
-            String dateString = sdf.format(date);
-            upTimeTxt.setText(dateString);
+            if (timestamp != null) {
+                Date date = timestamp.toDate();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
+                String dateString = sdf.format(date);
+                upTimeTxt.setText(dateString);
+            }
 
             return convertView;
         }

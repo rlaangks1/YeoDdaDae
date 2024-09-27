@@ -54,6 +54,14 @@ public class ReservationItem {
         return documentId;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public String getStatus() {
         if (isCancelled) {
             return "취소됨";
@@ -100,13 +108,5 @@ public class ReservationItem {
                 return "사용 종료";
             }
         }
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 }
