@@ -2,6 +2,7 @@ package com.bucheon.yeoddadae;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -106,6 +108,11 @@ public class MyShareParkFragment extends Fragment {
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) ma.getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(searchContentEditTxt.getWindowToken(), 0);
+                }
+
                 if (!replaceNewlinesAndTrim(searchContentEditTxt).isEmpty()) {
                     spa.loadSavedItems();
                     int searchCount = spa.searchSharePark(replaceNewlinesAndTrim(searchContentEditTxt));
@@ -151,9 +158,8 @@ public class MyShareParkFragment extends Fragment {
     }
 
     public void getShareParks() {
-        if (spa != null) {
-            spa.clear();
-        }
+        spa.clear();
+        searchContentEditTxt.setText("");
 
         FirestoreDatabase fd = new FirestoreDatabase();
         fd.calculateFreeSharePark(loginId, new OnFirestoreDataLoadedListener() {
@@ -180,7 +186,6 @@ public class MyShareParkFragment extends Fragment {
                             spa.addItem(new ShareParkItem(null, lat, lon, parkDetailAddress, isApproval, isCancelled, isCalculated, price, time, upTime, documentId));
                         }
 
-                        ma = (MainActivity) getActivity();
                         if (ma != null) {
                             ma.runOnUiThread(new Runnable() {
                                 @Override

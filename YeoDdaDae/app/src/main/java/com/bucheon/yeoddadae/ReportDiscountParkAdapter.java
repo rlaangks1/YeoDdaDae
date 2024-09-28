@@ -10,6 +10,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.google.firebase.Timestamp;
+import com.skt.Tmap.TMapData;
+import com.skt.Tmap.address_info.TMapAddressInfo;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -21,10 +23,14 @@ import java.util.Locale;
 
 public class ReportDiscountParkAdapter extends BaseAdapter {
     ArrayList<ReportDiscountParkItem> items = new ArrayList<>();
+    ArrayList<ReportDiscountParkItem> savedItems = new ArrayList<>();
     Activity activity;
+    LayoutInflater inflater;
+    boolean isItemsSaved = false;
 
     public ReportDiscountParkAdapter(Activity activity) {
         this.activity = activity;
+        this.inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     public void addItem(ReportDiscountParkItem item) {
@@ -41,19 +47,41 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
         return null; // 못 찾은 경우 null 반환
     }
 
-    public void clearItem () {
+    public void clear () {
         items.clear();
+        savedItems.clear();
+        isItemsSaved = false;
         notifyDataSetChanged();
     }
 
-    public void sortByUpTime() {
-        Collections.sort(items, new Comparator<ReportDiscountParkItem>() {
-            @Override
-            public int compare(ReportDiscountParkItem o1, ReportDiscountParkItem o2) {
-                return o1.getUpTime().compareTo(o2.getUpTime());
+    public int searchReportDiscountPark(String keyword) {
+        if (!isItemsSaved) {
+            savedItems = new ArrayList<>(items);
+            isItemsSaved = true;
+        }
+
+        ArrayList<ReportDiscountParkItem> removeItems = new ArrayList<>();
+        for (ReportDiscountParkItem item : items) {
+            if (!item.getDocumentId().contains(keyword) && !item.getStatus().contains(keyword) && (item.getParkName() == null || !item.getParkName().contains(keyword))) {
+                removeItems.add(item);
             }
-        });
+        }
+        items.removeAll(removeItems);
+
+
         notifyDataSetChanged();
+
+        return items.size();
+    }
+
+    public void loadSavedItems() {
+        if (isItemsSaved) {
+            items = new ArrayList<>(savedItems); // savedItems의 복사본으로 items 복원
+            savedItems.clear();
+            isItemsSaved = false;
+
+            notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -68,18 +96,15 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return items.get(position).getDocumentId().hashCode();
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-        Context context = parent.getContext();
         ReportDiscountParkItem report = items.get(position);
 
         if (activity instanceof MainActivity) {
             if (convertView == null) {
-                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.my_report_discount_park_item, parent, false);
             }
 
@@ -105,17 +130,20 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
             String rate = report.getRatePerfectCount() + " / " + report.getRateMistakeCount() + " / " + report.getRateWrongCount();
             reportDiscountParkRateTxt.setText(rate);
 
-            if (report.isCancelled) {
-                reportDiscountParkIsCancelledTxt.setVisibility(View.VISIBLE);
+            String status = report.getStatus();
+            int statusColor = reportDiscountParkAddressTxt.getCurrentTextColor();
+            switch (status) {
+                case "승인됨" :
+                    statusColor = Color.rgb(0, 0, 255);
+                    break;
+                case "취소됨" :
+                    statusColor = Color.rgb(255, 0, 0);
+                    break;
+                case "평가 중" :
+                    break;
             }
-            else if (report.isApproval){
-                reportDiscountParkIsCancelledTxt.setText("승인됨");
-                reportDiscountParkIsCancelledTxt.setTextColor(Color.rgb(0, 0, 255));
-                reportDiscountParkIsCancelledTxt.setVisibility(View.VISIBLE);
-            }
-            else {
-                reportDiscountParkIsCancelledTxt.setVisibility(View.GONE);
-            }
+            reportDiscountParkIsCancelledTxt.setText(status);
+            reportDiscountParkIsCancelledTxt.setTextColor(statusColor);
 
             Timestamp timestamp = report.getUpTime();
             if (timestamp != null) {
@@ -126,10 +154,8 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
             }
         }
 
-        else if (activity instanceof AnotherReportDiscountParkActivity
-                || activity instanceof ApproveReportActivity) {
+        else if (activity instanceof AnotherReportDiscountParkActivity || activity instanceof ApproveReportActivity) {
             if (convertView == null) {
-                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.report_discount_park_item, parent, false);
             }
 

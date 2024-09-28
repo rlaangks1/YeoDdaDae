@@ -63,9 +63,8 @@
 
     <TextView
         android:id="@+id/reportDiscountParkIsCancelledTxt"
-        android:text="취소됨"
+        android:text="상태"
         android:textSize="18sp"
-        android:textColor="@color/red"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/reportDiscountParkUpTimeTxt"

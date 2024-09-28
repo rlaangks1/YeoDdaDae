@@ -84,7 +84,7 @@ public class ShareParkAdapter extends BaseAdapter {
 
         ArrayList<ShareParkItem> removeItems = new ArrayList<>();
         for (ShareParkItem item : firstItems) {
-            if (!item.getDocumentId().contains(keyword) && (item.getAddress() == null || !item.getAddress().contains(keyword))) {
+            if (!item.getDocumentId().contains(keyword) && !item.getStatus().contains(keyword) && (item.getAddress() == null || !item.getAddress().contains(keyword))) {
                 removeItems.add(item);
             }
         }
@@ -92,7 +92,7 @@ public class ShareParkAdapter extends BaseAdapter {
 
         removeItems.clear();
         for (ShareParkItem item : secondItems) {
-            if (!item.getDocumentId().contains(keyword) && (item.getAddress() == null || !item.getAddress().contains(keyword))) {
+            if (!item.getDocumentId().contains(keyword) && !item.getStatus().contains(keyword) && (item.getAddress() == null || !item.getAddress().contains(keyword))) {
                 removeItems.add(item);
             }
         }

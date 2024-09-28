@@ -2,6 +2,7 @@ package com.bucheon.yeoddadae;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -95,6 +97,11 @@ public class MyReservationFragment extends Fragment {
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) ma.getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(searchContentEditTxt.getWindowToken(), 0);
+                }
+
                 if (!replaceNewlinesAndTrim(searchContentEditTxt).isEmpty()) {
                     ra.loadSavedItems();
                     int searchCount = ra.searchReservation(replaceNewlinesAndTrim(searchContentEditTxt));

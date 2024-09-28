@@ -79,7 +79,7 @@ public class ReservationAdapter extends BaseAdapter {
 
         ArrayList<ReservationItem> removeItems = new ArrayList<>();
         for (ReservationItem item : firstItems) {
-            if (!item.getDocumentId().contains(keyword) && (item.getAddress() == null || !item.getAddress().contains(keyword))) {
+            if (!item.getDocumentId().contains(keyword) && !item.getStatus().contains(keyword) && (item.getAddress() == null || !item.getAddress().contains(keyword))) {
                 removeItems.add(item);
             }
         }
@@ -87,7 +87,7 @@ public class ReservationAdapter extends BaseAdapter {
 
         removeItems.clear();
         for (ReservationItem item : secondItems) {
-            if (!item.getDocumentId().contains(keyword) && (item.getAddress() == null || !item.getAddress().contains(keyword))) {
+            if (!item.getDocumentId().contains(keyword) && !item.getStatus().contains(keyword) && (item.getAddress() == null || !item.getAddress().contains(keyword))) {
                 removeItems.add(item);
             }
         }
