@@ -2635,7 +2635,50 @@ public class FirestoreDatabase {
         insertData("routeHistory", hm, new OnFirestoreDataLoadedListener() {
             @Override
             public void onDataLoaded(Object data) {
-                listener.onDataLoaded(true);
+                if (type.equals("공유주차장")) {
+                    listener.onDataLoaded(true);
+                    return;
+                }
+
+                HashMap<String, Object> hm = new HashMap<>();
+                hm.put("id", userId);
+                hm.put("poiId", poiId);
+                hm.put("poiName", poiName);
+                hm.put("lat", endLat);
+                hm.put("lon", endLon);
+                hm.put("favorites", false);
+                hm.put("upTime", FieldValue.serverTimestamp());
+
+                if (type.equals("주유소")) {
+                    insertData("gasHistory", hm, new OnFirestoreDataLoadedListener() {
+                        @Override
+                        public void onDataLoaded(Object data) {
+                            listener.onDataLoaded(true);
+                        }
+
+                        @Override
+                        public void onDataLoadError(String errorMessage) {
+                            Log.d(TAG, errorMessage);
+                            listener.onDataLoadError(errorMessage);
+                        }
+                    });
+                }
+                else {
+                    hm.put("type", type);
+
+                    insertData("parkHistory", hm, new OnFirestoreDataLoadedListener() {
+                        @Override
+                        public void onDataLoaded(Object data) {
+                            listener.onDataLoaded(true);
+                        }
+
+                        @Override
+                        public void onDataLoadError(String errorMessage) {
+                            Log.d(TAG, errorMessage);
+                            listener.onDataLoadError(errorMessage);
+                        }
+                    });
+                }
             }
 
             @Override
@@ -2855,6 +2898,320 @@ public class FirestoreDatabase {
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "사용자 상태 불러오기 중 오류", e);
                     listener.onDataLoadError("사용자 상태 불러오기 중 오류");
+                });
+    }
+
+    public void loadParkHistory (String userId, OnFirestoreDataLoadedListener listener) {
+        ArrayList<HashMap<String, Object>> resultArrayList = new ArrayList<>();
+
+        db.collection("parkHistory")
+                .whereEqualTo("id", userId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        HashMap<String, Object> data = new HashMap<>(document.getData());
+                        data.put("documentId", document.getId());
+                        resultArrayList.add(data);
+                    }
+
+                    listener.onDataLoaded(resultArrayList);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "주차장 기록 찾기 중 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void favoriteParkHistory(String userId, String poiId, OnFirestoreDataLoadedListener listener) {
+        db.collection("parkHistory")
+                .whereEqualTo("id", userId)
+                .whereEqualTo("poiId", poiId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() == 1) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+
+                        if (!(boolean) document.get("favorites")) {
+                            db.collection("parkHistory")
+                                    .document(document.getId())
+                                    .update("favorites", true)
+                                    .addOnSuccessListener(queryDocumentSnapshots2 -> {
+                                        listener.onDataLoaded(true);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.d(TAG, "주차장 즐겨찾기 중 오류", e);
+                                        listener.onDataLoadError(e.getMessage());
+                                    });
+                        }
+                        else {
+                            Log.d(TAG, "이미 즐겨찾기 된 주차장임");
+                            listener.onDataLoadError("이미 즐겨찾기 된 주차장임");
+                        }
+                    }
+                    else {
+                        Log.d(TAG, "데이터가 없거나 여러 개임");
+                        listener.onDataLoadError("데이터가 없거나 여러 개임");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "주차장 기록 찾기 중 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void unfavoriteParkHistory(String userId, String poiId, OnFirestoreDataLoadedListener listener) {
+        db.collection("parkHistory")
+                .whereEqualTo("id", userId)
+                .whereEqualTo("poiId", poiId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() == 1) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+
+                        if ((boolean) document.get("favorites")) {
+                            db.collection("parkHistory")
+                                    .document(document.getId())
+                                    .update("favorites", false)
+                                    .addOnSuccessListener(queryDocumentSnapshots2 -> {
+                                        listener.onDataLoaded(true);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.d(TAG, "주차장 즐겨찾기 해제 중 오류", e);
+                                        listener.onDataLoadError(e.getMessage());
+                                    });
+                        }
+                        else {
+                            Log.d(TAG, "이미 즐겨찾기가 아닌 주차장임");
+                            listener.onDataLoadError("이미 즐겨찾기가 아닌 주차장임");
+                        }
+                    }
+                    else {
+                        Log.d(TAG, "데이터가 없거나 여러 개임");
+                        listener.onDataLoadError("데이터가 없거나 여러 개임");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "주차장 기록 찾기 중 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void updateUpTimeParkHistory(String userId, String poiId, OnFirestoreDataLoadedListener listener) {
+        db.collection("parkHistory")
+                .whereEqualTo("id", userId)
+                .whereEqualTo("poiId", poiId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() == 1) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+
+                        db.collection("parkHistory")
+                                .document(document.getId())
+                                .update("upTime", FieldValue.serverTimestamp())
+                                .addOnSuccessListener(queryDocumentSnapshots2 -> {
+                                    listener.onDataLoaded(true);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.d(TAG, "주차장 기록 시각 업데이트 중 오류", e);
+                                    listener.onDataLoadError(e.getMessage());
+                                });
+                    }
+                    else {
+                        Log.d(TAG, "데이터가 없거나 여러 개임");
+                        listener.onDataLoadError("데이터가 없거나 여러 개임");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "주차장 기록 찾기 중 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void deleteParkHistory(String userId, String poiId, OnFirestoreDataLoadedListener listener) {
+        db.collection("parkHistory")
+                .whereEqualTo("id", userId)
+                .whereEqualTo("poiId", poiId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() == 1) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+
+                        db.collection("parkHistory")
+                                .document(document.getId())
+                                .delete()
+                                .addOnSuccessListener(aVoid -> {
+                                    listener.onDataLoaded(true);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.d(TAG, "주차장 기록 삭제 중 오류", e);
+                                    listener.onDataLoadError(e.getMessage());
+                                });
+                    }
+                    else {
+                        Log.d(TAG, "데이터가 없거나 여러 개임");
+                        listener.onDataLoadError("데이터가 없거나 여러 개임");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "주차장 기록 찾기 중 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void loadGasHistory (String userId, OnFirestoreDataLoadedListener listener) {
+        ArrayList<HashMap<String, Object>> resultArrayList = new ArrayList<>();
+
+        db.collection("gasHistory")
+                .whereEqualTo("id", userId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        HashMap<String, Object> data = new HashMap<>(document.getData());
+                        data.put("documentId", document.getId());
+                        resultArrayList.add(data);
+                    }
+
+                    listener.onDataLoaded(resultArrayList);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "주유소 기록 찾기 중 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void favoriteGasHistory(String userId, String poiId, OnFirestoreDataLoadedListener listener) {
+        db.collection("gasHistory")
+                .whereEqualTo("id", userId)
+                .whereEqualTo("poiId", poiId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() == 1) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+
+                        if (!(boolean) document.get("favorites")) {
+                            db.collection("gasHistory")
+                                    .document(document.getId())
+                                    .update("favorites", true)
+                                    .addOnSuccessListener(queryDocumentSnapshots2 -> {
+                                        listener.onDataLoaded(true);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.d(TAG, "주유소 즐겨찾기 중 오류", e);
+                                        listener.onDataLoadError(e.getMessage());
+                                    });
+                        }
+                        else {
+                            Log.d(TAG, "이미 즐겨찾기 된 주유소임");
+                            listener.onDataLoadError("이미 즐겨찾기 된 주유소임");
+                        }
+                    }
+                    else {
+                        Log.d(TAG, "데이터가 없거나 여러 개임");
+                        listener.onDataLoadError("데이터가 없거나 여러 개임");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "주유소 기록 찾기 중 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void unfavoriteGasHistory(String userId, String poiId, OnFirestoreDataLoadedListener listener) {
+        db.collection("gasHistory")
+                .whereEqualTo("id", userId)
+                .whereEqualTo("poiId", poiId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() == 1) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+
+                        if ((boolean) document.get("favorites")) {
+                            db.collection("gasHistory")
+                                    .document(document.getId())
+                                    .update("favorites", false)
+                                    .addOnSuccessListener(queryDocumentSnapshots2 -> {
+                                        listener.onDataLoaded(true);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.d(TAG, "주유소 즐겨찾기 해제 중 오류", e);
+                                        listener.onDataLoadError(e.getMessage());
+                                    });
+                        }
+                        else {
+                            Log.d(TAG, "이미 즐겨찾기가 아닌 주유소임");
+                            listener.onDataLoadError("이미 즐겨찾기가 아닌 주유소임");
+                        }
+                    }
+                    else {
+                        Log.d(TAG, "데이터가 없거나 여러 개임");
+                        listener.onDataLoadError("데이터가 없거나 여러 개임");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "주유소 기록 찾기 중 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void updateUpTimeGasHistory(String userId, String poiId, OnFirestoreDataLoadedListener listener) {
+        db.collection("gasHistory")
+                .whereEqualTo("id", userId)
+                .whereEqualTo("poiId", poiId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() == 1) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+
+                        db.collection("gasHistory")
+                                .document(document.getId())
+                                .update("upTime", FieldValue.serverTimestamp())
+                                .addOnSuccessListener(queryDocumentSnapshots2 -> {
+                                    listener.onDataLoaded(true);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.d(TAG, "주유소 기록 시각 업데이트 중 오류", e);
+                                    listener.onDataLoadError(e.getMessage());
+                                });
+                    }
+                    else {
+                        Log.d(TAG, "데이터가 없거나 여러 개임");
+                        listener.onDataLoadError("데이터가 없거나 여러 개임");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "주유소 기록 찾기 중 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void deleteGasHistory(String userId, String poiId, OnFirestoreDataLoadedListener listener) {
+        db.collection("gasHistory")
+                .whereEqualTo("id", userId)
+                .whereEqualTo("poiId", poiId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() == 1) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+
+                        db.collection("gasHistory")
+                                .document(document.getId())
+                                .delete()
+                                .addOnSuccessListener(aVoid -> {
+                                    listener.onDataLoaded(true);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.d(TAG, "주유소 기록 삭제 중 오류", e);
+                                    listener.onDataLoadError(e.getMessage());
+                                });
+                    }
+                    else {
+                        Log.d(TAG, "데이터가 없거나 여러 개임");
+                        listener.onDataLoadError("데이터가 없거나 여러 개임");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "주유소 기록 찾기 중 오류", e);
+                    listener.onDataLoadError(e.getMessage());
                 });
     }
 
