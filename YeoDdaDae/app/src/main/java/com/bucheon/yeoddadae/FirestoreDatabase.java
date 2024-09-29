@@ -2650,34 +2650,94 @@ public class FirestoreDatabase {
                 hm.put("upTime", FieldValue.serverTimestamp());
 
                 if (type.equals("주유소")) {
-                    insertData("gasHistory", hm, new OnFirestoreDataLoadedListener() {
-                        @Override
-                        public void onDataLoaded(Object data) {
-                            listener.onDataLoaded(true);
-                        }
+                    db.collection("gasHistory")
+                            .whereEqualTo("id", userId)
+                            .whereEqualTo("poiId", poiId)
+                            .get()
+                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                                if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() == 1) {
+                                    DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
 
-                        @Override
-                        public void onDataLoadError(String errorMessage) {
-                            Log.d(TAG, errorMessage);
-                            listener.onDataLoadError(errorMessage);
-                        }
-                    });
+                                    db.collection("gasHistory")
+                                            .document(document.getId())
+                                            .update("upTime", FieldValue.serverTimestamp())
+                                            .addOnSuccessListener(aVoid -> {
+                                                listener.onDataLoaded(true);
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Log.d(TAG, "주유소 기록 시각 업데이트 중 오류", e);
+                                                listener.onDataLoadError("주유소 기록 시각 업데이트 중 오류");
+                                            });
+                                }
+                                else if (queryDocumentSnapshots == null || queryDocumentSnapshots.size() == 0) {
+                                    insertData("gasHistory", hm, new OnFirestoreDataLoadedListener() {
+                                        @Override
+                                        public void onDataLoaded(Object data) {
+                                            listener.onDataLoaded(true);
+                                        }
+
+                                        @Override
+                                        public void onDataLoadError(String errorMessage) {
+                                            Log.d(TAG, errorMessage);
+                                            listener.onDataLoadError(errorMessage);
+                                        }
+                                    });
+                                }
+                                else {
+                                    Log.d(TAG, "데이터가 없거나 여러 개임");
+                                    listener.onDataLoadError("데이터가 없거나 여러 개임");
+                                }
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.d(TAG, "주유소 기록 찾기 중 오류", e);
+                                listener.onDataLoadError("주유소 기록 찾기 중 오류");
+                            });
                 }
                 else {
                     hm.put("type", type);
 
-                    insertData("parkHistory", hm, new OnFirestoreDataLoadedListener() {
-                        @Override
-                        public void onDataLoaded(Object data) {
-                            listener.onDataLoaded(true);
-                        }
+                    db.collection("parkHistory")
+                            .whereEqualTo("id", userId)
+                            .whereEqualTo("poiId", poiId)
+                            .get()
+                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                                if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() == 1) {
+                                    DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
 
-                        @Override
-                        public void onDataLoadError(String errorMessage) {
-                            Log.d(TAG, errorMessage);
-                            listener.onDataLoadError(errorMessage);
-                        }
-                    });
+                                    db.collection("parkHistory")
+                                            .document(document.getId())
+                                            .update("upTime", FieldValue.serverTimestamp())
+                                            .addOnSuccessListener(aVoid -> {
+                                                listener.onDataLoaded(true);
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Log.d(TAG, "주차장 기록 시각 업데이트 중 오류", e);
+                                                listener.onDataLoadError("주차장 기록 시각 업데이트 중 오류");
+                                            });
+                                }
+                                else if (queryDocumentSnapshots == null || queryDocumentSnapshots.size() == 0) {
+                                    insertData("parkHistory", hm, new OnFirestoreDataLoadedListener() {
+                                        @Override
+                                        public void onDataLoaded(Object data) {
+                                            listener.onDataLoaded(true);
+                                        }
+
+                                        @Override
+                                        public void onDataLoadError(String errorMessage) {
+                                            Log.d(TAG, errorMessage);
+                                            listener.onDataLoadError(errorMessage);
+                                        }
+                                    });
+                                }
+                                else {
+                                    Log.d(TAG, "데이터가 없거나 여러 개임");
+                                    listener.onDataLoadError("데이터가 없거나 여러 개임");
+                                }
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.d(TAG, "주차장 기록 찾기 중 오류", e);
+                                listener.onDataLoadError("주유소 기록 찾기 중 오류");
+                            });
                 }
             }
 

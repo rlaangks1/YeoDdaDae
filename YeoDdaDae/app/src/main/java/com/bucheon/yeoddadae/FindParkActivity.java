@@ -103,7 +103,9 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     TMapMarkerItem selectedMarker;
     ParkAdapter parkAdapter;
     SearchParkAdapter spa = new SearchParkAdapter();
+    ParkHistoryDialog phd;
     FirestoreDatabase fd;
+
 
     Intent serviceIntent;
     SttService sttService;
@@ -134,7 +136,9 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     ImageButton cancelNaviBtn;
     ImageButton toStartNaviBtn;
     ImageButton toReservationBtn;
+    ConstraintLayout additionalFunctionConstLayout;
     ImageButton searchStartBtn;
+    ImageButton parkHistoryBtn;
     ConstraintLayout searchConstraintLayout;
     EditText searchEdTxt;
     ImageButton searchTxtClearBtn;
@@ -183,7 +187,9 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         findParkCustomTimeStartTimeEditTxt = findViewById(R.id.findParkCustomTimeStartTimeEditTxt);
         findParkCustomTimeEndDateEditTxt = findViewById(R.id.findParkCustomTimeEndDateEditTxt);
         findParkCustomTimeEndTimeEditTxt = findViewById(R.id.findParkCustomTimeEndTimeEditTxt);
+        additionalFunctionConstLayout = findViewById(R.id.additionalFunctionConstLayout);
         searchStartBtn = findViewById(R.id.searchStartBtn);
+        parkHistoryBtn = findViewById(R.id.parkHistoryBtn);
         searchConstraintLayout = findViewById(R.id.searchConstraintLayout);
         searchEdTxt = findViewById(R.id.searchEdTxt);
         searchTxtClearBtn = findViewById(R.id.searchTxtClearBtn);
@@ -378,7 +384,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                         tMapView.removeTMapPath();
 
                         parkSortHorizontalScrollView.setVisibility(View.VISIBLE);
-                        searchStartBtn.setVisibility(View.VISIBLE);
+                        additionalFunctionConstLayout.setVisibility(View.VISIBLE);
                         onlyConstLayout.setVisibility(View.VISIBLE);
                         naviConstLayout.setVisibility(View.GONE);
 
@@ -627,6 +633,20 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                 if (imm != null) {
                     imm.hideSoftInputFromWindow(searchEdTxt.getWindowToken(), 0);
                 }
+            }
+        });
+
+        parkHistoryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                phd = new ParkHistoryDialog(loginId, FindParkActivity.this, new ParkHistoryDialogListener() {
+                    @Override
+                    public void onMessageSend(String message) {
+
+                    }
+                });
+
+                phd.show();
             }
         });
 
@@ -896,7 +916,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                         parkName.setLayoutParams(params);
 
                         parkSortHorizontalScrollView.setVisibility(View.GONE);
-                        searchStartBtn.setVisibility(View.GONE);
+                        additionalFunctionConstLayout.setVisibility(View.GONE);
                         onlyConstLayout.setVisibility(View.GONE);
                         findParkCustomTimeConstLayout.setVisibility(View.GONE);
                         naviConstLayout.setVisibility(View.VISIBLE);
@@ -1066,7 +1086,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                         parkListView.setVisibility(View.VISIBLE);
                                         parkSortHorizontalScrollView.setVisibility(View.VISIBLE);
                                         naviConstLayout.setVisibility(View.GONE);
-                                        searchStartBtn.setVisibility(View.VISIBLE);
+                                        additionalFunctionConstLayout.setVisibility(View.VISIBLE);
                                     }
                                 });
 
