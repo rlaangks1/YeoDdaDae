@@ -117,7 +117,9 @@ public class ParkHistoryDialog extends Dialog {
         parkHistoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                ParkHistoryItem clickedItem = (ParkHistoryItem) pha.getItem(position);
+                listener.onMessageSend("주차장기록아이템클릭 : " + clickedItem.getLat() + "/" + clickedItem.getLon() + "/" + clickedItem.getPoiId());
+                dismiss();
             }
         });
     }
@@ -127,12 +129,6 @@ public class ParkHistoryDialog extends Dialog {
         super.onStart();
 
         getParkHistory();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        listener.onMessageSend("???닫힘");
     }
 
     void getParkHistory() {

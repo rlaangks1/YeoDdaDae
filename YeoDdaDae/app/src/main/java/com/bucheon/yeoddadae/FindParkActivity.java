@@ -158,6 +158,11 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     Bitmap tmapSelectedReportParkMarkerIcon;
     Bitmap tmapSearchPlaceMarker;
 
+    public interface OnFindParkCompletedListener {
+        void onFindParkCompleted();
+        void onFindParkError(String errorMessage);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -317,7 +322,15 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         tMapCircle.setAreaAlpha(25);
         tMapView.addTMapCircle("Circle", tMapCircle);
 
-        findPark(recievedSort, null, null);
+        findPark(recievedSort, null, null, new OnFindParkCompletedListener() {
+            @Override
+            public void onFindParkCompleted() {}
+
+            @Override
+            public void onFindParkError(String errorMessage) {
+                Log.d(TAG, errorMessage);
+            }
+        });
 
         // 버튼 클릭 이벤트 리스너들
         gpsBtn.setOnClickListener(new View.OnClickListener() { // GPS 현재 위치로 맵 중심점 이동
@@ -358,14 +371,30 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         sortByDistanceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findPark(1, null, null);
+                findPark(1, null, null, new OnFindParkCompletedListener() {
+                    @Override
+                    public void onFindParkCompleted() {}
+
+                    @Override
+                    public void onFindParkError(String errorMessage) {
+                        Log.d(TAG, errorMessage);
+                    }
+                });
             }
         });
 
         sortByParkPriceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findPark(2, null, null);
+                findPark(2, null, null, new OnFindParkCompletedListener() {
+                    @Override
+                    public void onFindParkCompleted() {}
+
+                    @Override
+                    public void onFindParkError(String errorMessage) {
+                        Log.d(TAG, errorMessage);
+                    }
+                });
             }
         });
 
@@ -388,7 +417,15 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                         onlyConstLayout.setVisibility(View.VISIBLE);
                         naviConstLayout.setVisibility(View.GONE);
 
-                        findPark(nowSort, null, null);
+                        findPark(nowSort, null, null, new OnFindParkCompletedListener() {
+                            @Override
+                            public void onFindParkCompleted() {}
+
+                            @Override
+                            public void onFindParkError(String errorMessage) {
+                                Log.d(TAG, errorMessage);
+                            }
+                        });
                     }
                 });
             }
@@ -642,7 +679,32 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                 phd = new ParkHistoryDialog(loginId, FindParkActivity.this, new ParkHistoryDialogListener() {
                     @Override
                     public void onMessageSend(String message) {
+                        if (message.startsWith("주차장기록아이템클릭")) {
+                            String dataPart = message.replace("주차장기록아이템클릭 : ", "");
+                            String[] numbers = dataPart.split("/");
 
+                            double historyLat = Double.parseDouble(numbers[0]);
+                            double historyLon = Double.parseDouble(numbers[1]);
+                            String poiId = numbers[2];
+                            Log.d(TAG, poiId);
+
+                            tMapView.setCenterPoint(historyLon, historyLat);
+
+                            findPark(nowSort, null, null, new OnFindParkCompletedListener() {
+                                @Override
+                                public void onFindParkCompleted() {
+                                    ParkItem pi = parkAdapter.findItemByPoiId(poiId);
+                                    TMapMarkerItem targetMarker = tMapView.getMarkerItemFromID(pi.getName());
+
+                                    parkSelect(targetMarker, pi);
+                                }
+
+                                @Override
+                                public void onFindParkError(String errorMessage) {
+                                    Log.d(TAG, errorMessage);
+                                }
+                            });
+                        }
                     }
                 });
 
@@ -660,7 +722,15 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     nowOnly = 1;
                 }
                 onlyBtnColorSet();
-                findPark(nowSort, null, null);
+                findPark(nowSort, null, null, new OnFindParkCompletedListener() {
+                    @Override
+                    public void onFindParkCompleted() {}
+
+                    @Override
+                    public void onFindParkError(String errorMessage) {
+                        Log.d(TAG, errorMessage);
+                    }
+                });
             }
         });
 
@@ -674,7 +744,15 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     nowOnly = 2;
                 }
                 onlyBtnColorSet();
-                findPark(nowSort, null, null);
+                findPark(nowSort, null, null, new OnFindParkCompletedListener() {
+                    @Override
+                    public void onFindParkCompleted() {}
+
+                    @Override
+                    public void onFindParkError(String errorMessage) {
+                        Log.d(TAG, errorMessage);
+                    }
+                });
             }
         });
 
@@ -935,7 +1013,6 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     }
 
     void searchSelect(ParkItem targetSearchPark) {
-        // 키보드 내리기
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.hideSoftInputFromWindow(searchEdTxt.getWindowToken(), 0);
@@ -952,11 +1029,25 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             }
         });
 
-        findPark(nowSort, null, null);
+        findPark(nowSort, null, null, new OnFindParkCompletedListener() {
+            @Override
+            public void onFindParkCompleted() {
+                if (targetSearchPark.getType() == 1 || targetSearchPark.getType() == 2) {
+                    tMapView.setZoomLevel(13);
+                    TMapMarkerItem targetMarker = tMapView.getMarkerItemFromID(targetSearchPark.getName());
+
+                    parkSelect(targetMarker, targetSearchPark);
+                }
+            }
+
+            @Override
+            public void onFindParkError(String errorMessage) {
+                Log.d(TAG, errorMessage);
+            }
+        });
     }
 
-
-    void findPark(int sortBy, String startString2, String endString2) { // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:주차가순)
+    void findPark(int sortBy, String startString2, String endString2, OnFindParkCompletedListener listener) { // sortBy는 정렬기준 (1:거리순, 2:평점순, 3:주차가순)
         Log.d (TAG, "findPark 시작");
         loadingStart();
 
@@ -970,6 +1061,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             public void onFindAroundNamePOI(ArrayList<TMapPOIItem> arrayList) {
                 if (arrayList == null) {
                     loadingStop();
+                    listener.onFindParkError("주차장 검색 결과 없음");
                     return;
                 }
                 fd = new FirestoreDatabase();
@@ -1112,12 +1204,14 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                 }
 
                                 loadingStop();
+                                listener.onFindParkCompleted();
                             }
                             @Override
                             public void onDataLoadError(String errorMessage) {
                                 Log.d(TAG, errorMessage);
                                 loadingStop();
                                 Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                                listener.onFindParkError(errorMessage);
                             }
                         });
                     }
@@ -1126,6 +1220,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                         Log.d(TAG, errorMessage);
                         loadingStop();
                         Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                        listener.onFindParkError(errorMessage);
                     }
                 });
             }
@@ -1180,7 +1275,15 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
 
         if (!firstOnLocationChangeCalled) {
             tMapView.setCenterPoint(lon, lat);
-            findPark(recievedSort, null, null);
+            findPark(recievedSort, null, null, new OnFindParkCompletedListener() {
+                @Override
+                public void onFindParkCompleted() {}
+
+                @Override
+                public void onFindParkError(String errorMessage) {
+                    Log.d(TAG, errorMessage);
+                }
+            });
             firstOnLocationChangeCalled = true;
         }
     }
@@ -1321,10 +1424,26 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         else if (!isItemSelected && (mainCommand.contains("순") || mainCommand.contains("정렬") || mainCommand.contains("찾") )) {
             sd.dismiss();
             if (mainCommand.contains("차비") && (mainCommand.contains("요금") || mainCommand.contains("료"))) {
-                findPark(2, null, null);
+                findPark(2, null, null, new OnFindParkCompletedListener() {
+                    @Override
+                    public void onFindParkCompleted() {}
+
+                    @Override
+                    public void onFindParkError(String errorMessage) {
+                        Log.d(TAG, errorMessage);
+                    }
+                });
             }
             else {
-                findPark(1, null, null);
+                findPark(1, null, null, new OnFindParkCompletedListener() {
+                    @Override
+                    public void onFindParkCompleted() {}
+
+                    @Override
+                    public void onFindParkError(String errorMessage) {
+                        Log.d(TAG, errorMessage);
+                    }
+                });
             }
         }
         else if (isItemSelected && (mainCommand.contains("안내") || mainCommand.contains("내비") || mainCommand.contains("시작") || mainCommand.contains("출발"))) {
@@ -1490,7 +1609,15 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
 
             Log.d(TAG, startString + "    " + endString);
 
-            findPark(nowSort, startString, endString);
+            findPark(nowSort, startString, endString, new OnFindParkCompletedListener() {
+                @Override
+                public void onFindParkCompleted() {}
+
+                @Override
+                public void onFindParkError(String errorMessage) {
+                    Log.d(TAG, errorMessage);
+                }
+            });
         }
     }
 

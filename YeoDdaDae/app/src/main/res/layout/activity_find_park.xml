@@ -194,7 +194,7 @@
 
                 <ImageButton
                     android:id="@+id/parkHistoryBtn"
-                    android:src="@drawable/search_icon"
+                    android:src="@drawable/history_icon_2"
                     android:scaleType="fitCenter"
                     android:background="@android:color/transparent"
                     android:layout_width="50dp"
