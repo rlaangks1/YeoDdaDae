@@ -405,6 +405,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     @Override
                     public void run() {
                         isItemSelected = false;
+
                         naviEndPoint = null;
                         naviEndPointType = 0;
                         naviEndPointName = null;
