@@ -1,0 +1,28 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.bucheon.yeoddadae.app-mergeDebugResources-86:/values-v11/values-v11.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\rhkp8\\.gradle\\caches\\transforms-3\\5a851f8185671d9949343541b7287696\\transformed\\jetified-mqtt_service-1.1.1\\res\\values-v11\\values-v11.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "4",
+                        "endColumns": "12",
+                        "endOffsets": "187"
+                    },
+                    "to": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "4",
+                        "endColumns": "12",
+                        "endOffsets": "138"
+                    }
+                }
+            ]
+        }
+    ]
+}
