@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#d6f1ff"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".StatisticsActivity">
+
 
     <ImageButton
         android:id="@+id/statisticsBackBtn"
@@ -154,139 +154,226 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:background="@color/lightgray">
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/round_background" />
 
             <TextView
                 android:id="@+id/statisticsRegisterCountTxt"
                 android:text="회원가입"
-                android:textSize="18sp"
+                android:textSize="20sp"
+                android:fontFamily="@font/paperlogy_5medium"
+                app:layout_constraintRight_toRightOf="parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp" />
+                />
 
             <TextView
                 android:id="@+id/statisticsRegisterCountContentTxt"
-                android:textSize="25sp"
+                android:textSize="17sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
+                android:fontFamily="@font/paperlogy_5medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/statisticsRegisterCountTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginLeft="10dp" />
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="10dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:background="@color/gray"
+                app:layout_constraintTop_toBottomOf="@id/statisticsRegisterCountContentTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
 
             <TextView
                 android:id="@+id/statisticsYdPointChargeTxt"
                 android:text="여따대포인트 충전"
-                android:textSize="18sp"
+                android:textSize="20sp"
+                android:fontFamily="@font/paperlogy_5medium"
+                app:layout_constraintRight_toRightOf="parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/statisticsRegisterCountContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="10dp" />
+                android:layout_marginTop="20dp"/>
 
             <TextView
                 android:id="@+id/statisticsYdPointChargeContentTxt"
-                android:textSize="25sp"
+                android:textSize="17sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
+                android:fontFamily="@font/paperlogy_5medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/statisticsYdPointChargeTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginLeft="10dp" />
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="10dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:background="@color/gray"
+                app:layout_constraintTop_toBottomOf="@id/statisticsYdPointChargeContentTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
 
             <TextView
                 android:id="@+id/statisticsYdPointRefundTxt"
                 android:text="여따대포인트 환급"
-                android:textSize="18sp"
+                android:textSize="20sp"
+                android:fontFamily="@font/paperlogy_5medium"
+                app:layout_constraintRight_toRightOf="parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/statisticsYdPointChargeContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="10dp" />
+                android:layout_marginTop="20dp" />
 
             <TextView
                 android:id="@+id/statisticsYdPointRefundContentTxt"
-                android:textSize="25sp"
+                android:textSize="17sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
+                android:fontFamily="@font/paperlogy_5medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/statisticsYdPointRefundTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginLeft="10dp" />
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="10dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:background="@color/gray"
+                app:layout_constraintTop_toBottomOf="@id/statisticsYdPointRefundContentTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
 
             <TextView
                 android:id="@+id/statisticsShareParkCountTxt"
                 android:text="공유주차장 신청"
-                android:textSize="18sp"
+                android:textSize="20sp"
+                android:fontFamily="@font/paperlogy_5medium"
+                app:layout_constraintRight_toRightOf="parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/statisticsYdPointRefundContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="10dp" />
+                android:layout_marginTop="20dp" />
 
             <TextView
                 android:id="@+id/statisticsShareParkCountContentTxt"
-                android:textSize="25sp"
+                android:textSize="17sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
+                android:fontFamily="@font/paperlogy_5medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/statisticsShareParkCountTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginLeft="10dp" />
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="10dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:background="@color/gray"
+                app:layout_constraintTop_toBottomOf="@id/statisticsShareParkCountContentTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
 
             <TextView
                 android:id="@+id/statisticsReservationCountTxt"
                 android:text="공유주차장 예약"
-                android:textSize="18sp"
+                android:textSize="20sp"
+                android:fontFamily="@font/paperlogy_5medium"
+                app:layout_constraintRight_toRightOf="parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/statisticsShareParkCountContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="10dp" />
+                android:layout_marginTop="20dp" />
 
             <TextView
                 android:id="@+id/statisticsReservationCountContentTxt"
-                android:textSize="25sp"
+                android:textSize="17sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
+                android:fontFamily="@font/paperlogy_5medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/statisticsReservationCountTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginLeft="10dp" />
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="10dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:background="@color/gray"
+                app:layout_constraintTop_toBottomOf="@id/statisticsReservationCountContentTxt"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
 
             <TextView
                 android:id="@+id/statisticsReportParkCountTxt"
                 android:text="제보주차장 신청"
-                android:textSize="18sp"
+                android:textSize="20sp"
+                android:fontFamily="@font/paperlogy_5medium"
+                app:layout_constraintRight_toRightOf="parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/statisticsReservationCountContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="10dp" />
+                android:layout_marginTop="20dp" />
 
             <TextView
                 android:id="@+id/statisticsReportParkCountContentTxt"
-                android:textSize="25sp"
+                android:textSize="17sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
+                android:fontFamily="@font/paperlogy_5medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/statisticsReportParkCountTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginLeft="10dp" />
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="10dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
