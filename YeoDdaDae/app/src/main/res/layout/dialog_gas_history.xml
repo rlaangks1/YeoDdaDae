@@ -2,11 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageButton
-        android:id="@+id/sttBackBtn"
+        android:id="@+id/gasHistoryBackBtn"
         android:src="@drawable/cancel_icon"
         android:scaleType="fitCenter"
         android:background="@android:color/transparent"
@@ -17,29 +17,29 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"/>
 
-    <ImageButton
-        android:id="@+id/sttListenBtn"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:src="@drawable/mic_activate"
-        android:scaleType="fitCenter"
-        android:background="@android:color/transparent"
-        app:layout_constraintTop_toTopOf="parent"
+    <TextView
+        android:text="주유소 기록"
+        android:textSize="25sp"
+        android:textColor="@color/sub"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/gasHistoryBackBtn"
+        app:layout_constraintBottom_toBottomOf="@+id/gasHistoryBackBtn"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <ListView
+        android:id="@+id/gasHistoryListView"
+        android:dividerHeight="5dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/gasHistoryBackBtn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="10dp" />
-
-    <TextView
-        android:id="@+id/sttStatusTxt"
-        android:text="상태"
-        android:textSize="20sp"
-        android:gravity="center_horizontal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/sttListenBtn"
         app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp" />
 

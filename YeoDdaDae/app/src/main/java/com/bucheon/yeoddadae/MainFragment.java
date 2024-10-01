@@ -85,7 +85,10 @@ public class MainFragment extends Fragment {
                     dataPasser.onDataPassed("비밀번호 변경");
                 }
                 else if (item.getItemId() == R.id.nav_history) {
-                    dataPasser.onDataPassed("사용 기록");
+                    dataPasser.onDataPassed("길찾기 기록");
+                }
+                else if (item.getItemId() == R.id.nav_withdrawal) {
+                    dataPasser.onDataPassed("회원 탈퇴");
                 }
                 return false;
             }

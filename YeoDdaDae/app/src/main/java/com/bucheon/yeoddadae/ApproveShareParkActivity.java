@@ -35,6 +35,8 @@ public class ApproveShareParkActivity extends AppCompatActivity {
         approveShareParkListView = findViewById(R.id.approveShareParkListView);
         approveShareParkNoTxt = findViewById(R.id.approveShareParkNoTxt);
 
+        spa = new ShareParkAdapter(ApproveShareParkActivity.this);
+
         approveShareParkBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,10 +58,7 @@ public class ApproveShareParkActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        if (spa != null) {
-            spa.clearItem();
-        }
-        spa = new ShareParkAdapter(ApproveShareParkActivity.this);
+        spa.clear();
 
         FirestoreDatabase fd = new FirestoreDatabase();
         fd.loadUnapprovedShareParks(new OnFirestoreDataLoadedListener() {

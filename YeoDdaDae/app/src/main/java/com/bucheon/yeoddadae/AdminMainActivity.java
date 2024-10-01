@@ -35,6 +35,7 @@ public class AdminMainActivity extends AppCompatActivity {
     String loginId;
 
     ImageButton toApproveShareParkBtn;
+    ImageButton toUserManagementBtn;
     TextView toApproveShareParkNotificationTxt;
     ImageButton toApproveReportBtn;
     TextView toApproveReportNotificationTxt;
@@ -49,6 +50,7 @@ public class AdminMainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin_main);
 
         toApproveShareParkBtn = findViewById(R.id.toApproveShareParkBtn);
+        toUserManagementBtn = findViewById(R.id.toUserManagementBtn);
         toApproveShareParkNotificationTxt = findViewById(R.id.toApproveShareParkNotificationTxt);
         toApproveReportBtn = findViewById(R.id.toApproveReportBtn);
         toApproveReportNotificationTxt = findViewById(R.id.toApproveReportNotificationTxt);
@@ -107,6 +109,14 @@ public class AdminMainActivity extends AppCompatActivity {
                     dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(AdminMainActivity.this, R.color.disable));
                 }
                 return false;
+            }
+        });
+
+        toUserManagementBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent userManagementIntent = new Intent(getApplicationContext(), UserManagementActivity.class);
+                startActivity(userManagementIntent);
             }
         });
 

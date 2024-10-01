@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 public class MyYdPointFragment extends Fragment {
+    MainActivity ma;
     String loginId;
     long ydPoint;
     int spinnerStatus;
@@ -66,8 +67,7 @@ public class MyYdPointFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_yd_point, container, false);
 
         myYdPointTxt = view.findViewById(R.id.myYdPointTxt);
@@ -81,6 +81,10 @@ public class MyYdPointFragment extends Fragment {
         pointHistoryCustomTimeEndTimeEditTxt = view.findViewById(R.id.pointHistoryCustomTimeEndTimeEditTxt);
         pointHistoryListView = view.findViewById(R.id.pointHistoryListView);
         pointHistoryNoTxt = view.findViewById(R.id.pointHistoryNoTxt);
+
+        ma = (MainActivity) getActivity();
+
+        ypha = new YdPointHistoryAdapter();
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 getActivity(),
@@ -292,11 +296,7 @@ public class MyYdPointFragment extends Fragment {
         fd.loadYdPointHistory(loginId, new OnFirestoreDataLoadedListener() {
             @Override
             public void onDataLoaded(Object data) {
-                if (ypha != null) {
-                    ypha.clear();
-                }
-
-                ypha = new YdPointHistoryAdapter();
+                ypha.clear();
 
                 ArrayList<ArrayList<HashMap<String, Object>>> result = (ArrayList<ArrayList<HashMap<String, Object>>>) data;
                 ArrayList<HashMap<String, Object>> charge = result.get(0);
@@ -333,7 +333,6 @@ public class MyYdPointFragment extends Fragment {
 
                 ypha.sortByUpTime();
 
-                MainActivity ma = (MainActivity) getActivity();
                 if (ma != null) {
                     ma.runOnUiThread(new Runnable() {
                         @Override
@@ -355,7 +354,8 @@ public class MyYdPointFragment extends Fragment {
 
             @Override
             public void onDataLoadError(String errorMessage) {
-
+                Log.d(TAG, errorMessage);
+                Toast.makeText(getContext(), "오류 발생", Toast.LENGTH_SHORT).show();
             }
         });
     }

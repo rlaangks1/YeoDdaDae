@@ -31,6 +31,15 @@ public class ParkAdapter extends BaseAdapter {
         return null; // 못 찾은 경우 null 반환
     }
 
+    public ParkItem findItemByPoiId(String poiId) {
+        for (ParkItem item : items) {
+            if (item.getPoiId().equals(poiId)) {
+                return item;
+            }
+        }
+        return null; // 못 찾은 경우 null 반환
+    }
+
     public int getSize() {
         return items.size();
     }

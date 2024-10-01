@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.firebase.Timestamp;
 import com.skt.Tmap.TMapData;
@@ -25,6 +27,7 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
     String loginId;
     String documentId;
     HashMap<String, Object> reportInfo;
+    FirestoreDatabase fd;
 
     ImageButton reportInfoBackBtn;
     TextView rateReportIdContentTxt;
@@ -41,6 +44,9 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
     TextView mistakeTxt;
     ImageButton rateReportWrongBtn;
     TextView wrongTxt;
+    ConstraintLayout rateReportReasonConstLayout;
+    EditText rateReportReasonEditTxt;
+    ImageButton rateReportReasonUploadBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +72,11 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
         mistakeTxt = findViewById(R.id.mistakeTxt);
         rateReportWrongBtn = findViewById(R.id.rateReportWrongBtn);
         wrongTxt = findViewById(R.id.wrongTxt);
+        rateReportReasonConstLayout = findViewById(R.id.rateReportReasonConstLayout);
+        rateReportReasonEditTxt = findViewById(R.id.rateReportReasonEditTxt);
+        rateReportReasonUploadBtn = findViewById(R.id.rateReportReasonUploadBtn);
 
-        FirestoreDatabase fd = new FirestoreDatabase();
+        fd = new FirestoreDatabase();
         fd.loadOneReport(documentId, new OnFirestoreDataLoadedListener() {
             @Override
             public void onDataLoaded(Object data) {
@@ -143,6 +152,27 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
                 });
             }
         });
+
+        rateReportReasonUploadBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!replaceNewlinesAndTrim(rateReportReasonEditTxt).isEmpty()) {
+                    fd = new FirestoreDatabase();
+                    fd.updateReason(loginId, documentId, replaceNewlinesAndTrim(rateReportReasonEditTxt), new OnFirestoreDataLoadedListener() {
+                        @Override
+                        public void onDataLoaded(Object data) {
+                            Toast.makeText(getApplicationContext(), "평가 이유 업로드 되었습니다", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onDataLoadError(String errorMessage) {
+                            Log.d(TAG, errorMessage);
+                            Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        });
     }
 
     void getRateCount () {
@@ -160,19 +190,30 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
                         mistakeTxt.setText(Long.toString(rates[1]));
                         wrongTxt.setText(Long.toString(rates[2]));
 
-                        rateReportPerfectBtn.setImageResource(R.drawable.disabled_button);
-                        rateReportMistakeBtn.setImageResource(R.drawable.disabled_button);
-                        rateReportWrongBtn.setImageResource(R.drawable.disabled_button);
-
-                        if (rates[3] == 1) {
+                        if (rates[3] == 0) {
+                            rateReportPerfectBtn.setImageResource(R.drawable.disabled_button);
+                            rateReportMistakeBtn.setImageResource(R.drawable.disabled_button);
+                            rateReportWrongBtn.setImageResource(R.drawable.disabled_button);
+                            rateReportReasonConstLayout.setVisibility(View.GONE);
+                        }
+                        else if (rates[3] == 1) {
                             rateReportPerfectBtn.setImageResource(R.drawable.gradate_button);
+                            rateReportMistakeBtn.setImageResource(R.drawable.disabled_button);
+                            rateReportWrongBtn.setImageResource(R.drawable.disabled_button);
+                            rateReportReasonConstLayout.setVisibility(View.GONE);
                         }
                         else if (rates[3] == 2) {
+                            rateReportPerfectBtn.setImageResource(R.drawable.disabled_button);
                             rateReportMistakeBtn.setImageResource(R.drawable.gradate_button);
-
+                            rateReportWrongBtn.setImageResource(R.drawable.disabled_button);
+                            rateReportReasonConstLayout.setVisibility(View.VISIBLE);
+                            getReason();
                         }
                         else if (rates[3] == 3) {
+                            rateReportPerfectBtn.setImageResource(R.drawable.disabled_button);
+                            rateReportMistakeBtn.setImageResource(R.drawable.disabled_button);
                             rateReportWrongBtn.setImageResource(R.drawable.gradate_button);
+                            rateReportReasonConstLayout.setVisibility(View.GONE);
                         }
                     }
                 });
@@ -183,6 +224,23 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
                 Log.d(TAG, errorMessage);
                 Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
                 finish();
+            }
+        });
+    }
+
+    void getReason() {
+        fd = new FirestoreDatabase();
+        fd.loadReason(loginId, documentId, new OnFirestoreDataLoadedListener() {
+            @Override
+            public void onDataLoaded(Object data) {
+                String reason = (String) data;
+                rateReportReasonEditTxt.setText(reason);
+            }
+
+            @Override
+            public void onDataLoadError(String errorMessage) {
+                Log.d(TAG, errorMessage);
+                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -237,5 +295,9 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
         });
 
         getRateCount();
+    }
+
+    String replaceNewlinesAndTrim(EditText et) {
+        return et.getText().toString().replaceAll("\\n", " ").trim();
     }
 }

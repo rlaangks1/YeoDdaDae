@@ -74,6 +74,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     TMapPoint scrollSavedPoint;
     TMapMarkerItem selectedMarker;
     GasStationAdapter gasStationAdapter;
+    GasHistoryDialog ghd;
     FirestoreDatabase fd;
 
     Intent serviceIntent;
@@ -97,6 +98,8 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     ConstraintLayout naviConstLayout;
     ImageButton cancelNaviBtn;
     ImageButton toStartNaviBtn;
+    ConstraintLayout additionalFunctionConstLayout;
+    ImageButton gasHistoryBtn;
 
     Bitmap tmapMyLocationIcon;
     Bitmap tmapMarkerIcon;
@@ -124,6 +127,8 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         naviConstLayout = findViewById(R.id.naviConstLayout);
         cancelNaviBtn = findViewById(R.id.cancelNaviBtn);
         toStartNaviBtn = findViewById(R.id.toStartNaviBtn);
+        additionalFunctionConstLayout = findViewById(R.id.additionalFunctionConstLayout);
+        gasHistoryBtn = findViewById(R.id.gasHistoryBtn);
 
         // Bitmap 정의
         tmapMyLocationIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_tmap_my_location);
@@ -329,6 +334,8 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
 
                         tMapView.removeTMapPath();
 
+                        gasStationSortHorizontalScrollView.setVisibility(View.VISIBLE);
+                        additionalFunctionConstLayout.setVisibility(View.VISIBLE);
                         naviConstLayout.setVisibility(View.GONE);
 
                         findGasStation(nowSort);
@@ -361,6 +368,15 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                 else {
                     Toast.makeText(getApplicationContext(), "TMAP이 설치되어 있지 않습니다", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        gasHistoryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ghd = new GasHistoryDialog(loginId, FindGasStationActivity.this);
+
+                ghd.show();
             }
         });
 
@@ -443,6 +459,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                         gasStationName.setLayoutParams(params);
 
                         gasStationSortHorizontalScrollView.setVisibility(View.GONE);
+                        additionalFunctionConstLayout.setVisibility(View.GONE);
                         naviConstLayout.setVisibility(View.VISIBLE);
                     }
                 });
@@ -594,6 +611,10 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
     public void loadingStart() {
         Log.d(TAG, "로딩 시작");
 
+        if (loadingAlert != null && loadingAlert.isShowing()) {
+            return; // 이미 보여지고 있다면 함수 종료
+        }
+
         if (!isLoadingFirstCalled) { // 로딩 AlertDialog 지정
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("로딩 중").setCancelable(false).setNegativeButton("액티비티 종료", new DialogInterface.OnClickListener() {
@@ -603,10 +624,6 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
             });
             loadingAlert = builder.create();
             isLoadingFirstCalled = true;
-        }
-
-        if (loadingAlert != null && loadingAlert.isShowing()) {
-            return; // 이미 보여지고 있다면 함수 종료
         }
 
         if (!isFinishing()) {
