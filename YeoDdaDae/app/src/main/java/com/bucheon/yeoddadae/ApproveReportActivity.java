@@ -57,7 +57,7 @@ public class ApproveReportActivity extends AppCompatActivity {
         super.onStart();
 
         if (rdpa != null) {
-            rdpa.clearItem();
+            rdpa.clear();
         }
         rdpa = new ReportDiscountParkAdapter(ApproveReportActivity.this);
 

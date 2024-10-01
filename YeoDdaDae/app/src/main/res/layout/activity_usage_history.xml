@@ -20,7 +20,7 @@
         android:layout_marginRight="5dp" />
 
     <TextView
-        android:text="주차장 및 주유소 사용 기록"
+        android:text="길찾기 기록"
         android:textSize="25sp"
         android:textColor="@color/sub"
         android:textStyle="bold"

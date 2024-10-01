@@ -80,7 +80,7 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
 
     public void getReports (int distanceKm, double nowLat, double nowLon) {
         if (rdpa != null) {
-            rdpa.clearItem();
+            rdpa.clear();
         }
         rdpa = new ReportDiscountParkAdapter(AnotherReportDiscountParkActivity.this);
 

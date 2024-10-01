@@ -140,6 +140,17 @@ public class LoginActivity extends AppCompatActivity {
                             if (errorMessage.equals("계정이 없음")) {
                                 Toast.makeText(getApplicationContext(), "해당 아이디의 계정이 없습니다", Toast.LENGTH_SHORT).show();
                             }
+                            else if (errorMessage.contains("사용 정지 : ")) {
+                                String pauseLimitString = errorMessage.replace("사용 정지 : ", "");
+
+                                Toast.makeText(getApplicationContext(), "사용 정지된 사용자입니다. 정지 기한 : " + pauseLimitString, Toast.LENGTH_SHORT).show();
+                            }
+                            else if (errorMessage.equals("강제 탈퇴")) {
+                                Toast.makeText(getApplicationContext(), "강제 탈퇴된 회원입니다", Toast.LENGTH_SHORT).show();
+                            }
+                            else if (errorMessage.equals("직접 탈퇴")) {
+                                Toast.makeText(getApplicationContext(), "탈퇴한 회원입니다", Toast.LENGTH_SHORT).show();
+                            }
                             else {
                                 Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
                             }

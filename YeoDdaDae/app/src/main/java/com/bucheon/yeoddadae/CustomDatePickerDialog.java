@@ -37,7 +37,7 @@ public class CustomDatePickerDialog extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.custom_date_picker_dialog);
+        setContentView(R.layout.dialog_custom_date_picker);
 
         customDatePicker = findViewById(R.id.customDatePicker);
         customDatePicker.setWeekDayFormatter(new ArrayWeekDayFormatter(context.getResources().getTextArray(R.array.custom_weekdays)));
@@ -112,6 +112,11 @@ public class CustomDatePickerDialog extends Dialog {
                             throw new RuntimeException(e);
                         }
                     }
+                }
+                else if (context instanceof UserManagementInformationActivity) {
+                    UserManagementInformationActivity umia = (UserManagementInformationActivity) context;
+
+                    umia.receiveDateFromDialog(formattedDate);
                 }
 
                 dismiss();

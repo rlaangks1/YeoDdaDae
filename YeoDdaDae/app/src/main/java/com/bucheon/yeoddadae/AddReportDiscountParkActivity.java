@@ -4,12 +4,16 @@ import static android.content.ContentValues.TAG;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -18,8 +22,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.firestore.FieldValue;
 import com.skt.Tmap.TMapData;
@@ -38,10 +44,12 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
     double poiLat;
     double poiLon;
     String poiPhone;
-    SearchParkAdapter spa = new SearchParkAdapter();;
+    SearchParkAdapter spa = new SearchParkAdapter();
     double nowLat;
     double nowLon;
     boolean isSearching = false;
+    AlertDialog loadingAlert;
+    boolean isLoadingFirstCalled = false;
     TMapPoint nowPoint;
     TMapGpsManager gpsManager;
 
@@ -53,6 +61,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
     ConstraintLayout findLocationConstLayout;
     ImageButton findBackBtn;
     EditText searchContentEditTxt;
+    ImageButton searchTxtClearBtn;
     ImageButton searchBtn;
     ListView searchResultListView;
     TextView searchNoTxt;
@@ -70,6 +79,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
         findLocationConstLayout = findViewById(R.id.findLocationConstLayout);
         findBackBtn = findViewById(R.id.findBackBtn);
         searchContentEditTxt = findViewById(R.id.searchContentEditTxt);
+        searchTxtClearBtn = findViewById(R.id.searchTxtClearBtn);
         searchBtn = findViewById(R.id.searchBtn);
         searchResultListView = findViewById(R.id.searchResultListView);
         searchNoTxt = findViewById(R.id.searchNoTxt);
@@ -120,6 +130,31 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
             }
         });
 
+        searchContentEditTxt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (searchContentEditTxt.getText().toString().isEmpty()) {
+                    searchTxtClearBtn.setVisibility(View.GONE);
+                }
+                else {
+                    searchTxtClearBtn.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        searchTxtClearBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!searchContentEditTxt.getText().toString().isEmpty()) {
+                    searchContentEditTxt.setText("");
+                }
+            }
+        });
+
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,6 +164,8 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
 
                 isSearching = true;
                 searchBtn.setEnabled(false);
+
+                loadingStart();
 
                 if (!replaceNewlinesAndTrim(searchContentEditTxt).isEmpty()) {
                     if (spa != null) {
@@ -179,6 +216,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                                         }
                                         searchBtn.setEnabled(true);
                                         isSearching = false;
+                                        loadingStop();
                                     }
                                 });
                             }
@@ -198,6 +236,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                                         }
                                         searchBtn.setEnabled(true);
                                         isSearching = false;
+                                        loadingStop();
                                     }
                                 });
                             }
@@ -208,6 +247,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                 else {
                     searchBtn.setEnabled(true);
                     isSearching = false;
+                    loadingStop();
                 }
             }
         });
@@ -327,6 +367,50 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
         Log.d(ContentValues.TAG, "onLocationChange 호출됨 : lon(위도) = " + nowLon);
 
         nowPoint = new TMapPoint(nowLat, nowLon);
+    }
+
+    public void loadingStart() {
+        Log.d(TAG, "로딩 시작");
+
+        if (loadingAlert != null && loadingAlert.isShowing()) {
+            return; // 이미 보여지고 있다면 함수 종료
+        }
+
+        if (!isLoadingFirstCalled) { // 로딩 AlertDialog 지정
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("로딩 중").setCancelable(false).setNegativeButton("액티비티 종료", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    finish();
+                }
+            });
+            loadingAlert = builder.create();
+            isLoadingFirstCalled = true;
+        }
+
+        if (!isFinishing()) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingAlert.show();
+                    loadingAlert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(AddReportDiscountParkActivity.this, R.color.disable));
+                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                }
+            });
+        }
+    }
+
+    public void loadingStop() {
+        Log.d(TAG, "로딩 끝");
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (loadingAlert != null && loadingAlert.isShowing()) {
+                    loadingAlert.dismiss();
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                }
+            }
+        });
     }
 
     String replaceNewlinesAndTrim(EditText et) {

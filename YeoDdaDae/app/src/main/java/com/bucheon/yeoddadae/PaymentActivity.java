@@ -16,10 +16,13 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FieldValue;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -34,6 +37,7 @@ public class PaymentActivity extends AppCompatActivity {
     FirestoreDatabase fd;
 
     ImageButton paymentBackBtn;
+    TextView paymentNowTimeContentTxt;
     TextView paymentTotalPriceContentTxt;
     TextView paymentYdPointContentTxt;
     TextView paymentAfterPayPointContentTxt;
@@ -46,6 +50,7 @@ public class PaymentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_payment);
 
         paymentBackBtn = findViewById(R.id.paymentBackBtn);
+        paymentNowTimeContentTxt = findViewById(R.id.paymentNowTimeContentTxt);
         paymentTotalPriceContentTxt = findViewById(R.id.paymentTotalPriceContentTxt);
         paymentYdPointContentTxt = findViewById(R.id.paymentYdPointContentTxt);
         paymentAfterPayPointContentTxt = findViewById(R.id.paymentAfterPayPointContentTxt);
@@ -65,6 +70,20 @@ public class PaymentActivity extends AppCompatActivity {
         }
 
         defaultTextColor = paymentAfterPayPointContentTxt.getCurrentTextColor();
+
+        Timestamp now = Timestamp.now();
+
+        if (now != null) {
+            Date date = now.toDate();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
+            String dateString = sdf.format(date);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    paymentNowTimeContentTxt.setText(dateString);
+                }
+            });
+        }
 
         fd = new FirestoreDatabase();
 

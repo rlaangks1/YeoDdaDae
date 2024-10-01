@@ -78,4 +78,16 @@ public class ReportDiscountParkItem {
     public String getDocumentId() {
         return documentId;
     }
+
+    public String getStatus() {
+        if (isApproval()) {
+            return "승인됨";
+        }
+        else if (isCancelled()) {
+            return "취소됨";
+        }
+        else {
+            return "평가 중";
+        }
+    }
 }
