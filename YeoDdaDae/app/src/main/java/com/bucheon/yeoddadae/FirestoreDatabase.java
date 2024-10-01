@@ -1937,6 +1937,85 @@ public class FirestoreDatabase {
                 });
     }
 
+    /*
+    data.put("id", loginId);
+    data.put("reportDocumentID", firestoreDocumentId);
+    data.put("rate", rate[0]);
+
+    "rateReport"
+     */
+    public void loadReason (String loginId, String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
+        db.collection("rateReport")
+                .whereEqualTo("id", loginId)
+                .whereEqualTo("reportDocumentID", firestoreDocumentId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() == 1) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+
+                        if (((String) document.get("rate")).equals("mistake")) {
+                            String reason;
+                            reason = (String) document.get("reason");
+                            if (reason == null || reason.isEmpty()) {
+                                listener.onDataLoaded("");
+                            }
+                            else {
+                                listener.onDataLoaded(reason);
+                            }
+                        }
+                        else {
+                            Log.d(TAG, "평가가 잘못된 부분이 있음이 아님");
+                            listener.onDataLoadError("평가가 잘못된 부분이 있음이 아님");
+                        }
+                    }
+                    else {
+                        Log.d(TAG, "데이터가 없거나 여러개임");
+                        listener.onDataLoadError("데이터가 없거나 여러개임");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
+    public void updateReason (String loginId, String firestoreDocumentId, String reason, OnFirestoreDataLoadedListener listener) {
+        db.collection("rateReport")
+                .whereEqualTo("id", loginId)
+                .whereEqualTo("reportDocumentID", firestoreDocumentId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() == 1) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+
+                        if (((String) document.get("rate")).equals("mistake")) {
+                            db.collection("rateReport")
+                                    .document(document.getId())
+                                    .update("reason", reason)
+                                    .addOnFailureListener(aVoid -> {
+                                        listener.onDataLoaded(true);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.d(TAG, "이유 수정 중 오류", e);
+                                        listener.onDataLoadError(e.getMessage());
+                                    });
+                        }
+                        else {
+                            Log.d(TAG, "평가가 잘못된 부분이 있음이 아님");
+                            listener.onDataLoadError("평가가 잘못된 부분이 있음이 아님");
+                        }
+                    }
+                    else {
+                        Log.d(TAG, "데이터가 없거나 여러개임");
+                        listener.onDataLoadError("데이터가 없거나 여러개임");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "데이터 검색 오류", e);
+                    listener.onDataLoadError(e.getMessage());
+                });
+    }
+
     public void loadUnapprovedShareParks(OnFirestoreDataLoadedListener listener) {
         db.collection("sharePark")
                 .whereEqualTo("isApproval", false)

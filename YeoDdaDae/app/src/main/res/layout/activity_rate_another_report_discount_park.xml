@@ -35,12 +35,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/reportInfoBackBtn"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="10dp" >
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
 
             <TextView
                 android:id="@+id/rateReportIdTxt"
@@ -270,6 +270,7 @@
                 app:layout_constraintRight_toRightOf="@+id/rateReportWrongBtn" />
 
             <TextView
+                android:id="@+id/perfect"
                 android:text="완벽해요"
                 android:textSize="18sp"
                 android:textColor="@color/sub"
@@ -302,6 +303,44 @@
                 app:layout_constraintLeft_toLeftOf="@+id/rateReportWrongBtn"
                 app:layout_constraintRight_toRightOf="@+id/rateReportWrongBtn" />
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/rateReportReasonConstLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/perfect"
+                android:layout_marginTop="20dp"
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/rateReportReasonEditTxt"
+                    android:maxLength="200"
+                    android:textSize="20sp"
+                    android:textColor="@color/sub"
+                    android:backgroundTint="@color/sub"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@+id/rateReportReasonUploadBtn"
+                    app:layout_constraintBottom_toBottomOf="@+id/rateReportReasonUploadBtn"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@+id/rateReportReasonUploadBtn"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp" />
+
+                <ImageButton
+                    android:id="@+id/rateReportReasonUploadBtn"
+                    android:src="@drawable/back_icon"
+                    android:scaleType="fitCenter"
+                    android:background="@android:color/transparent"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginRight="10dp" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
