@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,7 +58,6 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
     TextView myShareParkInfoShareParkOldAddressContentTxt;
     TextView myShareParkInfoShareParkDetailaddressContentTxt;
     TextView myShareParkInfoImageTxt;
-    ImageView myShareParkInfoImageImageView;
     TextView myShareParkInfoShareTimeContentTxt;
     TextView myShareParkInfoReservationTimeContentTxt;
     ImageButton myShareParkNaviBtn;
@@ -65,6 +65,11 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
     TextView myShareParkInfoCancelTxt;
     ImageButton myShareParkInfoCalculateBtn;
     TextView myShareParkInfoCalculateTxt;
+    ImageView imageView1;
+    ImageView imageView2;
+    ImageView imageView3;
+    ImageView imageView4;
+    LinearLayout imageContainer;
 
 
     @Override
@@ -85,7 +90,6 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
         myShareParkInfoShareParkOldAddressContentTxt = findViewById(R.id.myShareParkInfoShareParkOldAddressContentTxt);
         myShareParkInfoShareParkDetailaddressContentTxt = findViewById(R.id.myShareParkInfoShareParkDetailaddressContentTxt);
         myShareParkInfoImageTxt = findViewById(R.id.myShareParkInfoImageTxt);
-        myShareParkInfoImageImageView = findViewById(R.id.myShareParkInfoImageImageView);
         myShareParkInfoShareTimeContentTxt = findViewById(R.id.myShareParkInfoShareTimeContentTxt);
         myShareParkInfoReservationTimeContentTxt = findViewById(R.id.myShareParkInfoReservationTimeContentTxt);
         myShareParkNaviBtn = findViewById(R.id.myShareParkNaviBtn);
@@ -93,12 +97,18 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
         myShareParkInfoCancelTxt = findViewById(R.id.myShareParkInfoCancelTxt);
         myShareParkInfoCalculateBtn = findViewById(R.id.myShareParkInfoCalculateBtn);
         myShareParkInfoCalculateTxt = findViewById(R.id.myShareParkInfoCalculateTxt);
+        imageContainer = findViewById(R.id.imageContainer);
+        imageView1 = findViewById(R.id.imageView1);
+        imageView2 = findViewById(R.id.imageView2);
+        imageView3 = findViewById(R.id.imageView3);
+        imageView4 = findViewById(R.id.imageView4);
+
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("id");
         documentId = inIntent.getStringExtra("documentId");
 
-        loadImageFromFirestore();
+        loadImagesFromFirestore();
 
         FirestoreDatabase fd = new FirestoreDatabase();
         fd.calculateFreeSharePark(loginId, new OnFirestoreDataLoadedListener() {
@@ -149,7 +159,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
 
     }
 
-    private void loadImageFromFirestore() {
+    private void loadImagesFromFirestore() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("sharePark").document(documentId);
 
@@ -157,13 +167,21 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    String imageUrl = document.getString("imageUrl");
-                    if (imageUrl != null && !imageUrl.isEmpty()) {
-                        Glide.with(this)
-                                .load(imageUrl)
-                                .into(myShareParkInfoImageImageView);
-                    } else {
-                        Toast.makeText(MyShareParkInformationActivity.this, "이미지 URL이 없습니다", Toast.LENGTH_SHORT).show();
+                    List<String> imageUrls = (List<String>) document.get("imageUrls"); // 이미지 URL 리스트
+
+                    imageContainer.setVisibility(View.GONE); // 기본적으로 숨김
+
+                    if (imageUrls != null && !imageUrls.isEmpty()) {
+                        imageContainer.setVisibility(View.VISIBLE); // 이미지가 있을 경우 보이기
+
+                        for (int i = 0; i < imageUrls.size(); i++) {
+                            String imageUrl = imageUrls.get(i);
+                            ImageView imageView = findViewById(getResources().getIdentifier("imageView" + (i + 1), "id", getPackageName()));
+                            imageView.setVisibility(View.VISIBLE);
+                            Glide.with(this)
+                                    .load(imageUrl)
+                                    .into(imageView);
+                        }
                     }
                 } else {
                     Toast.makeText(MyShareParkInformationActivity.this, "문서가 존재하지 않습니다", Toast.LENGTH_SHORT).show();

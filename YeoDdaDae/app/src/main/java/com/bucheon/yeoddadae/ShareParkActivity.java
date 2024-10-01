@@ -2,12 +2,14 @@ package com.bucheon.yeoddadae;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -34,8 +36,11 @@ import com.skt.Tmap.address_info.TMapAddressInfo;
 
 import org.threeten.bp.LocalDate;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,6 +51,7 @@ public class ShareParkActivity extends AppCompatActivity {
     double lat = 0;
     double lon = 0;
 
+    ArrayList<Uri> imageUris = new ArrayList<>();
     StorageReference mStorageRef;
     Uri imageUri;
 
@@ -61,7 +67,10 @@ public class ShareParkActivity extends AppCompatActivity {
     EditText sharerEmailEditTxt;
     EditText sharerRelationEditTxt;
     ImageButton openImageBtn;
-    ImageView selectedImageView;
+    ImageView selectedImageView1;
+    ImageView selectedImageView2;
+    ImageView selectedImageView3;
+    ImageView selectedImageView4;
     EditText parkPriceEditTxt;
     ImageButton resetBtn;
     MaterialCalendarView parkDateCalendar;
@@ -83,7 +92,10 @@ public class ShareParkActivity extends AppCompatActivity {
         sharerEmailEditTxt = findViewById(R.id.sharerEmailEditTxt);
         sharerRelationEditTxt = findViewById(R.id.sharerRelationEditTxt);
         openImageBtn = findViewById(R.id.openImageBtn);
-        selectedImageView = findViewById(R.id.selectedImageView);
+        selectedImageView1 = findViewById(R.id.selectedImageView1);
+        selectedImageView2 = findViewById(R.id.selectedImageView2);
+        selectedImageView3 = findViewById(R.id.selectedImageView3);
+        selectedImageView4 = findViewById(R.id.selectedImageView4);
         parkPriceEditTxt = findViewById(R.id.parkPriceEditTxt);
         resetBtn = findViewById(R.id.resetBtn);
         parkDateCalendar = findViewById(R.id.parkDateCalendar);
@@ -165,8 +177,7 @@ public class ShareParkActivity extends AppCompatActivity {
                     ta.addItem(new TimeItem(date));
                     ta.sortByDate();
                     setTotalHeightofListView(parkTimeListView);
-                }
-                else {
+                } else {
                     Log.d(TAG, "선택 해제 한 날짜: " + date.getYear() + "년 " + date.getMonth() + "월 " + date.getDay() + "일");
                     ta.removeItem(ta.findItem(date));
                     setTotalHeightofListView(parkTimeListView);
@@ -196,44 +207,35 @@ public class ShareParkActivity extends AppCompatActivity {
                 if (lat == 0 || lon == 0) {
                     Toast.makeText(getApplicationContext(), "GPS로 주소를 찾으세요", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else if (parkDetailAddress.isEmpty()) {
+                } else if (parkDetailAddress.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "상세주소를 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else if (ownerName.isEmpty()) {
+                } else if (ownerName.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "공유자명을 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else if (ownerPhone.isEmpty()) {
+                } else if (ownerPhone.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "전화번호를 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else if (!isValidPhoneNumber(ownerPhone)) {
+                } else if (!isValidPhoneNumber(ownerPhone)) {
                     Toast.makeText(getApplicationContext(), "유효하지 않은 전화번호입니다", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else if (ownerEmail.isEmpty()) {
+                } else if (ownerEmail.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "이메일을 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else if (!isValidEmail(ownerEmail)) {
+                } else if (!isValidEmail(ownerEmail)) {
                     Toast.makeText(getApplicationContext(), "유효하지 않은 이메일 형식입니다", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else if (ownerParkingRelation.isEmpty()) {
+                } else if (ownerParkingRelation.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "주차장과의 관계를 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else if (priceText.isEmpty()) {
+                } else if (priceText.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "가격을 설정하세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 try {
                     price = Integer.parseInt(priceText);
-                }
-                catch (NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     Toast.makeText(getApplicationContext(), "가격을 숫자로 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -273,39 +275,49 @@ public class ShareParkActivity extends AppCompatActivity {
     private void openImageChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");  // 이미지만 선택 가능
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "사진을 선택하세요"), PICK_IMAGE_REQUEST_CODE);
     }
 
     private void uploadImageAndRegister(HashMap<String, Object> hm) {
-        if (imageUri != null) {
-            StorageReference fileRef = mStorageRef.child(System.currentTimeMillis() + ".jpg");
-            
-            fileRef.putFile(imageUri)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    String imageUrl = uri.toString();
-                                    hm.put("imageUrl", imageUrl);
+        if (!imageUris.isEmpty()) {
+            ArrayList<String> imageUrlsList = new ArrayList<>();
+            int totalImages = imageUris.size();
+            AtomicInteger uploadCount = new AtomicInteger(0);
 
-                                    registerUser(hm);
-                                }
-                            });
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d(TAG, e.toString());
-                            Toast.makeText(getApplicationContext(), "이미지 업로드 중 오류 발생", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }
-        else {
-            Toast.makeText(this, "이미지를 선택하세요", Toast.LENGTH_SHORT).show();
+            for (Uri imageUri : imageUris) {
+                StorageReference fileRef = mStorageRef.child(System.currentTimeMillis() + ".jpg");
+
+                fileRef.putFile(imageUri)
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        String imageUrl = uri.toString();
+                                        imageUrlsList.add(imageUrl);
+
+                                        if (uploadCount.incrementAndGet() == totalImages) {
+                                            hm.put("imageUrls", imageUrlsList);
+                                            registerUser(hm);
+                                        }
+
+                                    }
+                                });
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.e(TAG, "이미지 업로드 실패: " + e.getMessage());
+                                Toast.makeText(getApplicationContext(), "이미지 업로드 중 오류 발생", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
+        } else {
+            registerUser(hm);
         }
     }
 
@@ -437,7 +449,7 @@ public class ShareParkActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    String [] adrresses = tMapAddressInfo.strFullAddress.split(",");
+                                    String[] adrresses = tMapAddressInfo.strFullAddress.split(",");
 
                                     parkNewAddressContentTxt.setText(adrresses[2]);
                                     parkOldAddressContentTxt.setText(adrresses[1]);
@@ -447,16 +459,84 @@ public class ShareParkActivity extends AppCompatActivity {
                     }
                 });
             }
-        }
-        else if (requestCode == PICK_IMAGE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK && data != null && data.getData() != null) {
-                imageUri = data.getData();
-                selectedImageView.setImageURI(imageUri); // 선택한 이미지를 ImageView에 표시
+        } else if (requestCode == PICK_IMAGE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                imageUris.clear();
+                if (data.getClipData() != null) {
+                    int count = data.getClipData().getItemCount();
+                    for (int i = 0; i < count && i < 4; i++) {
+                        Uri imageUri = data.getClipData().getItemAt(i).getUri();
+                        imageUris.add(imageUri);
+                    }
+                } else if (data.getData() != null) {
+                    imageUris.add(data.getData());
+                }
+                showSelectedImages();
             }
         }
+    }
+
+    private void showSelectedImages() {
+        ImageView[] imageViews = {
+                selectedImageView1,
+                selectedImageView2,
+                selectedImageView3,
+                selectedImageView4
+        };
+
+        ImageButton[] cancelButtons = {
+                findViewById(R.id.cancelImageBtn1),
+                findViewById(R.id.cancelImageBtn2),
+                findViewById(R.id.cancelImageBtn3),
+                findViewById(R.id.cancelImageBtn4)
+        };
+
+        for (int i = 0; i < 4; i++) {
+            if (i < imageUris.size()) {
+                imageViews[i].setImageURI(imageUris.get(i));
+                imageViews[i].setVisibility(View.VISIBLE);
+                cancelButtons[i].setVisibility(View.VISIBLE); // 취소 버튼 보이기
+
+                // 현재 인덱스를 final로 설정
+                final int index = i;
+                imageViews[i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showImageDialog(imageUris.get(index)); // 다이얼로그 호출
+                    }
+                });
+
+                // 클릭 리스너 설정
+                cancelButtons[i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        imageUris.remove(index); // 이미지 URI 리스트에서 제거
+                        showSelectedImages(); // 갱신된 이미지 목록 보여주기
+                    }
+                });
+            } else {
+                imageViews[i].setVisibility(View.GONE);
+                cancelButtons[i].setVisibility(View.GONE); // 취소 버튼 숨기기
+            }
+        }
+    }
+
+    private void showImageDialog(Uri imageUri) {
+        // 다이얼로그 생성
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_image_view);
+
+        ImageView fullScreenImageView = dialog.findViewById(R.id.fullScreenImageView);
+        fullScreenImageView.setImageURI(imageUri); // 선택한 이미지 세팅
+
+        // 다이얼로그 외부 클릭 시 닫기
+        dialog.setCancelable(true);
+        dialog.show();
     }
 
     String replaceNewlinesAndTrim(EditText et) {
         return et.getText().toString().replaceAll("\\n", " ").trim();
     }
 }
+

@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,7 +51,6 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
     TextView approveShareParkInfoEmailContentTxt;
     TextView approveShareParkInfoRelationContentTxt;
     TextView approveShareParkInfoImageTxt;
-    ImageView approveShareParkInfoImageView;
     TextView approveShareParkInfoPriceContentTxt;
     TextView approveShareParkInfoHourPerTxt;
     TextView approveShareParkInfoPtTxt;
@@ -58,6 +58,11 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
     TextView approveShareParkInfoUpTimeContentTxt;
     ImageButton approveBtn;
     ImageButton rejectionBtn;
+    ImageView imageView1;
+    ImageView imageView2;
+    ImageView imageView3;
+    ImageView imageView4;
+    LinearLayout imageContainer;
 
 
     @Override
@@ -76,7 +81,6 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
         approveShareParkInfoEmailContentTxt = findViewById(R.id.approveShareParkInfoEmailContentTxt);
         approveShareParkInfoRelationContentTxt = findViewById(R.id.approveShareParkInfoRelationContentTxt);
         approveShareParkInfoImageTxt = findViewById(R.id.approveShareParkInfoImageTxt);
-        approveShareParkInfoImageView = findViewById(R.id.approveShareParkInfoImageView);
         approveShareParkInfoPriceContentTxt = findViewById(R.id.approveShareParkInfoPriceContentTxt);
         approveShareParkInfoHourPerTxt = findViewById(R.id.approveShareParkInfoHourPerTxt);
         approveShareParkInfoPtTxt = findViewById(R.id.approveShareParkInfoPtTxt);
@@ -84,11 +88,16 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
         approveShareParkInfoUpTimeContentTxt = findViewById(R.id.approveShareParkInfoUpTimeContentTxt);
         approveBtn = findViewById(R.id.approveBtn);
         rejectionBtn = findViewById(R.id.rejectionBtn);
+        imageContainer = findViewById(R.id.imageContainer);
+        imageView1 = findViewById(R.id.imageView1);
+        imageView2 = findViewById(R.id.imageView2);
+        imageView3 = findViewById(R.id.imageView3);
+        imageView4 = findViewById(R.id.imageView4);
 
         Intent inIntent = getIntent();
         documentId = inIntent.getStringExtra("documentId");
-        
-        loadImageFromFirestore();
+
+        loadImagesFromFirestore();
 
         FirestoreDatabase fd = new FirestoreDatabase();
         fd.loadShareParkInfo(documentId, new OnFirestoreDataLoadedListener() {
@@ -180,7 +189,7 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
         });
     }
 
-    private void loadImageFromFirestore() {
+    private void loadImagesFromFirestore() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("sharePark").document(documentId);
 
@@ -188,14 +197,21 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    String imageUrl = document.getString("imageUrl");
-                    if (imageUrl != null && !imageUrl.isEmpty()) {
-                        // 이미지 URL이 존재하면 이미지 표시
-                        Glide.with(this)
-                                .load(imageUrl)
-                                .into(approveShareParkInfoImageView);
-                    } else {
-                        Toast.makeText(ApproveShareParkInformationActivity.this, "이미지 URL이 없습니다", Toast.LENGTH_SHORT).show();
+                    List<String> imageUrls = (List<String>) document.get("imageUrls"); // 이미지 URL 리스트
+
+                    imageContainer.setVisibility(View.GONE); // 기본적으로 숨김
+
+                    if (imageUrls != null && !imageUrls.isEmpty()) {
+                        imageContainer.setVisibility(View.VISIBLE); // 이미지가 있을 경우 보이기
+
+                        for (int i = 0; i < imageUrls.size(); i++) {
+                            String imageUrl = imageUrls.get(i);
+                            ImageView imageView = findViewById(getResources().getIdentifier("imageView" + (i + 1), "id", getPackageName()));
+                            imageView.setVisibility(View.VISIBLE);
+                            Glide.with(this)
+                                    .load(imageUrl)
+                                    .into(imageView);
+                        }
                     }
                 } else {
                     Toast.makeText(ApproveShareParkInformationActivity.this, "문서가 존재하지 않습니다", Toast.LENGTH_SHORT).show();
@@ -205,7 +221,7 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
             }
         });
     }
-    
+
     void init() {
         runOnUiThread(new Runnable() {
             @Override
@@ -239,7 +255,7 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
                 approveShareParkInfoEmailContentTxt.setText((String) shareParkInfo.get("ownerEmail"));
 
                 approveShareParkInfoRelationContentTxt.setText((String) shareParkInfo.get("ownerParkingRelation"));
-                
+
                 if ((long) shareParkInfo.get("price") == 0) {
                     approveShareParkInfoHourPerTxt.setVisibility(View.GONE);
                     approveShareParkInfoPtTxt.setVisibility(View.GONE);
