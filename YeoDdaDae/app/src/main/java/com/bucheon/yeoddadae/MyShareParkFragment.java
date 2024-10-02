@@ -140,10 +140,12 @@ public class MyShareParkFragment extends Fragment {
         myShareParkListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent toMyShareParkInformationIntent = new Intent(getActivity(), MyShareParkInformationActivity.class);
-                toMyShareParkInformationIntent.putExtra("id", loginId);
-                toMyShareParkInformationIntent.putExtra("documentId", ((ShareParkItem) spa.getItem(position)).getDocumentId());
-                startActivity(toMyShareParkInformationIntent);
+                if (spa.getItem(position) != null) {
+                    Intent toMyShareParkInformationIntent = new Intent(getActivity(), MyShareParkInformationActivity.class);
+                    toMyShareParkInformationIntent.putExtra("id", loginId);
+                    toMyShareParkInformationIntent.putExtra("documentId", ((ShareParkItem) spa.getItem(position)).getDocumentId());
+                    startActivity(toMyShareParkInformationIntent);
+                }
             }
         });
 

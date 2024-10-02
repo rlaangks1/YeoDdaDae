@@ -918,7 +918,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             TMapMarkerItem targetMarker = arrayList.get(0); // endMarker = 클릭한 TMapMarkerItem
             ParkItem targetPark = parkAdapter.findItem(targetMarker.getName());
 
-            if (saveScrollPoint.equals(tMapView.getCenterPoint()) && targetMarker == tempMarker && targetPark == tempPark && targetPark != null && targetMarker != null) {
+            if (saveScrollPoint!= null && saveScrollPoint.equals(tMapView.getCenterPoint()) && targetMarker == tempMarker && targetPark == tempPark && targetPark != null && targetMarker != null) {
                 parkSelect(targetMarker, targetPark);
             }
         }
