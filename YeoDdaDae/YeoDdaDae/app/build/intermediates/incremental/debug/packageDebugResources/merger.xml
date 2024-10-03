@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res"><file name="my_date_text_color" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\color\my_date_text_color.xml" qualifiers="" type="color"/><file name="approve_report_park_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\approve_report_park_icon.png" qualifiers="" type="drawable"/><file name="approve_share_park_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\approve_share_park_icon.png" qualifiers="" type="drawable"/><file name="back_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\back_icon.png" qualifiers="" type="drawable"/><file name="baseline_camera_alt_24" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\baseline_camera_alt_24.xml" qualifiers="" type="drawable"/><file name="border_style" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\border_style.xml" qualifiers="" type="drawable"/><file name="camera_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\camera_icon.png" qualifiers="" type="drawable"/><file name="cancel_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\cancel_icon.png" qualifiers="" type="drawable"/><file name="charge_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\charge_icon.png" qualifiers="" type="drawable"/><file name="clock_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\clock_icon.png" qualifiers="" type="drawable"/><file name="disabled_button" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\disabled_button.xml" qualifiers="" type="drawable"/><file name="discount_park_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\discount_park_icon.png" qualifiers="" type="drawable"/><file name="favorites" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\favorites.xml" qualifiers="" type="drawable"/><file name="gas_station_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\gas_station_icon.png" qualifiers="" type="drawable"/><file name="gps_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\gps_icon.png" qualifiers="" type="drawable"/><file name="gradate_button" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\gradate_button.xml" qualifiers="" type="drawable"/><file name="gradate_calculate_button" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\gradate_calculate_button.xml" qualifiers="" type="drawable"/><file name="gradate_cancel_button" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\gradate_cancel_button.xml" qualifiers="" type="drawable"/><file name="gradate_list_view_item" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\gradate_list_view_item.xml" qualifiers="" type="drawable"/><file name="gradate_list_view_item_2" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\gradate_list_view_item_2.xml" qualifiers="" type="drawable"/><file name="gradate_notification" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\gradate_notification.xml" qualifiers="" type="drawable"/><file name="hamburger_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\hamburger_icon.png" qualifiers="" type="drawable"/><file name="history_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\history_icon.png" qualifiers="" type="drawable"/><file name="ic_cancel" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\ic_cancel.png" qualifiers="" type="drawable"/><file name="ic_launcher_background" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\ic_launcher_background.xml" qualifiers="" type="drawable"/><file name="ic_launcher_foreground" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\ic_launcher_foreground.xml" qualifiers="" type="drawable"/><file name="logout_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\logout_icon.png" qualifiers="" type="drawable"/><file name="long_line" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\long_line.xml" qualifiers="" type="drawable"/><file name="main_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\main_icon.png" qualifiers="" type="drawable"/><file name="main_icon_cut" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\main_icon_cut.png" qualifiers="" type="drawable"/><file name="main_icon_cutted_gradated" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\main_icon_cutted_gradated.png" qualifiers="" type="drawable"/><file name="menubar" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\menubar.xml" qualifiers="" type="drawable"/><file name="mic_activate" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\mic_activate.png" qualifiers="" type="drawable"/><file name="mic_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\mic_icon.png" qualifiers="" type="drawable"/><file name="mic_inactivate" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\mic_inactivate.png" qualifiers="" type="drawable"/><file name="minus_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\minus_icon.png" qualifiers="" type="drawable"/><file name="mybook" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\mybook.png" qualifiers="" type="drawable"/><file name="parking_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\parking_icon.png" qualifiers="" type="drawable"/><file name="parking_image" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\parking_image.png" qualifiers="" type="drawable"/><file name="password" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\password.png" qualifiers="" type="drawable"/><file name="plus_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\plus_icon.png" qualifiers="" type="drawable"/><file name="point" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\point.png" qualifiers="" type="drawable"/><file name="refund_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\refund_icon.png" qualifiers="" type="drawable"/><file name="reset_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\reset_icon.png" qualifiers="" type="drawable"/><file name="round_button" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\round_button.xml" qualifiers="" type="drawable"/><file name="round_button_disable" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\round_button_disable.xml" qualifiers="" type="drawable"/><file name="search_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\search_icon.png" qualifiers="" type="drawable"/><file name="shared_park" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\shared_park.png" qualifiers="" type="drawable"/><file name="statics_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\statics_icon.png" qualifiers="" type="drawable"/><file name="stt_button" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\stt_button.xml" qualifiers="" type="drawable"/><file name="stt_icon" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\stt_icon.png" qualifiers="" type="drawable"/><file name="temp_tmap_marker" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\temp_tmap_marker.png" qualifiers="" type="drawable"/><file name="temp_tmap_my_location" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\temp_tmap_my_location.png" qualifiers="" type="drawable"/><file name="temp_tmap_report_park_marker" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\temp_tmap_report_park_marker.png" qualifiers="" type="drawable"/><file name="temp_tmap_search_place_marker" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\temp_tmap_search_place_marker.png" qualifiers="" type="drawable"/><file name="temp_tmap_selected_marker" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\temp_tmap_selected_marker.png" qualifiers="" type="drawable"/><file name="temp_tmap_selected_report_park_marker" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\temp_tmap_selected_report_park_marker.png" qualifiers="" type="drawable"/><file name="temp_tmap_selected_share_park_marker" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\temp_tmap_selected_share_park_marker.png" qualifiers="" type="drawable"/><file name="temp_tmap_share_park_marker" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\temp_tmap_share_park_marker.png" qualifiers="" type="drawable"/><file name="temp_tmap_start_marker" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\temp_tmap_start_marker.png" qualifiers="" type="drawable"/><file name="temp_tmap_view_center_point" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\temp_tmap_view_center_point.png" qualifiers="" type="drawable"/><file name="usage_right_arrow" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\usage_right_arrow.xml" qualifiers="" type="drawable"/><file name="userface" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\drawable\userface.xml" qualifiers="" type="drawable"/><file name="activity_add_report_discount_park" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_add_report_discount_park.xml" qualifiers="" type="layout"/><file name="activity_admin_main" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_admin_main.xml" qualifiers="" type="layout"/><file name="activity_another_report_discount_park" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_another_report_discount_park.xml" qualifiers="" type="layout"/><file name="activity_apporve_report_information" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_apporve_report_information.xml" qualifiers="" type="layout"/><file name="activity_approve_report" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_approve_report.xml" qualifiers="" type="layout"/><file name="activity_approve_share_park" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_approve_share_park.xml" qualifiers="" type="layout"/><file name="activity_approve_share_park_information" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_approve_share_park_information.xml" qualifiers="" type="layout"/><file name="activity_change_password" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_change_password.xml" qualifiers="" type="layout"/><file name="activity_find_gas_station" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_find_gas_station.xml" qualifiers="" type="layout"/><file name="activity_find_park" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_find_park.xml" qualifiers="" type="layout"/><file name="activity_gps_cerification" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_gps_cerification.xml" qualifiers="" type="layout"/><file name="activity_login" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_login.xml" qualifiers="" type="layout"/><file name="activity_main" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_main.xml" qualifiers="" type="layout"/><file name="activity_my_share_park_information" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_my_share_park_information.xml" qualifiers="" type="layout"/><file name="activity_payment" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_payment.xml" qualifiers="" type="layout"/><file name="activity_rate_another_report_discount_park" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_rate_another_report_discount_park.xml" qualifiers="" type="layout"/><file name="activity_register" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_register.xml" qualifiers="" type="layout"/><file name="activity_report_discount_park_information" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_report_discount_park_information.xml" qualifiers="" type="layout"/><file name="activity_reservation_information" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_reservation_information.xml" qualifiers="" type="layout"/><file name="activity_reservation_park" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_reservation_park.xml" qualifiers="" type="layout"/><file name="activity_share_park" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_share_park.xml" qualifiers="" type="layout"/><file name="activity_start" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_start.xml" qualifiers="" type="layout"/><file name="activity_statistics" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_statistics.xml" qualifiers="" type="layout"/><file name="activity_usage_history" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_usage_history.xml" qualifiers="" type="layout"/><file name="activity_yd_point_charge" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_yd_point_charge.xml" qualifiers="" type="layout"/><file name="activity_yd_point_refund" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\activity_yd_point_refund.xml" qualifiers="" type="layout"/><file name="approve_share_park_item" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\approve_share_park_item.xml" qualifiers="" type="layout"/><file name="custom_date_picker_dialog" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\custom_date_picker_dialog.xml" qualifiers="" type="layout"/><file name="dialog_image_view" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\dialog_image_view.xml" qualifiers="" type="layout"/><file name="fragment_main" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\fragment_main.xml" qualifiers="" type="layout"/><file name="fragment_my_report_discount_park" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\fragment_my_report_discount_park.xml" qualifiers="" type="layout"/><file name="fragment_my_reservation" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\fragment_my_reservation.xml" qualifiers="" type="layout"/><file name="fragment_my_share_park" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\fragment_my_share_park.xml" qualifiers="" type="layout"/><file name="fragment_my_yd_point" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\fragment_my_yd_point.xml" qualifiers="" type="layout"/><file name="gas_station_item" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\gas_station_item.xml" qualifiers="" type="layout"/><file name="my_report_discount_park_item" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\my_report_discount_park_item.xml" qualifiers="" type="layout"/><file name="my_spinner" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\my_spinner.xml" qualifiers="" type="layout"/><file name="my_spinner_2" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\my_spinner_2.xml" qualifiers="" type="layout"/><file name="my_spinner_3" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\my_spinner_3.xml" qualifiers="" type="layout"/><file name="nav_header" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\nav_header.xml" qualifiers="" type="layout"/><file name="park_item" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\park_item.xml" qualifiers="" type="layout"/><file name="report_discount_park_item" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\report_discount_park_item.xml" qualifiers="" type="layout"/><file name="reservation_item" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\reservation_item.xml" qualifiers="" type="layout"/><file name="search_history_item" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\search_history_item.xml" qualifiers="" type="layout"/><file name="search_park_item" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\search_park_item.xml" qualifiers="" type="layout"/><file name="share_park_item" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\share_park_item.xml" qualifiers="" type="layout"/><file name="stt_dialog" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\stt_dialog.xml" qualifiers="" type="layout"/><file name="time_item" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\time_item.xml" qualifiers="" type="layout"/><file name="usage_history_item" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\usage_history_item.xml" qualifiers="" type="layout"/><file name="yd_point_history_item" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\layout\yd_point_history_item.xml" qualifiers="" type="layout"/><file name="bottom_nav" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\menu\bottom_nav.xml" qualifiers="" type="menu"/><file name="drawerlayout" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\menu\drawerlayout.xml" qualifiers="" type="menu"/><file name="drawer_menu" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\menu\drawer_menu.xml" qualifiers="" type="menu"/><file name="ic_launcher" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\mipmap-anydpi-v26\ic_launcher.xml" qualifiers="anydpi-v26" type="mipmap"/><file name="ic_launcher_round" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\mipmap-anydpi-v26\ic_launcher_round.xml" qualifiers="anydpi-v26" type="mipmap"/><file name="ic_launcher" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\mipmap-hdpi\ic_launcher.webp" qualifiers="hdpi-v4" type="mipmap"/><file name="ic_launcher_foreground" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\mipmap-hdpi\ic_launcher_foreground.webp" qualifiers="hdpi-v4" type="mipmap"/><file name="ic_launcher_round" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\mipmap-hdpi\ic_launcher_round.webp" qualifiers="hdpi-v4" type="mipmap"/><file name="ic_launcher" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\mipmap-mdpi\ic_launcher.webp" qualifiers="mdpi-v4" type="mipmap"/><file name="ic_launcher_foreground" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\mipmap-mdpi\ic_launcher_foreground.webp" qualifiers="mdpi-v4" type="mipmap"/><file name="ic_launcher_round" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\mipmap-mdpi\ic_launcher_round.webp" qualifiers="mdpi-v4" type="mipmap"/><file name="ic_launcher" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\mipmap-xhdpi\ic_launcher.webp" qualifiers="xhdpi-v4" type="mipmap"/><file name="ic_launcher_foreground" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\mipmap-xhdpi\ic_launcher_foreground.webp" qualifiers="xhdpi-v4" type="mipmap"/><file name="ic_launcher_round" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\mipmap-xhdpi\ic_launcher_round.webp" qualifiers="xhdpi-v4" type="mipmap"/><file name="ic_launcher" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\mipmap-xxhdpi\ic_launcher.webp" qualifiers="xxhdpi-v4" type="mipmap"/><file name="ic_launcher_foreground" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\mipmap-xxhdpi\ic_launcher_foreground.webp" qualifiers="xxhdpi-v4" type="mipmap"/><file name="ic_launcher_round" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\mipmap-xxhdpi\ic_launcher_round.webp" qualifiers="xxhdpi-v4" type="mipmap"/><file name="ic_launcher" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\mipmap-xxxhdpi\ic_launcher.webp" qualifiers="xxxhdpi-v4" type="mipmap"/><file name="ic_launcher_foreground" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\mipmap-xxxhdpi\ic_launcher_foreground.webp" qualifiers="xxxhdpi-v4" type="mipmap"/><file name="ic_launcher_round" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\mipmap-xxxhdpi\ic_launcher_round.webp" qualifiers="xxxhdpi-v4" type="mipmap"/><file name="nav_graph" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\navigation\nav_graph.xml" qualifiers="" type="navigation"/><file path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\values\colors.xml" qualifiers=""><color name="purple_200">#FFBB86FC</color><color name="purple_500">#FF6200EE</color><color name="purple_700">#FF3700B3</color><color name="teal_700">#FF018786</color><color name="blue">#FF0000FF</color><color name="red">#FF0000</color><color name="black">#FF000000</color><color name="white">#FFFFFFFF</color><color name="main">#9DE3F9</color><color name="sub">#1FB4F1</color><color name="disable">#666666</color></file><file path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\values\ic_launcher_background.xml" qualifiers=""><color name="ic_launcher_background">#FFFFFF</color></file><file path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\values\strings.xml" qualifiers=""><string name="app_name">여따대</string><string name="new_start">주차의 새로운 시작</string><string name="already_user">가입된 회원이십니까?</string><string name="login">로그인</string><string name="membership">회원이 아니십니까?</string><string name="join_membership1">회원가입</string><string name="join_membership2">회원가입</string><string name="id1">아이디</string><string name="pw1">비밀번호</string><string name="pw_check">비밀번호 확인</string><string name="email1">이메일</string><string name="all_agree">약관 전체 동의</string><string name="personal_information">개인정보 수집 동의(필수)</string><string name="read">읽어보기</string><string name="ad_agree">광고 이용 동의(선택)</string><string name="login2">로그인</string><string name="info_change">회원정보수정</string><string name="find_parkin">주차장 찾아가기\n Find parking lot</string><string name="find_gas_st">주유소 찾아가기\n Find gas station</string><string name="shared_park">공유주차장 등록\n Shared parking</string><string name="discount_park_report">할인주차장 제보\n Discount park report</string><string name="mybooking">나의 예약</string><string name="ticket">정기권구매</string><string name="car_register">주차장등록</string><string name="info">서비스안내</string><string name="customer_service">고객센터</string><string name="mybooking2">나의예약</string><string name="ticket2">정기권 구매</string><string name="mybookcheck">예약 자세히 보기</string><string name="info2">서비스안내</string><string name="info_listitem">안내사항 및 안내질문 게시글</string><string name="customer_service2">고객센터</string><string name="manager_info1">관리자 정보</string><string name="manager_info2">성명\n\n나이\n\n사업연혁</string><string-array name="custom_weekdays">
+        <item>월</item>
+        <item>화</item>
+        <item>수</item>
+        <item>목</item>
+        <item>금</item>
+        <item>토</item>
+        <item>일</item>
+    </string-array><string-array name="my_spinner_distance_items">
+        <item>무제한</item>
+        <item>5Km</item>
+        <item>3Km</item>
+        <item>1Km</item>
+    </string-array><string-array name="my_spinner_point_history_items">
+        <item>전체</item>
+        <item>증가만</item>
+        <item>감소만</item>
+        <item>기간 직접 설정</item>
+    </string-array><string-array name="my_spinner_charge_point_items">
+        <item>1,000pt</item>
+        <item>5,000pt</item>
+        <item>10,000pt</item>
+        <item>30,000pt</item>
+        <item>50,000pt</item>
+        <item>100,000pt</item>
+    </string-array><string-array name="my_spinner_time_items">
+        <item>오늘</item>
+        <item>이번 주</item>
+        <item>이번 달</item>
+        <item>올해</item>
+        <item>직접 설정</item>
+    </string-array><string-array name="my_spinner_usage_history">
+        <item>전체</item>
+        <item>주차장</item>
+        <item>주유소</item>
+    </string-array></file><file path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\values\styles.xml" qualifiers=""><style name="maincolorText">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#9DE3F9</item>
+    </style><style name="subcolorText">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#1FB4F1</item>
+    </style><style name="new_start">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#9DE3F9</item>
+        
+    </style><style name="already_user">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#1FB4F1</item>
+    </style><style name="new_button_style" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@color/blue</item>
+        
+    </style><style name="membership">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#1FB4F1</item>
+    </style><style name="join_membership1">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">#0000FF</item>
+    </style><style name="join_membership2">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#000000</item>
+    </style><style name="id1">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#0000FF</item>
+    </style><style name="pw1">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#0000FF</item>
+    </style><style name="pw_check">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#0000FF</item>
+    </style><style name="email1">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#0000FF</item>
+    </style><style name="all_agree">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#0000FF</item>
+    </style><style name="personal_information">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#0000FF</item>
+    </style><style name="read">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style><style name="ad_agree">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#0000FF</item>
+    </style><style name="login2">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#000000</item>
+    </style><style name="info_change">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#000000</item>
+    </style><style name="find_parkin">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style><style name="find_parkin_sub">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style><style name="find_gas_st">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style><style name="find_gas_st_sub">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style><style name="discount_park_report">
+        <item name="android:textSize">26sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style><style name="discount_park_report_sub">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style><style name="microphone">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style><style name="mybooking">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#0000FF</item>
+    </style><style name="ticket">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#0000FF</item>
+    </style><style name="car_register">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#0000FF</item>
+    </style><style name="info">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#0000FF</item>
+    </style><style name="customer_service">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#0000FF</item>
+    </style><style name="btn_login">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style><style name="mybooking2">
+        <item name="android:textSize">23sp</item>
+        <item name="android:textColor">#1FB4F1</item>
+    </style><style name="ticket2">
+        <item name="android:textSize">23sp</item>
+        <item name="android:textColor">#1FB4F1</item>
+    </style><style name="mybookcheck">
+        <item name="android:textSize">23sp</item>
+        <item name="android:textColor">#1FB4F1</item>
+    </style><style name="info2">
+        <item name="android:textSize">23sp</item>
+        <item name="android:textColor">#1FB4F1</item>
+    </style><style name="info_listitem">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style><style name="customer_service2">
+        <item name="android:textSize">23sp</item>
+        <item name="android:textColor">#1FB4F1</item>
+    </style><style name="manager_info1">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#1FB4F1</item>
+    </style><style name="manager_info2">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/blue</item>
+    </style><style name="sharedpark_approval">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style><style name="sharedpark_approval_sub">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style><style name="DC_approval_report">
+        <item name="android:textSize">27sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style><style name="DC_approval_report_sub">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style><style name="statics">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style><style name="statics_sub">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style><style name="CustomCalendarTextAppearance" parent="TextAppearance.MaterialCalendarWidget.Date">
+        <item name="android:textColor">@color/my_date_text_color</item>
+    </style><style name="CustomBadgeTextAppearance" parent="TextAppearance.MaterialComponents.Badge">
+        <item name="android:textSize">12sp</item>
+    </style></file><file path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\values\themes.xml" qualifiers=""><style name="Base.Theme.YeoDdaDae" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style><style name="Theme.YeoDdaDae" parent="Base.Theme.YeoDdaDae"/></file><file path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\values-night\themes.xml" qualifiers="night-v8"><style name="Base.Theme.YeoDdaDae" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        
+    </style></file><file name="backup_rules" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\xml\backup_rules.xml" qualifiers="" type="xml"/><file name="data_extraction_rules" path="C:\YeoDdaDae-master\YeoDdaDae\app\src\main\res\xml\data_extraction_rules.xml" qualifiers="" type="xml"/></source></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\YeoDdaDae-master\YeoDdaDae\app\src\debug\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug" generated-set="debug$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\YeoDdaDae-master\YeoDdaDae\app\src\debug\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\YeoDdaDae-master\YeoDdaDae\app\build\generated\res\resValues\debug"/><source path="C:\YeoDdaDae-master\YeoDdaDae\app\build\generated\res\processDebugGoogleServices"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated" generated-set="generated$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\YeoDdaDae-master\YeoDdaDae\app\build\generated\res\resValues\debug"/><source path="C:\YeoDdaDae-master\YeoDdaDae\app\build\generated\res\processDebugGoogleServices"><file path="C:\YeoDdaDae-master\YeoDdaDae\app\build\generated\res\processDebugGoogleServices\values\values.xml" qualifiers=""><string name="gcm_defaultSenderId" translatable="false">487050937991</string><string name="google_api_key" translatable="false">AIzaSyDv3AWsHOT7ZBawpV9GKGOySNqw_7aJ4Hs</string><string name="google_app_id" translatable="false">1:487050937991:android:7ba2b46beab33d0e5c9a22</string><string name="google_crash_reporting_api_key" translatable="false">AIzaSyDv3AWsHOT7ZBawpV9GKGOySNqw_7aJ4Hs</string><string name="google_storage_bucket" translatable="false">yeoddadae.appspot.com</string><string name="project_id" translatable="false">yeoddadae</string></file></source></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="res-processDebugGoogleServices$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"/><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="res-processDebugGoogleServices" generated-set="res-processDebugGoogleServices$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"/><mergedItems/></merger>

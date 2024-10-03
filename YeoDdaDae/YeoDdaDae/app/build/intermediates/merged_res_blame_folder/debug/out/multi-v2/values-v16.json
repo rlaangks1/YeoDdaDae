@@ -1,0 +1,38 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.bucheon.yeoddadae.app-mergeDebugResources-86:/values-v16/values-v16.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\rhkp8\\.gradle\\caches\\transforms-3\\c9c2a74f123cdebcaf6465c79cf99e7f\\transformed\\appcompat-1.6.1\\res\\values-v16\\values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "5",
+                        "endColumns": "12",
+                        "endOffsets": "223"
+                    },
+                    "to": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "121",
+                        "endLines": "6",
+                        "endColumns": "12",
+                        "endOffsets": "289"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\rhkp8\\.gradle\\caches\\transforms-3\\d11eb415976daf0808ba7a860b07b3d0\\transformed\\core-1.10.1\\res\\values-v16\\values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "65",
+                        "endOffsets": "116"
+                    }
+                }
+            ]
+        }
+    ]
+}
