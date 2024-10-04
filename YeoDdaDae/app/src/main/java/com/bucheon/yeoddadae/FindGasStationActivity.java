@@ -401,7 +401,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
             TMapMarkerItem targetMarker = arrayList.get(0); // endMarker = 클릭한 TMapMarkerItem
             GasStationItem targetGasStation = gasStationAdapter.findItem(targetMarker.getName());
 
-            if (scrollSavedPoint.equals(tMapView.getCenterPoint()) && targetMarker == tempMarker && targetGasStation == tempGasStation && targetGasStation != null && targetMarker != null) {
+            if (scrollSavedPoint != null && scrollSavedPoint.equals(tMapView.getCenterPoint()) && targetMarker == tempMarker && targetGasStation == tempGasStation && targetGasStation != null && targetMarker != null) {
                 gasStationSelect(targetMarker, targetGasStation);
             }
         }
