@@ -14,7 +14,7 @@
         android:background="@android:color/transparent"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp" />
@@ -75,7 +75,7 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/reprtInfoIdTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reprtInfoIdTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="10dp" />
@@ -87,7 +87,7 @@
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
                     android:background="@color/gray"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoIdContentTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoIdContentTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
 
@@ -112,7 +112,7 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoStatusTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoStatusTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="10dp" />
@@ -124,7 +124,7 @@
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
                     android:background="@color/gray"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoStatusContentTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoStatusContentTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
 
@@ -149,7 +149,7 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoCancelReasonTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoCancelReasonTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="10dp" />
@@ -162,7 +162,7 @@
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
                     android:background="@color/gray"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoCancelReasonContentTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoCancelReasonContentTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
 
@@ -174,7 +174,7 @@
                     android:text="주차장 이름"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoCancelReasonContentTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoCancelReasonContentTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="20dp" />
@@ -187,7 +187,7 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoParkNameTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoParkNameTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="10dp" />
@@ -199,7 +199,7 @@
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
                     android:background="@color/gray"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoParkNameContentTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoParkNameContentTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
 
@@ -211,7 +211,7 @@
                     android:text="주차장 주소"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoParkNameContentTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoParkNameContentTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="20dp" />
@@ -224,7 +224,7 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoParkAddressTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoParkAddressTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="10dp" />
@@ -237,7 +237,7 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoParkNewAddressContentTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoParkNewAddressContentTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
 
@@ -248,7 +248,7 @@
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
                     android:background="@color/gray"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoParkOldAddressContentTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoParkOldAddressContentTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
 
@@ -260,7 +260,7 @@
                     android:text="조건"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoParkOldAddressContentTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoParkOldAddressContentTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="20dp" />
@@ -273,7 +273,7 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoConditionTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoConditionTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="10dp" />
@@ -285,7 +285,7 @@
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
                     android:background="@color/gray"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoConditionContentTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoConditionContentTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
 
@@ -297,7 +297,7 @@
                     android:fontFamily="@font/paperlogy_5medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoConditionContentTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoConditionContentTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="20dp" />
@@ -346,7 +346,7 @@
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
                     android:background="@color/gray"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoDiscountConstLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoDiscountConstLayout"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
 
@@ -358,7 +358,7 @@
                     android:text="평가 (정확 / 틀린부분있음 / 완전히틀림)"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoDiscountConstLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoDiscountConstLayout"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="20dp" />
@@ -371,7 +371,7 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoRateTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoRateTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="10dp" />
@@ -383,7 +383,7 @@
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
                     android:background="@color/gray"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoRateContentTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoRateContentTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
 
@@ -395,7 +395,7 @@
                     android:text="제보 시각"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoRateContentTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoRateContentTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="20dp" />
@@ -408,7 +408,7 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/reportInfoUpTimeTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoUpTimeTxt"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -426,7 +426,7 @@
                 android:layout_height="50dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/reportDiscountparkInfoBackBoardConstLayout"
+                app:layout_constraintTop_toBottomOf="@+id/reportDiscountparkInfoBackBoardConstLayout"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
@@ -441,8 +441,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="@+id/reportInfoCancelBtn"
-                app:layout_constraintEnd_toEndOf="@+id/reportInfoCancelBtn"
-                app:layout_constraintStart_toStartOf="@+id/reportInfoCancelBtn"
+                app:layout_constraintRight_toRightOf="@+id/reportInfoCancelBtn"
+                app:layout_constraintLeft_toLeftOf="@+id/reportInfoCancelBtn"
                 app:layout_constraintTop_toTopOf="@+id/reportInfoCancelBtn" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

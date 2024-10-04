@@ -14,7 +14,7 @@
         android:background="@android:color/transparent"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp" />
@@ -61,7 +61,7 @@
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/chargeHavePointTxt"
+                app:layout_constraintTop_toBottomOf="@+id/chargeHavePointTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginLeft="10dp" />
 
@@ -73,8 +73,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="@+id/chargeHavePointContentTxt"
-                app:layout_constraintLeft_toRightOf="@id/chargeHavePointContentTxt"
-                app:layout_constraintTop_toTopOf="@id/chargeHavePointContentTxt"
+                app:layout_constraintLeft_toRightOf="@+id/chargeHavePointContentTxt"
+                app:layout_constraintTop_toTopOf="@+id/chargeHavePointContentTxt"
                 android:layout_marginLeft="5dp" />
 
             <TextView
@@ -105,7 +105,7 @@
                 android:textStyle="bold|italic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@id/chargePointSpinner"
+                app:layout_constraintTop_toTopOf="@+id/chargePointSpinner"
                 app:layout_constraintBottom_toBottomOf="@+id/chargePointSpinner"
                 app:layout_constraintLeft_toRightOf="@+id/chargePointSpinner"
                 android:layout_marginLeft="5dp"/>
@@ -171,8 +171,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/chargeBtn"
-        app:layout_constraintEnd_toEndOf="@+id/chargeBtn"
-        app:layout_constraintStart_toStartOf="@+id/chargeBtn"
+        app:layout_constraintRight_toRightOf="@+id/chargeBtn"
+        app:layout_constraintLeft_toLeftOf="@+id/chargeBtn"
         app:layout_constraintTop_toTopOf="@+id/chargeBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

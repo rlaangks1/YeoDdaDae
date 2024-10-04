@@ -239,7 +239,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/naviConstLayout"
-                app:layout_constraintLeft_toLeftOf="@id/gasStationSortHorizontalScrollView"
+                app:layout_constraintLeft_toLeftOf="@+id/gasStationSortHorizontalScrollView"
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="5dp">
 
@@ -281,7 +281,7 @@
                 android:background="@android:color/transparent"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                app:layout_constraintBottom_toTopOf="@id/zoomOutBtn"
+                app:layout_constraintBottom_toTopOf="@+id/zoomOutBtn"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginLeft="5dp"
                 android:layout_marginBottom="5dp"/>
@@ -293,7 +293,7 @@
                 android:background="@android:color/transparent"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                app:layout_constraintBottom_toTopOf="@id/zoomInBtn"
+                app:layout_constraintBottom_toTopOf="@+id/zoomInBtn"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginLeft="5dp"
                 android:layout_marginBottom="20dp" />

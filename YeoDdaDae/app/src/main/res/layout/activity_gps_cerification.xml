@@ -49,8 +49,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="@+id/decisionBtn"
-                app:layout_constraintEnd_toEndOf="@+id/decisionBtn"
-                app:layout_constraintStart_toStartOf="@+id/decisionBtn"
+                app:layout_constraintRight_toRightOf="@+id/decisionBtn"
+                app:layout_constraintLeft_toLeftOf="@+id/decisionBtn"
                 app:layout_constraintTop_toTopOf="@+id/decisionBtn" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -116,7 +116,7 @@
                 android:background="@android:color/transparent"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                app:layout_constraintBottom_toTopOf="@id/zoomOutBtn"
+                app:layout_constraintBottom_toTopOf="@+id/zoomOutBtn"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginLeft="5dp"
                 android:layout_marginBottom="5dp"/>
@@ -128,7 +128,7 @@
                 android:background="@android:color/transparent"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                app:layout_constraintBottom_toTopOf="@id/zoomInBtn"
+                app:layout_constraintBottom_toTopOf="@+id/zoomInBtn"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginLeft="5dp"
                 android:layout_marginBottom="20dp" />

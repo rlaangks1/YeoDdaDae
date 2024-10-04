@@ -14,7 +14,7 @@
         android:background="@android:color/transparent"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp" />
@@ -61,7 +61,7 @@
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/refundHavePointTxt"
+                app:layout_constraintTop_toBottomOf="@+id/refundHavePointTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginLeft="10dp" />
 
@@ -73,8 +73,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="@+id/refundHavePointContentTxt"
-                app:layout_constraintLeft_toRightOf="@id/refundHavePointContentTxt"
-                app:layout_constraintTop_toTopOf="@id/refundHavePointContentTxt"
+                app:layout_constraintLeft_toRightOf="@+id/refundHavePointContentTxt"
+                app:layout_constraintTop_toTopOf="@+id/refundHavePointContentTxt"
                 android:layout_marginLeft="5dp" />
 
             <TextView
@@ -113,8 +113,8 @@
                 android:textColor="@color/sub"
                 android:textStyle="bold|italic"
                 app:layout_constraintBottom_toBottomOf="@+id/refundTargetPointContentEditTxt"
-                app:layout_constraintLeft_toRightOf="@id/refundTargetPointContentEditTxt"
-                app:layout_constraintTop_toTopOf="@id/refundTargetPointContentEditTxt" />
+                app:layout_constraintLeft_toRightOf="@+id/refundTargetPointContentEditTxt"
+                app:layout_constraintTop_toTopOf="@+id/refundTargetPointContentEditTxt" />
 
             <TextView
                 android:id="@+id/refundWonTxt"
@@ -123,9 +123,9 @@
                 android:textStyle="bold|italic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@id/refundTargetPointContentEditTxt"
+                app:layout_constraintTop_toTopOf="@+id/refundTargetPointContentEditTxt"
                 app:layout_constraintBottom_toBottomOf="@+id/refundTargetPointContentEditTxt"
-                app:layout_constraintLeft_toRightOf="@id/refundPtTxt"
+                app:layout_constraintLeft_toRightOf="@+id/refundPtTxt"
                 android:layout_marginLeft="10dp"/>
 
             <TextView
@@ -201,7 +201,7 @@
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/refundAfterRefundPointTxt"
+                app:layout_constraintTop_toBottomOf="@+id/refundAfterRefundPointTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginLeft="10dp" />
 
@@ -213,8 +213,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="@+id/refundAfterRefundPointContentTxt"
-                app:layout_constraintLeft_toRightOf="@id/refundAfterRefundPointContentTxt"
-                app:layout_constraintTop_toTopOf="@id/refundAfterRefundPointContentTxt"
+                app:layout_constraintLeft_toRightOf="@+id/refundAfterRefundPointContentTxt"
+                app:layout_constraintTop_toTopOf="@+id/refundAfterRefundPointContentTxt"
                 android:layout_marginLeft="5dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -243,8 +243,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/refundBtn"
-        app:layout_constraintEnd_toEndOf="@+id/refundBtn"
-        app:layout_constraintStart_toStartOf="@+id/refundBtn"
+        app:layout_constraintRight_toRightOf="@+id/refundBtn"
+        app:layout_constraintLeft_toLeftOf="@+id/refundBtn"
         app:layout_constraintTop_toTopOf="@+id/refundBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
