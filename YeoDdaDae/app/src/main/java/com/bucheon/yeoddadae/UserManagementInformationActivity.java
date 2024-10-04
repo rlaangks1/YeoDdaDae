@@ -47,13 +47,15 @@ public class UserManagementInformationActivity extends AppCompatActivity {
     TextView userManagementInfoYdPointContentTxt;
     TextView userManagementInfoRegisterTimeContentTxt;
     TextView userManagementInfoStatusContentTxt;
+    View tempViewForMargin;
+    View userManagementInfoStatusLine;
     TextView userManagementInfoPauseLimitTxt;
     TextView userManagementInfoPauseLimitContentTxt;
-    ImageView userManagementInfoResumeBtn;
+    ImageButton userManagementInfoResumeBtn;
     TextView userManagementInfoResumeTxt;
-    ImageView userManagementInfoPauseBtn;
+    ImageButton userManagementInfoPauseBtn;
     TextView userManagementInfoPauseTxt;
-    ImageView userManagementInfoForceWithdrawalBtn;
+    ImageButton userManagementInfoForceWithdrawalBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +68,8 @@ public class UserManagementInformationActivity extends AppCompatActivity {
         userManagementInfoYdPointContentTxt = findViewById(R.id.userManagementInfoYdPointContentTxt);
         userManagementInfoRegisterTimeContentTxt = findViewById(R.id.userManagementInfoRegisterTimeContentTxt);
         userManagementInfoStatusContentTxt = findViewById(R.id.userManagementInfoStatusContentTxt);
+        tempViewForMargin = findViewById(R.id.tempViewForMargin);
+        userManagementInfoStatusLine = findViewById(R.id.userManagementInfoStatusLine);
         userManagementInfoPauseLimitTxt = findViewById(R.id.userManagementInfoPauseLimitTxt);
         userManagementInfoPauseLimitContentTxt = findViewById(R.id.userManagementInfoPauseLimitContentTxt);
         userManagementInfoResumeBtn = findViewById(R.id.userManagementInfoResumeBtn);
@@ -255,6 +259,8 @@ public class UserManagementInformationActivity extends AppCompatActivity {
                     userManagementInfoResumeTxt.setVisibility(View.GONE);
                     userManagementInfoPauseBtn.setVisibility(View.VISIBLE);
                     userManagementInfoPauseTxt.setVisibility(View.VISIBLE);
+                    tempViewForMargin.setVisibility(View.VISIBLE);
+                    userManagementInfoStatusLine.setVisibility(View.GONE);
                     userManagementInfoPauseLimitTxt.setVisibility(View.GONE);
                     userManagementInfoPauseLimitContentTxt.setVisibility(View.GONE);
                 }
@@ -263,6 +269,8 @@ public class UserManagementInformationActivity extends AppCompatActivity {
                     userManagementInfoResumeTxt.setVisibility(View.VISIBLE);
                     userManagementInfoPauseBtn.setVisibility(View.GONE);
                     userManagementInfoPauseTxt.setVisibility(View.GONE);
+                    tempViewForMargin.setVisibility(View.GONE);
+                    userManagementInfoStatusLine.setVisibility(View.VISIBLE);
                     userManagementInfoPauseLimitTxt.setVisibility(View.VISIBLE);
                     userManagementInfoPauseLimitContentTxt.setVisibility(View.VISIBLE);
                 }
