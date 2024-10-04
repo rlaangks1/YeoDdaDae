@@ -65,7 +65,7 @@
                     android:textSize="20sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/approvereportInfoBackBoardConstLayout" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/approveReportInfoIdContentTxt"
@@ -84,11 +84,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginLeft="50dp"
-                    android:layout_marginRight="50dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
                     android:background="@color/gray"
-                    app:layout_constraintEnd_toEndOf="@+id/approvereportInfoBackBoardConstLayout"
-                    app:layout_constraintStart_toStartOf="@+id/approvereportInfoBackBoardConstLayout"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/approveReportInfoIdContentTxt" />
 
                 <TextView
@@ -120,12 +120,12 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginLeft="40dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginRight="50dp"
+                    android:layout_marginRight="40dp"
                     android:background="@color/gray"
-                    app:layout_constraintEnd_toEndOf="@+id/approvereportInfoBackBoardConstLayout"
-                    app:layout_constraintStart_toStartOf="@+id/approvereportInfoBackBoardConstLayout"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/approveReportInfoParkNameContentTxt" />
 
                 <TextView
@@ -144,7 +144,7 @@
                 <TextView
                     android:id="@+id/approveReportInfoParkNewAddressContentTxt"
                     android:fontFamily="@font/paperlogy_5medium"
-                    android:textSize="15sp"
+                    android:textSize="14sp"
                     android:textColor="@color/sub"
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
@@ -157,7 +157,7 @@
                 <TextView
                     android:id="@+id/approveReportInfoParkOldAddressContentTxt"
                     android:fontFamily="@font/paperlogy_5medium"
-                    android:textSize="15sp"
+                    android:textSize="16sp"
                     android:textColor="@color/sub"
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
@@ -170,13 +170,12 @@
                     android:layout_width="match_parent"
                     android:fontFamily="@font/paperlogy_5medium"
                     android:layout_height="2dp"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginLeft="40dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginRight="50dp"
+                    android:layout_marginRight="40dp"
                     android:background="@color/gray"
-                    app:layout_constraintEnd_toEndOf="@+id/approvereportInfoBackBoardConstLayout"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/approvereportInfoBackBoardConstLayout"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/approveReportInfoParkOldAddressContentTxt" />
 
                 <TextView
@@ -208,13 +207,12 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginLeft="40dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginRight="50dp"
+                    android:layout_marginRight="40dp"
                     android:background="@color/gray"
-                    app:layout_constraintEnd_toEndOf="@+id/approvereportInfoBackBoardConstLayout"
-                    app:layout_constraintHorizontal_bias="0.15"
-                    app:layout_constraintStart_toStartOf="@+id/approvereportInfoBackBoardConstLayout"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/approveReportInfoConditionContentTxt" />
 
                 <TextView
@@ -222,7 +220,6 @@
                     android:fontFamily="@font/paperlogy_5medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:layout_marginTop="20dp"
                     android:text="혜택"
                     android:textColor="@color/black"
@@ -231,44 +228,54 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/approveReportInfoConditionContentTxt" />
 
-                <TextView
-                    android:id="@+id/approveReportInfoDiscountContentTxt"
-                    android:fontFamily="@font/paperlogy_5medium"
-                    android:textSize="17sp"
-                    android:textColor="@color/sub"
-                    android:textStyle="bold"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/approveReportInfoDiscountConstLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@+id/approveReportInfoDiscountTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="30dp"/>
+                    android:layout_marginTop="10dp" >
 
-                <TextView
-                    android:id="@+id/approveReportInfoWonTxt"
-                    android:fontFamily="@font/paperlogy_5medium"
-                    android:text="원 할인"
-                    android:textSize="15sp"
-                    android:textColor="@color/sub"
-                    android:textStyle="bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="@+id/approveReportInfoDiscountContentTxt"
-                    app:layout_constraintBottom_toBottomOf="@+id/approveReportInfoDiscountContentTxt"
-                    app:layout_constraintLeft_toRightOf="@+id/approveReportInfoDiscountContentTxt"
-                    android:layout_marginLeft="5dp"/>
+                    <TextView
+                        android:id="@+id/approveReportInfoDiscountContentTxt"
+                        android:text="0"
+                        android:textSize="17sp"
+                        android:textColor="@color/sub"
+                        android:fontFamily="@font/paperlogy_5medium"
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        android:layout_marginTop="10dp" />
+
+                    <TextView
+                        android:id="@+id/approveReportInfoWonTxt"
+                        android:fontFamily="@font/paperlogy_5medium"
+                        android:text="원 할인"
+                        android:textSize="15sp"
+                        android:textColor="@color/sub"
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="@+id/approveReportInfoDiscountContentTxt"
+                        app:layout_constraintBottom_toBottomOf="@+id/approveReportInfoDiscountContentTxt"
+                        app:layout_constraintLeft_toRightOf="@+id/approveReportInfoDiscountContentTxt"
+                        android:layout_marginLeft="5dp"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginLeft="40dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginRight="50dp"
+                    android:layout_marginRight="40dp"
                     android:background="@color/gray"
-                    app:layout_constraintEnd_toEndOf="@+id/approvereportInfoBackBoardConstLayout"
-                    app:layout_constraintStart_toStartOf="@+id/approvereportInfoBackBoardConstLayout"
-                    app:layout_constraintTop_toBottomOf="@+id/approveReportInfoWonTxt" />
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/approveReportInfoDiscountConstLayout" />
 
                 <TextView
                     android:id="@+id/approveReportInfoRateTxt"
@@ -276,12 +283,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:text="평가 : 정확 / 틀린부분있음 / 완전히틀림"
+                    android:text="평가 (정확 / 틀린부분있음 / 완전히틀림)"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/approveReportInfoDiscountContentTxt" />
+                    app:layout_constraintTop_toBottomOf="@+id/approveReportInfoDiscountConstLayout" />
 
                 <TextView
                     android:id="@+id/approveReportInfoRateContentTxt"
@@ -299,12 +306,12 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginLeft="40dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginRight="50dp"
+                    android:layout_marginRight="40dp"
                     android:background="@color/gray"
-                    app:layout_constraintEnd_toEndOf="@+id/approvereportInfoBackBoardConstLayout"
-                    app:layout_constraintStart_toStartOf="@+id/approvereportInfoBackBoardConstLayout"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/approveReportInfoRateContentTxt" />
 
                 <TextView
@@ -330,65 +337,65 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/approveReportInfoUpTimeTxt"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    android:layout_marginTop="10dp" />
-
-
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <ImageButton
+                android:id="@+id/approveReportInfoApproveBtn"
+                android:src="@drawable/gradate_button"
+                android:scaleType="fitCenter"
+                android:background="@android:color/transparent"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/approvereportInfoBackBoardConstLayout"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
-        <ImageButton
-            android:id="@+id/approveReportInfoApproveBtn"
-            android:src="@drawable/gradate_button"
-            android:scaleType="fitCenter"
-            android:background="@android:color/transparent"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/approvereportInfoBackBoardConstLayout"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            <TextView
+                android:text="승인"
+                android:textSize="25sp"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/approveReportInfoApproveBtn"
+                app:layout_constraintEnd_toEndOf="@+id/approveReportInfoApproveBtn"
+                app:layout_constraintStart_toStartOf="@+id/approveReportInfoApproveBtn"
+                app:layout_constraintTop_toTopOf="@+id/approveReportInfoApproveBtn" />
 
-        <TextView
-            android:text="승인"
-            android:textSize="25sp"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/approveReportInfoApproveBtn"
-            app:layout_constraintEnd_toEndOf="@+id/approveReportInfoApproveBtn"
-            app:layout_constraintStart_toStartOf="@+id/approveReportInfoApproveBtn"
-            app:layout_constraintTop_toTopOf="@+id/approveReportInfoApproveBtn" />
+            <ImageButton
+                android:id="@+id/approveReportInfoRejectionBtn"
+                android:src="@drawable/gradate_cancel_button"
+                android:scaleType="fitCenter"
+                android:background="@android:color/transparent"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/approveReportInfoApproveBtn"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
-        <ImageButton
-            android:id="@+id/approveReportInfoRejectionBtn"
-            android:src="@drawable/gradate_cancel_button"
-            android:scaleType="fitCenter"
-            android:background="@android:color/transparent"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/approveReportInfoApproveBtn"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
-
-        <TextView
-            android:text="거부"
-            android:textSize="25sp"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/approveReportInfoRejectionBtn"
-            app:layout_constraintEnd_toEndOf="@+id/approveReportInfoRejectionBtn"
-            app:layout_constraintStart_toStartOf="@+id/approveReportInfoRejectionBtn"
-            app:layout_constraintTop_toTopOf="@+id/approveReportInfoRejectionBtn" />
+            <TextView
+                android:text="거부"
+                android:textSize="25sp"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/approveReportInfoRejectionBtn"
+                app:layout_constraintEnd_toEndOf="@+id/approveReportInfoRejectionBtn"
+                app:layout_constraintStart_toStartOf="@+id/approveReportInfoRejectionBtn"
+                app:layout_constraintTop_toTopOf="@+id/approveReportInfoRejectionBtn" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

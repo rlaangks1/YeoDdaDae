@@ -35,6 +35,7 @@ public class ReportDiscountParkInformationActivity extends AppCompatActivity {
     TextView reportInfoStatusContentTxt;
     TextView reportInfoCancelReasonTxt;
     TextView reportInfoCancelReasonContentTxt;
+    View reportInfoCancelLine;
     TextView reportInfoParkNameContentTxt;
     TextView reportInfoParkNewAddressContentTxt;
     TextView reportInfoParkOldAddressContentTxt;
@@ -56,6 +57,7 @@ public class ReportDiscountParkInformationActivity extends AppCompatActivity {
         reportInfoStatusContentTxt = findViewById(R.id.reportInfoStatusContentTxt);
         reportInfoCancelReasonTxt = findViewById(R.id.reportInfoCancelReasonTxt);
         reportInfoCancelReasonContentTxt = findViewById(R.id.reportInfoCancelReasonContentTxt);
+        reportInfoCancelLine = findViewById(R.id.reportInfoCancelLine);
         reportInfoParkNameContentTxt = findViewById(R.id.reportInfoParkNameContentTxt);
         reportInfoParkNewAddressContentTxt = findViewById(R.id.reportInfoParkNewAddressContentTxt);
         reportInfoParkOldAddressContentTxt = findViewById(R.id.reportInfoParkOldAddressContentTxt);
@@ -145,6 +147,7 @@ public class ReportDiscountParkInformationActivity extends AppCompatActivity {
                     reportInfoCancelTxt.setVisibility(View.GONE);
                     reportInfoCancelReasonTxt.setVisibility(View.GONE);
                     reportInfoCancelReasonContentTxt.setVisibility(View.GONE);
+                    reportInfoCancelLine.setVisibility(View.GONE);
                 }
                 else if ((boolean) reportInfo.get("isCancelled")) {
                     reportInfoStatusContentTxt.setText("취소됨");
@@ -152,6 +155,7 @@ public class ReportDiscountParkInformationActivity extends AppCompatActivity {
                     reportInfoCancelTxt.setVisibility(View.GONE);
                     reportInfoCancelReasonTxt.setVisibility(View.VISIBLE);
                     reportInfoCancelReasonContentTxt.setVisibility(View.VISIBLE);
+                    reportInfoCancelLine.setVisibility(View.VISIBLE);
                     reportInfoCancelReasonContentTxt.setText((String) reportInfo.get("cancelReason"));
                 }
                 else {
@@ -160,6 +164,7 @@ public class ReportDiscountParkInformationActivity extends AppCompatActivity {
                     reportInfoCancelTxt.setVisibility(View.VISIBLE);
                     reportInfoCancelReasonTxt.setVisibility(View.GONE);
                     reportInfoCancelReasonContentTxt.setVisibility(View.GONE);
+                    reportInfoCancelLine.setVisibility(View.GONE);
                 }
 
                 reportInfoParkNameContentTxt.setText((String) reportInfo.get("parkName"));

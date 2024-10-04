@@ -50,6 +50,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
     TextView myShareParkInfoStatusContentTxt;
     TextView myShareParkInfoCancelReasonTxt;
     TextView myShareParkInfoCancelReasonContentTxt;
+    View myShareParkInfoCancelReasonLine;
     TextView myShareParkInfoUpTimeContentTxt;
     TextView myShareParkInfoPriceContentTxt;
     TextView myShareParkInfoHourPerTxt;
@@ -82,6 +83,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
         myShareParkInfoStatusContentTxt = findViewById(R.id.myShareParkInfoStatusContentTxt);
         myShareParkInfoCancelReasonTxt = findViewById(R.id.myShareParkInfoCancelReasonTxt);
         myShareParkInfoCancelReasonContentTxt = findViewById(R.id.myShareParkInfoCancelReasonContentTxt);
+        myShareParkInfoCancelReasonLine = findViewById(R.id.myShareParkInfoCancelReasonLine);
         myShareParkInfoUpTimeContentTxt = findViewById(R.id.myShareParkInfoUpTimeContentTxt);
         myShareParkInfoPriceContentTxt = findViewById(R.id.myShareParkInfoPriceContentTxt);
         myShareParkInfoHourPerTxt = findViewById(R.id.myShareParkInfoHourPerTxt);
@@ -332,10 +334,12 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                             myShareParkInfoCancelReasonTxt.setVisibility(View.VISIBLE);
                             myShareParkInfoCancelReasonContentTxt.setVisibility(View.VISIBLE);
                             myShareParkInfoCancelReasonContentTxt.setText((String) shareParkInfo.get("cancelReason"));
+                            myShareParkInfoCancelReasonLine.setVisibility(View.VISIBLE);
                         }
                         else if (!isApproval) {
                             myShareParkInfoCancelReasonTxt.setVisibility(View.GONE);
                             myShareParkInfoCancelReasonContentTxt.setVisibility(View.GONE);
+                            myShareParkInfoCancelReasonLine.setVisibility(View.GONE);
 
                             Calendar ca = Calendar.getInstance();
                             int year = ca.get(Calendar.YEAR);
@@ -388,6 +392,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                         else {
                             myShareParkInfoCancelReasonTxt.setVisibility(View.GONE);
                             myShareParkInfoCancelReasonContentTxt.setVisibility(View.GONE);
+                            myShareParkInfoCancelReasonLine.setVisibility(View.GONE);
 
                             Calendar ca = Calendar.getInstance();
                             int year = ca.get(Calendar.YEAR);

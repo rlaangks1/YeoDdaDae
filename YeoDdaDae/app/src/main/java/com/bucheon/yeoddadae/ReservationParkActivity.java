@@ -193,10 +193,11 @@ public class ReservationParkActivity extends AppCompatActivity {
 
                     textBuilder.append(year + "년 " + month + "월 " + day + "일 " + startTimeString + "부터 " + endTimeString + "까지\n");
                 }
+                String shareTimeString = textBuilder.toString();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        reservationShareTimeContentTxt.setText(textBuilder.toString());
+                        reservationShareTimeContentTxt.setText(shareTimeString.substring(0, shareTimeString.length() - 1));
                     }
                 });
 
