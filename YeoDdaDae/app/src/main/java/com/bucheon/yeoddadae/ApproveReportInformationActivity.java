@@ -29,6 +29,7 @@ import java.util.Locale;
 public class ApproveReportInformationActivity extends AppCompatActivity {
     String documentId;
     HashMap<String, Object> reportInfo;
+    ReasonDialog rd;
 
     ImageButton approveReportInfoBackBtn;
     TextView approveReportInfoIdContentTxt;
@@ -40,6 +41,7 @@ public class ApproveReportInformationActivity extends AppCompatActivity {
     TextView approveReportInfoWonTxt;
     TextView approveReportInfoRateContentTxt;
     TextView approveReportInfoUpTimeContentTxt;
+    ImageButton approveReportInfoShowReasonBtn;
     ImageButton approveReportInfoApproveBtn;
     ImageButton approveReportInfoRejectionBtn;
 
@@ -58,6 +60,7 @@ public class ApproveReportInformationActivity extends AppCompatActivity {
         approveReportInfoWonTxt = findViewById(R.id.approveReportInfoWonTxt);
         approveReportInfoRateContentTxt =findViewById(R.id.approveReportInfoRateContentTxt);
         approveReportInfoUpTimeContentTxt = findViewById(R.id.approveReportInfoUpTimeContentTxt);
+        approveReportInfoShowReasonBtn = findViewById(R.id.approveReportInfoShowReasonBtn);
         approveReportInfoApproveBtn = findViewById(R.id.approveReportInfoApproveBtn);
         approveReportInfoRejectionBtn = findViewById(R.id.approveReportInfoRejectionBtn);
 
@@ -84,6 +87,14 @@ public class ApproveReportInformationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        approveReportInfoShowReasonBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rd = new ReasonDialog(documentId, ApproveReportInformationActivity.this);
+                rd.show();
             }
         });
 

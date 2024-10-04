@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,7 @@ public class ParkHistoryDialog extends Dialog {
 
     ImageButton parkHistoryBackBtn;
     ListView parkHistoryListView;
+    TextView parkHistoryNoTxt;
 
     public ParkHistoryDialog(String id, @NonNull Context context, ParkHistoryDialogListener listener) {
         super(context);
@@ -49,6 +51,7 @@ public class ParkHistoryDialog extends Dialog {
 
         parkHistoryBackBtn = findViewById(R.id.parkHistoryBackBtn);
         parkHistoryListView = findViewById(R.id.parkHistoryListView);
+        parkHistoryNoTxt = findViewById(R.id.parkHistoryNoTxt);
 
         pha = new ParkHistoryAdapter();
 
@@ -147,6 +150,15 @@ public class ParkHistoryDialog extends Dialog {
 
                 pha.sortByUpTime();
                 parkHistoryListView.setAdapter(pha);
+
+                if (pha.getCount() == 0) {
+                    parkHistoryListView.setVisibility(View.GONE);
+                    parkHistoryNoTxt.setVisibility(View.VISIBLE);
+                }
+                else {
+                    parkHistoryListView.setVisibility(View.VISIBLE);
+                    parkHistoryNoTxt.setVisibility(View.GONE);
+                }
             }
 
             @Override

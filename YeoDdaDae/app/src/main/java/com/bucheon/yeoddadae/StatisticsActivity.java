@@ -198,7 +198,7 @@ public class StatisticsActivity extends AppCompatActivity {
                 }
 
                 if (startTimestamp != null && endTimestamp != null) {
-                    fd.getStatistics(startTimestamp, endTimestamp, new OnFirestoreDataLoadedListener() {
+                    fd.loadStatistics(startTimestamp, endTimestamp, new OnFirestoreDataLoadedListener() {
                         @Override
                         public void onDataLoaded(Object data) {
                             statisticsDatas = (HashMap<String, Long>) data;
@@ -310,7 +310,7 @@ public class StatisticsActivity extends AppCompatActivity {
             Timestamp endTs = new Timestamp(endDateTime);
 
             FirestoreDatabase fd2 = new FirestoreDatabase();
-            fd2.getStatistics(startTs, endTs, new OnFirestoreDataLoadedListener() {
+            fd2.loadStatistics(startTs, endTs, new OnFirestoreDataLoadedListener() {
                 @Override
                 public void onDataLoaded(Object data) {
                     statisticsDatas = (HashMap<String, Long>) data;
