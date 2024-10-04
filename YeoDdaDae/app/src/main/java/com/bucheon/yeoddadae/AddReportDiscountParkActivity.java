@@ -32,6 +32,7 @@ import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapGpsManager;
 import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapPolyLine;
+import com.skt.Tmap.address_info.TMapAddressInfo;
 import com.skt.Tmap.poi_item.TMapPOIItem;
 import com.skt.tmap.engine.navigation.SDKManager;
 
@@ -54,6 +55,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
     TMapGpsManager gpsManager;
 
     ImageButton addReportDiscountParkBackBtn;
+    TextView addReportDiscountParkMyLocationContentTxt;
     EditText addReportDiscountParkAddressContentEditTxt;
     EditText addReportDiscountParkConditionContentEditTxt;
     EditText addReportDiscountParkBenefitContentEditTxt;
@@ -72,6 +74,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
         setContentView(R.layout.activity_add_report_discount_park);
 
         addReportDiscountParkBackBtn = findViewById(R.id.addReportDiscountParkBackBtn);
+        addReportDiscountParkMyLocationContentTxt = findViewById(R.id.addReportDiscountParkMyLocationContentTxt);
         addReportDiscountParkAddressContentEditTxt = findViewById(R.id.addReportDiscountParkAddressContentEditTxt);
         addReportDiscountParkConditionContentEditTxt = findViewById(R.id.addReportDiscountParkConditionContentEditTxt);
         addReportDiscountParkBenefitContentEditTxt = findViewById(R.id.addReportDiscountParkBenefitContentEditTxt);
@@ -361,12 +364,39 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
     @Override
     public void onLocationChange(Location location) {
         nowLat = location.getLatitude();
-        Log.d(ContentValues.TAG, "onLocationChange 호출됨 : lat(경도) = " + nowLat);
-
         nowLon = location.getLongitude();
-        Log.d(ContentValues.TAG, "onLocationChange 호출됨 : lon(위도) = " + nowLon);
+        Log.d(TAG, "onLocationChange 호출됨 : lat(경도) = " + nowLat + ", lon(위도) = " + nowLon);
 
         nowPoint = new TMapPoint(nowLat, nowLon);
+
+        TMapData tMapData = new TMapData();
+        tMapData.reverseGeocoding(nowLat, nowLon, "A10", new TMapData.reverseGeocodingListenerCallback() {
+            @Override
+            public void onReverseGeocoding(TMapAddressInfo tMapAddressInfo) {
+                if (tMapAddressInfo != null) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String [] adrresses = tMapAddressInfo.strFullAddress.split(",");
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    addReportDiscountParkMyLocationContentTxt.setText(adrresses[1]);
+                                }
+                            });
+                        }
+                    });
+                }
+                else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            addReportDiscountParkMyLocationContentTxt.setText("...");
+                        }
+                    });
+                }
+            }
+        });
     }
 
     public void loadingStart() {

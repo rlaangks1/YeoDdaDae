@@ -1992,7 +1992,7 @@ public class FirestoreDatabase {
                             db.collection("rateReport")
                                     .document(document.getId())
                                     .update("reason", reason)
-                                    .addOnFailureListener(aVoid -> {
+                                    .addOnSuccessListener(aVoid -> {
                                         listener.onDataLoaded(true);
                                     })
                                     .addOnFailureListener(e -> {

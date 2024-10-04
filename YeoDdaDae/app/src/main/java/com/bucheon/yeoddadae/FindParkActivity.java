@@ -1266,10 +1266,8 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     @Override
     public void onLocationChange(Location location){
         lat = location.getLatitude();
-        Log.d(TAG, "onLocationChange 호출됨 : lat(경도) = " + lat);
-
         lon = location.getLongitude();
-        Log.d(TAG, "onLocationChange 호출됨 : lon(위도) = " + lon);
+        Log.d(TAG, "onLocationChange 호출됨 : lat(경도) = " + lat + ", lon(위도) = " + lon);
 
         nowPoint = gpsManager.getLocation();
         tMapView.setLocationPoint(lon, lat);

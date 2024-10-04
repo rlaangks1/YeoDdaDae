@@ -44,6 +44,7 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
     TextView mistakeTxt;
     ImageButton rateReportWrongBtn;
     TextView wrongTxt;
+    View tempViewForMargin;
     ConstraintLayout rateReportReasonConstLayout;
     EditText rateReportReasonEditTxt;
     ImageButton rateReportReasonUploadBtn;
@@ -72,6 +73,7 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
         mistakeTxt = findViewById(R.id.mistakeTxt);
         rateReportWrongBtn = findViewById(R.id.rateReportWrongBtn);
         wrongTxt = findViewById(R.id.wrongTxt);
+        tempViewForMargin = findViewById(R.id.tempViewForMargin);
         rateReportReasonConstLayout = findViewById(R.id.rateReportReasonConstLayout);
         rateReportReasonEditTxt = findViewById(R.id.rateReportReasonEditTxt);
         rateReportReasonUploadBtn = findViewById(R.id.rateReportReasonUploadBtn);
@@ -194,18 +196,21 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
                             rateReportPerfectBtn.setImageResource(R.drawable.disabled_button);
                             rateReportMistakeBtn.setImageResource(R.drawable.disabled_button);
                             rateReportWrongBtn.setImageResource(R.drawable.disabled_button);
+                            tempViewForMargin.setVisibility(View.VISIBLE);
                             rateReportReasonConstLayout.setVisibility(View.GONE);
                         }
                         else if (rates[3] == 1) {
                             rateReportPerfectBtn.setImageResource(R.drawable.gradate_button);
                             rateReportMistakeBtn.setImageResource(R.drawable.disabled_button);
                             rateReportWrongBtn.setImageResource(R.drawable.disabled_button);
+                            tempViewForMargin.setVisibility(View.VISIBLE);
                             rateReportReasonConstLayout.setVisibility(View.GONE);
                         }
                         else if (rates[3] == 2) {
                             rateReportPerfectBtn.setImageResource(R.drawable.disabled_button);
                             rateReportMistakeBtn.setImageResource(R.drawable.gradate_button);
                             rateReportWrongBtn.setImageResource(R.drawable.disabled_button);
+                            tempViewForMargin.setVisibility(View.GONE);
                             rateReportReasonConstLayout.setVisibility(View.VISIBLE);
                             getReason();
                         }
@@ -213,6 +218,7 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
                             rateReportPerfectBtn.setImageResource(R.drawable.disabled_button);
                             rateReportMistakeBtn.setImageResource(R.drawable.disabled_button);
                             rateReportWrongBtn.setImageResource(R.drawable.gradate_button);
+                            tempViewForMargin.setVisibility(View.VISIBLE);
                             rateReportReasonConstLayout.setVisibility(View.GONE);
                         }
                     }

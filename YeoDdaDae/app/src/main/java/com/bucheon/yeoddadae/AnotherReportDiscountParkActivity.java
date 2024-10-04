@@ -22,7 +22,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.Timestamp;
+import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapGpsManager;
+import com.skt.Tmap.address_info.TMapAddressInfo;
 import com.skt.tmap.engine.navigation.SDKManager;
 
 import java.util.ArrayList;
@@ -40,6 +42,7 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
     ReportDiscountParkAdapter rdpa;
 
     ImageButton anotherReportBackBtn;
+    TextView anotherReportMyLocationContentTxt;
     Spinner anotherReportDistanceSpinner;
     ListView anotherReportListView;
     ImageButton toAddReportBtn;
@@ -51,6 +54,7 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
         setContentView(R.layout.activity_another_report_discount_park);
 
         anotherReportBackBtn = findViewById(R.id.anotherReportBackBtn);
+        anotherReportMyLocationContentTxt = findViewById(R.id.anotherReportMyLocationContentTxt);
         anotherReportDistanceSpinner = findViewById(R.id.anotherReportDistanceSpinner);
         anotherReportListView = findViewById(R.id.anotherReportListView);
         toAddReportBtn = findViewById(R.id.toAddReportBtn);
@@ -135,10 +139,37 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
     @Override
     public void onLocationChange(Location location) {
         nowLat = location.getLatitude();
-        Log.d(ContentValues.TAG, "onLocationChange 호출됨 : nowLat(경도) = " + nowLat);
-
         nowLon = location.getLongitude();
-        Log.d(ContentValues.TAG, "onLocationChange 호출됨 : nowLon(위도) = " + nowLon);
+        Log.d(TAG, "onLocationChange 호출됨 : lat(경도) = " + nowLat + ", lon(위도) = " + nowLon);
+
+        TMapData tMapData = new TMapData();
+        tMapData.reverseGeocoding(nowLat, nowLon, "A10", new TMapData.reverseGeocodingListenerCallback() {
+            @Override
+            public void onReverseGeocoding(TMapAddressInfo tMapAddressInfo) {
+                if (tMapAddressInfo != null) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String [] adrresses = tMapAddressInfo.strFullAddress.split(",");
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    anotherReportMyLocationContentTxt.setText(adrresses[1]);
+                                }
+                            });
+                        }
+                    });
+                }
+                else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            anotherReportMyLocationContentTxt.setText("...");
+                        }
+                    });
+                }
+            }
+        });
     }
 
     private void checkPermission() {
