@@ -32,28 +32,27 @@
         app:layout_constraintRight_toRightOf="parent" />
 
     <ScrollView
+        android:background="@color/lightgray"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/reservationInfoBackBtn"
-        app:layout_constraintBottom_toTopOf="@+id/reservationInfoBtnConstLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="10dp" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/lightgray">
+            android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/round_background" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/reservationInfoBackBoardConstLayout"
+            android:background="@drawable/round_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp">
 
             <TextView
                 android:id="@+id/reservationInfoIdTxt"
@@ -62,7 +61,7 @@
                 android:fontFamily="@font/paperlogy_5medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@+id/imageView4"
+                app:layout_constraintTop_toTopOf="@+id/reservationInfoBackBoardConstLayout"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 android:layout_marginTop="10dp" />
@@ -72,6 +71,7 @@
                 android:textSize="17sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
+                android:fontFamily="@font/paperlogy_5medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationInfoIdTxt"
@@ -100,14 +100,14 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/reservationInfoIdContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="10dp" />
+                android:layout_marginTop="20dp" />
 
             <TextView
                 android:id="@+id/reservationInfoStatusContentTxt"
-                android:textSize="25sp"
+                android:textSize="17sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
+                android:fontFamily="@font/paperlogy_5medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationInfoStatusTxt"
@@ -137,14 +137,14 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationInfoStatusContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="10dp" />
+                android:layout_marginTop="20dp" />
 
             <TextView
                 android:id="@+id/reservationInfoUpTimeContentTxt"
-                android:textSize="25sp"
+                android:textSize="17sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
+                android:fontFamily="@font/paperlogy_5medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationInfoUpTimeTxt"
@@ -174,14 +174,14 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationInfoUpTimeContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="10dp" />
+                android:layout_marginTop="20dp" />
 
             <TextView
                 android:id="@+id/reservationInfoTimeContentTxt"
-                android:textSize="20sp"
+                android:textSize="17sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
+                android:fontFamily="@font/paperlogy_5medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationInfoTimeTxt"
@@ -211,27 +211,29 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationInfoTimeContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="10dp" />
+                android:layout_marginTop="20dp" />
 
             <TextView
                 android:id="@+id/reservationInfoPriceContentTxt"
-                android:textSize="25sp"
+                android:textSize="17sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
+                android:fontFamily="@font/paperlogy_5medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/reservationInfoPriceTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginTop="10dp" />
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"/>
 
             <TextView
                 android:id="@+id/reservationInfoPtTxt"
                 android:text="pt"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
+                android:fontFamily="@font/paperlogy_5medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@+id/reservationInfoPriceContentTxt"
@@ -260,14 +262,14 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationInfoPriceContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="10dp" />
+                android:layout_marginTop="20dp" />
 
             <TextView
                 android:id="@+id/reservationInfoShareParkNewAddressContentTxt"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
+                android:fontFamily="@font/paperlogy_5medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationInfoShareParkAddressTxt"
@@ -277,92 +279,85 @@
 
             <TextView
                 android:id="@+id/reservationInfoShareParkOldAddressContentTxt"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
+                android:fontFamily="@font/paperlogy_5medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationInfoShareParkNewAddressContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginTop="10dp" />
+                app:layout_constraintRight_toRightOf="parent" />
 
             <TextView
                 android:id="@+id/reservationInfoShareParkDetailaddressContentTxt"
-                android:textSize="25sp"
+                android:textSize="15sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
+                android:fontFamily="@font/paperlogy_5medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/reservationInfoShareParkOldAddressContentTxt"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginTop="10dp" />
+                app:layout_constraintRight_toRightOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageButton
+            android:id="@+id/reservationInfoCancelBtn"
+            android:src="@drawable/gradate_cancel_button"
+            android:scaleType="fitCenter"
+            android:background="@android:color/transparent"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            app:layout_constraintTop_toBottomOf="@id/reservationInfoNaviBtn"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
+
+        <TextView
+            android:id="@+id/reservationInfoCancelTxt"
+            android:text="예약취소"
+            android:textSize="25sp"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/reservationInfoCancelBtn"
+            app:layout_constraintBottom_toBottomOf="@+id/reservationInfoCancelBtn"
+            app:layout_constraintLeft_toLeftOf="@+id/reservationInfoCancelBtn"
+            app:layout_constraintRight_toRightOf="@+id/reservationInfoCancelBtn" />
+
+        <ImageButton
+            android:id="@+id/reservationInfoNaviBtn"
+            android:src="@drawable/gradate_button"
+            android:scaleType="fitCenter"
+            android:background="@android:color/transparent"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reservationInfoBackBoardConstLayout"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+
+        <TextView
+            android:id="@+id/reservationInfoNaviTxt"
+            android:text="길 안내"
+            android:textSize="25sp"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/reservationInfoNaviBtn"
+            app:layout_constraintEnd_toEndOf="@+id/reservationInfoNaviBtn"
+            app:layout_constraintStart_toStartOf="@+id/reservationInfoNaviBtn"
+            app:layout_constraintTop_toTopOf="@+id/reservationInfoNaviBtn" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/reservationInfoBtnConstLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:background="@color/lightgray"
-        >
-    <ImageButton
-        android:id="@+id/reservationInfoCancelBtn"
-        android:src="@drawable/gradate_cancel_button"
-        android:scaleType="fitCenter"
-        android:background="@android:color/transparent"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"/>
-
-    <TextView
-        android:id="@+id/reservationInfoCancelTxt"
-        android:text="예약취소"
-        android:textSize="25sp"
-        android:textColor="@color/white"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@+id/reservationInfoCancelBtn"
-        app:layout_constraintBottom_toBottomOf="@+id/reservationInfoCancelBtn"
-        app:layout_constraintLeft_toLeftOf="@+id/reservationInfoCancelBtn"
-        app:layout_constraintRight_toRightOf="@+id/reservationInfoCancelBtn" />
-
-    <ImageButton
-        android:id="@+id/reservationInfoNaviBtn"
-        android:src="@drawable/gradate_button"
-        android:scaleType="fitCenter"
-        android:background="@android:color/transparent"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/reservationInfoCancelBtn"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
-
-    <TextView
-        android:id="@+id/reservationInfoNaviTxt"
-        android:text="길 안내"
-        android:textSize="25sp"
-        android:textColor="@color/white"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/reservationInfoNaviBtn"
-        app:layout_constraintEnd_toEndOf="@+id/reservationInfoNaviBtn"
-        app:layout_constraintStart_toStartOf="@+id/reservationInfoNaviBtn"
-        app:layout_constraintTop_toTopOf="@+id/reservationInfoNaviBtn" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

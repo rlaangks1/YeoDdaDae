@@ -67,7 +67,7 @@
 
                 <TextView
                     android:id="@+id/reservationParkNewAddressContentTxt"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:fontFamily="@font/paperlogy_5medium"
                     android:textColor="@color/sub"
                     android:textStyle="bold"
@@ -80,7 +80,7 @@
 
                 <TextView
                     android:id="@+id/reservationParkOldAddressContentTxt"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:fontFamily="@font/paperlogy_5medium"
                     android:textColor="@color/sub"
                     android:textStyle="bold"
@@ -88,8 +88,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/reservationParkNewAddressContentTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    android:layout_marginTop="10dp" />
+                    app:layout_constraintRight_toRightOf="parent" />
 
                 <View
                     android:layout_width="match_parent"
