@@ -631,6 +631,7 @@ public class FirestoreDatabase {
 
     public void findDicountPark(double nowLat, double nowLon, double radiusKiloMeter, OnFirestoreDataLoadedListener listener) {
         ArrayList<ParkItem> resultList = new ArrayList<>();
+        ArrayList<String> poiIdList = new ArrayList<>();
 
         db.collection("reportDiscountPark")
                 .whereEqualTo("isApproval", true)
@@ -638,16 +639,27 @@ public class FirestoreDatabase {
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (DocumentSnapshot document : queryDocumentSnapshots) {
-                        double discountParkLat = (double) document.get("poiLat");
-                        double discountParkLon = (double) document.get("poiLon");
+                        if (poiIdList.contains((String) document.get("poiID"))) {
+                            for (ParkItem pi : resultList) {
+                                if (pi.getPoiId().equals((String) document.get("poiID"))) {
+                                    pi.addConditionAndDiscount((ArrayList<String>) document.get("condition"), (ArrayList<Long>) document.get("discount"));
+                                    break;
+                                }
+                            }
+                        }
+                        else {
+                            double discountParkLat = (double) document.get("poiLat");
+                            double discountParkLon = (double) document.get("poiLon");
 
-                        TMapPolyLine tpolyline = new TMapPolyLine();
-                        tpolyline.addLinePoint(new TMapPoint(nowLat, nowLon));
-                        tpolyline.addLinePoint(new TMapPoint(discountParkLat, discountParkLon));
-                        double distance = tpolyline.getDistance() / 1000; // km단위
+                            TMapPolyLine tpolyline = new TMapPolyLine();
+                            tpolyline.addLinePoint(new TMapPoint(nowLat, nowLon));
+                            tpolyline.addLinePoint(new TMapPoint(discountParkLat, discountParkLon));
+                            double distance = tpolyline.getDistance() / 1000; // km단위
 
-                        if (distance <= radiusKiloMeter) {
-                            resultList.add(new ParkItem(6, (String) document.get("parkName"), Double.toString(distance), null, (String) document.get("poiPhone"), (String) document.get("parkCondition"), (long) document.get("parkDiscount"), Double.toString(discountParkLat), Double.toString(discountParkLon), (String) document.get("poiID"), document.getId()));
+                            if (distance <= radiusKiloMeter) {
+                                resultList.add(new ParkItem(6, (String) document.get("parkName"), Double.toString(distance), null, (String) document.get("poiPhone"), (ArrayList<String>) document.get("condition"), (ArrayList<Long>) document.get("discount"), Double.toString(discountParkLat), Double.toString(discountParkLon), (String) document.get("poiID"), document.getId()));
+                                poiIdList.add((String) document.get("poiID"));
+                            }
                         }
                     }
                     if (resultList != null && resultList.size() != 0) {
@@ -745,7 +757,7 @@ public class FirestoreDatabase {
 
                         if (distance <= radiusKiloMeter) {
                             String parkName = (String) document.get("ownerId") + ": " + (String) document.get("parkDetailAddress");
-                            resultList.add(new ParkItem(3, parkName, Double.toString(distance), Long.toString((long) document.get("price")), (String) document.get("ownerPhone"), null, -1, Double.toString(shareParkLat), Double.toString(shareParkLon), null, document.getId()));
+                            resultList.add(new ParkItem(3, parkName, Double.toString(distance), Long.toString((long) document.get("price")), (String) document.get("ownerPhone"), null, null, Double.toString(shareParkLat), Double.toString(shareParkLon), null, document.getId()));
                         }
                     }
                     if (resultList != null && resultList.size() != 0) {

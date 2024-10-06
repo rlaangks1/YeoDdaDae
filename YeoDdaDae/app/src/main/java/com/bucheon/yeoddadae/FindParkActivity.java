@@ -102,7 +102,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     TMapPoint saveScrollPoint;
     TMapMarkerItem selectedMarker;
     ParkAdapter parkAdapter;
-    SearchParkAdapter spa = new SearchParkAdapter();
+    SearchParkAdapter spa;
     ParkHistoryDialog phd;
     FirestoreDatabase fd;
 
@@ -229,6 +229,8 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             Log.d(TAG, "loginId가 전달되지 않음 (오류)");
             finish();
         }
+
+        spa = new SearchParkAdapter(FindParkActivity.this);
 
         initSttService();
 
@@ -582,19 +584,19 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                     double distance = tpolyline.getDistance() / 1000; // km단위
 
                                     if (item.firstNo.equals("0") && item.secondNo.equals("0")) {
-                                        spa.addPark(new ParkItem(4, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                        spa.addPark(new ParkItem(4, item.name, Double.toString(distance), null, item.telNo, null, null, item.frontLat, item.frontLon, item.id, null));
                                     }
                                     else {
                                         if (item.name.contains("주차")) {
                                             if (item.name.contains("공영")) {
-                                                spa.addPark(new ParkItem(2, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                                spa.addPark(new ParkItem(2, item.name, Double.toString(distance), null, item.telNo, null, null, item.frontLat, item.frontLon, item.id, null));
                                             }
                                             else {
-                                                spa.addPark(new ParkItem(1, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                                spa.addPark(new ParkItem(1, item.name, Double.toString(distance), null, item.telNo, null, null, item.frontLat, item.frontLon, item.id, null));
                                             }
                                         }
                                         else {
-                                            spa.addPark(new ParkItem(5, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                            spa.addPark(new ParkItem(5, item.name, Double.toString(distance), null, item.telNo, null, null, item.frontLat, item.frontLon, item.id, null));
                                         }
                                     }
                                 }
@@ -1087,10 +1089,10 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                         double distance = tpolyline.getDistance() / 1000; // km단위
 
                                         if (item.name.contains("공영")) {
-                                            parkAdapter.addItem(new ParkItem(2, item.name, Double.toString(distance), item.fee, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                            parkAdapter.addItem(new ParkItem(2, item.name, Double.toString(distance), item.fee, item.telNo, null, null, item.frontLat, item.frontLon, item.id, null));
                                         }
                                         else {
-                                            parkAdapter.addItem(new ParkItem(1, item.name, Double.toString(distance), item.fee, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                            parkAdapter.addItem(new ParkItem(1, item.name, Double.toString(distance), item.fee, item.telNo, null, null, item.frontLat, item.frontLon, item.id, null));
                                         }
                                         TMapPoint tpoint = new TMapPoint(Double.parseDouble(item.frontLat), Double.parseDouble(item.frontLon));
                                         TMapMarkerItem tItem = new TMapMarkerItem();

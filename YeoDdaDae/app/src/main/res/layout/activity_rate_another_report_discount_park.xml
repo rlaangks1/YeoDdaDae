@@ -178,11 +178,11 @@
                     app:layout_constraintRight_toRightOf="parent" />
 
                 <TextView
-                    android:id="@+id/rateReportConditionTxt"
+                    android:id="@+id/rateReportConditionAndDiscountTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:text="조건"
+                    android:text="조건 및 혜택"
                     android:textSize="20sp"
                     android:fontFamily="@font/paperlogy_5medium"
                     android:textColor="@color/black"
@@ -191,7 +191,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/rateReportParkOldAddressContentTxt" />
 
                 <TextView
-                    android:id="@+id/rateReportConditionContentTxt"
+                    android:id="@+id/rateReportConditionAndDiscountContentTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -201,7 +201,7 @@
                     android:fontFamily="@font/paperlogy_5medium"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/rateReportConditionTxt" />
+                    app:layout_constraintTop_toBottomOf="@+id/rateReportConditionAndDiscountTxt" />
 
                 <View
                     android:layout_width="match_parent"
@@ -210,67 +210,7 @@
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
                     android:background="@color/gray"
-                    app:layout_constraintTop_toBottomOf="@+id/rateReportConditionContentTxt"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent" />
-
-                <TextView
-                    android:id="@+id/rateReportDiscountTxt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="혜택"
-                    android:textSize="20sp"
-                    android:fontFamily="@font/paperlogy_5medium"
-                    android:layout_marginTop="20dp"
-                    app:layout_constraintTop_toBottomOf="@+id/rateReportConditionContentTxt"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/rateReportDiscountConstLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/rateReportDiscountTxt"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    android:layout_marginTop="10dp" >
-
-                    <TextView
-                        android:id="@+id/rateReportDiscountContentTxt"
-                        android:text="0"
-                        android:textSize="17sp"
-                        android:textColor="@color/sub"
-                        android:textStyle="bold"
-                        android:fontFamily="@font/paperlogy_5medium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"/>
-
-                    <TextView
-                        android:id="@+id/rateReportWonTxt"
-                        android:text="원 할인"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="15sp"
-                        android:textColor="@color/sub"
-                        android:textStyle="bold"
-                        android:fontFamily="@font/paperlogy_5medium"
-                        app:layout_constraintTop_toTopOf="@+id/rateReportDiscountContentTxt"
-                        app:layout_constraintBottom_toBottomOf="@+id/rateReportDiscountContentTxt"
-                        app:layout_constraintLeft_toRightOf="@+id/rateReportDiscountContentTxt"
-                        android:layout_marginLeft="5dp" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="40dp"
-                    android:layout_marginRight="40dp"
-                    android:background="@color/gray"
-                    app:layout_constraintTop_toBottomOf="@+id/rateReportDiscountConstLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/rateReportConditionAndDiscountContentTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
 
@@ -282,7 +222,7 @@
                     android:textSize="20sp"
                     android:text="제보 시각"
                     android:fontFamily="@font/paperlogy_5medium"
-                    app:layout_constraintTop_toBottomOf="@+id/rateReportDiscountConstLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/rateReportConditionAndDiscountContentTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
 

@@ -18,7 +18,9 @@ import com.google.firebase.Timestamp;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.address_info.TMapAddressInfo;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -34,9 +36,7 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
     TextView rateReportParkNameContentTxt;
     TextView rateReportParkNewAddressContentTxt;
     TextView rateReportParkOldAddressContentTxt;
-    TextView rateReportConditionContentTxt;
-    TextView rateReportDiscountContentTxt;
-    TextView rateReportWonTxt;
+    TextView rateReportConditionAndDiscountContentTxt;
     TextView rateReportUpTimeContentTxt;
     ImageButton rateReportPerfectBtn;
     TextView perfectTxt;
@@ -63,9 +63,7 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
         rateReportParkNameContentTxt = findViewById(R.id.rateReportParkNameContentTxt);
         rateReportParkNewAddressContentTxt = findViewById(R.id.rateReportParkNewAddressContentTxt);
         rateReportParkOldAddressContentTxt = findViewById(R.id.rateReportParkOldAddressContentTxt);
-        rateReportConditionContentTxt = findViewById(R.id.rateReportConditionContentTxt);
-        rateReportDiscountContentTxt = findViewById(R.id.rateReportDiscountContentTxt);
-        rateReportWonTxt = findViewById(R.id.rateReportWonTxt);
+        rateReportConditionAndDiscountContentTxt = findViewById(R.id.rateReportConditionAndDiscountContentTxt);
         rateReportUpTimeContentTxt = findViewById(R.id.rateReportUpTimeContentTxt);
         rateReportPerfectBtn = findViewById(R.id.rateReportPerfectBtn);
         perfectTxt = findViewById(R.id.perfectTxt);
@@ -259,18 +257,29 @@ public class RateAnotherReportDiscountParkActivity extends AppCompatActivity {
 
                 rateReportParkNameContentTxt.setText((String) reportInfo.get("parkName"));
 
-                rateReportConditionContentTxt.setText((String) reportInfo.get("parkCondition"));
+                ArrayList<String> condition = (ArrayList<String>) reportInfo.get("condition");
+                ArrayList<Long> discount = (ArrayList<Long>) reportInfo.get("discount");
+                String conditionAndDscountString = "";
+                if (condition != null && discount != null && condition.size() == discount.size()) {
+                    DecimalFormat formatter = new DecimalFormat("#,###");
 
-                long discount = (long) reportInfo.get("parkDiscount");
+                    for (int i = 0; i < condition.size(); i++) {
+                        conditionAndDscountString += condition.get(i);
 
-                if (discount == 0) {
-                    rateReportDiscountContentTxt.setText("무료");
-                    rateReportWonTxt.setVisibility(View.GONE);
+                        if (discount.get(i) == 0) {
+                            conditionAndDscountString += "/무료";
+                        }
+                        else {
+                            long oneDiscount = discount.get(i);
+                            String formattedDiscount= formatter.format(oneDiscount);
+                            conditionAndDscountString += "/" + formattedDiscount + "원 할인";
+                        }
+                        if (i != condition.size() - 1) {
+                            conditionAndDscountString += "\n";
+                        }
+                    }
                 }
-                else {
-                    rateReportDiscountContentTxt.setText(Long.toString(discount));
-                    rateReportWonTxt.setVisibility(View.VISIBLE);
-                }
+                rateReportConditionAndDiscountContentTxt.setText(conditionAndDscountString);
 
                 Timestamp timestamp = (Timestamp) reportInfo.get("upTime");
                 if (timestamp != null) {

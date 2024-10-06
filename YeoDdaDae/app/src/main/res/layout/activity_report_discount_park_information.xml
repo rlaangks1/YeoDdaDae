@@ -253,11 +253,11 @@
                     app:layout_constraintRight_toRightOf="parent" />
 
                 <TextView
-                    android:id="@+id/reportInfoConditionTxt"
+                    android:id="@+id/reportInfoConditionAndDiscountTxt"
                     android:textSize="20sp"
                     android:textColor="@color/black"
                     android:fontFamily="@font/paperlogy_5medium"
-                    android:text="조건"
+                    android:text="조건 및 혜택"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@+id/reportInfoParkOldAddressContentTxt"
@@ -266,14 +266,14 @@
                     android:layout_marginTop="20dp" />
 
                 <TextView
-                    android:id="@+id/reportInfoConditionContentTxt"
+                    android:id="@+id/reportInfoConditionAndDiscountContentTxt"
                     android:textSize="17sp"
                     android:fontFamily="@font/paperlogy_5medium"
                     android:textColor="@color/sub"
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/reportInfoConditionTxt"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoConditionAndDiscountTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="10dp" />
@@ -285,68 +285,7 @@
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
                     android:background="@color/gray"
-                    app:layout_constraintTop_toBottomOf="@+id/reportInfoConditionContentTxt"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent" />
-
-                <TextView
-                    android:id="@+id/reportInfoDiscountTxt"
-                    android:text="혜택"
-                    android:textSize="20sp"
-                    android:textColor="@color/black"
-                    android:fontFamily="@font/paperlogy_5medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/reportInfoConditionContentTxt"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    android:layout_marginTop="20dp" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/reportInfoDiscountConstLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/reportInfoDiscountTxt"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    android:layout_marginTop="10dp" >
-
-                    <TextView
-                        android:id="@+id/reportInfoDiscountContentTxt"
-                        android:text="0"
-                        android:textSize="17sp"
-                        android:fontFamily="@font/paperlogy_5medium"
-                        android:textColor="@color/sub"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent" />
-
-                    <TextView
-                        android:id="@+id/reportInfoWonTxt"
-                        android:text="원 할인"
-                        android:textSize="15sp"
-                        android:fontFamily="@font/paperlogy_5medium"
-                        android:textColor="@color/sub"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintTop_toTopOf="@+id/reportInfoDiscountContentTxt"
-                        app:layout_constraintBottom_toBottomOf="@+id/reportInfoDiscountContentTxt"
-                        app:layout_constraintLeft_toRightOf="@+id/reportInfoDiscountContentTxt"
-                        android:layout_marginLeft="5dp"/>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="40dp"
-                    android:layout_marginRight="40dp"
-                    android:background="@color/gray"
-                    app:layout_constraintTop_toBottomOf="@+id/reportInfoDiscountConstLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoConditionAndDiscountContentTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
 
@@ -358,7 +297,7 @@
                     android:text="평가 (정확 / 틀린부분있음 / 완전히틀림)"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/reportInfoDiscountConstLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/reportInfoConditionAndDiscountContentTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="20dp" />

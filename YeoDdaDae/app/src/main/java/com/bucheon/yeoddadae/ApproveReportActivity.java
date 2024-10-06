@@ -70,8 +70,8 @@ public class ApproveReportActivity extends AppCompatActivity {
                 for (HashMap<String, Object> oneReport : unapprovedReports) {
                     String reporterId = (String) oneReport.get("reporterId");
                     String parkName = (String) oneReport.get("parkName");
-                    String parkCondition = (String) oneReport.get("parkCondition");
-                    long parkDiscount = (long) oneReport.get("parkDiscount");
+                    ArrayList<String> condition = (ArrayList<String>) oneReport.get("condition");
+                    ArrayList<Long> discount = (ArrayList<Long>) oneReport.get("discount");
                     long ratePerfectCount = (long) oneReport.get("ratePerfectCount");
                     long rateMistakeCount = (long) oneReport.get("rateMistakeCount");
                     long rateWrongCount = (long) oneReport.get("rateWrongCount");
@@ -81,7 +81,7 @@ public class ApproveReportActivity extends AppCompatActivity {
                     String poiID = (String) oneReport.get("poiID");
                     String documentId = (String) oneReport.get("documentId");
 
-                    rdpa.addItem(new ReportDiscountParkItem(reporterId, parkName, parkCondition, parkDiscount, ratePerfectCount, rateMistakeCount, rateWrongCount, isCancelled, isApproval, upTime, poiID, documentId));
+                    rdpa.addItem(new ReportDiscountParkItem(reporterId, parkName, condition, discount, ratePerfectCount, rateMistakeCount, rateWrongCount, isCancelled, isApproval, upTime, poiID, documentId));
                 }
 
                 runOnUiThread(new Runnable() {

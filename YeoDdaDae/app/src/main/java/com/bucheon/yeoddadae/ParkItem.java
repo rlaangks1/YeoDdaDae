@@ -2,20 +2,23 @@ package com.bucheon.yeoddadae;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class ParkItem {
     private int type; // 1:일반, 2:공영, 3:공유, 4:주소, 5:장소, 6: 제보주차장
     private String name;
     private String radius;
     private String parkPrice;
     private String phone;
-    private String condition;
-    private long discount;
+    private ArrayList<String> condition;
+    private ArrayList<Long> discount;
     private double lat;
     private double lon;
     private String poiId;
     private String firestoreDocumentId;
 
-    public ParkItem(int type, String name, String radius, String parkPrice, String phone, String condition, long discount, String lat, String lon, String poiId, String firestoreDocumentId) {
+    public ParkItem(int type, String name, String radius, String parkPrice, String phone, ArrayList<String> condition, ArrayList<Long> discount, String lat, String lon, String poiId, String firestoreDocumentId) {
         this.type = type;
         this.name = name;
         this.radius = radius;
@@ -27,6 +30,11 @@ public class ParkItem {
         this.lon = Double.parseDouble(lon);
         this.poiId = poiId;
         this.firestoreDocumentId = firestoreDocumentId;
+    }
+
+    public void addConditionAndDiscount (ArrayList<String> condition, ArrayList<Long> discount) {
+        this.condition.addAll(condition);
+        this.discount.addAll(discount);
     }
 
     public int getType() {
@@ -48,11 +56,11 @@ public class ParkItem {
         return phone;
     }
 
-    public String getCondition() {
+    public ArrayList<String> getCondition() {
         return condition;
     }
 
-    public long getDiscount() {
+    public ArrayList<Long> getDiscount() {
         return discount;
     }
 

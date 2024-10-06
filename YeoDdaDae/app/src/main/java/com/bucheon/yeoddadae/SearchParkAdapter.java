@@ -1,6 +1,10 @@
 package com.bucheon.yeoddadae;
 
+import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
+
+import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +24,22 @@ import java.util.HashSet;
 import java.util.Locale;
 
 public class SearchParkAdapter extends BaseAdapter {
+    Activity activity;
+    LayoutInflater inflater;
+
     ArrayList<SearchHistoryItem> historyItems = new ArrayList<>();
     ArrayList<ParkItem> parkItems = new ArrayList<ParkItem>();
     OnHistoryDeleteListener onHistoryDeleteListener;
 
+    public SearchParkAdapter (Activity activity) {
+        this.activity = activity;
+        this.inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
     public void addPark(ParkItem item) {
+        if (activity instanceof AddReportDiscountParkActivity && item.getType() == 4) {
+            return;
+        }
         parkItems.add(item);
     }
 
@@ -146,26 +161,35 @@ public class SearchParkAdapter extends BaseAdapter {
 
         // 뷰 내용
         switch (park.getType()) {
-            case 0 :
-                parkType.setText("???");
-                break;
             case 1 :
                 parkType.setText("일반주차장");
+                parkPrice.setVisibility(View.VISIBLE);
+                parkConditionAndDiscount.setVisibility(View.GONE);
                 break;
             case 2 :
                 parkType.setText("공영주차장");
+                parkPrice.setVisibility(View.VISIBLE);
+                parkConditionAndDiscount.setVisibility(View.GONE);
                 break;
             case 3 :
                 parkType.setText("공유주차장");
+                parkPrice.setVisibility(View.VISIBLE);
+                parkConditionAndDiscount.setVisibility(View.GONE);
                 break;
             case 4 :
                 parkType.setText("주소");
+                parkPrice.setVisibility(View.VISIBLE);
+                parkConditionAndDiscount.setVisibility(View.GONE);
                 break;
             case 5 :
                 parkType.setText("장소");
+                parkPrice.setVisibility(View.VISIBLE);
+                parkConditionAndDiscount.setVisibility(View.GONE);
                 break;
             case 6 :
                 parkType.setText("제보주차장");
+                parkPrice.setVisibility(View.GONE);
+                parkConditionAndDiscount.setVisibility(View.VISIBLE);
                 break;
             default :
                 parkType.setText("뭐냐고");
@@ -194,24 +218,41 @@ public class SearchParkAdapter extends BaseAdapter {
             parkPrice.setText("");
         }
 
-        if (park.getCondition() != null && park.getDiscount() != -1) {
-            if (park.getDiscount() == 0) {
-                parkConditionAndDiscount.setText(park.getCondition() + "/무료");
-            } else {
-                parkConditionAndDiscount.setText(park.getCondition() + "/" + park.getDiscount() + "원 할인");
+        String conditionAndDscountString = "";
+        if (park.getType() == 6 && park.getCondition() != null && park.getDiscount() != null && park.getCondition().size() == park.getDiscount().size()) {
+            formatter = new DecimalFormat("#,###");
+
+            for (int i = 0; i < park.getCondition().size(); i++) {
+                conditionAndDscountString += park.getCondition().get(i);
+
+                if (park.getDiscount().get(i) == 0) {
+                    conditionAndDscountString += "/무료";
+                }
+                else {
+                    long discount = park.getDiscount().get(i);
+                    String formattedDiscount= formatter.format(discount);
+                    conditionAndDscountString += "/" + formattedDiscount + "원 할인";
+                }
+                if (i != park.getCondition().size() - 1) {
+                    conditionAndDscountString += "\n";
+                }
             }
-        } else {
-            parkConditionAndDiscount.setText("");
         }
+        parkConditionAndDiscount.setText(conditionAndDscountString);
 
         String originalPhoneString = park.getPhone();
         String newPhoneString = "";
         if (originalPhoneString != null) {
-            if (originalPhoneString.length() == 10) {
+            if (originalPhoneString.length() == 8) {
+                newPhoneString = originalPhoneString.substring(0, 4) + "-" + originalPhoneString.substring(4);
+            }
+            else if (originalPhoneString.length() == 10) {
                 newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 6) + "-" + originalPhoneString.substring(6);
-            } else if (originalPhoneString.length() == 11) {
+            }
+            else if (originalPhoneString.length() == 11) {
                 newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 7) + "-" + originalPhoneString.substring(7);
-            } else {
+            }
+            else {
                 newPhoneString = originalPhoneString;
             }
         }

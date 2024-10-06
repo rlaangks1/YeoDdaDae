@@ -13,6 +13,7 @@ import com.google.firebase.Timestamp;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.address_info.TMapAddressInfo;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -117,15 +118,27 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
 
             reportDiscountParkAddressTxt.setText(report.getParkName());
 
-            String conditionAndDiscount = report.getCondition();
-            if (report.getDiscount() == 0) {
-                conditionAndDiscount += " / 무료";
+            String conditionAndDscountString = "";
+            if (report.getCondition() != null && report.getDiscount() != null && report.getCondition().size() == report.getDiscount().size()) {
+                DecimalFormat formatter = new DecimalFormat("#,###");
+
+                for (int i = 0; i < report.getCondition().size(); i++) {
+                    conditionAndDscountString += report.getCondition().get(i);
+
+                        if (report.getDiscount().get(i) == 0) {
+                        conditionAndDscountString += "/무료";
+                    }
+                    else {
+                        long discount = report.getDiscount().get(i);
+                        String formattedDiscount= formatter.format(discount);
+                        conditionAndDscountString += "/" + formattedDiscount + "원 할인";
+                    }
+                    if (i != report.getCondition().size() - 1) {
+                        conditionAndDscountString += "\n";
+                    }
+                }
             }
-            else {
-                String formattedYdPoint = NumberFormat.getNumberInstance(Locale.KOREA).format(report.getDiscount());
-                conditionAndDiscount += " / " + formattedYdPoint + "원 할인";
-            }
-            reportDiscountParkConditionAndDiscountTxt.setText(conditionAndDiscount);
+            reportDiscountParkConditionAndDiscountTxt.setText(conditionAndDscountString);
 
             String rate = report.getRatePerfectCount() + " / " + report.getRateMistakeCount() + " / " + report.getRateWrongCount();
             reportDiscountParkRateTxt.setText(rate);
@@ -168,15 +181,27 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
 
             reportDiscountParkNameTxt.setText(report.getParkName());
 
-            String conditionAndDiscount = report.getCondition();
-            if (report.getDiscount() == 0) {
-                conditionAndDiscount += " / 무료";
+            String conditionAndDscountString = "";
+            if (report.getCondition() != null && report.getDiscount() != null && report.getCondition().size() == report.getDiscount().size()) {
+                DecimalFormat formatter = new DecimalFormat("#,###");
+
+                for (int i = 0; i < report.getCondition().size(); i++) {
+                    conditionAndDscountString += report.getCondition().get(i);
+
+                    if (report.getDiscount().get(i) == 0) {
+                        conditionAndDscountString += "/무료";
+                    }
+                    else {
+                        long discount = report.getDiscount().get(i);
+                        String formattedDiscount= formatter.format(discount);
+                        conditionAndDscountString += "/" + formattedDiscount + "원 할인";
+                    }
+                    if (i != report.getCondition().size() - 1) {
+                        conditionAndDscountString += "\n";
+                    }
+                }
             }
-            else {
-                String formattedYdPoint = NumberFormat.getNumberInstance(Locale.KOREA).format(report.getDiscount());
-                conditionAndDiscount += " / " + formattedYdPoint + "원 할인";
-            }
-            reportDiscountParkConditionAndDiscountTxt.setText(conditionAndDiscount);
+            reportDiscountParkConditionAndDiscountTxt.setText(conditionAndDscountString);
 
             String rate = report.getRatePerfectCount() + " / " + report.getRateMistakeCount() + " / " + report.getRateWrongCount();
             reportDiscountParkRateTxt.setText(rate);

@@ -207,15 +207,22 @@ public class GasStationAdapter extends BaseAdapter {
 
         String originalPhoneString = gasStation.getPhone();
         String newPhoneString = "";
-        if (originalPhoneString.length() == 10) {
-            newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 6) + "-" + originalPhoneString.substring(6);
+
+        if (originalPhoneString != null) {
+            if (originalPhoneString.length() == 8) {
+                newPhoneString = originalPhoneString.substring(0, 4) + "-" + originalPhoneString.substring(4);
+            }
+            else if (originalPhoneString.length() == 10) {
+                newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 6) + "-" + originalPhoneString.substring(6);
+            }
+            else if (originalPhoneString.length() == 11) {
+                newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 7) + "-" + originalPhoneString.substring(7);
+            }
+            else {
+                newPhoneString = originalPhoneString;
+            }
         }
-        else if (originalPhoneString.length() == 11) {
-            newPhoneString = originalPhoneString.substring(0, 3) + "-" + originalPhoneString.substring(3, 7) + "-" + originalPhoneString.substring(7);
-        }
-        else {
-            newPhoneString = originalPhoneString;
-        }
+
         gasStationPhone.setText(newPhoneString);
 
         return convertView;

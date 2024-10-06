@@ -2,11 +2,13 @@ package com.bucheon.yeoddadae;
 
 import com.google.firebase.Timestamp;
 
+import java.util.ArrayList;
+
 public class ReportDiscountParkItem {
     String reporterId;
     String parkName;
-    String condition;
-    long discount;
+    ArrayList<String> condition;
+    ArrayList<Long> discount;
     long ratePerfectCount;
     long rateMistakeCount;
     long rateWrongCount;
@@ -16,7 +18,7 @@ public class ReportDiscountParkItem {
     String poiId;
     String documentId;
 
-    public ReportDiscountParkItem(String reporterId, String parkName, String condition, long discount, long ratePerfectCount, long rateMistakeCount, long rateWrongCount, boolean isCancelled, boolean isApproval, Timestamp upTime, String poiId, String documentId) {
+    public ReportDiscountParkItem(String reporterId, String parkName, ArrayList<String> condition, ArrayList<Long> discount, long ratePerfectCount, long rateMistakeCount, long rateWrongCount, boolean isCancelled, boolean isApproval, Timestamp upTime, String poiId, String documentId) {
         this.reporterId = reporterId;
         this.parkName = parkName;
         this.condition = condition;
@@ -39,11 +41,11 @@ public class ReportDiscountParkItem {
         return parkName;
     }
 
-    public String getCondition() {
+    public ArrayList<String> getCondition() {
         return condition;
     }
 
-    public long getDiscount() {
+    public ArrayList<Long> getDiscount() {
         return discount;
     }
 
