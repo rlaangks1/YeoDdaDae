@@ -19,8 +19,10 @@ import com.google.firebase.Timestamp;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.address_info.TMapAddressInfo;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -39,9 +41,7 @@ public class ReportDiscountParkInformationActivity extends AppCompatActivity {
     TextView reportInfoParkNameContentTxt;
     TextView reportInfoParkNewAddressContentTxt;
     TextView reportInfoParkOldAddressContentTxt;
-    TextView reportInfoConditionContentTxt;
-    TextView reportInfoDiscountContentTxt;
-    TextView reportInfoWonTxt;
+    TextView reportInfoConditionAndDiscountContentTxt;
     TextView reportInfoRateContentTxt;
     TextView reportInfoUpTimeContentTxt;
     ImageButton reportInfoCancelBtn;
@@ -61,9 +61,7 @@ public class ReportDiscountParkInformationActivity extends AppCompatActivity {
         reportInfoParkNameContentTxt = findViewById(R.id.reportInfoParkNameContentTxt);
         reportInfoParkNewAddressContentTxt = findViewById(R.id.reportInfoParkNewAddressContentTxt);
         reportInfoParkOldAddressContentTxt = findViewById(R.id.reportInfoParkOldAddressContentTxt);
-        reportInfoConditionContentTxt = findViewById(R.id.reportInfoConditionContentTxt);
-        reportInfoDiscountContentTxt = findViewById(R.id.reportInfoDiscountContentTxt);
-        reportInfoWonTxt = findViewById(R.id.reportInfoWonTxt);
+        reportInfoConditionAndDiscountContentTxt = findViewById(R.id.reportInfoConditionAndDiscountContentTxt);
         reportInfoRateContentTxt = findViewById(R.id.reportInfoRateContentTxt);
         reportInfoUpTimeContentTxt = findViewById(R.id.reportInfoUpTimeContentTxt);
         reportInfoCancelBtn = findViewById(R.id.reportInfoCancelBtn);
@@ -169,19 +167,29 @@ public class ReportDiscountParkInformationActivity extends AppCompatActivity {
 
                 reportInfoParkNameContentTxt.setText((String) reportInfo.get("parkName"));
 
-                reportInfoConditionContentTxt.setText((String) reportInfo.get("parkCondition"));
+                ArrayList<String> condition = (ArrayList<String>) reportInfo.get("condition");
+                ArrayList<Long> discount = (ArrayList<Long>) reportInfo.get("discount");
+                String conditionAndDscountString = "";
+                if (condition != null && discount != null && condition.size() == discount.size()) {
+                    DecimalFormat formatter = new DecimalFormat("#,###");
 
-                long discount = (long) reportInfo.get("parkDiscount");
+                    for (int i = 0; i < condition.size(); i++) {
+                        conditionAndDscountString += condition.get(i);
 
-                if (discount == 0) {
-                    reportInfoDiscountContentTxt.setText("무료");
-                    reportInfoWonTxt.setVisibility(View.GONE);
+                        if (discount.get(i) == 0) {
+                            conditionAndDscountString += "/무료";
+                        }
+                        else {
+                            long oneDiscount = discount.get(i);
+                            String formattedDiscount= formatter.format(oneDiscount);
+                            conditionAndDscountString += "/" + formattedDiscount + "원 할인";
+                        }
+                        if (i != condition.size() - 1) {
+                            conditionAndDscountString += "\n";
+                        }
+                    }
                 }
-                else {
-                    String formattedWon = NumberFormat.getNumberInstance(Locale.KOREA).format(discount);
-                    reportInfoDiscountContentTxt.setText(formattedWon);
-                    reportInfoWonTxt.setVisibility(View.VISIBLE);
-                }
+                reportInfoConditionAndDiscountContentTxt.setText(conditionAndDscountString);
 
                 String rate = (long) reportInfo.get("ratePerfectCount") + " / " + (long) reportInfo.get("rateMistakeCount") + " / " + (long) reportInfo.get("rateWrongCount");
                 reportInfoRateContentTxt.setText(rate);

@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -32,6 +33,7 @@ import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapGpsManager;
 import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapPolyLine;
+import com.skt.Tmap.address_info.TMapAddressInfo;
 import com.skt.Tmap.poi_item.TMapPOIItem;
 import com.skt.tmap.engine.navigation.SDKManager;
 
@@ -44,7 +46,8 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
     double poiLat;
     double poiLon;
     String poiPhone;
-    SearchParkAdapter spa = new SearchParkAdapter();
+    ConditionAndDiscountAdapter cada;
+    SearchParkAdapter spa;
     double nowLat;
     double nowLon;
     boolean isSearching = false;
@@ -54,9 +57,10 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
     TMapGpsManager gpsManager;
 
     ImageButton addReportDiscountParkBackBtn;
+    TextView addReportDiscountParkMyLocationContentTxt;
     EditText addReportDiscountParkAddressContentEditTxt;
-    EditText addReportDiscountParkConditionContentEditTxt;
-    EditText addReportDiscountParkBenefitContentEditTxt;
+    ListView conditionAndDiscountListView;
+    ImageButton addCAndDBtn;
     ImageButton reportBtn;
     ConstraintLayout findLocationConstLayout;
     ImageButton findBackBtn;
@@ -72,9 +76,10 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
         setContentView(R.layout.activity_add_report_discount_park);
 
         addReportDiscountParkBackBtn = findViewById(R.id.addReportDiscountParkBackBtn);
+        addReportDiscountParkMyLocationContentTxt = findViewById(R.id.addReportDiscountParkMyLocationContentTxt);
         addReportDiscountParkAddressContentEditTxt = findViewById(R.id.addReportDiscountParkAddressContentEditTxt);
-        addReportDiscountParkConditionContentEditTxt = findViewById(R.id.addReportDiscountParkConditionContentEditTxt);
-        addReportDiscountParkBenefitContentEditTxt = findViewById(R.id.addReportDiscountParkBenefitContentEditTxt);
+        conditionAndDiscountListView = findViewById(R.id.conditionAndDiscountListView);
+        addCAndDBtn = findViewById(R.id.addCAndDBtn);
         reportBtn = findViewById(R.id.reportBtn);
         findLocationConstLayout = findViewById(R.id.findLocationConstLayout);
         findBackBtn = findViewById(R.id.findBackBtn);
@@ -86,6 +91,9 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
+
+        cada = new ConditionAndDiscountAdapter(AddReportDiscountParkActivity.this);
+        spa = new SearchParkAdapter(AddReportDiscountParkActivity.this);
 
         Location currentLocation = SDKManager.getInstance().getCurrentPosition();
         nowLat = currentLocation.getLatitude();
@@ -99,6 +107,13 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
         gpsManager.OpenGps();
         // gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
         // gpsManager.OpenGps();
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                conditionAndDiscountListView.setAdapter(cada);
+            }
+        });
 
         addReportDiscountParkBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,19 +199,19 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                                     tpolyline.addLinePoint(new TMapPoint(Double.parseDouble(item.frontLat), Double.parseDouble(item.frontLon)));
                                     double distance = tpolyline.getDistance() / 1000; // km단위
                                     if (item.firstNo.equals("0") && item.secondNo.equals("0")) {
-                                        spa.addPark(new ParkItem(4, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                        spa.addPark(new ParkItem(4, item.name, Double.toString(distance), null, item.telNo, null, null, item.frontLat, item.frontLon, item.id, null));
                                     }
                                     else {
                                         if (item.name.contains("주차")) {
                                             if (item.name.contains("공영")) {
-                                                spa.addPark(new ParkItem(2, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                                spa.addPark(new ParkItem(2, item.name, Double.toString(distance), null, item.telNo, null, null, item.frontLat, item.frontLon, item.id, null));
                                             }
                                             else {
-                                                spa.addPark(new ParkItem(1, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                                spa.addPark(new ParkItem(1, item.name, Double.toString(distance), null, item.telNo, null, null, item.frontLat, item.frontLon, item.id, null));
                                             }
                                         }
                                         else {
-                                            spa.addPark(new ParkItem(5, item.name, Double.toString(distance), null, item.telNo, null, -1, item.frontLat, item.frontLon, item.id, null));
+                                            spa.addPark(new ParkItem(5, item.name, Double.toString(distance), null, item.telNo, null, null, item.frontLat, item.frontLon, item.id, null));
                                         }
                                     }
                                 }
@@ -292,81 +307,112 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
             }
         });
 
+        addCAndDBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cada.addItem(new ConditionAndDiscountItem());
+                setTotalHeightofListView();
+
+                if (cada.getCount() >= 6) {
+                    addCAndDBtn.setVisibility(View.GONE);
+                }
+            }
+        });
+
         reportBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String parkName = replaceNewlinesAndTrim(addReportDiscountParkAddressContentEditTxt);
-                String condition = replaceNewlinesAndTrim(addReportDiscountParkConditionContentEditTxt);
-                String discount = replaceNewlinesAndTrim(addReportDiscountParkBenefitContentEditTxt);
-
-                int discountInt;
 
                 if (poiId == null || poiLat == 0 || poiLon == 0 || parkName.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "위치를 찾으세요", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "위치를 찾아주세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (condition.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "조건을 입력하세요", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                if (cada.allDataSet()) {
+                    ArrayList<String> conditionList = cada.getConditions();
+                    ArrayList<Long> discountList = cada.getDiscounts();
 
-                if (discount.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "혜택을 입력하세요", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                    if (conditionList != null && discountList != null && conditionList.size() == discountList.size()) {
+                        HashMap<String, Object> hm = new HashMap<>();
+                        hm.put("reporterId", loginId);
+                        hm.put("poiID", poiId);
+                        hm.put("poiLat", poiLat);
+                        hm.put("poiLon", poiLon);
+                        hm.put("poiPhone", poiPhone);
+                        hm.put("parkName", parkName);
+                        hm.put("condition", conditionList);
+                        hm.put("discount", discountList);
+                        hm.put("ratePerfectCount", 0);
+                        hm.put("rateMistakeCount", 0);
+                        hm.put("rateWrongCount", 0);
+                        hm.put("isCancelled", false);
+                        hm.put("cancelReason", null);
+                        hm.put("isApproval", false);
+                        hm.put("upTime", FieldValue.serverTimestamp());
 
-                try {
-                    discountInt = Integer.parseInt(discount);
-                } catch (NumberFormatException e) {
-                    Toast.makeText(getApplicationContext(), "혜택을 숫자로 입력하세요", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                        FirestoreDatabase fd = new FirestoreDatabase();
+                        fd.insertData("reportDiscountPark", hm, new OnFirestoreDataLoadedListener() {
+                            @Override
+                            public void onDataLoaded(Object data) {
+                                Toast.makeText(getApplicationContext(), "무료/할인 주차장 제보 완료되었습니다", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
 
-                HashMap<String, Object> hm = new HashMap<>();
-                hm.put("reporterId", loginId);
-                hm.put("poiID", poiId);
-                hm.put("poiLat", poiLat);
-                hm.put("poiLon", poiLon);
-                hm.put("poiPhone", poiPhone);
-                hm.put("parkName", parkName);
-                hm.put("parkCondition", condition);
-                hm.put("parkDiscount", discountInt);
-                hm.put("ratePerfectCount", 0);
-                hm.put("rateMistakeCount", 0);
-                hm.put("rateWrongCount", 0);
-                hm.put("isCancelled", false);
-                hm.put("cancelReason", null);
-                hm.put("isApproval", false);
-                hm.put("upTime", FieldValue.serverTimestamp());
-
-                FirestoreDatabase fd = new FirestoreDatabase();
-                fd.insertData("reportDiscountPark", hm, new OnFirestoreDataLoadedListener() {
-                    @Override
-                    public void onDataLoaded(Object data) {
-                        Toast.makeText(getApplicationContext(), "무료/할인 주차장 제보 완료되었습니다", Toast.LENGTH_SHORT).show();
-                        finish();
+                            @Override
+                            public void onDataLoadError(String errorMessage) {
+                                Log.d(TAG, errorMessage);
+                                Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
-
-                    @Override
-                    public void onDataLoadError(String errorMessage) {
-                        Log.d(TAG, errorMessage);
-                        Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                }
             }
         });
+    }
+
+    public void checkAddButtonVisibility() {
+        if (cada.getCount() < 6) {
+            addCAndDBtn.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void onLocationChange(Location location) {
         nowLat = location.getLatitude();
-        Log.d(ContentValues.TAG, "onLocationChange 호출됨 : lat(경도) = " + nowLat);
-
         nowLon = location.getLongitude();
-        Log.d(ContentValues.TAG, "onLocationChange 호출됨 : lon(위도) = " + nowLon);
+        Log.d(TAG, "onLocationChange 호출됨 : lat(경도) = " + nowLat + ", lon(위도) = " + nowLon);
 
         nowPoint = new TMapPoint(nowLat, nowLon);
+
+        TMapData tMapData = new TMapData();
+        tMapData.reverseGeocoding(nowLat, nowLon, "A10", new TMapData.reverseGeocodingListenerCallback() {
+            @Override
+            public void onReverseGeocoding(TMapAddressInfo tMapAddressInfo) {
+                if (tMapAddressInfo != null) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String [] adrresses = tMapAddressInfo.strFullAddress.split(",");
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    addReportDiscountParkMyLocationContentTxt.setText(adrresses[1]);
+                                }
+                            });
+                        }
+                    });
+                }
+                else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            addReportDiscountParkMyLocationContentTxt.setText("...");
+                        }
+                    });
+                }
+            }
+        });
     }
 
     public void loadingStart() {
@@ -411,6 +457,32 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                 }
             }
         });
+    }
+
+    public void setTotalHeightofListView() {
+        int numberOfItems = cada.getCount();
+        int itemHeight = dpToPx(200); // 아이템 높이를 dp 단위로 변환하여 사용
+
+        // Calculate total height of all items.
+        int totalItemsHeight = numberOfItems * itemHeight - 10;
+
+        // Calculate total height of all item dividers.
+        int totalDividersHeight = conditionAndDiscountListView.getDividerHeight() * (numberOfItems - 1);
+
+        // Set list height.
+        ViewGroup.LayoutParams params = conditionAndDiscountListView.getLayoutParams();
+        params.height = totalItemsHeight + totalDividersHeight;
+        conditionAndDiscountListView.setLayoutParams(params);
+        conditionAndDiscountListView.requestLayout();
+    }
+
+    int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
+    }
+
+    ListView getListView () {
+        return conditionAndDiscountListView;
     }
 
     String replaceNewlinesAndTrim(EditText et) {

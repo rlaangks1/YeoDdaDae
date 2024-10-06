@@ -21,7 +21,9 @@ import com.google.firebase.Timestamp;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.address_info.TMapAddressInfo;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -29,17 +31,17 @@ import java.util.Locale;
 public class ApproveReportInformationActivity extends AppCompatActivity {
     String documentId;
     HashMap<String, Object> reportInfo;
+    ReasonDialog rd;
 
     ImageButton approveReportInfoBackBtn;
     TextView approveReportInfoIdContentTxt;
     TextView approveReportInfoParkNameContentTxt;
     TextView approveReportInfoParkNewAddressContentTxt;
     TextView approveReportInfoParkOldAddressContentTxt;
-    TextView approveReportInfoConditionContentTxt;
-    TextView approveReportInfoDiscountContentTxt;
-    TextView approveReportInfoWonTxt;
+    TextView approveReportInfoConditionAndDiscountContentTxt;
     TextView approveReportInfoRateContentTxt;
     TextView approveReportInfoUpTimeContentTxt;
+    ImageButton approveReportInfoShowReasonBtn;
     ImageButton approveReportInfoApproveBtn;
     ImageButton approveReportInfoRejectionBtn;
 
@@ -53,11 +55,10 @@ public class ApproveReportInformationActivity extends AppCompatActivity {
         approveReportInfoParkNameContentTxt = findViewById(R.id.approveReportInfoParkNameContentTxt);
         approveReportInfoParkNewAddressContentTxt = findViewById(R.id.approveReportInfoParkNewAddressContentTxt);
         approveReportInfoParkOldAddressContentTxt = findViewById(R.id.approveReportInfoParkOldAddressContentTxt);
-        approveReportInfoConditionContentTxt = findViewById(R.id.approveReportInfoConditionContentTxt);
-        approveReportInfoDiscountContentTxt = findViewById(R.id.approveReportInfoDiscountContentTxt);
-        approveReportInfoWonTxt = findViewById(R.id.approveReportInfoWonTxt);
+        approveReportInfoConditionAndDiscountContentTxt = findViewById(R.id.approveReportInfoConditionAndDiscountContentTxt);
         approveReportInfoRateContentTxt =findViewById(R.id.approveReportInfoRateContentTxt);
         approveReportInfoUpTimeContentTxt = findViewById(R.id.approveReportInfoUpTimeContentTxt);
+        approveReportInfoShowReasonBtn = findViewById(R.id.approveReportInfoShowReasonBtn);
         approveReportInfoApproveBtn = findViewById(R.id.approveReportInfoApproveBtn);
         approveReportInfoRejectionBtn = findViewById(R.id.approveReportInfoRejectionBtn);
 
@@ -84,6 +85,14 @@ public class ApproveReportInformationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        approveReportInfoShowReasonBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rd = new ReasonDialog(documentId, ApproveReportInformationActivity.this);
+                rd.show();
             }
         });
 
@@ -179,16 +188,29 @@ public class ApproveReportInformationActivity extends AppCompatActivity {
                     }
                 });
 
-                approveReportInfoConditionContentTxt.setText((String) reportInfo.get("parkCondition"));
+                ArrayList<String> condition = (ArrayList<String>) reportInfo.get("condition");
+                ArrayList<Long> discount = (ArrayList<Long>) reportInfo.get("discount");
+                String conditionAndDscountString = "";
+                if (condition != null && discount != null && condition.size() == discount.size()) {
+                    DecimalFormat formatter = new DecimalFormat("#,###");
 
-                if ((long) reportInfo.get("parkDiscount") == 0) {
-                    approveReportInfoWonTxt.setVisibility(View.GONE);
-                    approveReportInfoDiscountContentTxt.setText("무료");
+                    for (int i = 0; i < condition.size(); i++) {
+                        conditionAndDscountString += condition.get(i);
+
+                        if (discount.get(i) == 0) {
+                            conditionAndDscountString += "/무료";
+                        }
+                        else {
+                            long oneDiscount = discount.get(i);
+                            String formattedDiscount= formatter.format(oneDiscount);
+                            conditionAndDscountString += "/" + formattedDiscount + "원 할인";
+                        }
+                        if (i != condition.size() - 1) {
+                            conditionAndDscountString += "\n";
+                        }
+                    }
                 }
-                else {
-                    approveReportInfoWonTxt.setVisibility(View.VISIBLE);
-                    approveReportInfoDiscountContentTxt.setText(Long.toString((long) reportInfo.get("parkDiscount")));
-                }
+                approveReportInfoConditionAndDiscountContentTxt.setText(conditionAndDscountString);
 
                 approveReportInfoRateContentTxt.setText((long) reportInfo.get("ratePerfectCount") + " / " + (long) reportInfo.get("rateMistakeCount") + " / " + (long) reportInfo.get("rateWrongCount"));
 

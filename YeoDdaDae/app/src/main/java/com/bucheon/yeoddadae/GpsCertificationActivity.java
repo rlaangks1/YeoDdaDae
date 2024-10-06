@@ -269,10 +269,8 @@ public class GpsCertificationActivity extends AppCompatActivity implements TMapG
     @Override
     public void onLocationChange(Location location) {
         nowLat = location.getLatitude();
-        Log.d(TAG, "onLocationChange 호출됨 : lat(경도) = " + nowLat);
-
         nowLon = location.getLongitude();
-        Log.d(TAG, "onLocationChange 호출됨 : lon(위도) = " + nowLon);
+        Log.d(TAG, "onLocationChange 호출됨 : lat(경도) = " + nowLat + ", lon(위도) = " + nowLon);
 
         tMapView.removeAllTMapCircle();
         tMapView.setLocationPoint(nowLon, nowLat);

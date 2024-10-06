@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,7 @@ public class GasHistoryDialog extends Dialog {
 
     ImageButton gasHistoryBackBtn;
     ListView gasHistoryListView;
+    TextView gasHistoryNoTxt;
 
     public GasHistoryDialog(String id, @NonNull Context context) {
         super(context);
@@ -47,6 +49,7 @@ public class GasHistoryDialog extends Dialog {
 
         gasHistoryBackBtn = findViewById(R.id.gasHistoryBackBtn);
         gasHistoryListView = findViewById(R.id.gasHistoryListView);
+        gasHistoryNoTxt = findViewById(R.id.gasHistoryNoTxt);
 
         pha = new GasHistoryAdapter();
 
@@ -121,7 +124,6 @@ public class GasHistoryDialog extends Dialog {
     }
 
     void getGasHistory() {
-        Log.d(TAG, "getGasHistory()");
         pha.clear();
 
         fd = new FirestoreDatabase();
@@ -136,6 +138,15 @@ public class GasHistoryDialog extends Dialog {
 
                 pha.sortByUpTime();
                 gasHistoryListView.setAdapter(pha);
+
+                if (pha.getCount() == 0) {
+                    gasHistoryListView.setVisibility(View.GONE);
+                    gasHistoryNoTxt.setVisibility(View.VISIBLE);
+                }
+                else {
+                    gasHistoryListView.setVisibility(View.VISIBLE);
+                    gasHistoryNoTxt.setVisibility(View.GONE);
+                }
             }
 
             @Override

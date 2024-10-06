@@ -28,7 +28,6 @@ public class TimeAdapter extends BaseAdapter {
     private ReservationParkActivity mActivity;
     ArrayList<TimeItem> items = new ArrayList<>();
 
-
     public TimeAdapter() {}
 
     public TimeAdapter(ReservationParkActivity activity) {

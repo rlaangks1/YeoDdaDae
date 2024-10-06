@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="100dp"
-    android:background="@drawable/gradate_list_view_item"
+    android:background="@drawable/gradate_list_view_item_3"
     android:id="@+id/gasStationItemConstraintLayout">
 
     <TextView
@@ -16,8 +16,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp" />
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp" />
 
     <TextView
         android:id="@+id/gasStationName"
@@ -33,7 +33,7 @@
         app:layout_constraintLeft_toRightOf="@+id/gasStationOrder"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"/>
+        android:layout_marginRight="5dp"/>
 
     <TextView
         android:id="@+id/gasStationPhone"
@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/gasStationName"
         app:layout_constraintRight_toRightOf="@+id/gasStationName"
-        android:layout_marginTop="2dp" />
+        android:layout_marginTop="5dp" />
 
     <TextView
         android:id="@+id/gasStationDistance"
@@ -54,9 +54,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp" />
+        app:layout_constraintRight_toRightOf="@+id/gasStationName"
+        android:layout_marginBottom="5dp" />
 
     <TextView
         android:id="@+id/gasStationBrand"
@@ -67,7 +66,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/gasStationDistance"
         app:layout_constraintRight_toLeftOf="@+id/gasStationDistance"
-        android:layout_marginRight="5dp" />
+        android:layout_marginRight="10dp" />
 
     <TextView
         android:id="@+id/gasStationOilPrice"
@@ -77,10 +76,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp" />
-
-
+        app:layout_constraintLeft_toLeftOf="@+id/gasStationOrder"
+        android:layout_marginBottom="5dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

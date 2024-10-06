@@ -171,8 +171,8 @@ public class MyReportDiscountParkFragment extends Fragment {
                 for (HashMap<String, Object> oneReport : myReports) {
                     String reporterId = (String) oneReport.get("reporterId");
                     String parkName = (String) oneReport.get("parkName");
-                    String condition = (String) oneReport.get("parkCondition");
-                    long discount = (long) oneReport.get("parkDiscount");
+                    ArrayList<String> condition = (ArrayList<String>) oneReport.get("condition");
+                    ArrayList<Long> discount = (ArrayList<Long>) oneReport.get("discount");
                     long ratePerfectCount = (long) oneReport.get("ratePerfectCount");
                     long rateMistakeCount = (long) oneReport.get("rateMistakeCount");
                     long rateWrongCount = (long) oneReport.get("rateWrongCount");
