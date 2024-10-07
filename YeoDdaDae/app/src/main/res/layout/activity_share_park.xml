@@ -298,23 +298,24 @@
                         android:id="@+id/imageContainer1"
                         android:orientation="vertical"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10.5dp">
 
                         <ImageView
                             android:id="@+id/selectedImageView1"
                             android:scaleType="fitXY"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
+                            android:layout_width="85dp"
+                            android:layout_height="85dp"
                             android:visibility="gone" />
 
                         <ImageButton
                             android:id="@+id/cancelImageBtn1"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:src="@drawable/camera_icon"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/cancel_icon"
                             android:background="@android:color/transparent"
                             android:layout_gravity="end"
-                            android:layout_marginTop="-100dp"
+                            android:layout_marginTop="-85dp"
                             android:layout_marginEnd="0dp"
                             android:scaleType="fitCenter"
                             android:visibility="gone" />
@@ -324,23 +325,24 @@
                         android:id="@+id/imageContainer2"
                         android:orientation="vertical"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10.5dp">
 
                         <ImageView
                             android:id="@+id/selectedImageView2"
                             android:scaleType="fitXY"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
+                            android:layout_width="85dp"
+                            android:layout_height="85dp"
                             android:visibility="gone" />
 
                         <ImageButton
                             android:id="@+id/cancelImageBtn2"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:src="@drawable/camera_icon"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/cancel_icon"
                             android:background="@android:color/transparent"
                             android:layout_gravity="end"
-                            android:layout_marginTop="-100dp"
+                            android:layout_marginTop="-85dp"
                             android:layout_marginEnd="0dp"
                             android:scaleType="fitCenter"
                             android:visibility="gone" />
@@ -351,23 +353,24 @@
                         android:id="@+id/imageContainer3"
                         android:orientation="vertical"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10.5dp">
 
                         <ImageView
                             android:id="@+id/selectedImageView3"
                             android:scaleType="fitXY"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
+                            android:layout_width="85dp"
+                            android:layout_height="85dp"
                             android:visibility="gone" />
 
                         <ImageButton
                             android:id="@+id/cancelImageBtn3"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:src="@drawable/camera_icon"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/cancel_icon"
                             android:background="@android:color/transparent"
                             android:layout_gravity="end"
-                            android:layout_marginTop="-100dp"
+                            android:layout_marginTop="-85dp"
                             android:layout_marginEnd="0dp"
                             android:scaleType="fitCenter"
                             android:visibility="gone" />
@@ -383,24 +386,38 @@
                         <ImageView
                             android:id="@+id/selectedImageView4"
                             android:scaleType="fitXY"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
+                            android:layout_width="85dp"
+                            android:layout_height="85dp"
                             android:visibility="gone" />
 
                         <ImageButton
                             android:id="@+id/cancelImageBtn4"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:src="@drawable/camera_icon"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/cancel_icon"
                             android:background="@android:color/transparent"
                             android:layout_gravity="end"
-                            android:layout_marginTop="-100dp"
+                            android:layout_marginTop="-85dp"
                             android:layout_marginEnd="0dp"
                             android:scaleType="fitCenter"
                             android:visibility="gone" />
                     </LinearLayout>
 
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/imageCountTxt"
+                    android:text="(0 / 4)"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/imageContainer"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
 
                 <TextView
                     android:id="@+id/parkPriceTxt"
@@ -410,7 +427,7 @@
                     android:fontFamily="@font/paperlogy_5medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/imageContainer"
+                    app:layout_constraintTop_toBottomOf="@+id/imageCountTxt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     android:layout_marginTop="20dp"
                     android:layout_marginLeft="10dp"

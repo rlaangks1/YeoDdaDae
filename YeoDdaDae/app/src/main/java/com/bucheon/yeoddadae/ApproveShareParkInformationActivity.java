@@ -3,8 +3,10 @@ package com.bucheon.yeoddadae;
 import static android.content.ContentValues.TAG;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -40,6 +42,7 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
     String documentId;
     HashMap<String, Object> shareParkInfo;
 
+    private List<Uri> imageUris = new ArrayList<>();
     ImageButton approveShareParkInfoBackBtn;
     TextView approveShareParkInfoIdContentTxt;
     TextView approveShareParkInfoShareParkNewAddressContentTxt;
@@ -211,6 +214,8 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
                             Glide.with(this)
                                     .load(imageUrl)
                                     .into(imageView);
+
+                            imageView.setOnClickListener(v -> showImageDialog(imageUrl));
                         }
                     }
                 } else {
@@ -222,6 +227,26 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
         });
     }
 
+    private void showImageDialog(String imageUrl) {
+        Log.d("MyShareParkInformationActivity", "Image URL in dialog: " + imageUrl);
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_image_view3);
+
+        ImageView fullScreenImageView = dialog.findViewById(R.id.fullScreenImageView);
+        ImageButton closeButton = dialog.findViewById(R.id.closeButton);
+
+        Glide.with(this)
+                .load(imageUrl)
+                .into(fullScreenImageView);
+
+
+        closeButton.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.setCancelable(true);
+        dialog.setOnDismissListener(dialogInterface -> dialog.dismiss());
+
+        dialog.show();
+    }
     void init() {
         runOnUiThread(new Runnable() {
             @Override
@@ -301,7 +326,6 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
             }
         });
     }
-
     String replaceNewlinesAndTrim(EditText et) {
         return et.getText().toString().replaceAll("\\n", " ").trim();
     }

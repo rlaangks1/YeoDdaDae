@@ -3,6 +3,7 @@ package com.bucheon.yeoddadae;
 import static android.content.ContentValues.TAG;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -51,6 +52,7 @@ public class ShareParkActivity extends AppCompatActivity {
     double lat = 0;
     double lon = 0;
 
+    int imageCount = 0;
     ArrayList<Uri> imageUris = new ArrayList<>();
     StorageReference mStorageRef;
     Uri imageUri;
@@ -77,6 +79,7 @@ public class ShareParkActivity extends AppCompatActivity {
     ListView parkTimeListView;
     ImageButton registrationBtn;
 
+    TextView imageCountTxt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +104,8 @@ public class ShareParkActivity extends AppCompatActivity {
         parkDateCalendar = findViewById(R.id.parkDateCalendar);
         parkTimeListView = findViewById(R.id.parkTimeListView);
         registrationBtn = findViewById(R.id.registrationBtn);
+        imageCountTxt = findViewById(R.id.imageCountTxt);
+
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
@@ -271,6 +276,8 @@ public class ShareParkActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     private void openImageChooser() {
         Intent intent = new Intent();
@@ -519,19 +526,34 @@ public class ShareParkActivity extends AppCompatActivity {
                 cancelButtons[i].setVisibility(View.GONE); // 취소 버튼 숨기기
             }
         }
+        imageCountTxt.setText("(" + imageUris.size() + " / 4)");
     }
 
     private void showImageDialog(Uri imageUri) {
         // 다이얼로그 생성
         Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_image_view);
+        dialog.setCancelable(true);
 
         ImageView fullScreenImageView = dialog.findViewById(R.id.fullScreenImageView);
         fullScreenImageView.setImageURI(imageUri); // 선택한 이미지 세팅
 
         // 다이얼로그 외부 클릭 시 닫기
-        dialog.setCancelable(true);
+        ImageButton closeButton = dialog.findViewById(R.id.closeButton);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss(); // 다이얼로그 닫기
+            }
+        });
+
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                dialog.dismiss();
+            }
+        });
+
         dialog.show();
     }
 
