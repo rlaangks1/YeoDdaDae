@@ -3,6 +3,7 @@ package com.bucheon.yeoddadae;
 import static android.content.ContentValues.TAG;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -183,6 +184,8 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                             Glide.with(this)
                                     .load(imageUrl)
                                     .into(imageView);
+
+                            imageView.setOnClickListener(v -> showImageDialog(imageUrl));
                         }
                     }
                 } else {
@@ -194,6 +197,26 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
         });
     }
 
+    private void showImageDialog(String imageUrl) {
+        Log.d("MyShareParkInformationActivity", "Image URL in dialog: " + imageUrl);
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_image_view2);
+
+        ImageView fullScreenImageView = dialog.findViewById(R.id.fullScreenImageView);
+        ImageButton closeButton = dialog.findViewById(R.id.closeButton);
+
+        Glide.with(this)
+                .load(imageUrl)
+                .into(fullScreenImageView);
+
+
+        closeButton.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.setCancelable(true);
+        dialog.setOnDismissListener(dialogInterface -> dialog.dismiss());
+
+        dialog.show();
+    }
     void init() {
         runOnUiThread(new Runnable() {
             @Override
@@ -540,6 +563,8 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                     }
                 });
 
+
+
                 myShareParkInfoCalculateBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -558,6 +583,7 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                         });
                     }
                 });
+
             }
         });
     }
