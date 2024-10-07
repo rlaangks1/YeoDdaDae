@@ -18,11 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
-import androidx.core.view.ViewCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.google.android.material.badge.BadgeDrawable;
-import com.google.android.material.badge.BadgeUtils;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -205,7 +202,7 @@ public class AdminMainActivity extends AppCompatActivity {
                         finish();
                     }
                     else {
-                        Log.d(ContentValues.TAG, "인증 이메일 전송 실패 : " + task.getException().getMessage());
+                        Log.d(TAG, "인증 이메일 전송 실패 : " + task.getException().getMessage());
                         Toast.makeText(getApplicationContext(), "인증 이메일 전송 실패", Toast.LENGTH_SHORT).show();
                     }
                 });

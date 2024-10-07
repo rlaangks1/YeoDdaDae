@@ -1,7 +1,5 @@
 package com.bucheon.yeoddadae;
 
-import androidx.annotation.Nullable;
-
 import com.google.firebase.Timestamp;
 
 public class SearchHistoryItem {

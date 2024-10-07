@@ -9,8 +9,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.firebase.Timestamp;
-import com.skt.Tmap.TMapData;
-import com.skt.Tmap.address_info.TMapAddressInfo;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

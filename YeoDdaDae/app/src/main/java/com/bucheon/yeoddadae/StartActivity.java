@@ -70,11 +70,11 @@ public class StartActivity extends AppCompatActivity {
         if (checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(ContentValues.TAG, "권한 이미 있음");
+            Log.d(TAG, "권한 이미 있음");
             proceedAfterPermissionGranted();
         }
         else {
-            Log.d(ContentValues.TAG, "권한 없음. 요청");
+            Log.d(TAG, "권한 없음. 요청");
             String[] permissionArr = {android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.RECORD_AUDIO};
             requestPermissions(permissionArr, PERMISSION_REQUEST_CODE);
         }

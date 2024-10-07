@@ -1,10 +1,6 @@
 package com.bucheon.yeoddadae;
 
-import android.view.View;
-
 import com.google.firebase.Timestamp;
-import com.skt.Tmap.TMapData;
-import com.skt.Tmap.address_info.TMapAddressInfo;
 
 import java.util.ArrayList;
 import java.util.Calendar;

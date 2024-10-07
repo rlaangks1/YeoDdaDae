@@ -19,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.Timestamp;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 public class UsageHistoryActivity extends AppCompatActivity {

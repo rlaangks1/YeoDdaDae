@@ -16,11 +16,9 @@ import com.skt.Tmap.address_info.TMapAddressInfo;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 public class ShareParkAdapter extends BaseAdapter {

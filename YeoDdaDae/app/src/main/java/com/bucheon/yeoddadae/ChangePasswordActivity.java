@@ -117,7 +117,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                                                 finish();
                                             }
                                             else {
-                                                Log.d(ContentValues.TAG, "인증 이메일 전송 실패 : " + task.getException().getMessage());
+                                                Log.d(TAG, "인증 이메일 전송 실패 : " + task.getException().getMessage());
                                                 Toast.makeText(getApplicationContext(), "인증 이메일 전송 실패", Toast.LENGTH_SHORT).show();
                                                 isChanging = false;
                                             }

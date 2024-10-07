@@ -1,7 +1,5 @@
 package com.bucheon.yeoddadae;
 
-import com.google.firebase.Timestamp;
-
 public class ConditionAndDiscountItem {
     String condition;
     long discount;

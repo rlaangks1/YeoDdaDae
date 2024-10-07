@@ -3,7 +3,6 @@ package com.bucheon.yeoddadae;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ParkItem {
     private int type; // 1:일반, 2:공영, 3:공유, 4:주소, 5:장소, 6: 제보주차장

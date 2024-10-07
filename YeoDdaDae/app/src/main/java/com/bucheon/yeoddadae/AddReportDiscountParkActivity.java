@@ -2,7 +2,6 @@ package com.bucheon.yeoddadae;
 
 import static android.content.ContentValues.TAG;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -311,11 +310,17 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
             @Override
             public void onClick(View v) {
                 cada.addItem(new ConditionAndDiscountItem());
-                setTotalHeightofListView();
 
-                if (cada.getCount() >= 6) {
-                    addCAndDBtn.setVisibility(View.GONE);
-                }
+                conditionAndDiscountListView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setHeightOfConditionAndDiscountListView();
+
+                        if (cada.getCount() >= 6) {
+                            addCAndDBtn.setVisibility(View.GONE);
+                        }
+                    }
+                });
             }
         });
 
@@ -459,29 +464,19 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
         });
     }
 
-    public void setTotalHeightofListView() {
+    public void setHeightOfConditionAndDiscountListView() {
         int numberOfItems = cada.getCount();
-        int itemHeight = dpToPx(200); // 아이템 높이를 dp 단위로 변환하여 사용
+        int itemHeightPx = cada.getViewHeightPx();
+        int dividerHeightPx = conditionAndDiscountListView.getDividerHeight();
 
-        // Calculate total height of all items.
-        int totalItemsHeight = numberOfItems * itemHeight - 10;
-
-        // Calculate total height of all item dividers.
-        int totalDividersHeight = conditionAndDiscountListView.getDividerHeight() * (numberOfItems - 1);
-
-        // Set list height.
+        int totalHeightPx = (itemHeightPx * numberOfItems) + (dividerHeightPx * (numberOfItems - 1));
         ViewGroup.LayoutParams params = conditionAndDiscountListView.getLayoutParams();
-        params.height = totalItemsHeight + totalDividersHeight;
+        params.height = totalHeightPx;
         conditionAndDiscountListView.setLayoutParams(params);
         conditionAndDiscountListView.requestLayout();
     }
 
-    int dpToPx(int dp) {
-        float density = getResources().getDisplayMetrics().density;
-        return Math.round(dp * density);
-    }
-
-    ListView getListView () {
+    ListView getConditionAndDiscountListView () {
         return conditionAndDiscountListView;
     }
 

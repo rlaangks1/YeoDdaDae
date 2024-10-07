@@ -2,9 +2,6 @@ package com.bucheon.yeoddadae;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,23 +11,19 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.Timestamp;
-
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
 
 public class ConditionAndDiscountAdapter extends BaseAdapter {
     Activity activity;
     LayoutInflater inflater;
+    int viewHeightPx = 0;
+
     ArrayList<ConditionAndDiscountItem> items = new ArrayList<>();
 
     public ConditionAndDiscountAdapter(Activity activity) {
         this.activity = activity;
         this.inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         items.add(new ConditionAndDiscountItem());
     }
 
@@ -48,7 +41,7 @@ public class ConditionAndDiscountAdapter extends BaseAdapter {
 
             if (activity instanceof AddReportDiscountParkActivity) {
                 ((AddReportDiscountParkActivity) activity).checkAddButtonVisibility();
-                ((AddReportDiscountParkActivity) activity).setTotalHeightofListView();
+                ((AddReportDiscountParkActivity) activity).setHeightOfConditionAndDiscountListView();
             }
         }
     }
@@ -61,7 +54,7 @@ public class ConditionAndDiscountAdapter extends BaseAdapter {
             if (activity instanceof AddReportDiscountParkActivity) {
                 AddReportDiscountParkActivity adpa = (AddReportDiscountParkActivity) activity;
 
-                View view = adpa.getListView().getChildAt(i);
+                View view = adpa.getConditionAndDiscountListView().getChildAt(i);
 
                 EditText conditionContentEditTxt = view.findViewById(R.id.conditionContentEditTxt);
                 EditText benefitContentEditTxt = view.findViewById(R.id.benefitContentEditTxt);
@@ -113,6 +106,14 @@ public class ConditionAndDiscountAdapter extends BaseAdapter {
         return result;
     }
 
+    public int getViewHeightPx() {
+        return  viewHeightPx;
+    }
+
+    public void setViewHeightPx(int viewHeightPx) {
+        this.viewHeightPx = viewHeightPx;
+    }
+
     @Override
     public int getCount() {
         return items.size();
@@ -132,6 +133,10 @@ public class ConditionAndDiscountAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.condition_and_discount_item, parent, false);
+        }
+
+        if (viewHeightPx == 0) {
+            setViewHeightPx(convertView.getHeight());
         }
 
         TextView conditionTxt = convertView.findViewById(R.id.conditionTxt);

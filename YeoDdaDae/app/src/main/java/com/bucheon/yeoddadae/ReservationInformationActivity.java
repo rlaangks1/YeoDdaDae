@@ -164,7 +164,7 @@ public class ReservationInformationActivity extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(), "예약 시간이 지나서 취소 불가합니다", Toast.LENGTH_SHORT).show();
                                 }
                                 else {
-                                    Log.d(ContentValues.TAG, errorMessage);
+                                    Log.d(TAG, errorMessage);
                                     Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
                                 }
                             }

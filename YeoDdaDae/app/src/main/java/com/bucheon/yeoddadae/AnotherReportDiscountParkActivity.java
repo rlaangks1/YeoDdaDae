@@ -175,11 +175,11 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
     private void checkPermission() {
         if (checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(ContentValues.TAG, "권한 있음");
+            Log.d(TAG, "권한 있음");
             init();
         }
         else {
-            Log.d(ContentValues.TAG, "권한 없음. 요청");
+            Log.d(TAG, "권한 없음. 요청");
             String[] permissionArr = {android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
             requestPermissions(permissionArr, PERMISSION_REQUEST_CODE);
         }
@@ -192,12 +192,12 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
         if (requestCode == PERMISSION_REQUEST_CODE
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED
                 && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-            Log.d(ContentValues.TAG, "권한요청에서 허가");
+            Log.d(TAG, "권한요청에서 허가");
             init();
         }
         else {
             Toast.makeText(getApplicationContext(), "GPS 권한이 거부되었습니다", Toast.LENGTH_SHORT).show();
-            Log.d (ContentValues.TAG, "권한요청에서 거부or문제");
+            Log.d (TAG, "권한요청에서 거부or문제");
             finish();
         }
     }

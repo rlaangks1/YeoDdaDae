@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;

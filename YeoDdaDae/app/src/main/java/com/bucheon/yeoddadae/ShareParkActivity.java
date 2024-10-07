@@ -2,15 +2,12 @@ package com.bucheon.yeoddadae;
 
 import static android.content.ContentValues.TAG;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -37,11 +34,9 @@ import com.skt.Tmap.address_info.TMapAddressInfo;
 
 import org.threeten.bp.LocalDate;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,12 +46,9 @@ public class ShareParkActivity extends AppCompatActivity {
     String loginId;
     double lat = 0;
     double lon = 0;
-
-    int imageCount = 0;
     ArrayList<Uri> imageUris = new ArrayList<>();
+    ImageDialog id;
     StorageReference mStorageRef;
-    Uri imageUri;
-
     TimeAdapter ta;
 
     ImageButton shareParkBackBtn;
@@ -69,17 +61,21 @@ public class ShareParkActivity extends AppCompatActivity {
     EditText sharerEmailEditTxt;
     EditText sharerRelationEditTxt;
     ImageButton openImageBtn;
+    TextView imageCountTxt;
     ImageView selectedImageView1;
+    ImageButton cancelImageBtn1;
     ImageView selectedImageView2;
+    ImageButton cancelImageBtn2;
     ImageView selectedImageView3;
+    ImageButton cancelImageBtn3;
     ImageView selectedImageView4;
+    ImageButton cancelImageBtn4;
     EditText parkPriceEditTxt;
     ImageButton resetBtn;
     MaterialCalendarView parkDateCalendar;
     ListView parkTimeListView;
     ImageButton registrationBtn;
 
-    TextView imageCountTxt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,17 +91,20 @@ public class ShareParkActivity extends AppCompatActivity {
         sharerEmailEditTxt = findViewById(R.id.sharerEmailEditTxt);
         sharerRelationEditTxt = findViewById(R.id.sharerRelationEditTxt);
         openImageBtn = findViewById(R.id.openImageBtn);
+        imageCountTxt = findViewById(R.id.imageCountTxt);
         selectedImageView1 = findViewById(R.id.selectedImageView1);
+        cancelImageBtn1 = findViewById(R.id.cancelImageBtn1);
         selectedImageView2 = findViewById(R.id.selectedImageView2);
+        cancelImageBtn2 = findViewById(R.id.cancelImageBtn2);
         selectedImageView3 = findViewById(R.id.selectedImageView3);
+        cancelImageBtn3 = findViewById(R.id.cancelImageBtn3);
         selectedImageView4 = findViewById(R.id.selectedImageView4);
+        cancelImageBtn4 = findViewById(R.id.cancelImageBtn4);
         parkPriceEditTxt = findViewById(R.id.parkPriceEditTxt);
         resetBtn = findViewById(R.id.resetBtn);
         parkDateCalendar = findViewById(R.id.parkDateCalendar);
         parkTimeListView = findViewById(R.id.parkTimeListView);
         registrationBtn = findViewById(R.id.registrationBtn);
-        imageCountTxt = findViewById(R.id.imageCountTxt);
-
 
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("loginId");
@@ -277,9 +276,7 @@ public class ShareParkActivity extends AppCompatActivity {
         });
     }
 
-
-
-    private void openImageChooser() {
+    void openImageChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");  // 이미지만 선택 가능
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
@@ -287,11 +284,10 @@ public class ShareParkActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "사진을 선택하세요"), PICK_IMAGE_REQUEST_CODE);
     }
 
-    private void uploadImageAndRegister(HashMap<String, Object> hm) {
+    void uploadImageAndRegister(HashMap<String, Object> hm) {
         if (!imageUris.isEmpty()) {
             ArrayList<String> imageUrlsList = new ArrayList<>();
-            int totalImages = imageUris.size();
-            AtomicInteger uploadCount = new AtomicInteger(0);
+            int uploadCount [] = {0};
 
             for (Uri imageUri : imageUris) {
                 StorageReference fileRef = mStorageRef.child(System.currentTimeMillis() + ".jpg");
@@ -306,11 +302,12 @@ public class ShareParkActivity extends AppCompatActivity {
                                         String imageUrl = uri.toString();
                                         imageUrlsList.add(imageUrl);
 
-                                        if (uploadCount.incrementAndGet() == totalImages) {
+                                        uploadCount [0] ++;
+
+                                        if (uploadCount [0] == imageUris.size()) {
                                             hm.put("imageUrls", imageUrlsList);
                                             registerUser(hm);
                                         }
-
                                     }
                                 });
                             }
@@ -318,12 +315,13 @@ public class ShareParkActivity extends AppCompatActivity {
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Log.e(TAG, "이미지 업로드 실패: " + e.getMessage());
+                                Log.d(TAG, "이미지 업로드 실패: " + e.getMessage());
                                 Toast.makeText(getApplicationContext(), "이미지 업로드 중 오류 발생", Toast.LENGTH_SHORT).show();
                             }
                         });
             }
-        } else {
+        }
+        else {
             registerUser(hm);
         }
     }
@@ -466,16 +464,18 @@ public class ShareParkActivity extends AppCompatActivity {
                     }
                 });
             }
-        } else if (requestCode == PICK_IMAGE_REQUEST_CODE) {
+        }
+        else if (requestCode == PICK_IMAGE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 imageUris.clear();
-                if (data.getClipData() != null) {
+                if (data.getClipData() != null) { // 이미지 여러개 선택
                     int count = data.getClipData().getItemCount();
                     for (int i = 0; i < count && i < 4; i++) {
                         Uri imageUri = data.getClipData().getItemAt(i).getUri();
                         imageUris.add(imageUri);
                     }
-                } else if (data.getData() != null) {
+                }
+                else if (data.getData() != null) { // 이미지 하나 선택
                     imageUris.add(data.getData());
                 }
                 showSelectedImages();
@@ -484,19 +484,9 @@ public class ShareParkActivity extends AppCompatActivity {
     }
 
     private void showSelectedImages() {
-        ImageView[] imageViews = {
-                selectedImageView1,
-                selectedImageView2,
-                selectedImageView3,
-                selectedImageView4
-        };
+        ImageView[] imageViews = {selectedImageView1, selectedImageView2, selectedImageView3, selectedImageView4};
 
-        ImageButton[] cancelButtons = {
-                findViewById(R.id.cancelImageBtn1),
-                findViewById(R.id.cancelImageBtn2),
-                findViewById(R.id.cancelImageBtn3),
-                findViewById(R.id.cancelImageBtn4)
-        };
+        ImageButton[] cancelButtons = {cancelImageBtn1, cancelImageBtn2, cancelImageBtn3, cancelImageBtn4};
 
         for (int i = 0; i < 4; i++) {
             if (i < imageUris.size()) {
@@ -504,24 +494,24 @@ public class ShareParkActivity extends AppCompatActivity {
                 imageViews[i].setVisibility(View.VISIBLE);
                 cancelButtons[i].setVisibility(View.VISIBLE); // 취소 버튼 보이기
 
-                // 현재 인덱스를 final로 설정
-                final int index = i;
+                final int index = i; // 현재 인덱스를 final로 설정
+                int copyI = i;
                 imageViews[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showImageDialog(imageUris.get(index)); // 다이얼로그 호출
+                        showImageDialog(copyI); // 다이얼로그 호출
                     }
                 });
 
-                // 클릭 리스너 설정
-                cancelButtons[i].setOnClickListener(new View.OnClickListener() {
+                cancelButtons[i].setOnClickListener(new View.OnClickListener() { // 클릭 리스너 설정
                     @Override
                     public void onClick(View v) {
                         imageUris.remove(index); // 이미지 URI 리스트에서 제거
                         showSelectedImages(); // 갱신된 이미지 목록 보여주기
                     }
                 });
-            } else {
+            }
+            else {
                 imageViews[i].setVisibility(View.GONE);
                 cancelButtons[i].setVisibility(View.GONE); // 취소 버튼 숨기기
             }
@@ -529,32 +519,11 @@ public class ShareParkActivity extends AppCompatActivity {
         imageCountTxt.setText("(" + imageUris.size() + " / 4)");
     }
 
-    private void showImageDialog(Uri imageUri) {
-        // 다이얼로그 생성
-        Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog_image_view);
-        dialog.setCancelable(true);
+    private void showImageDialog(int position) {
+        String imageUrl = imageUris.get(position).toString();
 
-        ImageView fullScreenImageView = dialog.findViewById(R.id.fullScreenImageView);
-        fullScreenImageView.setImageURI(imageUri); // 선택한 이미지 세팅
-
-        // 다이얼로그 외부 클릭 시 닫기
-        ImageButton closeButton = dialog.findViewById(R.id.closeButton);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss(); // 다이얼로그 닫기
-            }
-        });
-
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialogInterface) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
+        id = new ImageDialog(ShareParkActivity.this, imageUrl);
+        id.show();
     }
 
     String replaceNewlinesAndTrim(EditText et) {
