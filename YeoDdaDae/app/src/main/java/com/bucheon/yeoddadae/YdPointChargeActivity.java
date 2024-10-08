@@ -52,7 +52,7 @@ public class YdPointChargeActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this,
                 R.array.my_spinner_charge_point_items,
-                R.layout.my_spinner_3
+                R.layout.spinner_my_3
         );
         chargePointSpinner.setAdapter(adapter);
 

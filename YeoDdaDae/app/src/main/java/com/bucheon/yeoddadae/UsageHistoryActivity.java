@@ -53,7 +53,7 @@ public class UsageHistoryActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this,
                 R.array.my_spinner_usage_history,
-                R.layout.my_spinner
+                R.layout.spinner_my
         );
         usageHistoryParkOrGasSpinner.setAdapter(adapter);
 

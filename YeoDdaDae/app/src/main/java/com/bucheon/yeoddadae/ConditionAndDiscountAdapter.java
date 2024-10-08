@@ -132,7 +132,7 @@ public class ConditionAndDiscountAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.condition_and_discount_item, parent, false);
+            convertView = inflater.inflate(R.layout.item_condition_and_discount, parent, false);
         }
 
         if (viewHeightPx == 0) {

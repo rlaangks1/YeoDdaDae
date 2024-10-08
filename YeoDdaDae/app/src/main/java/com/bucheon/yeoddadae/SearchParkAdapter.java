@@ -107,7 +107,7 @@ public class SearchParkAdapter extends BaseAdapter {
 
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.search_history_item, parent, false);
+                convertView = inflater.inflate(R.layout.item_search_history, parent, false);
             }
 
             TextView historyName = convertView.findViewById(R.id.historyName);
@@ -142,7 +142,7 @@ public class SearchParkAdapter extends BaseAdapter {
 
         if (convertView == null || convertView.getTag() instanceof SearchHistoryItem) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.search_park_item, parent, false);
+            convertView = inflater.inflate(R.layout.item_search_park, parent, false);
         }
 
         // 파인드 뷰

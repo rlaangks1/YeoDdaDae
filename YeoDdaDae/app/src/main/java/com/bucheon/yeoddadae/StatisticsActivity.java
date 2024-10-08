@@ -72,7 +72,7 @@ public class StatisticsActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this,
                 R.array.my_spinner_time_items,
-                R.layout.my_spinner
+                R.layout.spinner_my
         );
         statisticsTimeSpinner.setAdapter(adapter);
 

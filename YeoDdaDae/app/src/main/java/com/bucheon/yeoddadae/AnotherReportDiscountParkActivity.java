@@ -3,7 +3,6 @@ package com.bucheon.yeoddadae;
 import static android.content.ContentValues.TAG;
 
 import android.Manifest;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -63,7 +62,7 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this,
                 R.array.my_spinner_distance_items,
-                R.layout.my_spinner
+                R.layout.spinner_my
         );
         anotherReportDistanceSpinner.setAdapter(adapter);
 

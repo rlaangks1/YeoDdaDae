@@ -215,7 +215,7 @@ public class ShareParkAdapter extends BaseAdapter {
                 return convertView;
             }
             else {
-                convertView = inflater.inflate(R.layout.share_park_item, parent, false);
+                convertView = inflater.inflate(R.layout.item_share_park, parent, false);
 
                 ShareParkItem sharePark;
                 if (firstItems.isEmpty()) {

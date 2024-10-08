@@ -175,7 +175,7 @@ public class TimeAdapter extends BaseAdapter {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.time_item, parent, false);
+            convertView = inflater.inflate(R.layout.item_time, parent, false);
         }
 
         TextView textViewDate = convertView.findViewById(R.id.textViewDate);

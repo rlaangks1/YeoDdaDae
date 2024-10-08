@@ -151,7 +151,7 @@ public class GasStationAdapter extends BaseAdapter {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.gas_station_item, parent, false);
+            convertView = inflater.inflate(R.layout.item_gas_station, parent, false);
         }
         
         // 파인드 뷰

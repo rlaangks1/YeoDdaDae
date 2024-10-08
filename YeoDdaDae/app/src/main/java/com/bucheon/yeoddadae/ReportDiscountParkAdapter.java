@@ -101,7 +101,7 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
 
         if (activity instanceof MainActivity) {
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.my_report_discount_park_item, parent, false);
+                convertView = inflater.inflate(R.layout.item_my_report_discount_park, parent, false);
             }
 
             // 파인드 뷰
@@ -164,7 +164,7 @@ public class ReportDiscountParkAdapter extends BaseAdapter {
 
         else if (activity instanceof AnotherReportDiscountParkActivity || activity instanceof ApproveReportActivity) {
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.report_discount_park_item, parent, false);
+                convertView = inflater.inflate(R.layout.item_report_discount_park, parent, false);
             }
 
             // 파인드 뷰

@@ -48,7 +48,7 @@ public class ReasonAdapter extends BaseAdapter {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.reason_item, parent, false);
+            convertView = inflater.inflate(R.layout.item_reason, parent, false);
         }
 
         convertView.setEnabled(false);

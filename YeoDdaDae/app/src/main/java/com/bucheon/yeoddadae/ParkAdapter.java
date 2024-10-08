@@ -132,7 +132,7 @@ public class ParkAdapter extends BaseAdapter {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.park_item, parent, false);
+            convertView = inflater.inflate(R.layout.item_park, parent, false);
         }
 
         // 파인드 뷰

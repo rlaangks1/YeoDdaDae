@@ -73,13 +73,16 @@
         android:id="@+id/anotherReportListView"
         android:divider="@null"
         android:dividerHeight="5dp"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/anotherReportDistanceSpinner"
+        app:layout_constraintBottom_toTopOf="@+id/toAddReportBtn"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/toAddReportBtn"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
 
     <TextView
         android:id="@+id/anotherReportNoTxt"
@@ -89,10 +92,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/anotherReportDistanceSpinner"
+        app:layout_constraintBottom_toTopOf="@+id/toAddReportBtn"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/toAddReportBtn"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
 
     <ImageButton
         android:id="@+id/toAddReportBtn"
