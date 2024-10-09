@@ -14,6 +14,7 @@ import com.google.firebase.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
@@ -118,10 +119,27 @@ public class SearchParkAdapter extends BaseAdapter {
 
             Timestamp timestamp = historyItem.getUpTime();
             if (timestamp != null) {
+                Timestamp now = Timestamp.now();
+
                 Date date = timestamp.toDate();
-                SimpleDateFormat sdf = new SimpleDateFormat("yy.MM.dd", Locale.KOREA);
-                String dateString = sdf.format(date);
-                historyTime.setText(dateString);
+                Date currentDate = now.toDate();
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yy.MM.dd", Locale.KOREA);
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss", Locale.KOREA);
+
+                Calendar calendar1 = Calendar.getInstance();
+                calendar1.setTime(date);
+
+                Calendar calendar2 = Calendar.getInstance();
+                calendar2.setTime(currentDate);
+
+                if (calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) && calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH) && calendar1.get(Calendar.DAY_OF_MONTH) == calendar2.get(Calendar.DAY_OF_MONTH)) {
+                    String timeString = timeFormat.format(date);
+                    historyTime.setText(timeString);
+                } else {
+                    String dateString = dateFormat.format(date);
+                    historyTime.setText(dateString);
+                }
             }
 
             historyDeleteBtn.setOnClickListener(new View.OnClickListener() {

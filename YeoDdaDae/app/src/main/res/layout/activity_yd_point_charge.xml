@@ -32,147 +32,264 @@
         app:layout_constraintRight_toRightOf="parent" />
 
     <ScrollView
-        android:id="@+id/scrollView2"
+        android:background="@color/lightgray"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/chargeBtn"
         app:layout_constraintTop_toBottomOf="@+id/chargeBackBtn"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="10dp" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/chargeHavePointTxt"
-                android:text="보유 여따대포인트"
-                android:textSize="35sp"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/chargeBackBoardConstLayout"
+                android:background="@drawable/round_background"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginLeft="10dp" />
-
-            <TextView
-                android:id="@+id/chargeHavePointContentTxt"
-                android:text="0"
-                android:textColor="@color/sub"
-                android:textSize="40sp"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/chargeHavePointTxt"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginLeft="10dp" />
-
-            <TextView
-                android:text="pt"
-                android:textColor="@color/sub"
-                android:textSize="40sp"
-                android:textStyle="bold|italic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/chargeHavePointContentTxt"
-                app:layout_constraintLeft_toRightOf="@+id/chargeHavePointContentTxt"
-                app:layout_constraintTop_toTopOf="@+id/chargeHavePointContentTxt"
-                android:layout_marginLeft="5dp" />
-
-            <TextView
-                android:id="@+id/chargeTargetPointTxt"
-                android:text="충전할 금액"
-                android:textSize="35sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/chargeHavePointContentTxt"
-                app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="20dp"
-                android:layout_marginLeft="10dp" />
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp" >
 
-            <Spinner
-                android:id="@+id/chargePointSpinner"
-                android:spinnerMode="dropdown"
-                android:dropDownWidth="match_parent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/chargeTargetPointTxt"
+                <TextView
+                    android:id="@+id/chargeNowTimeTxt"
+                    android:text="현재 시각"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/paperlogy_5medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="10dp" />
+
+                <TextView
+                    android:id="@+id/chargeNowTimeContentTxt"
+                    android:text="yyyy년 MM월 dd일 HH:mm:ss"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/paperlogy_5medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/chargeNowTimeTxt"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="10dp" />
+
+                <View
+                    android:background="@color/gray"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    app:layout_constraintTop_toBottomOf="@+id/chargeNowTimeContentTxt"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"/>
+
+                <TextView
+                    android:id="@+id/chargeHavePointTxt"
+                    android:text="보유 여따대포인트"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/paperlogy_5medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/chargeNowTimeContentTxt"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="20dp" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/chargeHavePointConstLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/chargeHavePointTxt"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="10dp" >
+
+                    <TextView
+                        android:id="@+id/chargeHavePointContentTxt"
+                        android:text="0"
+                        android:textSize="22sp"
+                        android:textColor="@color/sub"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/paperlogy_5medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent" />
+
+                    <TextView
+                        android:text="pt"
+                        android:textColor="@color/sub"
+                        android:textSize="20sp"
+                        android:fontFamily="@font/paperlogy_5medium"
+                        android:textStyle="bold|italic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="@+id/chargeHavePointContentTxt"
+                        app:layout_constraintBottom_toBottomOf="@+id/chargeHavePointContentTxt"
+                        app:layout_constraintLeft_toRightOf="@+id/chargeHavePointContentTxt"
+                        android:layout_marginLeft="5dp" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:background="@color/gray"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    app:layout_constraintTop_toBottomOf="@+id/chargeHavePointConstLayout"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"/>
+
+                <TextView
+                    android:id="@+id/chargeTargetPointTxt"
+                    android:text="충전할 금액"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/paperlogy_5medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/chargeHavePointConstLayout"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="20dp" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/chargePointConstLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/chargeTargetPointTxt"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="10dp" >
+
+                    <Spinner
+                        android:id="@+id/chargePointSpinner"
+                        android:spinnerMode="dropdown"
+                        android:dropDownWidth="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent" />
+
+                    <TextView
+                        android:id="@+id/chargePointWonTxt"
+                        android:text="(0 원)"
+                        android:textSize="22sp"
+                        android:fontFamily="@font/paperlogy_5medium"
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="@+id/chargePointSpinner"
+                        app:layout_constraintBottom_toBottomOf="@+id/chargePointSpinner"
+                        app:layout_constraintLeft_toRightOf="@+id/chargePointSpinner"
+                        android:layout_marginLeft="5dp" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:background="@color/gray"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    app:layout_constraintTop_toBottomOf="@+id/chargePointConstLayout"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"/>
+
+                <TextView
+                    android:id="@+id/chargeAfterChargePointTxt"
+                    android:text="충전 후 여따대포인트"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/paperlogy_5medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/chargePointConstLayout"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="20dp" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/chargeAfterChargePointConstLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/chargeAfterChargePointTxt"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp" >
+
+                    <TextView
+                        android:id="@+id/chargeAfterChargePointContentTxt"
+                        android:text="0"
+                        android:textSize="22sp"
+                        android:textColor="@color/blue"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/paperlogy_5medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent" />
+
+                    <TextView
+                        android:text="pt"
+                        android:textSize="20sp"
+                        android:textColor="@color/blue"
+                        android:fontFamily="@font/paperlogy_5medium"
+                        android:textStyle="bold|italic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="@+id/chargeAfterChargePointContentTxt"
+                        app:layout_constraintBottom_toBottomOf="@+id/chargeAfterChargePointContentTxt"
+                        app:layout_constraintLeft_toRightOf="@+id/chargeAfterChargePointContentTxt"
+                        android:layout_marginLeft="5dp" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ImageButton
+                android:id="@+id/chargeBtn"
+                android:src="@drawable/gradate_button"
+                android:scaleType="fitCenter"
+                android:background="@android:color/transparent"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                app:layout_constraintTop_toBottomOf="@+id/chargeBackBoardConstLayout"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginLeft="10dp" />
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
             <TextView
-                android:id="@+id/anotherReportWonTxt"
-                android:text="(0 원)"
-                android:textSize="30sp"
-                android:textStyle="bold|italic"
+                android:text="충전"
+                android:textSize="25sp"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@+id/chargePointSpinner"
-                app:layout_constraintBottom_toBottomOf="@+id/chargePointSpinner"
-                app:layout_constraintLeft_toRightOf="@+id/chargePointSpinner"
-                android:layout_marginLeft="5dp"/>
-
-            <TextView
-                android:id="@+id/anotherReportAfterChargePointTxt"
-                android:text="충전 후 여따대포인트"
-                android:textSize="35sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/chargePointSpinner"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="60dp"
-                android:layout_marginLeft="10dp" />
-
-            <TextView
-                android:id="@+id/anotherReportAfterChargePointContentTxt"
-                android:text="0"
-                android:textSize="40sp"
-                android:textColor="@color/blue"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/anotherReportAfterChargePointTxt"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginLeft="10dp" />
-
-            <TextView
-                android:id="@+id/paymentAfterPayPointPtTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text="pt"
-                android:textSize="40sp"
-                android:textColor="@color/blue"
-                android:textStyle="bold|italic"
-                app:layout_constraintBottom_toBottomOf="@+id/anotherReportAfterChargePointContentTxt"
-                app:layout_constraintLeft_toRightOf="@+id/anotherReportAfterChargePointContentTxt"
-                app:layout_constraintTop_toTopOf="@+id/anotherReportAfterChargePointContentTxt" />
+                app:layout_constraintBottom_toBottomOf="@+id/chargeBtn"
+                app:layout_constraintRight_toRightOf="@+id/chargeBtn"
+                app:layout_constraintLeft_toLeftOf="@+id/chargeBtn"
+                app:layout_constraintTop_toTopOf="@+id/chargeBtn" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
-
-    <ImageButton
-        android:id="@+id/chargeBtn"
-        android:src="@drawable/gradate_button"
-        android:scaleType="fitCenter"
-        android:background="@android:color/transparent"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
-
-    <TextView
-        android:text="충전"
-        android:textSize="25sp"
-        android:textColor="@color/white"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/chargeBtn"
-        app:layout_constraintRight_toRightOf="@+id/chargeBtn"
-        app:layout_constraintLeft_toLeftOf="@+id/chargeBtn"
-        app:layout_constraintTop_toTopOf="@+id/chargeBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

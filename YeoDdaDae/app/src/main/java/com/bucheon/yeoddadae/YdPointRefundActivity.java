@@ -19,7 +19,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.google.firebase.Timestamp;
+
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 public class YdPointRefundActivity extends AppCompatActivity {
@@ -30,6 +35,7 @@ public class YdPointRefundActivity extends AppCompatActivity {
     FirestoreDatabase fd;
 
     ImageButton refundBackBtn;
+    TextView refundNowTimeContentTxt;
     TextView refundHavePointContentTxt;
     EditText refundTargetPointContentEditTxt;
     TextView refundWonTxt;
@@ -45,6 +51,7 @@ public class YdPointRefundActivity extends AppCompatActivity {
         setContentView(R.layout.activity_yd_point_refund);
 
         refundBackBtn = findViewById(R.id.refundBackBtn);
+        refundNowTimeContentTxt =findViewById(R.id.refundNowTimeContentTxt);
         refundHavePointContentTxt = findViewById(R.id.refundHavePointContentTxt);
         refundTargetPointContentEditTxt = findViewById(R.id.refundTargetPointContentEditTxt);
         refundWonTxt = findViewById(R.id.refundWonTxt);
@@ -75,12 +82,17 @@ public class YdPointRefundActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String refundWonString = replaceNewlinesAndTrim(refundTargetPointContentEditTxt);
 
+                DecimalFormat formatter = new DecimalFormat("#,###");
+
                 if (refundWonString == null || refundWonString.isEmpty()) {
                     refundWonTxt.setText("(0 원)");
+                    refundAfterRefundPointContentTxt.setText(formatter.format(ydPoint));
+                    refundAfterRefundPointContentTxt.setTextColor(defaultTextColor);
+                    refundAfterRefundPointPtTxt.setTextColor(defaultTextColor);
                 }
                 else {
                     long won = Long.parseLong(replaceNewlinesAndTrim(refundTargetPointContentEditTxt));
-                    String formattedWon = NumberFormat.getNumberInstance(Locale.KOREA).format(won);
+                    String formattedWon = formatter.format(won);
                     refundWonTxt.setText("(" +  formattedWon+ " 원)");
 
                     String formattedAfterRefundPoint = NumberFormat.getNumberInstance(Locale.KOREA).format(ydPoint - won);
@@ -176,15 +188,35 @@ public class YdPointRefundActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        getYdPoint();
+    }
+
+    void getYdPoint() {
+        Timestamp now = Timestamp.now();
+
+        if (now != null) {
+            Date date = now.toDate();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
+            String dateString = sdf.format(date);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    refundNowTimeContentTxt.setText(dateString);
+                }
+            });
+        }
+
         fd.loadYdPoint(loginId, new OnFirestoreDataLoadedListener() {
             @Override
             public void onDataLoaded(Object data) {
                 ydPoint = (long) data;
-                String formattedYdPoint = NumberFormat.getNumberInstance(Locale.KOREA).format(ydPoint);
+                DecimalFormat formatter = new DecimalFormat("#,###");
+                String formattedYdPoint = formatter.format(ydPoint);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         refundHavePointContentTxt.setText(formattedYdPoint);
+                        refundAfterRefundPointContentTxt.setText(formattedYdPoint);
                     }
                 });
             }

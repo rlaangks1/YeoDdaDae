@@ -329,7 +329,7 @@ public class ShareParkAdapter extends BaseAdapter {
         }
         else if (activity instanceof ApproveShareParkActivity) {
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.approve_share_park_item, parent, false);
+                convertView = inflater.inflate(R.layout.item_approve_share_park, parent, false);
             }
 
             ShareParkItem sharePark = firstItems.get(position);
