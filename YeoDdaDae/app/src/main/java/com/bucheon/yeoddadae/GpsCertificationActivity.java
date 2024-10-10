@@ -40,8 +40,8 @@ public class GpsCertificationActivity extends AppCompatActivity implements TMapG
     boolean isCloseEnough = false;
     boolean firstOnLocationChangeCalled = false;
     // 경복궁
-    Double nowLat = 37.578611;
-    Double nowLon= 126.977222;
+    double nowLat = 37.578611;
+    double nowLon= 126.977222;
     TMapGpsManager gpsManager;
     TMapView tMapView;
     TMapCircle tMapCircle;

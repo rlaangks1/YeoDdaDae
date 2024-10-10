@@ -99,7 +99,6 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     ParkHistoryDialog phd;
     FirestoreDatabase fd;
 
-
     Intent serviceIntent;
     SttService sttService;
     ServiceConnection serviceConnection;

@@ -27,6 +27,9 @@ public class UsageHistoryActivity extends AppCompatActivity {
 
     ImageButton usageHistoryBackBtn;
     Spinner usageHistoryParkOrGasSpinner;
+    Spinner usageHistoryOrderSpinner;
+    Spinner usageHistorySub1Spinner;
+    Spinner usageHistorySub2Spinner;
     ListView usageHistoryListView;
     TextView usageHistoryNoTxt;
 
@@ -37,6 +40,9 @@ public class UsageHistoryActivity extends AppCompatActivity {
 
         usageHistoryBackBtn = findViewById(R.id.usageHistoryBackBtn);
         usageHistoryParkOrGasSpinner = findViewById(R.id.usageHistoryParkOrGasSpinner);
+        usageHistoryOrderSpinner = findViewById(R.id.usageHistoryOrderSpinner);
+        usageHistorySub1Spinner = findViewById(R.id.usageHistorySub1Spinner);
+        usageHistorySub2Spinner = findViewById(R.id.usageHistorySub2Spinner);
         usageHistoryListView = findViewById(R.id.usageHistoryListView);
         usageHistoryNoTxt = findViewById(R.id.usageHistoryNoTxt);
 
@@ -53,9 +59,30 @@ public class UsageHistoryActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this,
                 R.array.my_spinner_usage_history,
-                R.layout.spinner_my
+                R.layout.spinner_my_3
         );
         usageHistoryParkOrGasSpinner.setAdapter(adapter);
+
+        adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.my_spinner_usage_history_222,
+                R.layout.spinner_my_3
+        );
+        usageHistoryOrderSpinner.setAdapter(adapter);
+
+        adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.my_spinner_usage_history_333,
+                R.layout.spinner_my_3
+        );
+        usageHistorySub1Spinner.setAdapter(adapter);
+
+        adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.my_spinner_usage_history_444,
+                R.layout.spinner_my_3
+        );
+        usageHistorySub2Spinner.setAdapter(adapter);
 
         usageHistoryParkOrGasSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

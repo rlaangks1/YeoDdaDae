@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,8 +19,11 @@ import androidx.core.content.ContextCompat;
 
 import com.google.firebase.Timestamp;
 import com.skt.Tmap.TMapData;
+import com.skt.Tmap.TMapGpsManager;
+import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapTapi;
 import com.skt.Tmap.address_info.TMapAddressInfo;
+import com.skt.tmap.engine.navigation.SDKManager;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -31,12 +35,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class ReservationInformationActivity extends AppCompatActivity {
+public class ReservationInformationActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback {
     String loginId;
     String documentId;
     HashMap<String, Object> reservationInfo;
     HashMap<String, Object> shareParkInfo;
     String naviEndPointName;
+    double nowLat = 37.578611; // 위도
+    double nowLon = 126.977222; // 경도
+    boolean isFirstLocationChangeCalled = false;
+    TMapPoint nowPoint;
+    TMapGpsManager gpsManager;
 
     ImageButton reservationInfoBackBtn;
     TextView reservationInfoIdContentTxt;
@@ -76,6 +85,18 @@ public class ReservationInformationActivity extends AppCompatActivity {
         Intent inIntent = getIntent();
         loginId = inIntent.getStringExtra("id");
         documentId = inIntent.getStringExtra("documentId");
+
+        gpsManager = new TMapGpsManager(this);
+        gpsManager.setMinTime(500); // ms단위
+        gpsManager.setMinDistance(1); // m단위
+        gpsManager.setProvider(gpsManager.GPS_PROVIDER);
+        gpsManager.OpenGps();
+        // gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
+        // gpsManager.OpenGps();
+
+        Location currentLocation = SDKManager.getInstance().getCurrentPosition();
+        nowLat = currentLocation.getLatitude();
+        nowLon = currentLocation.getLongitude();
 
         FirestoreDatabase fd = new FirestoreDatabase();
         fd.loadReservation(loginId, documentId, new OnFirestoreDataLoadedListener() {
@@ -129,12 +150,24 @@ public class ReservationInformationActivity extends AppCompatActivity {
         reservationInfoNaviBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (isFirstLocationChangeCalled) {
+                    fd.insertRoute(loginId, "공유주차장", nowLat, nowLon, null, naviEndPointName, (double) shareParkInfo.get("lat"), (double) shareParkInfo.get("lon"), new OnFirestoreDataLoadedListener() {
+                                @Override
+                                public void onDataLoaded(Object data) {}
+
+                                @Override
+                                public void onDataLoadError(String errorMessage) {
+                                    Log.d(TAG, errorMessage);
+                                    Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                    );
+                }
+
                 TMapTapi tt = new TMapTapi(ReservationInformationActivity.this);
                 boolean isTmapApp = tt.isTmapApplicationInstalled();
                 if (isTmapApp) {
-                    if (naviEndPointName != null) {
-                        tt.invokeRoute(naviEndPointName, (float) ((double) shareParkInfo.get("lon")), (float) ((double) shareParkInfo.get("lat")));
-                    }
+                    tt.invokeRoute(naviEndPointName, (float) ((double) shareParkInfo.get("lon")), (float) ((double) shareParkInfo.get("lat")));
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "TMAP이 설치되어 있지 않습니다", Toast.LENGTH_SHORT).show();
@@ -309,5 +342,17 @@ public class ReservationInformationActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onLocationChange(Location location) {
+        nowLat = location.getLatitude();
+        nowLon = location.getLongitude();
+        Log.d(TAG, "onLocationChange 호출됨 : lat(경도) = " + nowLat + ", lon(위도) = " + nowLon);
+        nowPoint = new TMapPoint(nowLat, nowLon);
+
+        if (!isFirstLocationChangeCalled) {
+            isFirstLocationChangeCalled = true;
+        }
     }
 }

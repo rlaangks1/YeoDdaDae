@@ -33,12 +33,52 @@
 
     <Spinner
         android:id="@+id/usageHistoryParkOrGasSpinner"
-        android:layout_width="wrap_content"
+        android:dropDownWidth="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/usageHistoryBackBtn"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/usageHistoryOrderSpinner"
+        android:paddingRight="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"/>
+
+    <Spinner
+        android:id="@+id/usageHistoryOrderSpinner"
+        android:dropDownWidth="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/usageHistoryParkOrGasSpinner"
+        app:layout_constraintBottom_toBottomOf="@+id/usageHistoryParkOrGasSpinner"
+        app:layout_constraintLeft_toRightOf="@+id/usageHistoryParkOrGasSpinner"
+        app:layout_constraintRight_toLeftOf="@+id/usageHistorySub1Spinner"
+        android:paddingRight="10dp"
+        android:layout_marginLeft="5dp"/>
+
+    <Spinner
+        android:id="@+id/usageHistorySub1Spinner"
+        android:dropDownWidth="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/usageHistoryParkOrGasSpinner"
+        app:layout_constraintBottom_toBottomOf="@+id/usageHistoryParkOrGasSpinner"
+        app:layout_constraintLeft_toRightOf="@+id/usageHistoryOrderSpinner"
+        app:layout_constraintRight_toLeftOf="@+id/usageHistorySub2Spinner"
+        android:paddingRight="10dp"
+        android:layout_marginLeft="5dp" />
+
+    <Spinner
+        android:id="@+id/usageHistorySub2Spinner"
+        android:dropDownWidth="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/usageHistoryParkOrGasSpinner"
+        app:layout_constraintBottom_toBottomOf="@+id/usageHistoryParkOrGasSpinner"
+        app:layout_constraintLeft_toRightOf="@+id/usageHistorySub1Spinner"
+        app:layout_constraintRight_toRightOf="parent"
+        android:paddingRight="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="10dp" />
 
     <ListView
         android:id="@+id/usageHistoryListView"

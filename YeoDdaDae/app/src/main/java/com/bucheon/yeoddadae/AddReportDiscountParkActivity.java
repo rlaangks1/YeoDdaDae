@@ -47,13 +47,13 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
     String poiPhone;
     ConditionAndDiscountAdapter cada;
     SearchParkAdapter spa;
-    double nowLat;
-    double nowLon;
+    double nowLat = 37.578611;
+    double nowLon = 126.977222;
+    TMapPoint nowPoint;
+    boolean isLoadingFirstCalled = false;
+    TMapGpsManager gpsManager;
     boolean isSearching = false;
     AlertDialog loadingAlert;
-    boolean isLoadingFirstCalled = false;
-    TMapPoint nowPoint;
-    TMapGpsManager gpsManager;
 
     ImageButton addReportDiscountParkBackBtn;
     TextView addReportDiscountParkMyLocationContentTxt;
@@ -467,6 +467,9 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
     public void setHeightOfConditionAndDiscountListView() {
         int numberOfItems = cada.getCount();
         int itemHeightPx = cada.getViewHeightPx();
+        if (itemHeightPx == 0) {
+            return;
+        }
         int dividerHeightPx = conditionAndDiscountListView.getDividerHeight();
 
         int totalHeightPx = (itemHeightPx * numberOfItems) + (dividerHeightPx * (numberOfItems - 1));

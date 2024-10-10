@@ -33,8 +33,8 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
 
     private final int PERMISSION_REQUEST_CODE = 1;
     String loginId;
-    double nowLat;
-    double nowLon;
+    double nowLat = 37.578611;
+    double nowLon = 126.977222;
     int km = -1;
     TMapGpsManager gpsManager;
     boolean firstInitCalled = false;

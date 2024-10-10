@@ -1,7 +1,10 @@
 package com.bucheon.yeoddadae;
 
+import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
+
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +26,7 @@ import java.util.Locale;
 
 public class TimeAdapter extends BaseAdapter {
     private ReservationParkActivity mActivity;
+
     ArrayList<TimeItem> items = new ArrayList<>();
 
     public TimeAdapter() {}
@@ -177,6 +181,8 @@ public class TimeAdapter extends BaseAdapter {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.item_time, parent, false);
         }
+
+        convertView.setEnabled(false);
 
         TextView textViewDate = convertView.findViewById(R.id.textViewDate);
         EditText startTime = convertView.findViewById(R.id.startTime);
