@@ -111,7 +111,7 @@ public class ShareParkActivity extends AppCompatActivity {
 
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
 
-        ta = new TimeAdapter();
+        ta = new TimeAdapter(ShareParkActivity.this);
         parkTimeListView.setAdapter(ta);
 
         gpsBtn.setOnClickListener(new View.OnClickListener() {
