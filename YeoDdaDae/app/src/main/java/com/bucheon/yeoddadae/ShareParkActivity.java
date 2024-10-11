@@ -5,6 +5,7 @@ import static android.content.ContentValues.TAG;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -435,6 +436,11 @@ public class ShareParkActivity extends AppCompatActivity {
     private int dpToPx(int dp) {
         float density = getResources().getDisplayMetrics().density;
         return Math.round(dp * density);
+    }
+
+    private int pxToDp(int px) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round(px / density);
     }
 
     @Override

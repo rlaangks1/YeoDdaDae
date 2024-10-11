@@ -310,17 +310,10 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
             @Override
             public void onClick(View v) {
                 cada.addItem(new ConditionAndDiscountItem());
-
-                conditionAndDiscountListView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        setHeightOfConditionAndDiscountListView();
-
-                        if (cada.getCount() >= 6) {
-                            addCAndDBtn.setVisibility(View.GONE);
-                        }
-                    }
-                });
+                setHeightOfConditionAndDiscountListView();
+                if (cada.getCount() >= 6) {
+                    addCAndDBtn.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -465,16 +458,22 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
     }
 
     public void setHeightOfConditionAndDiscountListView() {
-        int numberOfItems = cada.getCount();
-        int itemHeightPx = cada.getViewHeightPx();
-        if (itemHeightPx == 0) {
-            return;
-        }
-        int dividerHeightPx = conditionAndDiscountListView.getDividerHeight();
+        int totalHeight = 0;
 
-        int totalHeightPx = (itemHeightPx * numberOfItems) + (dividerHeightPx * (numberOfItems - 1));
+        int numberOfItem = cada.getCount();
+        int dividerHeight = conditionAndDiscountListView.getDividerHeight();
+
+        for (int i = 0; i < numberOfItem; i++) {
+            View listItem = cada.getView(i, null, conditionAndDiscountListView);
+            listItem.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+        if (dividerHeight * (numberOfItem - 1) > 0) {
+            totalHeight += dividerHeight * (numberOfItem - 1);
+        }
+
         ViewGroup.LayoutParams params = conditionAndDiscountListView.getLayoutParams();
-        params.height = totalHeightPx;
+        params.height = totalHeight;
         conditionAndDiscountListView.setLayoutParams(params);
         conditionAndDiscountListView.requestLayout();
     }

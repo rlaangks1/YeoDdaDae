@@ -494,15 +494,11 @@ public class ReservationParkActivity extends AppCompatActivity {
 
     public void setTotalHeightofListView(ListView listView) {
         int numberOfItems = ta.getCount();
-        int itemHeight = dpToPx(60); // 아이템 높이를 dp 단위로 변환하여 사용
+        int itemHeight = dpToPx(60);
 
-        // Calculate total height of all items.
         int totalItemsHeight = numberOfItems * itemHeight;
-
-        // Calculate total height of all item dividers.
         int totalDividersHeight = listView.getDividerHeight() * (numberOfItems - 1);
 
-        // Set list height.
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         params.height = totalItemsHeight + totalDividersHeight;
         listView.setLayoutParams(params);

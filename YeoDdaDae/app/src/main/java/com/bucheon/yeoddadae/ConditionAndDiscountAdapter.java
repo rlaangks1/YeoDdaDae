@@ -16,7 +16,6 @@ import java.util.ArrayList;
 public class ConditionAndDiscountAdapter extends BaseAdapter {
     Activity activity;
     LayoutInflater inflater;
-    int viewHeightPx = 0;
 
     ArrayList<ConditionAndDiscountItem> items = new ArrayList<>();
 
@@ -106,14 +105,6 @@ public class ConditionAndDiscountAdapter extends BaseAdapter {
         return result;
     }
 
-    public int getViewHeightPx() {
-        return  viewHeightPx;
-    }
-
-    public void setViewHeightPx(int viewHeightPx) {
-        this.viewHeightPx = viewHeightPx;
-    }
-
     @Override
     public int getCount() {
         return items.size();
@@ -133,10 +124,6 @@ public class ConditionAndDiscountAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_condition_and_discount, parent, false);
-        }
-
-        if (viewHeightPx == 0) {
-            setViewHeightPx(convertView.getHeight());
         }
 
         TextView conditionTxt = convertView.findViewById(R.id.conditionTxt);
