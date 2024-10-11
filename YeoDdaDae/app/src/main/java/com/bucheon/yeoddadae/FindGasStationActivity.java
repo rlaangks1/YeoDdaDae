@@ -21,6 +21,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.HorizontalScrollView;
@@ -445,10 +446,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                     public void run() {
                         tMapView.setCenterPoint(selectedMarker.longitude, selectedMarker.latitude);
 
-                        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-                        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
-                        gasStationListView.getLayoutParams().height = (int) px;
-                        gasStationListView.requestLayout();
+                        setHeightOfGasStationListView(true);
 
                         TextView gasStationOrder = findViewById(R.id.gasStationOrder);
                         gasStationOrder.setVisibility(View.INVISIBLE);
@@ -505,25 +503,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                     public void run() {
                         gasStationListView.setAdapter(gasStationAdapter);
 
-                        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-                        float px;
-
-                        switch (gasStationAdapter.getSize()) {
-                            case 0:
-                                px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, displayMetrics);
-                                break;
-                            case 1:
-                                px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
-                                break;
-                            case 2:
-                                px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, displayMetrics);
-                                break;
-                            default:
-                                px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, displayMetrics);
-                        }
-
-                        gasStationListView.getLayoutParams().height = (int) px;
-                        gasStationListView.requestLayout();
+                        setHeightOfGasStationListView(false);
 
                         switch (sortBy) {
                             case 1 :
@@ -588,6 +568,42 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                 loadingStop();
             }
         });
+    }
+
+    public void setHeightOfGasStationListView(boolean selectMod) {
+        int itemHeightDp = 100;
+
+        int totalHeightPx = 0;
+
+        int numberOfItem = gasStationAdapter.getCount();
+        if (selectMod) {
+            numberOfItem = 1;
+        }
+        int dividerHeightPx = gasStationListView.getDividerHeight();
+
+        if (numberOfItem < 3) {
+            totalHeightPx += (dpToPx(itemHeightDp) * numberOfItem);
+        }
+        else {
+            totalHeightPx += ((dpToPx(itemHeightDp) * 2) + (dpToPx(itemHeightDp) * 4 / 10));
+        }
+
+        if (numberOfItem == 2) {
+            totalHeightPx += dividerHeightPx;
+        }
+        else if (numberOfItem >= 3) {
+            totalHeightPx += dividerHeightPx * 2;
+        }
+
+        ViewGroup.LayoutParams params = gasStationListView.getLayoutParams();
+        params.height = totalHeightPx;
+        gasStationListView.setLayoutParams(params);
+        gasStationListView.requestLayout();
+    }
+
+    private int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
     }
 
     @Override

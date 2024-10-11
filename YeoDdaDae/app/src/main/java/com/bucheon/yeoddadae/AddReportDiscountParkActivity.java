@@ -327,7 +327,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                     return;
                 }
 
-                if (cada.allDataSet()) {
+                if (cada.checkValidationAndAllDataSet()) {
                     ArrayList<String> conditionList = cada.getConditions();
                     ArrayList<Long> discountList = cada.getDiscounts();
 
@@ -458,22 +458,22 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
     }
 
     public void setHeightOfConditionAndDiscountListView() {
-        int totalHeight = 0;
+        int totalHeightPx = 0;
 
         int numberOfItem = cada.getCount();
-        int dividerHeight = conditionAndDiscountListView.getDividerHeight();
+        int dividerHeightPx = conditionAndDiscountListView.getDividerHeight();
 
         for (int i = 0; i < numberOfItem; i++) {
             View listItem = cada.getView(i, null, conditionAndDiscountListView);
             listItem.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-            totalHeight += listItem.getMeasuredHeight();
+            totalHeightPx += listItem.getMeasuredHeight();
         }
-        if (dividerHeight * (numberOfItem - 1) > 0) {
-            totalHeight += dividerHeight * (numberOfItem - 1);
+        if (dividerHeightPx * (numberOfItem - 1) > 0) {
+            totalHeightPx += dividerHeightPx * (numberOfItem - 1);
         }
 
         ViewGroup.LayoutParams params = conditionAndDiscountListView.getLayoutParams();
-        params.height = totalHeight;
+        params.height = totalHeightPx;
         conditionAndDiscountListView.setLayoutParams(params);
         conditionAndDiscountListView.requestLayout();
     }

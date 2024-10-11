@@ -1,8 +1,8 @@
 package com.bucheon.yeoddadae;
 
 public class ConditionAndDiscountItem {
-    String condition;
-    long discount;
+    String condition = "";
+    long discount = -1;
 
     public String getCondition() {
         return condition;

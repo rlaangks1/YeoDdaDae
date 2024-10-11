@@ -77,6 +77,10 @@ public class ShareParkActivity extends AppCompatActivity {
     ListView parkTimeListView;
     ImageButton registrationBtn;
 
+    public ListView getParkTimeListView() {
+        return parkTimeListView;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,7 +140,7 @@ public class ShareParkActivity extends AppCompatActivity {
                 for (CalendarDay element : ta.clear()) {
                     parkDateCalendar.setDateSelected(element, false);
                 }
-                setTotalHeightofListView(parkTimeListView);
+                setHeightOfParkTimeListView();
             }
         });
 
@@ -181,11 +185,11 @@ public class ShareParkActivity extends AppCompatActivity {
                     Log.d(TAG, "선택한 날짜: " + date.getYear() + "년 " + date.getMonth() + "월 " + date.getDay() + "일");
                     ta.addItem(new TimeItem(date));
                     ta.sortByDate();
-                    setTotalHeightofListView(parkTimeListView);
+                    setHeightOfParkTimeListView();
                 } else {
                     Log.d(TAG, "선택 해제 한 날짜: " + date.getYear() + "년 " + date.getMonth() + "월 " + date.getDay() + "일");
                     ta.removeItem(ta.findItem(date));
-                    setTotalHeightofListView(parkTimeListView);
+                    setHeightOfParkTimeListView();
                 }
             }
         });
@@ -416,31 +420,29 @@ public class ShareParkActivity extends AppCompatActivity {
         return isAfterNow;
     }
 
-    public void setTotalHeightofListView(ListView listView) {
-        int numberOfItems = ta.getCount();
-        int itemHeight = dpToPx(60); // 아이템 높이를 dp 단위로 변환하여 사용
+    public void setHeightOfParkTimeListView() {
+        int itemHeightDp = 60;
 
-        // Calculate total height of all items.
-        int totalItemsHeight = numberOfItems * itemHeight;
+        int totalHeightPx = 0;
 
-        // Calculate total height of all item dividers.
-        int totalDividersHeight = listView.getDividerHeight() * (numberOfItems - 1);
+        int numberOfItem = ta.getCount();
+        int dividerHeightPx = parkTimeListView.getDividerHeight();
 
-        // Set list height.
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalItemsHeight + totalDividersHeight;
-        listView.setLayoutParams(params);
-        listView.requestLayout();
+        totalHeightPx += dpToPx(itemHeightDp) * numberOfItem;
+
+        if (dividerHeightPx * (numberOfItem - 1) > 0) {
+            totalHeightPx += dividerHeightPx * (numberOfItem - 1);
+        }
+
+        ViewGroup.LayoutParams params = parkTimeListView.getLayoutParams();
+        params.height = totalHeightPx;
+        parkTimeListView.setLayoutParams(params);
+        parkTimeListView.requestLayout();
     }
 
     private int dpToPx(int dp) {
         float density = getResources().getDisplayMetrics().density;
         return Math.round(dp * density);
-    }
-
-    private int pxToDp(int px) {
-        float density = getResources().getDisplayMetrics().density;
-        return Math.round(px / density);
     }
 
     @Override

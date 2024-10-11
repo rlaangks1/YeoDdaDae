@@ -24,6 +24,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -117,6 +118,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     ImageButton findParkOnlyShareParkBtn;
     ImageButton findParkTimeSetBtn;
     ConstraintLayout findParkCustomTimeConstLayout;
+    ImageButton findParkCustomTimeBackBtn;
     EditText findParkCustomTimeStartDateEditTxt;
     EditText findParkCustomTimeStartTimeEditTxt;
     EditText findParkCustomTimeEndDateEditTxt;
@@ -128,6 +130,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     ImageButton cancelNaviBtn;
     ImageButton toStartNaviBtn;
     ImageButton toReservationBtn;
+    TextView toReservationTxt;
     ConstraintLayout additionalFunctionConstLayout;
     ImageButton searchStartBtn;
     ImageButton parkHistoryBtn;
@@ -175,11 +178,13 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         cancelNaviBtn = findViewById(R.id.cancelNaviBtn);
         toStartNaviBtn = findViewById(R.id.toStartNaviBtn);
         toReservationBtn = findViewById(R.id.toReservationBtn);
+        toReservationTxt = findViewById(R.id.toReservationTxt);
         onlyConstLayout = findViewById(R.id.onlyConstLayout);
         findParkOnlyReportParkBtn = findViewById(R.id.findParkOnlyReportParkBtn);
         findParkOnlyShareParkBtn = findViewById(R.id.findParkOnlyShareParkBtn);
         findParkTimeSetBtn = findViewById(R.id.findParkTimeSetBtn);
         findParkCustomTimeConstLayout = findViewById(R.id.findParkCustomTimeConstLayout);
+        findParkCustomTimeBackBtn = findViewById(R.id.findParkCustomTimeBackBtn);
         findParkCustomTimeStartDateEditTxt = findViewById(R.id.findParkCustomTimeStartDateEditTxt);
         findParkCustomTimeStartTimeEditTxt = findViewById(R.id.findParkCustomTimeStartTimeEditTxt);
         findParkCustomTimeEndDateEditTxt = findViewById(R.id.findParkCustomTimeEndDateEditTxt);
@@ -754,12 +759,14 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         findParkTimeSetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (findParkCustomTimeConstLayout.getVisibility() == View.VISIBLE) {
-                    findParkCustomTimeConstLayout.setVisibility(View.GONE);
-                }
-                else {
-                    findParkCustomTimeConstLayout.setVisibility(View.VISIBLE);
-                }
+                findParkCustomTimeConstLayout.setVisibility(View.VISIBLE);
+            }
+        });
+
+        findParkCustomTimeBackBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findParkCustomTimeConstLayout.setVisibility(View.GONE);
             }
         });
 
@@ -975,10 +982,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     public void run() {
                         tMapView.setCenterPoint(selectedMarker.longitude, selectedMarker.latitude);
 
-                        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-                        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
-                        parkListView.getLayoutParams().height = (int) px;
-                        parkListView.requestLayout();
+                        setHeightOfParkListView(true);
 
                         TextView parkOrder = findViewById(R.id.parkOrder);
                         parkOrder.setVisibility(View.INVISIBLE);
@@ -996,8 +1000,11 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                         if (targetPark.getType() == 3) {
                             reservationFirestoreDocumentId = targetPark.getFirebaseDocumentId();
                             toReservationBtn.setVisibility(View.VISIBLE);
-                        } else {
+                            toReservationTxt.setVisibility(View.VISIBLE);
+                        }
+                        else {
                             toReservationBtn.setVisibility(View.GONE);
+                            toReservationTxt.setVisibility(View.GONE);
                         }
 
                         isItemSelected = true;
@@ -1149,23 +1156,15 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                                     @Override
                                     public void run() {
                                         parkListView.setAdapter(parkAdapter);
-                                        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-                                        float px;
-                                        switch (parkAdapter.getSize()) {
-                                            case 0:
-                                                px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, displayMetrics);
-                                                break; case 1: px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, displayMetrics);
-                                                break; case 2: px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, displayMetrics);
-                                                break; default: px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, displayMetrics);
-                                        }
-                                        parkListView.getLayoutParams().height = (int) px;
-                                        parkListView.requestLayout();
+                                        setHeightOfParkListView(false);
                                         switch (sortBy) {
                                             case 1 :
                                                 sortByDistanceBtn.setImageResource(R.drawable.gradate_button);
                                                 sortByParkPriceBtn.setImageResource(R.drawable.disabled_button);
                                                 parkAdapter.sortByDistance();
-                                                break; case 2 : sortByDistanceBtn.setImageResource(R.drawable.disabled_button);
+                                                break;
+                                            case 2 :
+                                                sortByDistanceBtn.setImageResource(R.drawable.disabled_button);
                                                 sortByParkPriceBtn.setImageResource(R.drawable.gradate_button);
                                                 parkAdapter.sortByParkPrice();
                                                 break;
@@ -1255,6 +1254,42 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                 Toast.makeText(getApplicationContext(), "오류 발생", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void setHeightOfParkListView(boolean selectMod) {
+        int itemHeightDp = 100;
+
+        int totalHeightPx = 0;
+
+        int numberOfItem = parkAdapter.getCount();
+        if (selectMod) {
+            numberOfItem = 1;
+        }
+        int dividerHeightPx = parkListView.getDividerHeight();
+
+        if (numberOfItem < 3) {
+            totalHeightPx += (dpToPx(itemHeightDp) * numberOfItem);
+        }
+        else {
+            totalHeightPx += ((dpToPx(itemHeightDp) * 2) + (dpToPx(itemHeightDp) * 4 / 10));
+        }
+
+        if (numberOfItem == 2) {
+            totalHeightPx += dividerHeightPx;
+        }
+        else if (numberOfItem >= 3) {
+            totalHeightPx += dividerHeightPx * 2;
+        }
+
+        ViewGroup.LayoutParams params = parkListView.getLayoutParams();
+        params.height = totalHeightPx;
+        parkListView.setLayoutParams(params);
+        parkListView.requestLayout();
+    }
+
+    private int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
     }
 
     @Override
