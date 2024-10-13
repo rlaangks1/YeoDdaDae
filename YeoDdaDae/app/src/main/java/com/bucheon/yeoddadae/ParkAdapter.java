@@ -165,23 +165,13 @@ public class ParkAdapter extends BaseAdapter {
                 parkPrice.setVisibility(View.VISIBLE);
                 parkConditionAndDiscount.setVisibility(View.GONE);
                 break;
-            case 4 :
-                parkType.setText("주소");
-                parkPrice.setVisibility(View.VISIBLE);
-                parkConditionAndDiscount.setVisibility(View.GONE);
-                break;
-            case 5 :
-                parkType.setText("장소");
-                parkPrice.setVisibility(View.VISIBLE);
-                parkConditionAndDiscount.setVisibility(View.GONE);
-                break;
             case 6 :
                 parkType.setText("제보주차장");
                 parkPrice.setVisibility(View.GONE);
                 parkConditionAndDiscount.setVisibility(View.VISIBLE);
                 break;
             default :
-                parkType.setText("뭐냐고");
+                parkType.setText("???");
         }
 
         double number = Double.parseDouble(park.getRadius());

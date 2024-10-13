@@ -626,7 +626,7 @@ public class FirestoreDatabase {
                 });
     }
 
-    public void findDicountPark(double nowLat, double nowLon, double radiusKiloMeter, OnFirestoreDataLoadedListener listener) {
+    public void findDicountPark(TMapPoint nowPoint, double centerLat, double centerLon, double radiusKiloMeter, OnFirestoreDataLoadedListener listener) {
         ArrayList<ParkItem> resultList = new ArrayList<>();
         ArrayList<String> poiIdList = new ArrayList<>();
 
@@ -649,12 +649,18 @@ public class FirestoreDatabase {
                             double discountParkLon = (double) document.get("poiLon");
 
                             TMapPolyLine tpolyline = new TMapPolyLine();
-                            tpolyline.addLinePoint(new TMapPoint(nowLat, nowLon));
+                            tpolyline.addLinePoint(new TMapPoint(centerLat, centerLon));
                             tpolyline.addLinePoint(new TMapPoint(discountParkLat, discountParkLon));
                             double distance = tpolyline.getDistance() / 1000; // km단위
 
                             if (distance <= radiusKiloMeter) {
-                                resultList.add(new ParkItem(6, (String) document.get("parkName"), Double.toString(distance), null, (String) document.get("poiPhone"), (ArrayList<String>) document.get("condition"), (ArrayList<Long>) document.get("discount"), Double.toString(discountParkLat), Double.toString(discountParkLon), (String) document.get("poiID"), document.getId()));
+                                tpolyline = new TMapPolyLine();
+                                tpolyline.addLinePoint(nowPoint);
+                                tpolyline.addLinePoint(new TMapPoint(discountParkLat, discountParkLon));
+                                double distanceFromNow = tpolyline.getDistance() / 1000; // km단위
+
+                                resultList.add(new ParkItem(6, (String) document.get("parkName"), Double.toString(distanceFromNow), null, (String) document.get("poiPhone"), (ArrayList<String>) document.get("condition"), (ArrayList<Long>) document.get("discount"), Double.toString(discountParkLat), Double.toString(discountParkLon), (String) document.get("poiID"), document.getId()));
+
                                 poiIdList.add((String) document.get("poiID"));
                             }
                         }
@@ -674,7 +680,7 @@ public class FirestoreDatabase {
     }
 
 
-    public void findSharePark(String id, double nowLat, double nowLon, double radiusKiloMeter, String startString, String endString, OnFirestoreDataLoadedListener listener) {
+    public void findSharePark(String id, TMapPoint nowPoint, double centerLat, double centerLon, double radiusKiloMeter, String startString, String endString, OnFirestoreDataLoadedListener listener) {
         ArrayList<ParkItem> resultList = new ArrayList<>();
 
         if (id == null || id.isEmpty()) {
@@ -748,13 +754,19 @@ public class FirestoreDatabase {
                         double shareParkLon = (double) document.get("lon");
 
                         TMapPolyLine tpolyline = new TMapPolyLine();
-                        tpolyline.addLinePoint(new TMapPoint(nowLat, nowLon));
+                        tpolyline.addLinePoint(new TMapPoint(centerLat, centerLon));
                         tpolyline.addLinePoint(new TMapPoint(shareParkLat, shareParkLon));
                         double distance = tpolyline.getDistance() / 1000; // km단위
 
                         if (distance <= radiusKiloMeter) {
                             String parkName = (String) document.get("ownerId") + ": " + (String) document.get("parkDetailAddress");
-                            resultList.add(new ParkItem(3, parkName, Double.toString(distance), Long.toString((long) document.get("price")), (String) document.get("ownerPhone"), null, null, Double.toString(shareParkLat), Double.toString(shareParkLon), null, document.getId()));
+
+                            tpolyline = new TMapPolyLine();
+                            tpolyline.addLinePoint(nowPoint);
+                            tpolyline.addLinePoint(new TMapPoint(shareParkLat, shareParkLon));
+                            double distanceFromNow = tpolyline.getDistance() / 1000; // km단위
+
+                            resultList.add(new ParkItem(3, parkName, Double.toString(distanceFromNow), Long.toString((long) document.get("price")), (String) document.get("ownerPhone"), null, null, Double.toString(shareParkLat), Double.toString(shareParkLon), null, document.getId()));
                         }
                     }
                     if (resultList != null && resultList.size() != 0) {

@@ -45,6 +45,7 @@ public class GpsCertificationActivity extends AppCompatActivity implements TMapG
     TMapGpsManager gpsManager;
     TMapView tMapView;
     TMapCircle tMapCircle;
+    TMapPoint saveScrollPoint;
 
     LinearLayout linearLayoutTmap;
     ImageButton decisionBtn;
@@ -195,42 +196,44 @@ public class GpsCertificationActivity extends AppCompatActivity implements TMapG
         tMapView.setOnClickListenerCallBack(new TMapView.OnClickListenerCallback() {
             @Override
             public boolean onPressEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
-                tMapView.removeAllMarkerItem();
-
-                TMapMarkerItem tItem = new TMapMarkerItem();
-                tItem.setTMapPoint(tMapPoint);
-                tItem.setName("temp");
-                tItem.setVisible(TMapMarkerItem.VISIBLE);
-                tItem.setIcon(tmapMarkerIcon);
-                tItem.setPosition(0.5f,1.0f); // 마커의 중심점을 하단, 중앙으로 설정
-                tMapView.addMarkerItem("temp", tItem);
-
-                TMapData tMapData = new TMapData();
-                tMapData.reverseGeocoding(tItem.latitude, tItem.longitude, "A10", new TMapData.reverseGeocodingListenerCallback() {
-                    @Override
-                    public void onReverseGeocoding(TMapAddressInfo tMapAddressInfo) {
-                        if (tMapAddressInfo != null) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    String [] adrresses = tMapAddressInfo.strFullAddress.split(",");
-
-                                    newAddressTxt.setText(adrresses[2]);
-                                    oldAddressTxt.setText(adrresses[1]);
-                                    addressLayout.setVisibility(View.VISIBLE);
-                                }
-                            });
-                        }
-                    }
-                });
-
-                checkDistance();
-
+                saveScrollPoint = tMapView.getCenterPoint();
                 return false;
             }
 
             @Override
             public boolean onPressUpEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
+                if (saveScrollPoint != null && saveScrollPoint.equals(tMapView.getCenterPoint())) {
+                    tMapView.removeAllMarkerItem();
+
+                    TMapMarkerItem tItem = new TMapMarkerItem();
+                    tItem.setTMapPoint(tMapPoint);
+                    tItem.setName("temp");
+                    tItem.setVisible(TMapMarkerItem.VISIBLE);
+                    tItem.setIcon(tmapMarkerIcon);
+                    tItem.setPosition(0.5f,1.0f); // 마커의 중심점을 하단, 중앙으로 설정
+                    tMapView.addMarkerItem("temp", tItem);
+
+                    TMapData tMapData = new TMapData();
+                    tMapData.reverseGeocoding(tItem.latitude, tItem.longitude, "A10", new TMapData.reverseGeocodingListenerCallback() {
+                        @Override
+                        public void onReverseGeocoding(TMapAddressInfo tMapAddressInfo) {
+                            if (tMapAddressInfo != null) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        String [] adrresses = tMapAddressInfo.strFullAddress.split(",");
+
+                                        newAddressTxt.setText(adrresses[2]);
+                                        oldAddressTxt.setText(adrresses[1]);
+                                        addressLayout.setVisibility(View.VISIBLE);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                    checkDistance();
+                }
+                saveScrollPoint = null;
                 return false;
             }
         });
@@ -264,7 +267,6 @@ public class GpsCertificationActivity extends AppCompatActivity implements TMapG
             }
         }
     }
-
 
     @Override
     public void onLocationChange(Location location) {

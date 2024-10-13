@@ -291,7 +291,7 @@
 
                 <ImageButton
                     android:id="@+id/findParkOnlyReportParkBtn"
-                    android:src="@drawable/gradate_button"
+                    android:src="@drawable/only_report_button"
                     android:scaleType="fitCenter"
                     android:background="@android:color/transparent"
                     android:layout_width="80dp"
@@ -312,7 +312,7 @@
 
                 <ImageButton
                     android:id="@+id/findParkOnlyShareParkBtn"
-                    android:src="@drawable/gradate_button"
+                    android:src="@drawable/only_share_button"
                     android:scaleType="fitCenter"
                     android:background="@android:color/transparent"
                     android:layout_width="80dp"

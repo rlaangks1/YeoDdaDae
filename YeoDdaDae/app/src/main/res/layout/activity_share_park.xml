@@ -68,7 +68,7 @@
 
                 <TextView
                     android:id="@+id/parkAddressTxt"
-                    android:text="주차장 주소"
+                    android:text="주차장 위치"
                     android:textSize="20sp"
                     android:textColor="@color/black"
                     android:fontFamily="@font/paperlogy_5medium"
