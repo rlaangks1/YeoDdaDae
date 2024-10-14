@@ -2421,7 +2421,43 @@ public class FirestoreDatabase {
                                 .whereEqualTo("isCancelled", false)
                                 .get()
                                 .addOnSuccessListener(queryDocumentSnapshots2 -> {
-                                    approveShareParkNotification[0] = queryDocumentSnapshots2.size();
+                                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots2) {
+                                        Calendar ca = Calendar.getInstance();
+                                        int year = ca.get(Calendar.YEAR);
+                                        int month = ca.get(Calendar.MONTH) + 1;
+                                        int day = ca.get(Calendar.DAY_OF_MONTH);
+                                        int hour = ca.get(Calendar.HOUR_OF_DAY);
+                                        int minute = ca.get(Calendar.MINUTE);
+                                        String nowString = "";
+                                        nowString += year;
+                                        if (month < 10) {
+                                            nowString += "0";
+                                        }
+                                        nowString += month;
+                                        if (day < 10) {
+                                            nowString += "0";
+                                        }
+                                        nowString += day;
+                                        if (hour < 10) {
+                                            nowString += "0";
+                                        }
+                                        nowString += hour;
+                                        if (minute < 10) {
+                                            nowString += "0";
+                                        }
+                                        nowString += minute;
+
+                                        HashMap<String, ArrayList<String>> shareTime = (HashMap<String, ArrayList<String>>) documentSnapshot.get("time");
+                                        List<String> sortedKeys = new ArrayList<>(shareTime.keySet());
+                                        Collections.sort(sortedKeys);
+                                        String firstTime = sortedKeys.get(0) + shareTime.get(sortedKeys.get(0)).get(0);
+
+                                        if (nowString.compareTo(firstTime) > 0) {
+                                            continue;
+                                        }
+
+                                        approveShareParkNotification[0]++;
+                                    }
 
                                     db.collection("reportDiscountPark")
                                             .whereEqualTo("isApproval", false)

@@ -247,13 +247,11 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
                     firstFindGasStationOfOnLocationChangeCalled = true;
                     findGasStation(recievedSort, new OnFindGasStationCompletedListener() {
                         @Override
-                        public void onFindGasStationCompleted() {
-
-                        }
+                        public void onFindGasStationCompleted() {}
 
                         @Override
                         public void onFindGasStationError(String errorMessage) {
-
+                            Log.d(TAG, errorMessage);
                         }
                     });
                 }
@@ -812,7 +810,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
             sd.dismiss();
             finish();
         }
-        else if (mainCommand.contains("돌아") || mainCommand.contains("이전")) {
+        else if (mainCommand.contains("돌아") || mainCommand.contains("이전") || mainCommand.contains("뒤로")) {
             if (isItemSelected) {
                 sd.dismiss();
                 cancelNaviBtn.callOnClick();

@@ -23,6 +23,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -329,9 +330,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
                     firstFindParkOfOnLocationChangeCalled = true;
                     findPark(recievedSort, null, null, new OnFindParkCompletedListener() {
                         @Override
-                        public void onFindParkCompleted() {
-
-                        }
+                        public void onFindParkCompleted() {}
 
                         @Override
                         public void onFindParkError(String errorMessage) {
@@ -807,6 +806,13 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             @Override
             public void onClick(View v) {
                 findParkCustomTimeConstLayout.setVisibility(View.VISIBLE);
+
+                findParkCustomTimeConstLayout.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        return true;
+                    }
+                });
             }
         });
 
@@ -1437,7 +1443,7 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
             sd.dismiss();
             finish();
         }
-        else if (mainCommand.contains("돌아") || mainCommand.contains("이전")) {
+        else if (mainCommand.contains("돌아") || mainCommand.contains("이전") || mainCommand.contains("뒤로")) {
             if (isItemSelected) {
                 sd.dismiss();
                 cancelNaviBtn.callOnClick();

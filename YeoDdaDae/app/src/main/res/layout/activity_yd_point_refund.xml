@@ -283,6 +283,7 @@
 
                 <EditText
                     android:id="@+id/refundAccountNumberContentEditTxt"
+                    android:inputType="number"
                     android:textSize="22sp"
                     android:textColor="@color/sub"
                     android:fontFamily="@font/paperlogy_5medium"

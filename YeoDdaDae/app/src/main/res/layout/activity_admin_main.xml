@@ -87,7 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:text="사용자 사용정지/강제탈퇴/재개 "
-            android:textAppearance="@style/sharedpark_approval_sub"
+            android:textAppearance="@style/DC_approval_report_sub"
             android:textStyle="bold|italic"
             app:layout_constraintBottom_toBottomOf="@+id/toUserManagementBtn"
             app:layout_constraintRight_toRightOf="@+id/toUserManagementTxt" />
