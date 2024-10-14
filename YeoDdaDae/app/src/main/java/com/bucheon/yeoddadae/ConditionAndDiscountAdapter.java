@@ -16,7 +16,6 @@ import java.util.ArrayList;
 public class ConditionAndDiscountAdapter extends BaseAdapter {
     Activity activity;
     LayoutInflater inflater;
-    int viewHeightPx = 0;
 
     ArrayList<ConditionAndDiscountItem> items = new ArrayList<>();
 
@@ -28,15 +27,17 @@ public class ConditionAndDiscountAdapter extends BaseAdapter {
     }
 
     public void addItem(ConditionAndDiscountItem item) {
+        allDataSet();
         if (items.size() <= 5) {
             items.add(item);
             notifyDataSetChanged();
         }
     }
 
-    public void removeItem(int i) {
+    public void removeItem(ConditionAndDiscountItem item) {
+        allDataSet();
         if (items.size() >= 2) {
-            items.remove(i);
+            items.remove(item);
             notifyDataSetChanged();
 
             if (activity instanceof AddReportDiscountParkActivity) {
@@ -46,7 +47,38 @@ public class ConditionAndDiscountAdapter extends BaseAdapter {
         }
     }
 
-    public boolean allDataSet() {
+    public void allDataSet() {
+        for (int i = 0; i < items.size(); i++) {
+            if (activity instanceof AddReportDiscountParkActivity) {
+                ConditionAndDiscountItem item = items.get(i);
+
+                AddReportDiscountParkActivity adpa = (AddReportDiscountParkActivity) activity;
+
+                View view = adpa.getConditionAndDiscountListView().getChildAt(i);
+
+                EditText conditionContentEditTxt = view.findViewById(R.id.conditionContentEditTxt);
+                EditText benefitContentEditTxt = view.findViewById(R.id.benefitContentEditTxt);
+
+                String condition = replaceNewlinesAndTrim(conditionContentEditTxt);
+                String discountStr = replaceNewlinesAndTrim(benefitContentEditTxt);
+
+                if (condition.isEmpty()) {
+                    item.setCondition("");
+                }
+                else {
+                    item.setCondition(condition);
+                }
+                if (discountStr.isEmpty()) {
+                    item.setDiscount(-1);
+                }
+                else {
+                    item.setDiscount(Long.parseLong(discountStr));
+                }
+            }
+        }
+    }
+
+    public boolean checkValidationAndAllDataSet() {
         if (items.isEmpty()) {
             return  false;
         }
@@ -106,14 +138,6 @@ public class ConditionAndDiscountAdapter extends BaseAdapter {
         return result;
     }
 
-    public int getViewHeightPx() {
-        return  viewHeightPx;
-    }
-
-    public void setViewHeightPx(int viewHeightPx) {
-        this.viewHeightPx = viewHeightPx;
-    }
-
     @Override
     public int getCount() {
         return items.size();
@@ -131,30 +155,49 @@ public class ConditionAndDiscountAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.condition_and_discount_item, parent, false);
-        }
+        ConditionAndDiscountItem cadi = items.get(position);
 
-        if (viewHeightPx == 0) {
-            setViewHeightPx(convertView.getHeight());
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.item_condition_and_discount, parent, false);
         }
 
         TextView conditionTxt = convertView.findViewById(R.id.conditionTxt);
+        EditText conditionContentEditTxt = convertView.findViewById(R.id.conditionContentEditTxt);
         TextView benefitTxt = convertView.findViewById(R.id.benefitTxt);
+        EditText benefitContentEditTxt = convertView.findViewById(R.id.benefitContentEditTxt);
         ImageButton removeBtn = convertView.findViewById(R.id.removeBtn);
 
         conditionTxt.setText("조건 " + (position + 1));
 
+        if (cadi.getCondition() == null || cadi.getCondition().isEmpty()) {
+            conditionContentEditTxt.setText("");
+        }
+        else {
+            conditionContentEditTxt.setText(cadi.getCondition());
+        }
+
         benefitTxt.setText("혜택 " + (position + 1));
+
+        if (cadi.getDiscount() == -1) {
+            benefitContentEditTxt.setText("");
+        }
+        else {
+            long discount = cadi.getDiscount();
+
+            benefitContentEditTxt.setText(Long.toString(discount));
+        }
 
         if (position == 0) {
             removeBtn.setVisibility(View.GONE);
+        }
+        else {
+            removeBtn.setVisibility(View.VISIBLE);
         }
 
         removeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                removeItem(position);
+                removeItem(cadi);
             }
         });
 

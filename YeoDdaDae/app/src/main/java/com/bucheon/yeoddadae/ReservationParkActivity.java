@@ -313,7 +313,7 @@ public class ReservationParkActivity extends AppCompatActivity {
                 for (CalendarDay element : ta.clear()) {
                     reservationParkDateCalendar.setDateSelected(element, false);
                 }
-                setTotalHeightofListView(reservationParkTimeListView);
+                setHeightOfReservationParkTimeListView();
                 calculatePrice();
             }
         });
@@ -342,13 +342,13 @@ public class ReservationParkActivity extends AppCompatActivity {
                     Log.d(TAG, "선택한 날짜: " + date.getYear() + "년 " + date.getMonth() + "월 " + date.getDay() + "일");
                     ta.addItem(new TimeItem(date));
                     ta.sortByDate();
-                    setTotalHeightofListView(reservationParkTimeListView);
+                    setHeightOfReservationParkTimeListView();
                     calculatePrice();
                 }
                 else {
                     Log.d(TAG, "선택 해제 한 날짜: " + date.getYear() + "년 " + date.getMonth() + "월 " + date.getDay() + "일");
                     ta.removeItem(ta.findItem(date));
-                    setTotalHeightofListView(reservationParkTimeListView);
+                    setHeightOfReservationParkTimeListView();
                     calculatePrice();
                 }
             }
@@ -492,21 +492,24 @@ public class ReservationParkActivity extends AppCompatActivity {
         });
     }
 
-    public void setTotalHeightofListView(ListView listView) {
-        int numberOfItems = ta.getCount();
-        int itemHeight = dpToPx(60); // 아이템 높이를 dp 단위로 변환하여 사용
+    public void setHeightOfReservationParkTimeListView() {
+        int itemHeightDp = 60;
 
-        // Calculate total height of all items.
-        int totalItemsHeight = numberOfItems * itemHeight;
+        int totalHeightPx = 0;
 
-        // Calculate total height of all item dividers.
-        int totalDividersHeight = listView.getDividerHeight() * (numberOfItems - 1);
+        int numberOfItem = ta.getCount();
+        int dividerHeightPx = reservationParkTimeListView.getDividerHeight();
 
-        // Set list height.
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalItemsHeight + totalDividersHeight;
-        listView.setLayoutParams(params);
-        listView.requestLayout();
+        totalHeightPx += dpToPx(itemHeightDp) * numberOfItem;
+
+        if (dividerHeightPx * (numberOfItem - 1) > 0) {
+            totalHeightPx += dividerHeightPx * (numberOfItem - 1);
+        }
+
+        ViewGroup.LayoutParams params = reservationParkTimeListView.getLayoutParams();
+        params.height = totalHeightPx;
+        reservationParkTimeListView.setLayoutParams(params);
+        reservationParkTimeListView.requestLayout();
     }
 
     private int dpToPx(int dp) {

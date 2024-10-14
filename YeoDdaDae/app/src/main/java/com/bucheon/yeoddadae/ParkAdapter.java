@@ -33,7 +33,7 @@ public class ParkAdapter extends BaseAdapter {
 
     public ParkItem findItemByPoiId(String poiId) {
         for (ParkItem item : items) {
-            if (item.getPoiId().equals(poiId)) {
+            if (item.getPoiId() != null && !item.getPoiId().isEmpty() && item.getPoiId().equals(poiId)) {
                 return item;
             }
         }
@@ -132,7 +132,7 @@ public class ParkAdapter extends BaseAdapter {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.park_item, parent, false);
+            convertView = inflater.inflate(R.layout.item_park, parent, false);
         }
 
         // 파인드 뷰
@@ -145,6 +145,10 @@ public class ParkAdapter extends BaseAdapter {
         TextView parkPhone = convertView.findViewById(R.id.parkPhone);
 
         // 뷰 내용
+        parkOrder.setText (Integer.toString(position + 1));
+
+        parkName.setText(park.getName());
+
         switch (park.getType()) {
             case 1 :
                 parkType.setText("일반주차장");
@@ -161,34 +165,28 @@ public class ParkAdapter extends BaseAdapter {
                 parkPrice.setVisibility(View.VISIBLE);
                 parkConditionAndDiscount.setVisibility(View.GONE);
                 break;
-            case 4 :
-                parkType.setText("주소");
-                parkPrice.setVisibility(View.VISIBLE);
-                parkConditionAndDiscount.setVisibility(View.GONE);
-                break;
-            case 5 :
-                parkType.setText("장소");
-                parkPrice.setVisibility(View.VISIBLE);
-                parkConditionAndDiscount.setVisibility(View.GONE);
-                break;
             case 6 :
                 parkType.setText("제보주차장");
                 parkPrice.setVisibility(View.GONE);
                 parkConditionAndDiscount.setVisibility(View.VISIBLE);
                 break;
             default :
-                parkType.setText("뭐냐고");
+                parkType.setText("???");
         }
 
-        parkOrder.setText (Integer.toString(position + 1));
-        parkName.setText(park.getName());
-
-        // 숫자 포맷 지정 (세 번째 자리에서 반올림)
-        DecimalFormat formatter = new DecimalFormat("#.##");
-        // 소수로 파싱 후, 포맷 적용하여 새로운 문자열 생성
         double number = Double.parseDouble(park.getRadius());
-        String formattedDistanceString = formatter.format(number);
-        parkDistance.setText(formattedDistanceString + "km");
+        DecimalFormat formatter;
+        String formattedDistanceString;
+        if (number < 1) {
+            number *= 1000;
+            formatter = new DecimalFormat("#,###");
+            formattedDistanceString = formatter.format(number) + "m";
+        }
+        else {
+            formatter = new DecimalFormat("#.##");
+            formattedDistanceString = formatter.format(number) + "km";
+        }
+        parkDistance.setText(formattedDistanceString);
 
         String parkPriceValue = park.getParkPrice();
         if (parkPriceValue != null && !parkPriceValue.equals("null") ) {

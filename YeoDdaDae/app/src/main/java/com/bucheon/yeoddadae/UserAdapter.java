@@ -95,7 +95,7 @@ public class UserAdapter extends BaseAdapter {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.user_item, parent, false);
+            convertView = inflater.inflate(R.layout.item_user, parent, false);
         }
 
         TextView idTxt = convertView.findViewById(R.id.idTxt);

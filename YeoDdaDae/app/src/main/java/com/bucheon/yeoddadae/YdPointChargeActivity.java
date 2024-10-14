@@ -18,7 +18,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.google.firebase.Timestamp;
+
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 public class YdPointChargeActivity extends AppCompatActivity {
@@ -28,10 +32,11 @@ public class YdPointChargeActivity extends AppCompatActivity {
     FirestoreDatabase fd;
 
     ImageButton chargeBackBtn;
+    TextView chargeNowTimeContentTxt;
     TextView chargeHavePointContentTxt;
     Spinner chargePointSpinner;
-    TextView anotherReportWonTxt;
-    TextView anotherReportAfterChargePointContentTxt;
+    TextView chargePointWonTxt;
+    TextView chargeAfterChargePointContentTxt;
     ImageButton chargeBtn;
 
     @Override
@@ -40,10 +45,11 @@ public class YdPointChargeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_yd_point_charge);
 
         chargeBackBtn = findViewById(R.id.chargeBackBtn);
+        chargeNowTimeContentTxt =findViewById(R.id.chargeNowTimeContentTxt);
         chargeHavePointContentTxt = findViewById(R.id.chargeHavePointContentTxt);
         chargePointSpinner = findViewById(R.id.chargePointSpinner);
-        anotherReportWonTxt = findViewById(R.id.anotherReportWonTxt);
-        anotherReportAfterChargePointContentTxt = findViewById(R.id.anotherReportAfterChargePointContentTxt);
+        chargePointWonTxt = findViewById(R.id.chargePointWonTxt);
+        chargeAfterChargePointContentTxt = findViewById(R.id.chargeAfterChargePointContentTxt);
         chargeBtn = findViewById(R.id.chargeBtn);
 
         Intent inIntent = getIntent();
@@ -52,7 +58,7 @@ public class YdPointChargeActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this,
                 R.array.my_spinner_charge_point_items,
-                R.layout.my_spinner_3
+                R.layout.spinner_my_2
         );
         chargePointSpinner.setAdapter(adapter);
 
@@ -90,12 +96,12 @@ public class YdPointChargeActivity extends AppCompatActivity {
                 }
 
                 String formattedWon = NumberFormat.getNumberInstance(Locale.KOREA).format(chargePoint);
-                anotherReportWonTxt.setText("(" + formattedWon + "원 )");
+                chargePointWonTxt.setText("(" + formattedWon + "원 )");
 
                 if (ydPoint != -1 && chargePoint != 0) {
                     String formattedAfterChargePoint = NumberFormat.getNumberInstance(Locale.KOREA).format(ydPoint + chargePoint);
 
-                    anotherReportAfterChargePointContentTxt.setText(formattedAfterChargePoint);
+                    chargeAfterChargePointContentTxt.setText(formattedAfterChargePoint);
                 }
             }
 
@@ -151,6 +157,24 @@ public class YdPointChargeActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        getYdPoint();
+    }
+
+    void getYdPoint () {
+        Timestamp now = Timestamp.now();
+
+        if (now != null) {
+            Date date = now.toDate();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
+            String dateString = sdf.format(date);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    chargeNowTimeContentTxt.setText(dateString);
+                }
+            });
+        }
+
         fd.loadYdPoint(loginId, new OnFirestoreDataLoadedListener() {
             @Override
             public void onDataLoaded(Object data) {
@@ -164,7 +188,7 @@ public class YdPointChargeActivity extends AppCompatActivity {
                         if (ydPoint != -1 && chargePoint != 0) {
                             String formattedAfterChargePoint = NumberFormat.getNumberInstance(Locale.KOREA).format(ydPoint + chargePoint);
 
-                            anotherReportAfterChargePointContentTxt.setText(formattedAfterChargePoint);
+                            chargeAfterChargePointContentTxt.setText(formattedAfterChargePoint);
                         }
                     }
                 });

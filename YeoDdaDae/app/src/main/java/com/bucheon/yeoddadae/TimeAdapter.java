@@ -1,7 +1,11 @@
 package com.bucheon.yeoddadae;
 
+import static com.google.android.exoplayer2.ExoPlayerLibraryInfo.TAG;
+
+import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,13 +26,12 @@ import java.util.HashMap;
 import java.util.Locale;
 
 public class TimeAdapter extends BaseAdapter {
-    private ReservationParkActivity mActivity;
+    private Activity activity;
+
     ArrayList<TimeItem> items = new ArrayList<>();
 
-    public TimeAdapter() {}
-
-    public TimeAdapter(ReservationParkActivity activity) {
-        mActivity = activity;
+    public TimeAdapter(Activity activity) {
+        this.activity = activity;
     }
 
     public void addItem(TimeItem item) {
@@ -175,8 +178,9 @@ public class TimeAdapter extends BaseAdapter {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.time_item, parent, false);
+            convertView = inflater.inflate(R.layout.item_time, parent, false);
         }
+        convertView.setEnabled(false);
 
         TextView textViewDate = convertView.findViewById(R.id.textViewDate);
         EditText startTime = convertView.findViewById(R.id.startTime);
@@ -218,8 +222,8 @@ public class TimeAdapter extends BaseAdapter {
                         hour[0] = Integer.parseInt(time.getStartTime().substring(0, 2));
                         minute[0] = Integer.parseInt(time.getStartTime().substring(2, 4));
 
-                        if (mActivity != null) {
-                            mActivity.calculatePrice();
+                        if (activity instanceof ReservationParkActivity) {
+                            ((ReservationParkActivity) activity).calculatePrice();
                         }
                     }
                 }, hour[0], minute[0], true);
@@ -256,8 +260,8 @@ public class TimeAdapter extends BaseAdapter {
                         hour[0] = Integer.parseInt(time.getStartTime().substring(0, 2));
                         minute[0] = Integer.parseInt(time.getStartTime().substring(2, 4));
 
-                        if (mActivity != null) {
-                            mActivity.calculatePrice();
+                        if (activity instanceof ReservationParkActivity) {
+                            ((ReservationParkActivity) activity).calculatePrice();
                         }
                     }
                 }, hour[0], minute[0], true);

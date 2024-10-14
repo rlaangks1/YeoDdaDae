@@ -106,7 +106,7 @@ public class YdPointHistoryAdapter extends BaseAdapter {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.yd_point_history_item, parent, false);
+            convertView = inflater.inflate(R.layout.item_yd_point_history, parent, false);
         }
 
         TextView priceTxt = convertView.findViewById(R.id.priceTxt);

@@ -193,8 +193,8 @@
             android:layout_height="80dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="5dp"/>
 
         <ImageView
             android:id="@+id/micIcon"

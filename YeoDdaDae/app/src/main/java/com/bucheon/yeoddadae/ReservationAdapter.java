@@ -190,7 +190,7 @@ public class ReservationAdapter extends BaseAdapter {
             return convertView;
         }
         else { // 예약 항목 뷰
-            convertView = inflater.inflate(R.layout.reservation_item, parent, false);
+            convertView = inflater.inflate(R.layout.item_reservation, parent, false);
 
             ReservationItem reservation;
             if (firstItems.isEmpty()) {

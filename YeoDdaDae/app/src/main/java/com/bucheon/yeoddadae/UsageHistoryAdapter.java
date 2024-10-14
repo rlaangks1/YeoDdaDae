@@ -77,7 +77,7 @@ public class UsageHistoryAdapter extends BaseAdapter {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.usage_history_item, parent, false);
+            convertView = inflater.inflate(R.layout.item_usage_history, parent, false);
         }
 
         TextView typeText = convertView.findViewById(R.id.typeText);

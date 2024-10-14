@@ -151,7 +151,7 @@ public class GasStationAdapter extends BaseAdapter {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.gas_station_item, parent, false);
+            convertView = inflater.inflate(R.layout.item_gas_station, parent, false);
         }
         
         // 파인드 뷰
@@ -164,14 +164,22 @@ public class GasStationAdapter extends BaseAdapter {
 
         // 뷰 내용
         gasStationOrder.setText (Integer.toString(position + 1));
+
         gasStationName.setText(gasStation.getName());
 
-        // 숫자 포맷 지정 (세 번째 자리에서 반올림)
-        DecimalFormat formatter = new DecimalFormat("#.##");
-        // 소수로 파싱 후, 포맷 적용하여 새로운 문자열 생성
         double number = Double.parseDouble(gasStation.getRadius());
-        String formattedDistanceString = formatter.format(number);
-        gasStationDistance.setText(formattedDistanceString + "km");
+        DecimalFormat formatter;
+        String formattedDistanceString;
+        if (number < 1) {
+            number *= 1000;
+            formatter = new DecimalFormat("#,###");
+            formattedDistanceString = formatter.format(number) + "m";
+        }
+        else {
+            formatter = new DecimalFormat("#.##");
+            formattedDistanceString = formatter.format(number) + "km";
+        }
+        gasStationDistance.setText(formattedDistanceString);
 
         gasStationBrand.setText(gasStation.getBrand());
 

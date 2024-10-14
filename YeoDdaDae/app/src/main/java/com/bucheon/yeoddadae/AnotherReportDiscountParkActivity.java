@@ -3,7 +3,6 @@ package com.bucheon.yeoddadae;
 import static android.content.ContentValues.TAG;
 
 import android.Manifest;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -34,8 +33,8 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
 
     private final int PERMISSION_REQUEST_CODE = 1;
     String loginId;
-    double nowLat;
-    double nowLon;
+    double nowLat = 37.578611;
+    double nowLon = 126.977222;
     int km = -1;
     TMapGpsManager gpsManager;
     boolean firstInitCalled = false;
@@ -63,7 +62,7 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this,
                 R.array.my_spinner_distance_items,
-                R.layout.my_spinner
+                R.layout.spinner_my
         );
         anotherReportDistanceSpinner.setAdapter(adapter);
 

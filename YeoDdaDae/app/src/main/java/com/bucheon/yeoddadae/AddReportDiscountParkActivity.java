@@ -47,13 +47,13 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
     String poiPhone;
     ConditionAndDiscountAdapter cada;
     SearchParkAdapter spa;
-    double nowLat;
-    double nowLon;
+    double nowLat = 37.578611;
+    double nowLon = 126.977222;
+    TMapPoint nowPoint;
+    boolean isLoadingFirstCalled = false;
+    TMapGpsManager gpsManager;
     boolean isSearching = false;
     AlertDialog loadingAlert;
-    boolean isLoadingFirstCalled = false;
-    TMapPoint nowPoint;
-    TMapGpsManager gpsManager;
 
     ImageButton addReportDiscountParkBackBtn;
     TextView addReportDiscountParkMyLocationContentTxt;
@@ -310,17 +310,10 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
             @Override
             public void onClick(View v) {
                 cada.addItem(new ConditionAndDiscountItem());
-
-                conditionAndDiscountListView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        setHeightOfConditionAndDiscountListView();
-
-                        if (cada.getCount() >= 6) {
-                            addCAndDBtn.setVisibility(View.GONE);
-                        }
-                    }
-                });
+                setHeightOfConditionAndDiscountListView();
+                if (cada.getCount() >= 6) {
+                    addCAndDBtn.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -334,7 +327,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                     return;
                 }
 
-                if (cada.allDataSet()) {
+                if (cada.checkValidationAndAllDataSet()) {
                     ArrayList<String> conditionList = cada.getConditions();
                     ArrayList<Long> discountList = cada.getDiscounts();
 
@@ -465,11 +458,20 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
     }
 
     public void setHeightOfConditionAndDiscountListView() {
-        int numberOfItems = cada.getCount();
-        int itemHeightPx = cada.getViewHeightPx();
+        int totalHeightPx = 0;
+
+        int numberOfItem = cada.getCount();
         int dividerHeightPx = conditionAndDiscountListView.getDividerHeight();
 
-        int totalHeightPx = (itemHeightPx * numberOfItems) + (dividerHeightPx * (numberOfItems - 1));
+        for (int i = 0; i < numberOfItem; i++) {
+            View listItem = cada.getView(i, null, conditionAndDiscountListView);
+            listItem.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            totalHeightPx += listItem.getMeasuredHeight();
+        }
+        if (dividerHeightPx * (numberOfItem - 1) > 0) {
+            totalHeightPx += dividerHeightPx * (numberOfItem - 1);
+        }
+
         ViewGroup.LayoutParams params = conditionAndDiscountListView.getLayoutParams();
         params.height = totalHeightPx;
         conditionAndDiscountListView.setLayoutParams(params);
