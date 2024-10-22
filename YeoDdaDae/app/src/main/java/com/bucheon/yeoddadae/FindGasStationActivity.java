@@ -721,11 +721,7 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
 
         if (!isLoadingFirstCalled) { // 로딩 AlertDialog 지정
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("로딩 중").setCancelable(false).setNegativeButton("액티비티 종료", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    finish();
-                }
-            });
+            builder.setMessage("로딩 중").setCancelable(false);
             loadingAlert = builder.create();
             isLoadingFirstCalled = true;
         }
