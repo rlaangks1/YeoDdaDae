@@ -25,15 +25,17 @@
     <TextView
         android:id="@+id/approveShareParkShareTimeTxt"
         android:text="공유시간"
-        android:textSize="14sp"
+        android:textSize="11sp"
         android:maxLines="4"
         android:ellipsize="end"
         android:textColor="@color/white"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/approveShareParkLocationTxt"
         app:layout_constraintBottom_toTopOf="@+id/approveShareParkOwnerIdTxt"
-        app:layout_constraintLeft_toLeftOf="@+id/approveShareParkLocationTxt"/>
+        app:layout_constraintLeft_toLeftOf="@+id/approveShareParkLocationTxt"
+        app:layout_constraintRight_toLeftOf="@+id/approveShareParkPriceTxt"
+        android:layout_marginRight="10dp" />
 
     <TextView
         android:id="@+id/approveShareParkOwnerIdTxt"
