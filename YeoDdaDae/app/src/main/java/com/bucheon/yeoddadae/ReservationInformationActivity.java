@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class ReservationInformationActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback {
+    boolean IS_REAL_ANDROID_MACHINE = true;
     String loginId;
     String documentId;
     HashMap<String, Object> reservationInfo;
@@ -91,8 +92,10 @@ public class ReservationInformationActivity extends AppCompatActivity implements
         gpsManager.setMinDistance(1); // m단위
         gpsManager.setProvider(gpsManager.GPS_PROVIDER);
         gpsManager.OpenGps();
-        // gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
-        // gpsManager.OpenGps();
+        if (IS_REAL_ANDROID_MACHINE) {
+            gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
+            gpsManager.OpenGps();
+        }
 
         Location currentLocation = SDKManager.getInstance().getCurrentPosition();
         nowLat = currentLocation.getLatitude();

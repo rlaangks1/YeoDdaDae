@@ -173,7 +173,7 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ApproveShareParkInformationActivity.this);
-                builder.setTitle("거절 사유 입력");
+                builder.setTitle("거부 사유 입력");
 
                 // Set up the input
                 final EditText input = new EditText(ApproveShareParkInformationActivity.this);

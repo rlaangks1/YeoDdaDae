@@ -23,6 +23,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.DecimalFormat;
 
@@ -67,6 +70,37 @@ public class AdminMainActivity extends AppCompatActivity {
         if (loginId != null) {
             navHeaderUsername.setText(loginId);
         }
+
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference collectionRef1 = db.collection("sharePark");
+        CollectionReference collectionRef2 = db.collection("reportDiscountPark");
+
+        collectionRef1.addSnapshotListener((querySnapshot, e) -> {
+            if (e != null) {
+                Log.d(TAG, "Listen failed.", e);
+                return;
+            }
+
+            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                for (DocumentChange documentChange : querySnapshot.getDocumentChanges()) {
+                    getAdminNotification();
+                }
+            }
+        });
+
+        collectionRef2.addSnapshotListener((querySnapshot, e) -> {
+            if (e != null) {
+                Log.d(TAG, "Listen failed.", e);
+                return;
+            }
+
+            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                for (DocumentChange documentChange : querySnapshot.getDocumentChanges()) {
+                    getAdminNotification();
+                }
+            }
+        });
 
         menubarBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,6 +180,10 @@ public class AdminMainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        getAdminNotification();
+    }
+
+    void getAdminNotification() {
         FirestoreDatabase fd = new FirestoreDatabase();
 
         fd.loadAdminNotification(loginId, new OnFirestoreDataLoadedListener() {

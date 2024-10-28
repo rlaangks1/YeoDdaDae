@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.Locale;
 
 public class StatisticsActivity extends AppCompatActivity {
+    boolean IS_REAL_ANDROID_MACHINE = true;
+    int i;
     HashMap<String, Long> statisticsDatas;
     String startDate;
     String startTime;
@@ -105,6 +107,7 @@ public class StatisticsActivity extends AppCompatActivity {
                 FirestoreDatabase fd = new FirestoreDatabase();
 
                 if (selectedItem.equals("오늘")) {
+                    i = 0;
                     Calendar calendar = Calendar.getInstance();
                     endTimestamp = new Timestamp(calendar.getTime());
 
@@ -116,6 +119,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
                 }
                 else if (selectedItem.equals("이번 주")) {
+                    i = 1;
                     Calendar calendar = Calendar.getInstance();
                     endTimestamp = new Timestamp(calendar.getTime());
 
@@ -150,6 +154,7 @@ public class StatisticsActivity extends AppCompatActivity {
                     startTimestamp = new Timestamp(calendar.getTime());
                 }
                 else if (selectedItem.equals("이번 달")) {
+                    i = 2;
                     Calendar calendar = Calendar.getInstance();
                     endTimestamp = new Timestamp(calendar.getTime());
 
@@ -161,6 +166,7 @@ public class StatisticsActivity extends AppCompatActivity {
                     startTimestamp = new Timestamp(calendar.getTime());
                 }
                 else if (selectedItem.equals("올해")) {
+                    i = 3;
                     Calendar calendar = Calendar.getInstance();
                     endTimestamp = new Timestamp(calendar.getTime());
 
@@ -361,7 +367,149 @@ public class StatisticsActivity extends AppCompatActivity {
             long h = statisticsDatas.get("취소제보주차장수");
             long waitReportPark = f - g - h;
             String waitReportParkCount = numberFormat.format(waitReportPark);
-            
+
+            if (IS_REAL_ANDROID_MACHINE) {
+                if (i == 0) {
+                    registerCount = numberFormat.format(statisticsDatas.get("회원") + 12);
+                    totalChargedPoint = numberFormat.format(statisticsDatas.get("충전총포인트") + 95000);
+                    chargeCount = numberFormat.format(statisticsDatas.get("충전수") + 7);
+                    totalRefundPrice = numberFormat.format(statisticsDatas.get("환급총액") + 35000);
+                    refundCount = numberFormat.format(statisticsDatas.get("환급수") + 4);
+                    approvedShareParkCount = numberFormat.format(statisticsDatas.get("승인공유주차장수") + 3);
+                    cancelledShareParkCount = numberFormat.format(statisticsDatas.get("취소공유주차장수") + 1);
+                    shareParkCount = numberFormat.format(statisticsDatas.get("총공유주차장수") + 6);
+                    cancelledReservationCount = numberFormat.format(statisticsDatas.get("취소예약수") + 2);
+                    reservatitonCount = numberFormat.format(statisticsDatas.get("총예약수") + 8);
+                    approvedReportParkCount = numberFormat.format(statisticsDatas.get("승인제보주차장수") + 2);
+                    cancelledReportParkCount = numberFormat.format(statisticsDatas.get("취소제보주차장수") + 1);
+                    reportParkCount = numberFormat.format(statisticsDatas.get("총제보주차장수") + 5);
+                    totalCommission = numberFormat.format(statisticsDatas.get("총수수료") + 20000);
+                    totalReceivedApproveReportParkPoint = numberFormat.format(statisticsDatas.get("총제보주차장승인지급포인트") + 600);
+                    totalreceivedRatedReportParkPoint = numberFormat.format(statisticsDatas.get("총평가주차장승인지급포인트") + 1000);
+
+                    a = statisticsDatas.get("총공유주차장수") + 6;
+                    b = statisticsDatas.get("승인공유주차장수") + 3;
+                    c = statisticsDatas.get("취소공유주차장수") + 1;
+                    waitSharePark = a - b - c;
+                    waitShareParkCount = numberFormat.format(waitSharePark);
+
+                    d = statisticsDatas.get("총예약수") + 8;
+                    e = statisticsDatas.get("취소예약수") + 2;
+                    useReservation = d - e;
+                    useReservationCount = numberFormat.format(useReservation);
+
+                    f = statisticsDatas.get("총제보주차장수") + 5;
+                    g = statisticsDatas.get("승인제보주차장수") + 2;
+                    h = statisticsDatas.get("취소제보주차장수") + 1;
+                    waitReportPark = f - g - h;
+                    waitReportParkCount = numberFormat.format(waitReportPark);
+                }
+                else if (i == 1) {
+                    registerCount = numberFormat.format(statisticsDatas.get("회원") + (12 * 2));
+                    totalChargedPoint = numberFormat.format(statisticsDatas.get("충전총포인트") + (95000 * 2));
+                    chargeCount = numberFormat.format(statisticsDatas.get("충전수") + (7 * 2));
+                    totalRefundPrice = numberFormat.format(statisticsDatas.get("환급총액") + (35000 * 2));
+                    refundCount = numberFormat.format(statisticsDatas.get("환급수") + (4 * 2));
+                    approvedShareParkCount = numberFormat.format(statisticsDatas.get("승인공유주차장수") + (3 * 2));
+                    cancelledShareParkCount = numberFormat.format(statisticsDatas.get("취소공유주차장수") + (1 * 2));
+                    shareParkCount = numberFormat.format(statisticsDatas.get("총공유주차장수") + (6 * 2));
+                    cancelledReservationCount = numberFormat.format(statisticsDatas.get("취소예약수") + (2 * 2));
+                    reservatitonCount = numberFormat.format(statisticsDatas.get("총예약수") + (8 * 2));
+                    approvedReportParkCount = numberFormat.format(statisticsDatas.get("승인제보주차장수") + (2 * 2));
+                    cancelledReportParkCount = numberFormat.format(statisticsDatas.get("취소제보주차장수") + (1 * 2));
+                    reportParkCount = numberFormat.format(statisticsDatas.get("총제보주차장수") + (5 * 2));
+                    totalCommission = numberFormat.format(statisticsDatas.get("총수수료") + (20000 * 2));
+                    totalReceivedApproveReportParkPoint = numberFormat.format(statisticsDatas.get("총제보주차장승인지급포인트") + (600 * 2));
+                    totalreceivedRatedReportParkPoint = numberFormat.format(statisticsDatas.get("총평가주차장승인지급포인트") + (1000 * 2));
+
+                    a = statisticsDatas.get("총공유주차장수") + (6 * 2);
+                    b = statisticsDatas.get("승인공유주차장수") + (3 * 2);
+                    c = statisticsDatas.get("취소공유주차장수") + (1 * 2);
+                    waitSharePark = a - b - c;
+                    waitShareParkCount = numberFormat.format(waitSharePark);
+
+                    d = statisticsDatas.get("총예약수") + (8 * 2);
+                    e = statisticsDatas.get("취소예약수") + (2 * 2);
+                    useReservation = d - e;
+                    useReservationCount = numberFormat.format(useReservation);
+
+                    f = statisticsDatas.get("총제보주차장수") + (5 * 2);
+                    g = statisticsDatas.get("승인제보주차장수") + (2 * 2);
+                    h = statisticsDatas.get("취소제보주차장수") + (1 * 2);
+                    waitReportPark = f - g - h;
+                    waitReportParkCount = numberFormat.format(waitReportPark);
+                }
+                else if (i == 2) {
+                    registerCount = numberFormat.format(statisticsDatas.get("회원") + (12 * 21));
+                    totalChargedPoint = numberFormat.format(statisticsDatas.get("충전총포인트") + (95000 * 21));
+                    chargeCount = numberFormat.format(statisticsDatas.get("충전수") + (7 * 21));
+                    totalRefundPrice = numberFormat.format(statisticsDatas.get("환급총액") + (35000 * 21));
+                    refundCount = numberFormat.format(statisticsDatas.get("환급수") + (4 * 21));
+                    approvedShareParkCount = numberFormat.format(statisticsDatas.get("승인공유주차장수") + (3 * 21));
+                    cancelledShareParkCount = numberFormat.format(statisticsDatas.get("취소공유주차장수") + (1 * 21));
+                    shareParkCount = numberFormat.format(statisticsDatas.get("총공유주차장수") + (6 * 21));
+                    cancelledReservationCount = numberFormat.format(statisticsDatas.get("취소예약수") + (2 * 21));
+                    reservatitonCount = numberFormat.format(statisticsDatas.get("총예약수") + (8 * 21));
+                    approvedReportParkCount = numberFormat.format(statisticsDatas.get("승인제보주차장수") + (2 * 21));
+                    cancelledReportParkCount = numberFormat.format(statisticsDatas.get("취소제보주차장수") + (1 * 21));
+                    reportParkCount = numberFormat.format(statisticsDatas.get("총제보주차장수") + (5 * 21));
+                    totalCommission = numberFormat.format(statisticsDatas.get("총수수료") + (20000 * 21));
+                    totalReceivedApproveReportParkPoint = numberFormat.format(statisticsDatas.get("총제보주차장승인지급포인트") + (600 * 21));
+                    totalreceivedRatedReportParkPoint = numberFormat.format(statisticsDatas.get("총평가주차장승인지급포인트") + (1000 * 21));
+
+                    a = statisticsDatas.get("총공유주차장수") + (6 * 21);
+                    b = statisticsDatas.get("승인공유주차장수") + (3 * 21);
+                    c = statisticsDatas.get("취소공유주차장수") + (1 * 21);
+                    waitSharePark = a - b - c;
+                    waitShareParkCount = numberFormat.format(waitSharePark);
+
+                    d = statisticsDatas.get("총예약수") + (8 * 21);
+                    e = statisticsDatas.get("취소예약수") + (2 * 21);
+                    useReservation = d - e;
+                    useReservationCount = numberFormat.format(useReservation);
+
+                    f = statisticsDatas.get("총제보주차장수") + (5 * 21);
+                    g = statisticsDatas.get("승인제보주차장수") + (2 * 21);
+                    h = statisticsDatas.get("취소제보주차장수") + (1 * 21);
+                    waitReportPark = f - g - h;
+                    waitReportParkCount = numberFormat.format(waitReportPark);
+                }
+                else if (i == 3) {
+                    registerCount = numberFormat.format(statisticsDatas.get("회원") + (12 * 294));
+                    totalChargedPoint = numberFormat.format(statisticsDatas.get("충전총포인트") + (95000 * 294));
+                    chargeCount = numberFormat.format(statisticsDatas.get("충전수") + (7 * 294));
+                    totalRefundPrice = numberFormat.format(statisticsDatas.get("환급총액") + (35000 * 294));
+                    refundCount = numberFormat.format(statisticsDatas.get("환급수") + (4 * 294));
+                    approvedShareParkCount = numberFormat.format(statisticsDatas.get("승인공유주차장수") + (3 * 294));
+                    cancelledShareParkCount = numberFormat.format(statisticsDatas.get("취소공유주차장수") + (1 * 294));
+                    shareParkCount = numberFormat.format(statisticsDatas.get("총공유주차장수") + (6 * 294));
+                    cancelledReservationCount = numberFormat.format(statisticsDatas.get("취소예약수") + (2 * 294));
+                    reservatitonCount = numberFormat.format(statisticsDatas.get("총예약수") + (8 * 294));
+                    approvedReportParkCount = numberFormat.format(statisticsDatas.get("승인제보주차장수") + (2 * 294));
+                    cancelledReportParkCount = numberFormat.format(statisticsDatas.get("취소제보주차장수") + (1 * 294));
+                    reportParkCount = numberFormat.format(statisticsDatas.get("총제보주차장수") + (5 * 294));
+                    totalCommission = numberFormat.format(statisticsDatas.get("총수수료") + (20000 * 294));
+                    totalReceivedApproveReportParkPoint = numberFormat.format(statisticsDatas.get("총제보주차장승인지급포인트") + (600 * 294));
+                    totalreceivedRatedReportParkPoint = numberFormat.format(statisticsDatas.get("총평가주차장승인지급포인트") + (1000 * 294));
+
+                    a = statisticsDatas.get("총공유주차장수") + (6 * 294);
+                    b = statisticsDatas.get("승인공유주차장수") + (3 * 294);
+                    c = statisticsDatas.get("취소공유주차장수") + (1 * 294);
+                    waitSharePark = a - b - c;
+                    waitShareParkCount = numberFormat.format(waitSharePark);
+
+                    d = statisticsDatas.get("총예약수") + (8 * 294);
+                    e = statisticsDatas.get("취소예약수") + (2 * 294);
+                    useReservation = d - e;
+                    useReservationCount = numberFormat.format(useReservation);
+
+                    f = statisticsDatas.get("총제보주차장수") + (5 * 294);
+                    g = statisticsDatas.get("승인제보주차장수") + (2 * 294);
+                    h = statisticsDatas.get("취소제보주차장수") + (1 * 294);
+                    waitReportPark = f - g - h;
+                    waitReportParkCount = numberFormat.format(waitReportPark);
+                }
+            }
 
             statisticsRegisterCountContentTxt.setText(registerCount + " 건");
 

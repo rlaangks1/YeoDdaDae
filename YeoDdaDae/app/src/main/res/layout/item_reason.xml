@@ -9,11 +9,7 @@
     <TextView
         android:id="@+id/reasonTxt"
         android:text="내용"
-        android:textSize="25sp"
-        android:autoSizeMaxTextSize="25sp"
-        android:autoSizeMinTextSize="12sp"
-        android:autoSizeStepGranularity="1sp"
-        android:autoSizeTextType="uniform"
+        android:textSize="20sp"
         android:textColor="@color/white"
         android:ellipsize="end"
         android:layout_width="0dp"
@@ -23,6 +19,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"/>
 

@@ -458,15 +458,15 @@ public class FirestoreDatabase {
                                     })
                                     .addOnFailureListener(e -> {
                                         Log.d(TAG, "포인트 충전 실패", e);
-                                        listener.onDataLoadError("포인트 충전에 실패했습니다.");
+                                        listener.onDataLoadError("포인트 충전에 실패했습니다");
                                     });
                         } else {
                             Log.d(TAG, "ydPoint 값이 null입니다");
-                            listener.onDataLoadError("ydPoint 값이 null입니다.");
+                            listener.onDataLoadError("ydPoint 값이 null입니다");
                         }
                     } else {
                         Log.d(TAG, "해당 ID의 계정 없음");
-                        listener.onDataLoadError("해당 ID의 계정을 찾을 수 없습니다.");
+                        listener.onDataLoadError("해당 ID의 계정을 찾을 수 없습니다");
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -523,12 +523,12 @@ public class FirestoreDatabase {
                         }
                         else {
                             Log.d(TAG, "ydPoint 값이 null입니다");
-                            listener.onDataLoadError("ydPoint 값이 null입니다.");
+                            listener.onDataLoadError("ydPoint 값이 null입니다");
                         }
                     }
                     else {
                         Log.d(TAG, "해당 ID의 계정 없음");
-                        listener.onDataLoadError("해당 ID의 계정을 찾을 수 없습니다.");
+                        listener.onDataLoadError("해당 ID의 계정을 찾을 수 없습니다");
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -573,15 +573,15 @@ public class FirestoreDatabase {
                                     })
                                     .addOnFailureListener(e -> {
                                         Log.d(TAG, "포인트 받기 실패", e);
-                                        listener.onDataLoadError("포인트 받기에 실패했습니다.");
+                                        listener.onDataLoadError("포인트 받기에 실패했습니다");
                                     });
                         } else {
                             Log.d(TAG, "ydPoint 값이 null입니다");
-                            listener.onDataLoadError("ydPoint 값이 null입니다.");
+                            listener.onDataLoadError("ydPoint 값이 null입니다");
                         }
                     } else {
                         Log.d(TAG, "해당 ID의 계정 없음");
-                        listener.onDataLoadError("해당 ID의 계정을 찾을 수 없습니다.");
+                        listener.onDataLoadError("해당 ID의 계정을 찾을 수 없습니다");
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -609,7 +609,7 @@ public class FirestoreDatabase {
                                     })
                                     .addOnFailureListener(e -> {
                                         Log.d(TAG, "포인트 차감 실패", e);
-                                        listener.onDataLoadError("포인트 차감에 실패했습니다.");
+                                        listener.onDataLoadError("포인트 차감에 실패했습니다");
                                     });
                         } else {
                             Log.d(TAG, "포인트가 부족합니다");
@@ -617,7 +617,7 @@ public class FirestoreDatabase {
                         }
                     } else {
                         Log.d(TAG, "해당 ID의 계정 없음");
-                        listener.onDataLoadError("해당 ID의 계정을 찾을 수 없습니다.");
+                        listener.onDataLoadError("해당 ID의 계정을 찾을 수 없습니다");
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -1628,10 +1628,10 @@ public class FirestoreDatabase {
                     }
 
                     if (resultArrayList.size() > 0 && resultArrayList != null) {
-                        Log.d (TAG, "승인 안된 할인주차장 제보 찾기 성공 갯수 : " + resultArrayList.size());
+                        Log.d (TAG, "승인 안된 제보주차장 찾기 성공 갯수 : " + resultArrayList.size());
                     }
                     else {
-                        Log.d(TAG, "승인 안된 할인주차장 제보가 없음");
+                        Log.d(TAG, "승인 안된 제보주차장 없음");
                     }
                     listener.onDataLoaded(resultArrayList);
                 })
@@ -2408,14 +2408,14 @@ public class FirestoreDatabase {
     }
 
     public void loadAdminNotification(String id, OnFirestoreDataLoadedListener listener) {
+        int [] approveShareParkNotification = {0};
+        int [] approveReportNotification = {0};
+
         db.collection("account")
                 .whereEqualTo("id", id)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots1 -> {
                     if ((boolean) queryDocumentSnapshots1.getDocuments().get(0).get("isAdmin")) {
-                        int [] approveShareParkNotification = {0};
-                        int [] approveReportNotification = {0};
-
                         db.collection("sharePark")
                                 .whereEqualTo("isApproval", false)
                                 .whereEqualTo("isCancelled", false)

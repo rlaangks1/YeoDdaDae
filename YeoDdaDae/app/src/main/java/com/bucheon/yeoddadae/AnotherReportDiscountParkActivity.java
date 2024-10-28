@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AnotherReportDiscountParkActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback {
-
+    boolean IS_REAL_ANDROID_MACHINE = true;
     private final int PERMISSION_REQUEST_CODE = 1;
     String loginId;
     double nowLat = 37.578611;
@@ -213,8 +213,10 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
             gpsManager.setMinDistance(1); // m단위
             gpsManager.setProvider(gpsManager.GPS_PROVIDER);
             gpsManager.OpenGps();
-            // gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
-            // gpsManager.OpenGps();
+            if (IS_REAL_ANDROID_MACHINE) {
+                gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
+                gpsManager.OpenGps();
+            }
         }
 
         Log.d(TAG, "현재 Lat : "  + nowLat);

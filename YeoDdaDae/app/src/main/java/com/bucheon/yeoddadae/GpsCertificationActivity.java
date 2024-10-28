@@ -36,6 +36,7 @@ import com.skt.tmap.engine.navigation.SDKManager;
 import java.util.ArrayList;
 
 public class GpsCertificationActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback {
+    boolean IS_REAL_ANDROID_MACHINE = true;
     private final int PERMISSION_REQUEST_CODE = 1;
     boolean isCloseEnough = false;
     boolean firstOnLocationChangeCalled = false;
@@ -123,8 +124,10 @@ public class GpsCertificationActivity extends AppCompatActivity implements TMapG
         gpsManager.setMinDistance(1); // m단위
         gpsManager.setProvider(gpsManager.GPS_PROVIDER);
         gpsManager.OpenGps();
-        // gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
-        // gpsManager.OpenGps();
+        if (IS_REAL_ANDROID_MACHINE) {
+            gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
+            gpsManager.OpenGps();
+        }
 
         tMapView = new TMapView(this);
         LinearLayout linearLayoutTmap = (LinearLayout)findViewById(R.id.linearLayoutTmap);

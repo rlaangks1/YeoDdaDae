@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.FieldValue;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -70,6 +71,7 @@ public class ReservationParkActivity extends AppCompatActivity {
     ListView reservationParkTimeListView;
     TextView reservationTotalPriceContentTxt;
     ImageButton reservationBtn;
+    TextView reservationBtnTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +97,7 @@ public class ReservationParkActivity extends AppCompatActivity {
         reservationParkTimeListView = findViewById(R.id.reservationParkTimeListView);
         reservationTotalPriceContentTxt = findViewById(R.id.reservationTotalPriceContentTxt);
         reservationBtn = findViewById(R.id.reservationBtn);
+        reservationBtnTxt = findViewById(R.id.reservationBtnTxt);
 
         Intent inIntent = getIntent();
         reservationFirestoreDocumentId = inIntent.getStringExtra("fireStoreDocumentId");
@@ -106,14 +109,6 @@ public class ReservationParkActivity extends AppCompatActivity {
 
         ta = new TimeAdapter(this);
         reservationParkTimeListView.setAdapter(ta);
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                reservationTotalPriceContentTxt.setText("무료");
-                reservationWonTxt.setVisibility(View.GONE);
-            }
-        });
 
         reservationBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -480,13 +475,56 @@ public class ReservationParkActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "다른 예약 시간과 겹칩니다", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Intent toPaymentIntent = new Intent(getApplicationContext(), PaymentActivity.class);
-                    toPaymentIntent.putExtra("shareParkDocumentName", reservationFirestoreDocumentId);
-                    toPaymentIntent.putExtra("payType", "공유주차장 예약");
-                    toPaymentIntent.putExtra("id", loginId);
-                    toPaymentIntent.putExtra("time", ta.getAllTime());
-                    toPaymentIntent.putExtra("price", totalPrice);
-                    startActivityForResult(toPaymentIntent, paymentRequestCode);
+                    if (totalPrice == 0) {
+                        HashMap<String, Object> hm = new HashMap<>();
+                        hm.put("shareParkDocumentName", reservationFirestoreDocumentId);
+                        hm.put("id", loginId);
+                        hm.put("time", ta.getAllTime());
+                        hm.put("isCancelled", false);
+                        hm.put("upTime", FieldValue.serverTimestamp());
+                        hm.put("price", 0);
+                        fd.insertData("reservation", hm, new OnFirestoreDataLoadedListener() {
+                            @Override
+                            public void onDataLoaded(Object data) {
+                                String reservationDocumentId = (String) data;
+
+                                HashMap<String, Object> hm = new HashMap<>();
+                                hm.put("id", loginId);
+                                hm.put("type", "공유주차장 예약");
+                                hm.put("reservationId", reservationDocumentId);
+                                hm.put("price", 0);
+                                hm.put("upTime", FieldValue.serverTimestamp());
+                                fd.insertData("spendYdPointHistory", hm, new OnFirestoreDataLoadedListener() {
+                                    @Override
+                                    public void onDataLoaded(Object data) {
+                                        Toast.makeText(getApplicationContext(), "예약되었습니다", Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onDataLoadError(String errorMessage) {
+                                        Log.d(TAG, errorMessage);
+                                        Toast.makeText(getApplicationContext(), "소비 문서 추가 중 오류 발생", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onDataLoadError(String errorMessage) {
+                                Log.d(TAG, errorMessage);
+                                Toast.makeText(getApplicationContext(), "예약 문서 추가 중 오류 발생", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                    else {
+                        Intent toPaymentIntent = new Intent(getApplicationContext(), PaymentActivity.class);
+                        toPaymentIntent.putExtra("shareParkDocumentName", reservationFirestoreDocumentId);
+                        toPaymentIntent.putExtra("payType", "공유주차장 예약");
+                        toPaymentIntent.putExtra("id", loginId);
+                        toPaymentIntent.putExtra("time", ta.getAllTime());
+                        toPaymentIntent.putExtra("price", totalPrice);
+                        startActivityForResult(toPaymentIntent, paymentRequestCode);
+                    }
                 }
             }
         });
@@ -527,11 +565,13 @@ public class ReservationParkActivity extends AppCompatActivity {
                     if (totalPrice == 0) {
                         reservationTotalPriceContentTxt.setText("무료");
                         reservationWonTxt.setVisibility(View.GONE);
+                        reservationBtnTxt.setText("예약하기");
                     }
                     else {
                         String formattedYdPoint = NumberFormat.getNumberInstance(Locale.KOREA).format(totalPrice);
                         reservationTotalPriceContentTxt.setText(formattedYdPoint);
                         reservationWonTxt.setVisibility(View.VISIBLE);
+                        reservationBtnTxt.setText("결제하러 가기");
                     }
                 }
             });

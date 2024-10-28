@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AddReportDiscountParkActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback {
+    boolean IS_REAL_ANDROID_MACHINE = true;
     String loginId;
     String poiId;
     double poiLat;
@@ -104,8 +105,10 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
         gpsManager.setMinDistance(1); // m단위
         gpsManager.setProvider(gpsManager.GPS_PROVIDER);
         gpsManager.OpenGps();
-        // gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
-        // gpsManager.OpenGps();
+        if (IS_REAL_ANDROID_MACHINE) {
+            gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
+            gpsManager.OpenGps();
+        }
 
         runOnUiThread(new Runnable() {
             @Override
@@ -353,7 +356,7 @@ public class AddReportDiscountParkActivity extends AppCompatActivity implements 
                         fd.insertData("reportDiscountPark", hm, new OnFirestoreDataLoadedListener() {
                             @Override
                             public void onDataLoaded(Object data) {
-                                Toast.makeText(getApplicationContext(), "무료/할인 주차장 제보 완료되었습니다", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "제보주차장 제보 완료되었습니다", Toast.LENGTH_SHORT).show();
                                 finish();
                             }
 

@@ -94,10 +94,9 @@
                 <TextView
                     android:id="@+id/paymentYdPointTxt"
                     android:text="보유 여따대포인트"
-                    android:textSize="17sp"
+                    android:textSize="20sp"
                     android:textColor="@color/black"
                     android:fontFamily="@font/paperlogy_5medium"
-                    android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@+id/paymentNowTimeContentTxt"
@@ -155,10 +154,9 @@
                 <TextView
                     android:id="@+id/paymentTotalPriceTxt"
                     android:text="가격"
-                    android:textSize="17sp"
+                    android:textSize="20sp"
                     android:textColor="@color/black"
                     android:fontFamily="@font/paperlogy_5medium"
-                    android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@+id/paymentYdPointConstLayout"
@@ -216,10 +214,9 @@
                 <TextView
                     android:id="@+id/paymentAfterPayPointTxt"
                     android:text="결제 후 남을 여따대포인트"
-                    android:textSize="17sp"
+                    android:textSize="20sp"
                     android:textColor="@color/black"
                     android:fontFamily="@font/paperlogy_5medium"
-                    android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@+id/paymentTotalPriceConstLayout"
@@ -280,7 +277,7 @@
                 android:layout_marginRight="10dp" />
 
             <TextView
-                android:text="결제"
+                android:text="결제하기"
                 android:textSize="25sp"
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"

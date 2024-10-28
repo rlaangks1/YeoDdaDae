@@ -509,7 +509,7 @@
 
                     <TextView
                         android:id="@+id/reservationTotalPriceContentTxt"
-                        android:text="0"
+                        android:text="무료"
                         android:textSize="17sp"
                         android:textColor="@color/sub"
                         android:textStyle="bold"
@@ -531,7 +531,8 @@
                         app:layout_constraintTop_toTopOf="@+id/reservationTotalPriceContentTxt"
                         app:layout_constraintBottom_toBottomOf="@+id/reservationTotalPriceContentTxt"
                         app:layout_constraintLeft_toRightOf="@+id/reservationTotalPriceContentTxt"
-                        android:layout_marginLeft="5dp"/>
+                        android:layout_marginLeft="5dp"
+                        android:visibility="gone" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -552,7 +553,8 @@
                 android:layout_marginBottom="10dp"/>
 
             <TextView
-                android:text="결제하기"
+                android:id="@+id/reservationBtnTxt"
+                android:text="결제하러 가기"
                 android:textSize="25sp"
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"

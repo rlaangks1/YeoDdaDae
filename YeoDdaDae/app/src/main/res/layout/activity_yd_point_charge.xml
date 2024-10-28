@@ -278,7 +278,7 @@
                 android:layout_marginRight="10dp" />
 
             <TextView
-                android:text="충전"
+                android:text="충전하기"
                 android:textSize="25sp"
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"

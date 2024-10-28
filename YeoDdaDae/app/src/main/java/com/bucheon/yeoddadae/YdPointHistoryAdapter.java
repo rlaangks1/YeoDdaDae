@@ -22,7 +22,9 @@ public class YdPointHistoryAdapter extends BaseAdapter {
     ArrayList<YdPointHistoryItem> items = new ArrayList<>();
 
     public void addItem(YdPointHistoryItem item) {
-        items.add(item);
+        if (item.getPoint() > 0) {
+            items.add(item);
+        }
         notifyDataSetChanged();
     }
 

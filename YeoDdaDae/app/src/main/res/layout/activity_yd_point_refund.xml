@@ -379,7 +379,7 @@
 
             <TextView
                 android:id="@+id/toAddReportTxt"
-                android:text="환급"
+                android:text="환급하기"
                 android:textSize="25sp"
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"

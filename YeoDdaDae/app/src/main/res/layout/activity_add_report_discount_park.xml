@@ -28,7 +28,7 @@
                 android:layout_marginRight="5dp" />
 
             <TextView
-                android:text="무료/할인주차장 제보"
+                android:text="제보주차장 제보"
                 android:textSize="25sp"
                 android:textColor="@color/sub"
                 android:textStyle="bold"
@@ -131,7 +131,7 @@
                         android:layout_marginBottom="10dp" />
 
                     <TextView
-                        android:text="제보"
+                        android:text="제보하기"
                         android:textSize="25sp"
                         android:textColor="@color/white"
                         android:layout_width="wrap_content"
@@ -152,7 +152,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/addReportDiscountParkMyLocationTxt"

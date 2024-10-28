@@ -42,7 +42,7 @@
 
             <TextView
                 android:id="@+id/decisionTxt"
-                android:text="결정"
+                android:text="결정하기"
                 android:textSize="25sp"
                 android:textColor="@color/white"
                 android:visibility="gone"

@@ -51,8 +51,9 @@ import com.skt.tmap.engine.navigation.SDKManager;
 import java.util.ArrayList;
 
 public class FindGasStationActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback, SttService.SttCallback {
-    String loginId;
+    boolean IS_REAL_ANDROID_MACHINE = true;
     private static final int PERMISSION_REQUEST_CODE = 1;
+    String loginId;
     boolean firstOnLocationChangeCalled = false; // onLocationChange가 처음 불림 여부
     boolean firstFindGasStationOfOnLocationChangeCalled = false;
     boolean isItemSelected = false;
@@ -218,8 +219,10 @@ public class FindGasStationActivity extends AppCompatActivity implements TMapGps
         gpsManager.setMinDistance(1); // m단위
         gpsManager.setProvider(gpsManager.GPS_PROVIDER);
         gpsManager.OpenGps();
-        // gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
-        // gpsManager.OpenGps();
+        if (IS_REAL_ANDROID_MACHINE) {
+            gpsManager.setProvider(gpsManager.NETWORK_PROVIDER);
+            gpsManager.OpenGps();
+        }
 
         // TMapView 생성 및 보이기
         tMapView = new TMapView(this);

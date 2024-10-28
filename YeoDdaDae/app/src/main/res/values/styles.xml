@@ -92,11 +92,11 @@
         <item name="android:textColor">#FFFFFF</item>
     </style>
     <style name="discount_park_report">
-        <item name="android:textSize">26sp</item>
+        <item name="android:textSize">28sp</item>
         <item name="android:textColor">#FFFFFF</item>
     </style>
     <style name="discount_park_report_sub">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textColor">#FFFFFF</item>
     </style>
     <style name="microphone">
@@ -159,8 +159,12 @@
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/blue</item>
     </style>
-    <style name="sharedpark_approval">
+    <style name="user_management">
         <item name="android:textSize">30sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+    <style name="sharedpark_approval">
+        <item name="android:textSize">26sp</item>
         <item name="android:textColor">#FFFFFF</item>
     </style>
     <style name="sharedpark_approval_sub">
@@ -168,11 +172,11 @@
         <item name="android:textColor">#FFFFFF</item>
     </style>
     <style name="DC_approval_report">
-        <item name="android:textSize">27sp</item>
+        <item name="android:textSize">26sp</item>
         <item name="android:textColor">#FFFFFF</item>
     </style>
     <style name="DC_approval_report_sub">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:textColor">#FFFFFF</item>
     </style>
     <style name="statics">
