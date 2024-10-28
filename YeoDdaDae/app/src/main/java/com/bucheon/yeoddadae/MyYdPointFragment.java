@@ -305,18 +305,22 @@ public class MyYdPointFragment extends Fragment {
                 ArrayList<HashMap<String, Object>> receive = result.get(3);
 
                 for (HashMap<String, Object> hm : charge) {
-                    ypha.addItem(new YdPointHistoryItem("충전", (long) hm.get("chargedYdPoint"), null, null, null, null, null, (Timestamp) hm.get("upTime"), (String) hm.get("documentId")));
+                    if (0 < (long) hm.get("chargedYdPoint")) {
+                        ypha.addItem(new YdPointHistoryItem("충전", (long) hm.get("chargedYdPoint"), null, null, null, null, null, (Timestamp) hm.get("upTime"), (String) hm.get("documentId")));
+                    }
                 }
                 for (HashMap<String, Object> hm : refund) {
-                    ypha.addItem(new YdPointHistoryItem("환급", (long) hm.get("refundedYdPoint"), (String) hm.get("bank"), (String) hm.get("accountNumber"), null, null, null, (Timestamp) hm.get("upTime"), (String) hm.get("documentId")));
+                    if (0 < (long) hm.get("refundedYdPoint")) {
+                        ypha.addItem(new YdPointHistoryItem("환급", (long) hm.get("refundedYdPoint"), (String) hm.get("bank"), (String) hm.get("accountNumber"), null, null, null, (Timestamp) hm.get("upTime"), (String) hm.get("documentId")));
+                    }
                 }
                 for (HashMap<String, Object> hm : spend) {
-                    if ((long) hm.get("price") != 0) {
+                    if (0 < (long) hm.get("price")) {
                         ypha.addItem(new YdPointHistoryItem("사용", (long) hm.get("price"), null, null, (String) hm.get("type"), (String) hm.get("reservationId"), null, (Timestamp) hm.get("upTime"), (String) hm.get("documentId")));
                     }
                 }
                 for (HashMap<String, Object> hm : receive) {
-                    if ((long) hm.get("receivedYdPoint") != 0) {
+                    if (0 < (long) hm.get("receivedYdPoint")) {
                         ypha.addItem(new YdPointHistoryItem("받음", (long) hm.get("receivedYdPoint"), null, null, null, null, (String) hm.get("type"), (Timestamp) hm.get("upTime"), (String) hm.get("documentId")));
                     }
                 }
