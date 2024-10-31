@@ -109,7 +109,7 @@ public class SttService extends Service {
 
                     Log.d(TAG, "호출어듣기 : 내용 : " + wakeUpWord);
                     
-                    if (wakeUpWord.contains("음성 명령")) { // 웨이크업 워드가 감지되었는지 확인
+                    if (wakeUpWord.contains("어따대") || wakeUpWord.contains("어따") || wakeUpWord.contains("어디다") || wakeUpWord.contains("옷 다 돼") || wakeUpWord.contains("다대") || wakeUpWord.contains("오타") || wakeUpWord.contains("오따")) { // 웨이크업 워드가 감지되었는지 확인
                         Log.d(TAG, "호출어듣기 : 호출어 확인 성공");
                         amanager.setStreamVolume(AudioManager.STREAM_MUSIC, originalStreamVolume, AudioManager.FLAG_PLAY_SOUND);
                         startListeningForMainCommand();

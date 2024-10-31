@@ -739,6 +739,11 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
 
                             tMapView.setCenterPoint(historyLon, historyLat);
 
+                            if (nowOnly != 0) {
+                                nowOnly = 0;
+                            }
+                            onlyBtnColorSet();
+
                             findPark(nowSort, null, null, new OnFindParkCompletedListener() {
                                 @Override
                                 public void onFindParkCompleted() {

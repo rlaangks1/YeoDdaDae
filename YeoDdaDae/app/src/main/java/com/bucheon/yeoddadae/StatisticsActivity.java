@@ -368,7 +368,7 @@ public class StatisticsActivity extends AppCompatActivity {
             long waitReportPark = f - g - h;
             String waitReportParkCount = numberFormat.format(waitReportPark);
 
-            if (IS_REAL_ANDROID_MACHINE) {
+            if (true) {
                 if (i == 0) {
                     registerCount = numberFormat.format(statisticsDatas.get("회원") + 12);
                     totalChargedPoint = numberFormat.format(statisticsDatas.get("충전총포인트") + 95000);

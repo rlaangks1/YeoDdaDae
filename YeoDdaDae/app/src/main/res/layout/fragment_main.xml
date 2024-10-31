@@ -210,7 +210,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="'음성명령'이라고\n말해보세요"
+            android:text="'어따대'라고\n말해보세요"
             android:textAppearance="@style/microphone"
             android:gravity="center"
             android:textStyle="bold"
