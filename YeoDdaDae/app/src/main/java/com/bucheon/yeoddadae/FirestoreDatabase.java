@@ -2475,7 +2475,7 @@ public class FirestoreDatabase {
                 .whereEqualTo("id", id)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots1 -> {
-                    if ((boolean) queryDocumentSnapshots1.getDocuments().get(0).get("isAdmin")) {
+                    if (queryDocumentSnapshots1 != null && queryDocumentSnapshots1.size() == 1 && (boolean) queryDocumentSnapshots1.getDocuments().get(0).get("isAdmin")) {
                         db.collection("sharePark")
                                 .whereEqualTo("isApproval", false)
                                 .whereEqualTo("isCancelled", false)
