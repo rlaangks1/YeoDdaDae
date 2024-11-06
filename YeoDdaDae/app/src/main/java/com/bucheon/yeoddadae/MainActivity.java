@@ -425,7 +425,7 @@ public class MainActivity extends AppCompatActivity implements FragmentToActivit
         fd.loadNotification(loginId, new OnFirestoreDataLoadedListener() {
             @Override
             public void onDataLoaded(Object data) {
-                int temp[] = (int[]) data;
+                int[] temp = (int[]) data;
 
                 Log.d(TAG, "알림 수(예약,공유,제보) : " + temp[0] + ", " + temp[1] + ", " + temp[2]);
 

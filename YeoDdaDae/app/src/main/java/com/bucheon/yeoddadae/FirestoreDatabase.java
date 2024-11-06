@@ -262,7 +262,7 @@ public class FirestoreDatabase {
                         if (status.equals("정상")) {
                             String email = (String) document.get("email");
                             String isAdmin = Boolean.toString((boolean) document.get("isAdmin"));
-                            String result[] = {email, isAdmin};
+                            String[] result = {email, isAdmin};
 
                             listener.onDataLoaded(result);
                         }
@@ -276,7 +276,7 @@ public class FirestoreDatabase {
                                         public void onDataLoaded(Object data) {
                                             String email = (String) document.get("email");
                                             String isAdmin = Boolean.toString((boolean) document.get("isAdmin"));
-                                            String result[] = {email, isAdmin};
+                                            String[] result = {email, isAdmin};
 
                                             listener.onDataLoaded(result);
                                         }
@@ -961,8 +961,8 @@ public class FirestoreDatabase {
                 .whereEqualTo("price", 0)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    long targetCount[] = {0};
-                    long didCount[] = {0};
+                    long[] targetCount = {0};
+                    long[] didCount = {0};
 
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         Calendar ca = Calendar.getInstance();
@@ -1410,7 +1410,7 @@ public class FirestoreDatabase {
                                                         .get()
                                                         .addOnSuccessListener(queryDocumentSnapshots -> {
                                                             if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() != 0) {
-                                                                int docCount[] = {0};
+                                                                int[] docCount = {0};
                                                                 for (DocumentSnapshot documentSnapshot2 : queryDocumentSnapshots) {
                                                                     if (documentSnapshot2.get("rate").equals("mistake") || documentSnapshot2.get("rate").equals("wrong")) {
                                                                         docCount[0]++;
@@ -1420,7 +1420,7 @@ public class FirestoreDatabase {
                                                                 for (DocumentSnapshot documentSnapshot2 : queryDocumentSnapshots) {
                                                                     String raterId = (String) documentSnapshot2.get("id");
 
-                                                                    int count[] = {1};
+                                                                    int[] count = {1};
                                                                     receiveYdPoint(raterId, 200, "부정적 평가한 할인주차장 취소", new OnFirestoreDataLoadedListener() {
                                                                         @Override
                                                                         public void onDataLoaded(Object data) {
@@ -1510,7 +1510,7 @@ public class FirestoreDatabase {
                                                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                                                 String raterId = (String) documentSnapshot.get("id");
 
-                                                                int count[] = {1};
+                                                                int[] count = {1};
                                                                 receiveYdPoint(raterId, 200, "긍정적 평가한 할인주차장 승인", new OnFirestoreDataLoadedListener() {
                                                                     @Override
                                                                     public void onDataLoaded(Object data) {
@@ -1707,7 +1707,7 @@ public class FirestoreDatabase {
                 .document(firestoreDocumentId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
-                    long rateCount[] = {(long) documentSnapshot.get("ratePerfectCount"), (long) documentSnapshot.get("rateMistakeCount"), (long) documentSnapshot.get("rateWrongCount")};
+                    long[] rateCount = {(long) documentSnapshot.get("ratePerfectCount"), (long) documentSnapshot.get("rateMistakeCount"), (long) documentSnapshot.get("rateWrongCount")};
 
                     // 먼저 해당 조건에 맞는 문서가 있는지 확인
                     db.collection("rateReport")
@@ -2515,14 +2515,14 @@ public class FirestoreDatabase {
     }
 
     public void loadNotification (String userId, OnFirestoreDataLoadedListener listener) {
-        int result [] = {-1, -1, -1};
+        int[] result = {-1, -1, -1};
 
         Calendar calendar = Calendar.getInstance();
         Timestamp now = new Timestamp(calendar.getTime());
 
-        Timestamp recentSawMyReservationTime [] = {null};
-        Timestamp recentSawMyShareParkTime [] = {null};
-        Timestamp recentSawMyReportParkTime [] = {null};
+        Timestamp[] recentSawMyReservationTime = {null};
+        Timestamp[] recentSawMyShareParkTime = {null};
+        Timestamp[] recentSawMyReportParkTime = {null};
 
         db.collection("account")
                 .whereEqualTo("id", userId)

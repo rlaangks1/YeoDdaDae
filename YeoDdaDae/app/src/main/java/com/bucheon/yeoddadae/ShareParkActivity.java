@@ -153,11 +153,10 @@ public class ShareParkActivity extends AppCompatActivity {
                 // LocalDate로 변환하는 처리가 필요하다
                 LocalDate inputText = day.getDate();
                 String[] calendarHeaderElements = inputText.toString().split("-");
-                StringBuilder calendarHeaderBuilder = new StringBuilder();
-                calendarHeaderBuilder.append(calendarHeaderElements[0])
-                        .append(" ")
-                        .append(calendarHeaderElements[1]);
-                return calendarHeaderBuilder.toString();
+                String calendarHeaderBuilder = calendarHeaderElements[0] +
+                        " " +
+                        calendarHeaderElements[1];
+                return calendarHeaderBuilder;
             }
         });
 
@@ -292,7 +291,7 @@ public class ShareParkActivity extends AppCompatActivity {
     void uploadImageAndRegister(HashMap<String, Object> hm) {
         if (!imageUris.isEmpty()) {
             ArrayList<String> imageUrlsList = new ArrayList<>();
-            int uploadCount [] = {0};
+            int[] uploadCount = {0};
 
             for (Uri imageUri : imageUris) {
                 StorageReference fileRef = mStorageRef.child(System.currentTimeMillis() + ".jpg");

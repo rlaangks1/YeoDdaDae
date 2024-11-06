@@ -47,11 +47,10 @@ public class CustomDatePickerDialog extends Dialog {
             public CharSequence format(CalendarDay day) {
                 LocalDate inputText = day.getDate();
                 String[] calendarHeaderElements = inputText.toString().split("-");
-                StringBuilder calendarHeaderBuilder = new StringBuilder();
-                calendarHeaderBuilder.append(calendarHeaderElements[0])
-                        .append(" ")
-                        .append(calendarHeaderElements[1]);
-                return calendarHeaderBuilder.toString();
+                String calendarHeaderBuilder = calendarHeaderElements[0] +
+                        " " +
+                        calendarHeaderElements[1];
+                return calendarHeaderBuilder;
             }
         });
 

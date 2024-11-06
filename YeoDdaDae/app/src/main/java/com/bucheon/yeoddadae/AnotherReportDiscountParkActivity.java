@@ -202,7 +202,7 @@ public class AnotherReportDiscountParkActivity extends AppCompatActivity impleme
     }
 
     void init() {
-        if (firstInitCalled == false) {
+        if (!firstInitCalled) {
             Location currentLocation = SDKManager.getInstance().getCurrentPosition();
             nowLat = currentLocation.getLatitude();
             nowLon = currentLocation.getLongitude();

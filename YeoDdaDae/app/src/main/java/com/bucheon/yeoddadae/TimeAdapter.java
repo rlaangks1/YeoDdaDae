@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 public class TimeAdapter extends BaseAdapter {
-    private Activity activity;
+    private final Activity activity;
 
     ArrayList<TimeItem> items = new ArrayList<>();
 

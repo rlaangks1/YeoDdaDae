@@ -83,11 +83,6 @@ public class ParkItem {
     public boolean equals(@Nullable Object obj) {
         ParkItem target = (ParkItem) obj;
 
-        if (this.name.equals(target.getName()) && this.lat == target.getLat() && this.lon == target.getLon() && this.poiId.equals(target.getPoiId()) && this.firestoreDocumentId.equals(target.getFirebaseDocumentId())) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return this.name.equals(target.getName()) && this.lat == target.getLat() && this.lon == target.getLon() && this.poiId.equals(target.getPoiId()) && this.firestoreDocumentId.equals(target.getFirebaseDocumentId());
     }
 }
