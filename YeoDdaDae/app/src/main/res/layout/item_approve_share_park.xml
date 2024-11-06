@@ -25,7 +25,7 @@
     <TextView
         android:id="@+id/approveShareParkShareTimeTxt"
         android:text="공유시간"
-        android:textSize="11sp"
+        android:textSize="14sp"
         android:maxLines="4"
         android:ellipsize="end"
         android:textColor="@color/white"

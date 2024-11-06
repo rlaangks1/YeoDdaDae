@@ -1061,7 +1061,6 @@ public class FirestoreDatabase {
     }
 
     void calculateShareParkPrice(String id, String firestoreDocumentId, OnFirestoreDataLoadedListener listener) {
-        /* 원본
         db.collection("sharePark")
                 .document(firestoreDocumentId)
                 .get()
@@ -1092,12 +1091,10 @@ public class FirestoreDatabase {
                                 nowString += "0";
                             }
                             nowString += minute;
-
                             HashMap<String, ArrayList<String>> shareTime = (HashMap<String, ArrayList<String>>) documentSnapshot.get("time");
                             List<String> sortedKeys = new ArrayList<>(shareTime.keySet());
                             Collections.sort(sortedKeys);
                             String endTime = sortedKeys.get(sortedKeys.size() - 1) + shareTime.get(sortedKeys.get(sortedKeys.size() - 1)).get(1);
-
                             Log.d(TAG, "현재 시각 : " + nowString);
                             Log.d(TAG, "공유 마지막 날의 끝 시각 : " + endTime);
                             if (nowString.compareTo(endTime) > 0) {
@@ -1131,79 +1128,17 @@ public class FirestoreDatabase {
                                                                 listener.onDataLoadError(e.getMessage());
                                                             });
                                                 }
-
                                                 @Override
                                                 public void onDataLoadError(String errorMessage) {
-
                                                 }
                                             });
                                         })
                                         .addOnFailureListener(e -> {
-
                                         });
                             }
                             else {
                                 listener.onDataLoadError("사용완료된 공유주차장이 아님");
                             }
-                        }
-                        else {
-                            listener.onDataLoadError("이미 정산됨");
-                        }
-                    }
-                    else {
-                        listener.onDataLoadError("ID가 일치하지 않음");
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.d(TAG, e.getMessage());
-                    listener.onDataLoadError(e.getMessage());
-                });
-
-         */
-
-        db.collection("sharePark")
-                .document(firestoreDocumentId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (id.equals((String) documentSnapshot.get("ownerId"))) {
-                        if (!(boolean) documentSnapshot.get("isCalculated")) {
-                            db.collection("reservation")
-                                    .whereEqualTo("shareParkDocumentName", firestoreDocumentId)
-                                    .whereEqualTo("isCancelled", false)
-                                    .get()
-                                    .addOnSuccessListener(queryDocumentSnapshots -> {
-                                        long totalPrice = 0;
-                                        for (QueryDocumentSnapshot documentSnapshot2 : queryDocumentSnapshots) {
-                                            totalPrice += (long) documentSnapshot2.get("price");
-                                        }
-                                        int calculatedValue = ((int) (totalPrice * 95 / 100));
-                                        if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() > 0) {
-                                            Log.d(TAG, "정산할 예약 수 : " + queryDocumentSnapshots.size() );
-                                        }
-                                        else {
-                                            Log.d(TAG, "정산할 예약이 없음");
-                                        }
-                                        receiveYdPoint(id, calculatedValue, "공유주차장 정산", new OnFirestoreDataLoadedListener() {
-                                            @Override
-                                            public void onDataLoaded(Object data) {
-                                                db.collection("sharePark")
-                                                        .document(firestoreDocumentId)
-                                                        .update("isCalculated", true)
-                                                        .addOnSuccessListener(aVoid -> {
-                                                            listener.onDataLoaded(true);
-                                                        })
-                                                        .addOnFailureListener(e -> {
-                                                            Log.d(TAG, "isCalculated true로 변경 실패");
-                                                            listener.onDataLoadError(e.getMessage());
-                                                        });
-                                            }
-                                            @Override
-                                            public void onDataLoadError(String errorMessage) {
-                                            }
-                                        });
-                                    })
-                                    .addOnFailureListener(e -> {
-                                    });
                         }
                         else {
                             listener.onDataLoadError("이미 정산됨");

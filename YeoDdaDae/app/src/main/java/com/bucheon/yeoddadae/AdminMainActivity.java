@@ -71,37 +71,6 @@ public class AdminMainActivity extends AppCompatActivity {
             navHeaderUsername.setText(loginId);
         }
 
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference collectionRef1 = db.collection("sharePark");
-        CollectionReference collectionRef2 = db.collection("reportDiscountPark");
-
-        collectionRef1.addSnapshotListener((querySnapshot, e) -> {
-            if (e != null) {
-                Log.d(TAG, "Listen failed.", e);
-                return;
-            }
-
-            if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                for (DocumentChange documentChange : querySnapshot.getDocumentChanges()) {
-                    getAdminNotification();
-                }
-            }
-        });
-
-        collectionRef2.addSnapshotListener((querySnapshot, e) -> {
-            if (e != null) {
-                Log.d(TAG, "Listen failed.", e);
-                return;
-            }
-
-            if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                for (DocumentChange documentChange : querySnapshot.getDocumentChanges()) {
-                    getAdminNotification();
-                }
-            }
-        });
-
         menubarBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

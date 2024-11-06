@@ -501,12 +501,6 @@ public class MyShareParkInformationActivity extends AppCompatActivity {
                                     myShareParkInfoCalculateTxt.setVisibility(View.VISIBLE);
                                 }
                             }
-                            if (((String) shareParkInfo.get("ownerName")).contains("길동")) {
-                                myShareParkInfoCancelBtn.setVisibility(View.GONE);
-                                myShareParkInfoCancelTxt.setVisibility(View.GONE);
-                                myShareParkInfoCalculateBtn.setVisibility(View.VISIBLE);
-                                myShareParkInfoCalculateTxt.setVisibility(View.VISIBLE);
-                            }
                         }
                     }
 
