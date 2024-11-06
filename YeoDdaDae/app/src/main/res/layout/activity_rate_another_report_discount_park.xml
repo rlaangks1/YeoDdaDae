@@ -245,7 +245,6 @@
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/rateAnotherReportMyRateBackBoardConstLayout"
                 android:background="@drawable/round_background"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

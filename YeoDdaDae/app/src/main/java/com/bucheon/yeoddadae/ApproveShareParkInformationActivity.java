@@ -49,7 +49,6 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
     TextView approveShareParkInfoPhoneContentTxt;
     TextView approveShareParkInfoEmailContentTxt;
     TextView approveShareParkInfoRelationContentTxt;
-    TextView approveShareParkInfoImageTxt;
     TextView approveShareParkInfoPriceContentTxt;
     TextView approveShareParkInfoHourPerTxt;
     TextView approveShareParkInfoPtTxt;
@@ -57,7 +56,6 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
     TextView approveShareParkInfoUpTimeContentTxt;
     ImageButton approveBtn;
     ImageButton rejectionBtn;
-    ConstraintLayout imageContainer;
     TextView imageNoTxt;
     ImageView imageView1;
     ImageView imageView2;
@@ -79,7 +77,6 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
         approveShareParkInfoPhoneContentTxt = findViewById(R.id.approveShareParkInfoPhoneContentTxt);
         approveShareParkInfoEmailContentTxt = findViewById(R.id.approveShareParkInfoEmailContentTxt);
         approveShareParkInfoRelationContentTxt = findViewById(R.id.approveShareParkInfoRelationContentTxt);
-        approveShareParkInfoImageTxt = findViewById(R.id.approveShareParkInfoImageTxt);
         approveShareParkInfoPriceContentTxt = findViewById(R.id.approveShareParkInfoPriceContentTxt);
         approveShareParkInfoHourPerTxt = findViewById(R.id.approveShareParkInfoHourPerTxt);
         approveShareParkInfoPtTxt = findViewById(R.id.approveShareParkInfoPtTxt);
@@ -87,7 +84,6 @@ public class ApproveShareParkInformationActivity extends AppCompatActivity {
         approveShareParkInfoUpTimeContentTxt = findViewById(R.id.approveShareParkInfoUpTimeContentTxt);
         approveBtn = findViewById(R.id.approveBtn);
         rejectionBtn = findViewById(R.id.rejectionBtn);
-        imageContainer = findViewById(R.id.imageContainer);
         imageNoTxt = findViewById(R.id.imageNoTxt);
         imageView1 = findViewById(R.id.imageView1);
         imageView2 = findViewById(R.id.imageView2);

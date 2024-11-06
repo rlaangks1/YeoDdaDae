@@ -252,7 +252,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/tempId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right" >
@@ -539,7 +538,6 @@
                         android:layout_marginRight="10dp"/>
 
                     <TextView
-                        android:id="@+id/findParkCustomTimeEndTxt"
                         android:text="끝"
                         android:textSize="20sp"
                         android:textColor="@color/sub"

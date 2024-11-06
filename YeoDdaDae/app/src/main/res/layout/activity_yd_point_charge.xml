@@ -222,7 +222,6 @@
                     android:layout_marginTop="20dp" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/chargeAfterChargePointConstLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@+id/chargeAfterChargePointTxt"

@@ -3,7 +3,6 @@ package com.bucheon.yeoddadae;
 import static android.content.ContentValues.TAG;
 
 import android.Manifest;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;

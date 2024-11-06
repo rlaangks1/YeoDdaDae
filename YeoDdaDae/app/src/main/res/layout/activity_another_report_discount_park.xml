@@ -111,7 +111,6 @@
         android:layout_marginRight="10dp" />
 
     <TextView
-        android:id="@+id/toAddReportTxt"
         android:text="새 제보하기"
         android:textSize="25sp"
         android:textColor="@color/white"

@@ -6,7 +6,6 @@ import android.Manifest;
 import android.app.TimePickerDialog;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
@@ -19,9 +18,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -109,7 +106,6 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
     SttService.SttCallback sttCallback;
     SttDialog sd;
 
-    ConstraintLayout topConstraintLayout;
     ListView parkListView;
     ImageButton findParkBackBtn;
     ImageButton zoomOutBtn;
@@ -167,7 +163,6 @@ public class FindParkActivity extends AppCompatActivity implements TMapGpsManage
         setContentView(R.layout.activity_find_park);
   
         // 뷰 정의
-        topConstraintLayout = findViewById(R.id.topConstraintLayout);
         parkListView = findViewById(R.id.parkListView);
         findParkBackBtn = findViewById(R.id.findParkBackBtn);
         zoomOutBtn = findViewById(R.id.zoomOutBtn);

@@ -100,7 +100,6 @@
         android:layout_marginRight="70dp" />
 
     <TextView
-        android:id="@+id/loginBtnTxt"
         android:text="로그인"
         android:textSize="25sp"
         android:textColor="@color/white"

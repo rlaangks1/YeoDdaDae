@@ -2,7 +2,6 @@ package com.bucheon.yeoddadae;
 
 import static android.content.ContentValues.TAG;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
